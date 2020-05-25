@@ -1,0 +1,24 @@
+#define VALUE(x)
+#define TYPE(T) T var_ ## T;
+#define MEMBER_DATA(T, M)
+#define MEMBER_FUNC(T, M)
+
+// first pass to declare variables of each type
+#include "data.h"
+
+#undef VALUE
+#undef TYPE
+#undef MEMBER_DATA
+#undef MEMBER_FUNC
+
+int main() {
+#define VALUE(x) printf("valueof(" #x ") = %u\n", x);
+#define TYPE(T) printf("sizeof(" #T ") = %u\n", sizeof(T));
+#define MEMBER_DATA(T, M) printf("offsetof(" #T "." #M ") = %u\n", \
+	(int)(((unsigned char*)&var_ ## T.M) - ((unsigned char*)&var_ ## T)));
+#define MEMBER_FUNC(T, M) printf("offsetof(" #T "." #M ") = %u\n", \
+	(int)(((unsigned char*)&var_ ## T.M) - ((unsigned char*)&var_ ## T)));
+
+// second pass to add printf calls
+#include "data.h"
+}

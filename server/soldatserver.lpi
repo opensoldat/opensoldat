@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <Title Value="soldatserver"/>
+      <ResourceType Value="res"/>
+    </General>
+    <LazDoc Paths="docs"/>
+    <BuildModes Count="12">
+      <Item1 Name="Windows x86_64 debug" Default="True"/>
+      <Item2 Name="Windows x86_64 release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <RelocatableUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT"/>
+          </Other>
+        </CompilerOptions>
+      </Item2>
+      <Item3 Name="Windows i386 debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <IncludeAssertionCode Value="True"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <RelocatableUnit Value="True"/>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="win32"/>
+            <Optimizations>
+              <OptimizationLevel Value="0"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Other>
+            <Verbosity>
+              <ShoLineNum Value="True"/>
+            </Verbosity>
+            <ConfigFile>
+              <StopAfterErrCount Value="10"/>
+            </ConfigFile>
+            <CustomOptions Value="-dDEBUG
+-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT
+-dDEVELOPMENT"/>
+          </Other>
+        </CompilerOptions>
+      </Item3>
+      <Item4 Name="Windows i386 release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <RelocatableUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="win32"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT"/>
+          </Other>
+        </CompilerOptions>
+      </Item4>
+      <Item5 Name="GNU/Linux x86_64 debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="linux"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <UseLineInfoUnit Value="False"/>
+            </Debugging>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT
+-dDEVELOPMENT"/>
+          </Other>
+        </CompilerOptions>
+      </Item5>
+      <Item6 Name="GNU/Linux x86_64 release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver" ApplyConventions="False"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="linux"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT"/>
+          </Other>
+        </CompilerOptions>
+      </Item6>
+      <Item7 Name="GNU/Linux i386 debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="linux"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <UseLineInfoUnit Value="False"/>
+            </Debugging>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT
+-dDEVELOPMENT"/>
+          </Other>
+        </CompilerOptions>
+      </Item7>
+      <Item8 Name="GNU/Linux i386 release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver" ApplyConventions="False"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="linux"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT"/>
+          </Other>
+        </CompilerOptions>
+      </Item8>
+      <Item9 Name="OSX i386 debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="darwin"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <UseLineInfoUnit Value="False"/>
+            </Debugging>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT
+-dDEVELOPMENT"/>
+          </Other>
+        </CompilerOptions>
+      </Item9>
+      <Item10 Name="OSX i386 release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="darwin"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT"/>
+          </Other>
+        </CompilerOptions>
+      </Item10>
+      <Item11 Name="GNU/Linux ARM debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <TargetCPU Value="arm"/>
+            <TargetOS Value="linux"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <UseLineInfoUnit Value="False"/>
+            </Debugging>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dSERVER
+-dDEVELOPMENT"/>
+          </Other>
+        </CompilerOptions>
+      </Item11>
+      <Item12 Name="GNU/Linux ARM release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\soldatserver" ApplyConventions="False"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="libs"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="arm"/>
+            <TargetOS Value="linux"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dSERVER"/>
+          </Other>
+        </CompilerOptions>
+      </Item12>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <LaunchingApplication PathPlusParams="\usr\X11R6\bin\xterm -T 'Lazarus Run Output' -e $(LazarusDir)\tools\runwait.sh $(TargetCmdLine)"/>
+      </local>
+      <environment>
+        <UserOverrides Count="1">
+          <Variable0 Name="LD_LIBRARY_PATH" Value="/home/tomek/ls3"/>
+        </UserOverrides>
+      </environment>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default">
+          <local>
+            <LaunchingApplication PathPlusParams="\usr\X11R6\bin\xterm -T 'Lazarus Run Output' -e $(LazarusDir)\tools\runwait.sh $(TargetCmdLine)"/>
+          </local>
+          <environment>
+            <UserOverrides Count="1">
+              <Variable0 Name="LD_LIBRARY_PATH" Value="/home/tomek/ls3"/>
+            </UserOverrides>
+          </environment>
+        </Mode0>
+      </Modes>
+    </RunParams>
+    <Units Count="87">
+      <Unit0>
+        <Filename Value="soldatserver.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="..\shared\Weapons.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\shared\Parts.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\shared\PolyMap.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\shared\Constants.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\shared\Anims.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\shared\Calc.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\shared\AI.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\shared\Demo.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\shared\LogFile.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="..\shared\Version.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\shared\Waypoints.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="scriptcore\ScriptCoreInterface.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="scriptcore\PascalCore.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="scriptcore\PascalCompiler.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="scriptcore\PascalDebugger.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="scriptcore\ScriptPlayer.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="scriptcore\ScriptPlayers.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="scriptcore\ScriptWeapon.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="scriptcore\ScriptGame.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="scriptcore\ScriptTeam.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="scriptcore\scriptunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ScriptUnit"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="scriptcore\ScriptExceptions.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="scriptcore\ScriptSpawnPoint.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="scriptcore\ScriptCoreAPIAdapter.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="..\shared\Game.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="..\shared\gfx.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="..\shared\MapFile.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="..\shared\SharedConfig.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="..\shared\TraceLog.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="..\shared\Util.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="..\shared\Vector.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="scriptcore\ScriptMath.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="scriptcore\MyInterfacedObject.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="scriptcore\PascalExec.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="scriptcore\Script.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="scriptcore\ScriptBanLists.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="scriptcore\ScriptBullet.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="scriptcore\ScriptCore.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="scriptcore\ScriptCore3.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="scriptcore\ScriptCore3Api.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="scriptcore\ScriptCoreFunctions.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="scriptcore\ScriptDateUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="scriptcore\ScriptDispatcher.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="scriptcore\ScriptFileAPI.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="scriptcore\ScriptGlobal.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="scriptcore\ScriptMap.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="scriptcore\ScriptMapsList.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="scriptcore\ScriptObject.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="..\shared\Version.txt"/>
+        <IsPartOfProject Value="True"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="..\shared\VersionLong.txt"/>
+        <IsPartOfProject Value="True"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="..\shared\network\NetworkClientConnection.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="..\shared\network\NetworkClientFunctions.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="..\shared\network\NetworkClientGame.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="..\shared\network\NetworkClientHeartbeat.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="..\shared\network\NetworkClientMessages.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="..\shared\network\NetworkClientSprite.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="..\shared\network\NetworkClientThing.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit57>
+      <Unit58>
+        <Filename Value="..\shared\network\NetworkServerBullet.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="..\shared\network\NetworkServerConnection.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit59>
+      <Unit60>
+        <Filename Value="..\shared\network\NetworkServerFunctions.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit60>
+      <Unit61>
+        <Filename Value="..\shared\network\NetworkServerGame.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit61>
+      <Unit62>
+        <Filename Value="..\shared\network\NetworkServerHeartbeat.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit62>
+      <Unit63>
+        <Filename Value="..\shared\network\NetworkServerMessages.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit63>
+      <Unit64>
+        <Filename Value="..\shared\network\NetworkServerSprite.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit64>
+      <Unit65>
+        <Filename Value="..\shared\network\NetworkServerThing.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit65>
+      <Unit66>
+        <Filename Value="..\shared\network\NetworkUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit66>
+      <Unit67>
+        <Filename Value="..\shared\network\NetworkClientBullet.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit67>
+      <Unit68>
+        <Filename Value="Main.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit68>
+      <Unit69>
+        <Filename Value="..\shared\mechanics\Sparks.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit69>
+      <Unit70>
+        <Filename Value="..\shared\mechanics\Sprites.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit70>
+      <Unit71>
+        <Filename Value="..\shared\mechanics\Things.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit71>
+      <Unit72>
+        <Filename Value="..\shared\mechanics\Bullets.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit72>
+      <Unit73>
+        <Filename Value="..\shared\libs\PhysFS\PhysFS.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit73>
+      <Unit74>
+        <Filename Value="BanSystem.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit74>
+      <Unit75>
+        <Filename Value="FileServer.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit75>
+      <Unit76>
+        <Filename Value="LobbyClient.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit76>
+      <Unit77>
+        <Filename Value="Rcon.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit77>
+      <Unit78>
+        <Filename Value="Server.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit78>
+      <Unit79>
+        <Filename Value="ServerCommands.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit79>
+      <Unit80>
+        <Filename Value="ServerHelper.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit80>
+      <Unit81>
+        <Filename Value="ServerLoop.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit81>
+      <Unit82>
+        <Filename Value="..\shared\AutoUpdater.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit82>
+      <Unit83>
+        <Filename Value="..\shared\Command.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit83>
+      <Unit84>
+        <Filename Value="..\shared\Console.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit84>
+      <Unit85>
+        <Filename Value="..\shared\Cvar.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit85>
+      <Unit86>
+        <Filename Value="..\shared\gfx.inc.in"/>
+        <IsPartOfProject Value="True"/>
+      </Unit86>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="build\soldatserver"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+      <Libraries Value="libs"/>
+      <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+      <UnitOutputDirectory Value="build\$(TargetOS)"/>
+    </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <SyntaxMode Value="Delphi"/>
+        <UseAnsiStrings Value="False"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <RelocatableUnit Value="True"/>
+      <TargetCPU Value="x86_64"/>
+      <TargetOS Value="win64"/>
+      <Optimizations>
+        <OptimizationLevel Value="0"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <UseLineInfoUnit Value="False"/>
+      </Debugging>
+    </Linking>
+    <Other>
+      <Verbosity>
+        <ShowNotes Value="False"/>
+        <ShowHints Value="False"/>
+      </Verbosity>
+      <CustomOptions Value="-dDEBUG
+-dSERVER
+-dSCRIPT
+-dPS_USESSUPPORT
+-dDEVELOPMENT"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="6">
+      <Item1>
+        <Name Value="EIdConnClosedGracefully"/>
+      </Item1>
+      <Item2>
+        <Name Value="EStringListError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EAbort"/>
+      </Item3>
+      <Item4>
+        <Name Value="EIdException"/>
+      </Item4>
+      <Item5>
+        <Name Value="TProcNotFoundException"/>
+      </Item5>
+      <Item6>
+        <Name Value="RunError(201)"/>
+      </Item6>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

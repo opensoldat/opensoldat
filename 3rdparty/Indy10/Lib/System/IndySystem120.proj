@@ -1,0 +1,45 @@
+<Project DefaultTargets="default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<BuildProject>indy</BuildProject>
+	</PropertyGroup>
+
+	<Import Project="$(TPADDONS)\tpaddons.Targets"/>
+	<PropertyGroup>
+		<DcuOutput>$(DCUOUTDIR)</DcuOutput>
+		<DcpOutput>$(DCPOUTDIR)</DcpOutput>
+		<HppOutput>$(HPPOUTDIR)</HppOutput>
+		<ObjOutput>$(LIBOUTDIR)</ObjOutput>
+		<BpiOutput>$(LIBOUTDIR)</BpiOutput>
+		<BinOutput>$(BINOUTDIR)</BinOutput>
+		<GenerateCppPackages>true</GenerateCppPackages>
+		<GenerateCppFiles>true</GenerateCppFiles>
+	</PropertyGroup>
+	<ItemGroup>
+
+		<BuildTarget Include="IndySystem120.dpk">
+			<BuildAs>package</BuildAs>
+			<Language>delphi</Language>
+			<Platform>win32</Platform>
+		</BuildTarget>
+
+		<Compile Include="IndySystem120.dpk">
+			<CompilerOptions>$(DCCSWTS) $(BCBSWTS)</CompilerOptions>
+		</Compile>
+
+		<ResourceFiles Include="
+				IndySystem120.rc
+		">
+			<TargetExtension>.res</TargetExtension>
+		</ResourceFiles>
+		<RequiredDirs Include="
+			$(DcuOutput);
+			$(HppOutput);
+			$(ObjOutput);
+			$(BpiOutput);
+			$(BinOutput);
+			$(DcpOutput)
+		"/>
+	</ItemGroup>
+	<Target Name="default" DependsOnTargets="mkdir;buildresources;tpbuild"/>
+	<!--<Target Name="clean" DependsOnTargets="integclean;cleanall"/>-->
+</Project>

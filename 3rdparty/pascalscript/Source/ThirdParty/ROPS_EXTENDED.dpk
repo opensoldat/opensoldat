@@ -1,0 +1,43 @@
+package ROPS_EXTENDED;
+
+{$R *.RES}
+{$ALIGN ON}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'Innerfuse Pascal Script 3 Extensions'}
+{$IMPLICITBUILD ON}
+
+requires
+  JvCoreD5R,
+  JvSystemD5R,
+  JvNetD5R,
+  VCLIB50,
+  PascalScript_Core_D5;
+
+contains
+  uPSI_JvMail in 'uPSI_JvMail.pas',
+  uPSI_Registry in 'uPSI_Registry.pas',
+  uPSI_IBX in 'uPSI_IBX.pas',
+  uPS_ExtReg in 'uPS_ExtReg.pas',
+  uPSI_Mask in 'uPSI_Mask.pas',
+  uPSI_Dialogs in 'uPSI_Dialogs.pas';
+
+end.

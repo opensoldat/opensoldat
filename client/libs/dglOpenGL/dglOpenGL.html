@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" >
+<head>
+  <title>Delphi/Free Pascal OpenGL Community - OpenGL Header</title>
+
+  <style type="text/css" media="all">
+<!--
+  body {
+    color: #000000; 
+    background: #FFFFFF; 
+    font-family: lucida sans, sans, verdana, tahoma;
+    font-size: 12px;
+    margin: 10px;
+  }
+
+  #content {
+    margin: 0 0 0 10px;
+  }
+
+  #content pre {
+    font-family: monospace; 
+    font-size: 90%; 
+    color: #000000; 
+    background: #F7F7F7; 
+    border-width: 1px; 
+    border-color: #AAAAAA; 
+    border-style: solid;
+    margin-left: 15px;
+    padding-left: 3px;
+  }
+
+  #content p {
+    margin: 0 0 10px 15px;
+  }
+
+#content ul {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  h1 {
+    margin: 0 0 5px;
+    font-size: 195%;
+    font-weight: bold;
+  }
+
+  h2 {
+    margin: 15px 0 5px;
+    font-size: 125%;
+    border-bottom: 1px solid #888;
+  }
+
+  h3 {
+    font-style: italic;
+    margin: 5px 0 5px;
+    font-size: 100%;
+  }
+-->
+  </style>
+</head>
+<body>
+  <div id="header">
+    <h1>Delphi/Free Pascal OpenGL Header for OpenGL 4.4b - Readme -</h1>
+    <div id="content">
+      <p>(obtained and maintained through <a href="http://www.delphigl.com" target="_blank">www.delphigl.com</a>)</p>
+    </div>
+  </div>
+  
+  <div id="content">
+    <h2>Content</h2>
+    <p><a href="#desc">Description</a><br>
+    <a href="#howto">How to use</a><br>
+    <a href="#support">Support</a><br>
+    <a href="#credits">Credits</a><br>
+    <a href="#copyright">Copyright</a><br></p>
+  </div>
+
+  <div id="content">
+    <a name="desc" />
+    <h2>Description</h2>
+    <p>This is the readme for the OpenGL-Headers for Delphi/FreePascal that has been developed by DGL's OpenGL2.0-Portteam. Please read carefully through this file before using the header to avoid common problems and faults.
+	
+	The changelog is included in the source file itself.
+	</p>
+    </p>
+  </div>
+
+  <div id="content">
+    <h2>Note</h2>
+    <p>OpenGL-Header is for Borland Delphi 4 and above (tested with Delphi 7) and FreePascal.<br />
+    Containts the translations of glext.h, gl_1_1.h, glu.h and weglext.h.<br />
+    It also contains some helperfunctions that were inspired by those found in Mike Lischke's OpenGL12.pas.</p>
+  </div>
+
+  <div id="content">
+    <a name="howto" />
+    <h2>How to use</h2>
+    <p>Before you can use any of the gl-functions contained in the header, you'll have to call InitOpenGL to initialize the functionpointers. In your app it should look something like that :</p>
+
+    <pre id="code">
+procedure MyGLInit;
+begin
+  InitOpenGL; // Don't forget, or first gl-Call will result in an access violation!
+  MyDC := GetDC(...);
+  MyRC := CreateRenderingContext(...);
+  ActivateRenderingContext(MyDC, MyRC); // Necessary, will also read some extension
+  ...
+end;</pre>
+    <p>After doing the above initialisation, you're ready to use all OpenGL-Functions and extensions your card supports. And also don't forget to release your context properly when exiting :</p>
+    <pre id="code">
+procedure MyDeInit;
+begin
+  DeactivateRenderingContext; // Deactivates the current context
+  wglDeleteContext(myRC);
+  ReleaseDC(Handle, myDC);
+end;</pre>
+  </div>
+  
+<div id="content">
+    <a name="howto" />
+    <h2>Creating a versioned rendering context</h2>
+    <p>As of OpenGL version 4.4, the header offers an additional way of creating a rendercontext, that allows for setting the desired OpenGL version and (if applicable) wether to create a forward compatible context (see OpenGL man pages on what that means) :
+    <pre id="code">
+procedure MyGLInit;
+begin
+  DC := GetDC(...);
+  RC := CreateRenderingContextVersion(DC, [opDoubleBuffered], 4, 2, True, 32, 24, 8, 0, 0, 0); // Creates an OpenGL 4.2 forward-compatible context
+  InitOpenGL; // Don't forget, or first gl-Call will result in an access violation!
+  ...
+end;</pre>
+Only use this method of creating a rendering context if you're sure what you're doing. Trying to create a versioned rendering context that's not supported by the target OpenGL implementation may fail!
+
+	</p>
+  </div>
+  
+
+  <div id="content">
+    <a name="support" />
+    <h2>Support</h2>
+    <p>If you have problems, want to ask a question or think you may have encountered a bug in the header, please feel free to use the support-threads in our forums :<br />
+    <a href="http://www.delphigl.com/forum/viewtopic.php?t=2207" target="_blank">English support</a><br />
+    <a href="http://www.delphigl.com/forum/viewtopic.php?t=1863" target="_blank">German support</a></p>
+  </div>
+
+  <div id="content">
+    <a name="credits" />
+    <h2>Credits</h2>
+    <div id="content">
+      <p><h3>Converted and maintained by DGL's GL2.0-Team :</h3>
+      <p>Sascha Willems (<a href="http://www.delphigl.de" target="_blank">http://www.delphigl.de</a>)<br>
+      Steffen Xonna (Lossy eX, <a href="http://www.dev-center.de" target="_blank">http://www.dev-center.de</a>)<br>
+	  </p>
+      <h3>Additional input :</h3>
+      <p> Andrey Gruzdev for the Mac OS X patch for XE2 / FPC
+	  Lars Middendorf
+Martin Waldegger (Mars)<br>
+      Nico Michaelis (Delphic) for the Linux version of the header (<a href="http://www.delphigl.com/forum/viewtopic.php?t=2577" target="_blank">see here</a>)<br>
+      Benjamin Rosseaux (BeRo) for expanding the header for use with Free Pascal<br>
+      And thanks to all who helps us to make the header better</p></p>
+    </div>
+  </div>
+
+  <div id="content">
+    <a name="copyright" />
+    <h2>Copyright</h2>
+    <p>This Source Code Form is subject to the terms of the Mozilla Public License, 
+  v. 2.0. If a copy of the MPL was not distributed with this file, 
+  You can obtain one at http://mozilla.org/MPL/2.0/.
+  Software distributed under the License is distributed on an
+  "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  implied. See the License for the specific language governing
+  rights and limitations under the License.<br></p>
+    <p>Software distributed under the License is distributed on an<br>
+    "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or<br>
+    implied. See the License for the specific language governing<br>
+    rights and limitations under the License.</p>
+  </div>
+
+  <div id="content">
+    Copyright (c) 2003-2015 DGL-OpenGL-Portteam - All Rights Reserved
+  </div>
+</div>
+  
+</body>
+</html>
+    

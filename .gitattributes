@@ -1,0 +1,27 @@
+# set default behavior
+* text=auto
+
+# normalize and convert to native line endings on checkout
+*.inc text
+*.pas text
+*.pp  text
+*.rc  text
+*.txt text
+
+# checkout with CRLF line endings
+*.dof text eol=crlf
+*.dfm text eol=crlf
+
+# checkout with LF line endings
+*.sh  text eol=lf
+*.hit text eol=lf
+hit   text eol=lf
+
+# do not modify binary files at all
+*.bmp binary
+*.dll binary
+*.exe binary
+*.ico binary
+*.jpg binary
+*.png binary
+*.res binary

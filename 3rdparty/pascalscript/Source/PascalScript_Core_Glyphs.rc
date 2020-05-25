@@ -1,0 +1,14 @@
+TPSScript                   BITMAP DISCARDABLE "Glyphs\TPSScript.bmp"
+TPSScriptDebugger           BITMAP DISCARDABLE "Glyphs\TPSScriptDebugger.bmp"
+TPSDllPlugin                BITMAP DISCARDABLE "Glyphs\TPSDllPlugin.bmp"
+
+TPSImport_Classes           BITMAP DISCARDABLE "Glyphs\TPSImport_Classes.bmp"
+TPSImport_ComObj            BITMAP DISCARDABLE "Glyphs\TPSImport_ComObj.bmp"
+TPSImport_Controls          BITMAP DISCARDABLE "Glyphs\TPSImport_Controls.bmp"
+TPSImport_DateUtils         BITMAP DISCARDABLE "Glyphs\TPSImport_DateUtils.bmp"
+TPSImport_DB                BITMAP DISCARDABLE "Glyphs\TPSImport_DB.bmp"
+TPSImport_Forms             BITMAP DISCARDABLE "Glyphs\TPSImport_Forms.bmp"
+TPSImport_StdCtrls          BITMAP DISCARDABLE "Glyphs\TPSImport_StdCtrls.bmp"
+
+
+

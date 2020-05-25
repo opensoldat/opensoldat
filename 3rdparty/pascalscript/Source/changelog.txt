@@ -1,0 +1,118 @@
+March 2008
+- 0005235: Re: Error in compile error report 
+Feb 2008
+- 0005025: InvokeExternalMethod possible bug 
+- 0003016: ranges .. in case statement not working 
+Jan 2008
+- 0004974: TPSScriptExtension: trivial bug 
+- 0004975: bug fixed uPSRuntime.pas
+- 0004862: FPC/Lazarus please check. 
+- 0004870: Re: fixed bug 
+- 0004905: Duplicate Identifiers with constants
+- 0004906: strange issue 
+Dec 2007
+- 0004927: PS can't determine the length of a variant type anymore 
+- 0004836: Semicolon bug 
+Nov 2007
+- 0004797: [Hint] issue with modules 
+- 0004786: CreateOpenArray function issue 
+- Power pc support (done by Henry Vermaak)
+- 0004558: Re: Exception problem
+Oct 2007
+- 0004504: Getting characters at a given position 
+- 0004404: PreProcessor issue 
+- 0004503: Pascalscript error position for var params 
+- "With" on record
+
+Sept 2007
+- 0003488: breakpoints in unit support 
+- 0003535: byref/ open arrays of string give runtime type mismatch 
+- 0004434: Re: Exception Support broken 
+- 0004176: Duplicate local with diff caps don't show errors 
+- 0004192: Fix for ErTypeMismatch in TPSExec.DoBooleanCalc 
+- 0004443: public.pascalscript: uPSComponentExt.pas issue 
+- 0003310: bugfix for PascalScript
+- fix for casing of dll exports
+
+April 2007
+ - 11 apr: 0003310: bugfix for PascalScript in uPSComponentExt; Simon Forsberg
+ - 5 apr: 0003274: Finally inside except block does not reset exception  (reported by Martijn Laan)
+ - 5 apr: Fix by Fabio Lindner: using AND on booleans and notification variants
+
+March 2007
+ - 2 mar: 0003179: strange assignment result 
+ - 2 mar: 0003180: Type mismatch with currency 
+
+February 2007
+ - 22 feb: 0003033: string results are returned wrong on FreePascal 
+ - 22 feb: fix for parameter type of TStream.CopyFRom
+ - 19 feb: 0002735: Problem with function returning record; Give an error when calling record members on a funtion instead of an AV
+ - 2 Feb: Allow converting a Variant back to an array of Variant
+
+January 2007
+ - 3034: Complication errors for Length() and SetLength() function when performed on arrays or widestrings
+ - 3034: Access to widestring elements
+ - Changes by Thomas Nitzschke; Low, High, SetLength, GetLength on arrays support
+
+December 2004
+ - Safecall
+ - UnloadDll function
+ - New package for non-db versions of delphi (Personal)
+
+November 2004:
+  - Assign for plugin collections.
+  - IDE demo changes
+
+November 2004;
+  - Allow overriding internal procs.
+  - Add importdecl to old style AddFunction ImportDecl.
+
+October 2004:
+  - New compiletime support functions
+  - getconst/getconstcount
+  - allow interface to be registered more than once and in any order 
+  - widestring published properties support.
+
+August 2004:
+  - Fix. Var parameter types weren't always checked.
+  - fixes for CHAR consts.
+  - Eliminate "Comparing signed and unsigned types" warnings (on D5) (jr)
+
+2004-05-01
+  - strtoint now throws an exception for invalid numbers.
+  - Compiler fix: Check var parameters.
+  - Docs update
+  - Fixes in the import tool
+  - Added a few new functions to make it earlier to add variable pointers to the script.
+  - Added a few new samples
+  - New Help system
+
+
+2004-04-24:
+  - Changed unit names for RemObjects.
+2004-01-13:
+  - Removed TIFPSInternalProcedure.exportmode and made it always use
+    emExportDecl
+  - RunProcP RunProcPN added
+  - Added Variant and PChar to the default to be exported type list
+  - function TIFPS3CompExec.ExecuteFunction(const Params: array of Variant;
+    const ProcName: string): Variant;
+  - Fix in ExportCheck
+  - Added source for Using_Innerfuse_Pascal_Script.pdf
+  - Updated docs
+2004-01-14:
+  - Added CompExec.GetVarContents (for watches)
+  - Seperate Procedure Parameter reading code from using the actual header
+2004-01-15:
+  - Added IDispatchInvoke scripted function
+  - Copyright Update
+2004-01-16:
+  - Full IDispatch (dynamic) invoke support
+
+  - Made IDispatch code work only on Variant types
+  - Fixes in IFPSVariantToString
+
+
+
+Todo:
+  - Com functions

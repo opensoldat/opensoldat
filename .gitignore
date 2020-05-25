@@ -1,0 +1,47 @@
+# general files
+*.bak
+*.bk1
+*.bk2
+*.gex
+*.map
+
+# windows temp files
+*.db
+*.exe
+*.lnk
+
+# lazarus temp files
+*.a
+*.lps
+*.o
+*.ppu
+*.saved
+*.so
+*.stat
+backup
+
+# delphi temp files
+*.cbk
+*.cfg
+*.dcu
+*.ddp
+*.drc
+*.dsk
+*.dsm
+*.obj
+*.~*
+
+build
+build.*
+release
+
+# stb.dll stuff
+.vs
+Release
+*.vcxproj.user
+*.suo
+
+# vim temp files
+*.swo
+*.swp
+*.swu

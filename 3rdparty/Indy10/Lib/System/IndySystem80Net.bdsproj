@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <PersonalityInfo>
+    <Option>
+      <Option Name="Personality" Type="String">DelphiDotNet.Personality</Option>
+      <Option Name="ProjectType" Type="String">VCLApplication</Option>
+      <Option Name="Version" Type="String">1.0</Option>
+      <Option Name="GUID" Type="String">{E5467B34-F70C-4355-B43A-FAD00DF80769}</Option>
+    </Option>
+  </PersonalityInfo>
+  <DelphiDotNet.Personality>
+    <Source>
+      <Source Name="MainSource" Type="String">IndySystem80Net.dpk</Source>
+    </Source>
+    
+    
+    
+    
+    
+    
+    <FileList>
+      <File FileName="c:\program files\common files\borland shared\bds\shared assemblies\2.0\Borland.Delphi.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="Borland.Delphi" AssemblyName="Borland.Delphi" Version="7.1.1523.17956" LinkUnits="False"/>
+      <File FileName="c:\program files\common files\borland shared\bds\shared assemblies\2.0\Borland.VclRtl.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="Borland.VclRtl" AssemblyName="Borland.VclRtl" Version="7.1.1523.17956" LinkUnits="False"/>
+      <File FileName="$(SystemRoot)\microsoft.net\framework\v1.1.4322\System.Drawing.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="System.Drawing" AssemblyName="system.drawing" Version="1.0.5000.0" LinkUnits="False"/>
+      <File FileName="IdAntiFreezeBase.pas" ContainerId="" ModuleName="IdAntiFreezeBase"/>
+      <File FileName="IdBaseComponent.pas" ContainerId="" ModuleName="IdBaseComponent"/>
+      <File FileName="IdComponent.pas" ContainerId="" ModuleName="IdComponent"/>
+      <File FileName="IdException.pas" ContainerId="" ModuleName="IdException"/>
+      <File FileName="IdGlobal.pas" ContainerId="" ModuleName="IdGlobal"/>
+      <File FileName="IdResourceStrings.pas" ContainerId="" ModuleName="IdResourceStrings"/>
+      <File FileName="IdStack.pas" ContainerId="" ModuleName="IdStack"/>
+      <File FileName="IdStackConsts.pas" ContainerId="" ModuleName="IdStackConsts"/>
+      <File FileName="IdStackDotNet.pas" ContainerId="" ModuleName="IdStackDotNet"/>
+      <File FileName="IdStream.pas" ContainerId="" ModuleName="IdStream"/>
+      <File FileName="IdStreamRandomAccess.pas" ContainerId="" ModuleName="IdStreamRandomAccess"/>
+      <File FileName="IdStreamVCL.pas" ContainerId="" ModuleName="IdStreamVCL"/>
+      <File FileName="IdStreamVCLBase.pas" ContainerId="" ModuleName="IdStreamVCLBase"/>
+      <File FileName="IdStreamVCLDotNet.pas" ContainerId="" ModuleName="IdStreamVCLDotNet"/>
+    </FileList>
+    <FileVersion>
+      <FileVersion Name="Version" Type="String">7.0</FileVersion>
+    </FileVersion>
+    <Compiler>
+      <Compiler Name="A" Type="Integer">0</Compiler>
+      <Compiler Name="B" Type="Integer">0</Compiler>
+      <Compiler Name="C" Type="Integer">1</Compiler>
+      <Compiler Name="D" Type="Integer">1</Compiler>
+      <Compiler Name="E" Type="Integer">0</Compiler>
+      <Compiler Name="F" Type="Integer">0</Compiler>
+      <Compiler Name="G" Type="Integer">1</Compiler>
+      <Compiler Name="H" Type="Integer">1</Compiler>
+      <Compiler Name="I" Type="Integer">1</Compiler>
+      <Compiler Name="J" Type="Integer">0</Compiler>
+      <Compiler Name="K" Type="Integer">0</Compiler>
+      <Compiler Name="L" Type="Integer">1</Compiler>
+      <Compiler Name="M" Type="Integer">0</Compiler>
+      <Compiler Name="N" Type="Integer">1</Compiler>
+      <Compiler Name="O" Type="Integer">1</Compiler>
+      <Compiler Name="P" Type="Integer">1</Compiler>
+      <Compiler Name="Q" Type="Integer">1</Compiler>
+      <Compiler Name="R" Type="Integer">1</Compiler>
+      <Compiler Name="S" Type="Integer">0</Compiler>
+      <Compiler Name="T" Type="Integer">0</Compiler>
+      <Compiler Name="U" Type="Integer">0</Compiler>
+      <Compiler Name="V" Type="Integer">1</Compiler>
+      <Compiler Name="W" Type="Integer">0</Compiler>
+      <Compiler Name="X" Type="Integer">1</Compiler>
+      <Compiler Name="Y" Type="Integer">1</Compiler>
+      <Compiler Name="Z" Type="Integer">1</Compiler>
+      <Compiler Name="ShowHints" Type="Boolean">True</Compiler>
+      <Compiler Name="ShowWarnings" Type="Boolean">True</Compiler>
+      <Compiler Name="UnitAliases" Type="String">WinTypes=Borland.Vcl.Windows;WinProcs=Borland.Vcl.Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;</Compiler>
+      <Compiler Name="NamespacePrefix" Type="String">Borland.Vcl</Compiler>
+      <Compiler Name="GenerateDocumentation" Type="Boolean">False</Compiler>
+      <Compiler Name="DefaultNamespace" Type="String"></Compiler>
+      <Compiler Name="SymbolDeprecated" Type="Boolean">True</Compiler>
+      <Compiler Name="SymbolLibrary" Type="Boolean">True</Compiler>
+      <Compiler Name="SymbolPlatform" Type="Boolean">True</Compiler>
+      <Compiler Name="SymbolExperimental" Type="Boolean">True</Compiler>
+      <Compiler Name="UnitLibrary" Type="Boolean">True</Compiler>
+      <Compiler Name="UnitPlatform" Type="Boolean">True</Compiler>
+      <Compiler Name="UnitDeprecated" Type="Boolean">True</Compiler>
+      <Compiler Name="UnitExperimental" Type="Boolean">True</Compiler>
+      <Compiler Name="HResultCompat" Type="Boolean">True</Compiler>
+      <Compiler Name="HidingMember" Type="Boolean">True</Compiler>
+      <Compiler Name="HiddenVirtual" Type="Boolean">True</Compiler>
+      <Compiler Name="Garbage" Type="Boolean">True</Compiler>
+      <Compiler Name="BoundsError" Type="Boolean">True</Compiler>
+      <Compiler Name="ZeroNilCompat" Type="Boolean">True</Compiler>
+      <Compiler Name="StringConstTruncated" Type="Boolean">True</Compiler>
+      <Compiler Name="ForLoopVarVarPar" Type="Boolean">True</Compiler>
+      <Compiler Name="TypedConstVarPar" Type="Boolean">True</Compiler>
+      <Compiler Name="AsgToTypedConst" Type="Boolean">True</Compiler>
+      <Compiler Name="CaseLabelRange" Type="Boolean">True</Compiler>
+      <Compiler Name="ForVariable" Type="Boolean">True</Compiler>
+      <Compiler Name="ConstructingAbstract" Type="Boolean">True</Compiler>
+      <Compiler Name="ComparisonFalse" Type="Boolean">True</Compiler>
+      <Compiler Name="ComparisonTrue" Type="Boolean">True</Compiler>
+      <Compiler Name="ComparingSignedUnsigned" Type="Boolean">True</Compiler>
+      <Compiler Name="CombiningSignedUnsigned" Type="Boolean">True</Compiler>
+      <Compiler Name="UnsupportedConstruct" Type="Boolean">True</Compiler>
+      <Compiler Name="FileOpen" Type="Boolean">True</Compiler>
+      <Compiler Name="FileOpenUnitSrc" Type="Boolean">True</Compiler>
+      <Compiler Name="BadGlobalSymbol" Type="Boolean">True</Compiler>
+      <Compiler Name="DuplicateConstructorDestructor" Type="Boolean">True</Compiler>
+      <Compiler Name="InvalidDirective" Type="Boolean">True</Compiler>
+      <Compiler Name="PackageNoLink" Type="Boolean">True</Compiler>
+      <Compiler Name="PackageThreadVar" Type="Boolean">True</Compiler>
+      <Compiler Name="ImplicitImport" Type="Boolean">True</Compiler>
+      <Compiler Name="HPPEMITIgnored" Type="Boolean">True</Compiler>
+      <Compiler Name="NoRetVal" Type="Boolean">True</Compiler>
+      <Compiler Name="UseBeforeDef" Type="Boolean">True</Compiler>
+      <Compiler Name="ForLoopVarUndef" Type="Boolean">True</Compiler>
+      <Compiler Name="UnitNameMismatch" Type="Boolean">True</Compiler>
+      <Compiler Name="NoCFGFileFound" Type="Boolean">True</Compiler>
+      <Compiler Name="MessageDirective" Type="Boolean">True</Compiler>
+      <Compiler Name="ImplicitVariants" Type="Boolean">True</Compiler>
+      <Compiler Name="UnicodeToLocale" Type="Boolean">True</Compiler>
+      <Compiler Name="LocaleToUnicode" Type="Boolean">True</Compiler>
+      <Compiler Name="ImagebaseMultiple" Type="Boolean">True</Compiler>
+      <Compiler Name="SuspiciousTypecast" Type="Boolean">True</Compiler>
+      <Compiler Name="PrivatePropAccessor" Type="Boolean">True</Compiler>
+      <Compiler Name="UnsafeType" Type="Boolean">True</Compiler>
+      <Compiler Name="UnsafeCode" Type="Boolean">True</Compiler>
+      <Compiler Name="UnsafeCast" Type="Boolean">True</Compiler>
+      <Compiler Name="OptionTruncated" Type="Boolean">True</Compiler>
+      <Compiler Name="WideCharReduced" Type="Boolean">True</Compiler>
+      <Compiler Name="DuplicatesIgnored" Type="Boolean">True</Compiler>
+    </Compiler>
+    <Linker>
+      <Linker Name="MapFile" Type="Integer">0</Linker>
+      <Linker Name="OutputObjs" Type="Integer">0</Linker>
+      <Linker Name="ConsoleApp" Type="Integer">1</Linker>
+      <Linker Name="DebugInfo" Type="Boolean">True</Linker>
+      <Linker Name="RemoteSymbols" Type="Boolean">False</Linker>
+      <Linker Name="GenerateDRC" Type="Boolean">False</Linker>
+      <Linker Name="MinStackSize" Type="Integer">4096</Linker>
+      <Linker Name="MaxStackSize" Type="Integer">1048576</Linker>
+      <Linker Name="ImageBase" Type="Integer">4194304</Linker>
+      <Linker Name="ExeDescription" Type="String">Indy 10 System</Linker>
+    </Linker>
+    <Directories>
+      <Directories Name="OutputDir" Type="String"></Directories>
+      <Directories Name="UnitOutputDir" Type="String"></Directories>
+      <Directories Name="PackageDLLOutputDir" Type="String"></Directories>
+      <Directories Name="PackageDCPOutputDir" Type="String"></Directories>
+      <Directories Name="SearchPath" Type="String">c:\windows\microsoft.net\framework\v1.1.4322;w:\source\indy10\lib\system;w:\source\indy10\lib\core;w:\source\indy10\lib\protocols;c:\program files\common files\borland shared\bds\shared assemblies\2.0</Directories>
+      <Directories Name="Packages" Type="String">c:\windows\microsoft.net\framework\v1.1.4322\System.Drawing.dll;Borland.VclRtl;Borland.Delphi</Directories>
+      <Directories Name="Conditionals" Type="String"></Directories>
+      <Directories Name="DebugSourceDirs" Type="String"></Directories>
+      <Directories Name="UsePackages" Type="Boolean">False</Directories>
+    </Directories>
+    <Parameters>
+      <Parameters Name="RunParams" Type="String"></Parameters>
+      <Parameters Name="HostApplication" Type="String"></Parameters>
+      <Parameters Name="Launcher" Type="String"></Parameters>
+      <Parameters Name="UseLauncher" Type="Boolean">False</Parameters>
+      <Parameters Name="DebugCWD" Type="String"></Parameters>
+      <Parameters Name="RemoteHost" Type="String"></Parameters>
+      <Parameters Name="RemotePath" Type="String"></Parameters>
+      <Parameters Name="RemoteLauncher" Type="String"></Parameters>
+      <Parameters Name="RemoteCWD" Type="String"></Parameters>
+      <Parameters Name="RemoteDebug" Type="Boolean">False</Parameters>
+    </Parameters>
+    <Language>
+      <Language Name="ActiveLang" Type="String"></Language>
+      <Language Name="ProjectLang" Type="String">$00000000</Language>
+      <Language Name="RootDir" Type="String"></Language>
+    </Language>
+    <VersionInfo>
+      <VersionInfo Name="IncludeVerInfo" Type="Boolean">False</VersionInfo>
+      <VersionInfo Name="AutoIncBuild" Type="Boolean">False</VersionInfo>
+      <VersionInfo Name="MajorVer" Type="Integer">1</VersionInfo>
+      <VersionInfo Name="MinorVer" Type="Integer">0</VersionInfo>
+      <VersionInfo Name="Release" Type="Integer">0</VersionInfo>
+      <VersionInfo Name="Build" Type="Integer">0</VersionInfo>
+      <VersionInfo Name="Debug" Type="Boolean">False</VersionInfo>
+      <VersionInfo Name="PreRelease" Type="Boolean">False</VersionInfo>
+      <VersionInfo Name="Special" Type="Boolean">False</VersionInfo>
+      <VersionInfo Name="Private" Type="Boolean">False</VersionInfo>
+      <VersionInfo Name="DLL" Type="Boolean">False</VersionInfo>
+      <VersionInfo Name="Locale" Type="Integer">1033</VersionInfo>
+      <VersionInfo Name="CodePage" Type="Integer">1252</VersionInfo>
+    </VersionInfo>
+  </DelphiDotNet.Personality>
+</BorlandProject>

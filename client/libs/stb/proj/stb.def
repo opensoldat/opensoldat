@@ -1,0 +1,12 @@
+LIBRARY STB
+EXPORTS
+	stbi_xload_file       @1
+	stbi_xload_mem        @2
+	stbi_load             @3
+	stbi_image_free       @4
+	stbi_load_from_memory @5
+	stbi_write_png        @6
+	stbi_write_bmp        @7
+	stbi_write_tga        @8
+	stbi_write_hdr        @9
+	stbir_resize_uint8    @10

@@ -1,0 +1,67 @@
+#   Makefile.fpc for indysystemfpc 10.6.2.$WCREV$
+
+[package]
+name=indysystemfpc
+version=10.6.2.$WCREV$
+main=indy
+
+[require]
+packages=fcl-base
+
+[compiler]
+includedir=../Inc
+unittargetdir=lib/$(CPU_TARGET)-$(OS_TARGET)
+unitdir=lib/$(CPU_TARGET)-$(OS_TARGET)
+options=-gl
+
+#Note that we use implicitunits_TARGETOS for all
+#so we can easily modify things when new targets
+#are added.  We have to think years down the line.
+[target]
+units=indysystemfpc
+rsts=IdResourceStrings
+implicitunits=IdAntiFreezeBase \
+  IdBaseComponent \
+  IdCTypes \
+  IdComponent \
+  IdException \
+  IdGlobal \
+  IdResourceStrings \
+  IdStack \
+  IdStackConsts \
+  IdStream \
+  IdStreamVCL \
+  IdStruct
+
+implicitunits_amiga=
+implicitunits_atari=
+implicitunits_beos=
+implicitunits_darwin=IdStackUnix IdStackBSDBase 
+implicitunits_emx=
+implicitunits_freebsd=IdStackUnix IdStackBSDBase
+implicitunits_go32v1=
+implicitunits_go32v2=
+implicitunits_linux=IdStackUnix IdStackBSDBase
+implicitunits_macos=
+implicitunits_morphos=
+implicitunits_netbsd=IdStackUnix IdStackBSDBase
+implicitunits_netware=
+implicitunits_netwlibc=
+implicitunits_openbsd=IdStackUnix IdStackBSDBase
+implicitunits_os2=
+implicitunits_palmos=
+implicitunits_qnx=IdStackUnix IdStackBSDBase
+implicitunits_solaris=IdStackUnix IdStackBSDBase
+implicitunits_watcom=
+implicitunits_win32=IdStackBSDBase IdStackWindows IdWinsock2 IdWship6
+implicitunits_win64=IdStackBSDBase IdStackWindows IdWinsock2 IdWship6
+implicitunits_wince=IdStackBSDBase IdStackWindows IdWinsock2 IdWship6
+implicitunits_wdosx=
+
+[install]
+fpcpackage=y
+fpcsubdir=packages/extra
+buildunit=indysystemfpc
+
+[shared]	
+build=n

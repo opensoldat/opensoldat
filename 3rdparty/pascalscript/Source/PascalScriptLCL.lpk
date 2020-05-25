@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Package Version="4">
+    <Name Value="PascalScriptLCL"/>
+    <AddToProjectUsesSection Value="True"/>
+    <Author Value="Carlo Kok"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <SearchPaths>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+      <Other>
+        <Verbosity>
+          <ShowHints Value="False"/>
+        </Verbosity>
+        <CompilerPath Value="$(CompPath)"/>
+      </Other>
+    </CompilerOptions>
+    <Description Value="RemObjects Pascal Script 
+Created by Carlo Kok
+RemObjects Software
+Fixed for Lazarus by Bogusіaw Brandys
+"/>
+    <License Value="*********************************************************************
+RemObjects Pascal Script
+Created By Carlo Kok 	   			ck@carlo-kok.com
+*********************************************************************
+Copyright (C) 2000-2004 by Carlo Kok, Innerfuse, RemObjects
+
+This software is provided 'as-is', without any expressed or implied
+warranty. In no event will the author be held liable for any damages
+arising from the use of this software.
+Permission is granted to anyone to use this software for any kind of
+application, and to alter it and redistribute it freely, subject to
+the following restrictions:
+1. The origin of this software must not be misrepresented, you must
+   not claim that you wrote the original software.
+2. Altered source versions must be plainly marked as such, and must
+   not be misrepresented as being the original software.
+3. You must have a visible line in your programs aboutbox or
+   documentation that it is made using RemObjects Pascal Script and
+   where RemObjects Pascal Script can be found.
+4. This notice may not be removed or altered from any source
+   distribution.
+
+If you have any questions concerning this license write me (Carlo Kok):
+  ck@carlo-kok.com or try our newsserver:
+  news://news.RemObjects.com/
+
+Carlo Kok
+RemObjects Software
+"/>
+    <Version Build="1"/>
+    <Files Count="17">
+      <Item1>
+        <Filename Value="uPSR_stdctrls.pas"/>
+        <UnitName Value="uPSR_stdctrls"/>
+      </Item1>
+      <Item2>
+        <Filename Value="PascalScript_Core_Reg.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="PascalScript_Core_Reg"/>
+      </Item2>
+      <Item3>
+        <Filename Value="uPSC_buttons.pas"/>
+        <UnitName Value="uPSC_buttons"/>
+      </Item3>
+      <Item4>
+        <Filename Value="uPSC_controls.pas"/>
+        <UnitName Value="uPSC_controls"/>
+      </Item4>
+      <Item5>
+        <Filename Value="uPSC_extctrls.pas"/>
+        <UnitName Value="uPSC_extctrls"/>
+      </Item5>
+      <Item6>
+        <Filename Value="uPSC_forms.pas"/>
+        <UnitName Value="uPSC_forms"/>
+      </Item6>
+      <Item7>
+        <Filename Value="uPSC_graphics.pas"/>
+        <UnitName Value="uPSC_graphics"/>
+      </Item7>
+      <Item8>
+        <Filename Value="uPSC_menus.pas"/>
+        <UnitName Value="uPSC_menus"/>
+      </Item8>
+      <Item9>
+        <Filename Value="uPSC_stdctrls.pas"/>
+        <UnitName Value="uPSC_stdctrls"/>
+      </Item9>
+      <Item10>
+        <Filename Value="uPSComponent_Forms.pas"/>
+        <UnitName Value="uPSComponent_Forms"/>
+      </Item10>
+      <Item11>
+        <Filename Value="uPSComponent_StdCtrls.pas"/>
+        <UnitName Value="uPSComponent_StdCtrls"/>
+      </Item11>
+      <Item12>
+        <Filename Value="uPSR_buttons.pas"/>
+        <UnitName Value="uPSR_buttons"/>
+      </Item12>
+      <Item13>
+        <Filename Value="uPSR_controls.pas"/>
+        <UnitName Value="uPSR_controls"/>
+      </Item13>
+      <Item14>
+        <Filename Value="uPSR_extctrls.pas"/>
+        <UnitName Value="uPSR_extctrls"/>
+      </Item14>
+      <Item15>
+        <Filename Value="uPSR_forms.pas"/>
+        <UnitName Value="UPSR_forms"/>
+      </Item15>
+      <Item16>
+        <Filename Value="uPSR_graphics.pas"/>
+        <UnitName Value="UPSR_graphics"/>
+      </Item16>
+      <Item17>
+        <Filename Value="uPSR_menus.pas"/>
+        <UnitName Value="uPSR_menus"/>
+      </Item17>
+    </Files>
+    <Type Value="RunAndDesignTime"/>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="PascalScriptFCL"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+        <MinVersion Major="1" Valid="True"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+    </PublishOptions>
+    <CustomOptions Items="ExternHelp" Version="2">
+      <_ExternHelp Items="Count"/>
+    </CustomOptions>
+  </Package>
+</CONFIG>
