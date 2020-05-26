@@ -19,6 +19,7 @@ const
   {$ENDIF}
   {$IFDEF DARWIN}
   GNSLIB = 'libGameNetworkingSockets.dylib';
+  {$linklib GameNetworkingSockets}
   {$ENDIF}
   {$IFDEF LINUX}
   GNSLIB = 'libGameNetworkingSockets.so';

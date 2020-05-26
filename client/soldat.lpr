@@ -16,7 +16,6 @@ program soldat;
 {$linklib freetype}
 {$linklib stb}
 {$linklib physfs}
-{$linklib enet}
 {$ENDIF}
 
 uses
