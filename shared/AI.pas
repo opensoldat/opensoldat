@@ -34,7 +34,7 @@ procedure ControlBot(var SpriteC: TSprite);
 implementation
 
 uses
-  Vector, Net, Server, Game, Weapons, Constants, Bullets,Waypoints, 
+  Vector, Net, Server, Game, Weapons, Constants, Bullets,Waypoints,
   NetworkServerMessages, Calc;
 
 // Checks the distance on one axis
@@ -368,25 +368,26 @@ begin
     end;
 
     // Grenade throw
-	if Brain.GrenadeFreq > -1 then begin
-		GR := Brain.GrenadeFreq;
-		if (Weapon.AmmoCount = 0) or (Weapon.FireIntervalCount > 125) then
-		  GR := GR div 2;
-		if (Brain.CurrentWaypoint > 0) and
-		  (BotPath.Waypoint[Brain.CurrentWaypoint].C1 > 0) then
-		  GR := GR div 2;
-		if bots_difficulty.Value < 100 then
-		  GR := GR div 2;
+    if Brain.GrenadeFreq > -1 then
+    begin
+      GR := Brain.GrenadeFreq;
+      if (Weapon.AmmoCount = 0) or (Weapon.FireIntervalCount > 125) then
+        GR := GR div 2;
+      if  (Brain.CurrentWaypoint > 0) and
+          (BotPath.Waypoint[Brain.CurrentWaypoint].C1 > 0) then
+        GR := GR div 2;
+      if bots_difficulty.Value < 100 then
+        GR := GR div 2;
 
-		if bots_difficulty.Value < 201 then
-		  if (Random(GR) = 0)                  and
-			 (DistToTargetX < DIST_FAR)        and
-			 (TertiaryWeapon.AmmoCount > 0)    and
-		   (((DistToTargetY < DIST_VERY_CLOSE) and
-			 (m.y > t.y)) or (m.y < t.y)) then
-			Control.ThrowNade := True;
-	end;
-	
+      if bots_difficulty.Value < 201 then
+        if  (Random(GR) = 0)                    and
+            (DistToTargetX < DIST_FAR)          and
+            (TertiaryWeapon.AmmoCount > 0)      and
+            (((DistToTargetY < DIST_VERY_CLOSE) and
+            (m.y > t.y)) or (m.y < t.y))        then
+          Control.ThrowNade := True;
+    end;
+
     // Knife Throw
     if (Sprite[SNum].CeaseFireCounter < 30)             and
        (Sprite[SNum].Weapon.Num = Guns[KNIFE].Num)      and

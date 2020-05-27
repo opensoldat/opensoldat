@@ -148,7 +148,7 @@ begin
   if (Style = BULLET_STYLE_THROWNKNIFE) and (WeaponActive[KNIFE] = 0) then
   begin
     if KickPlayer(p, True, KICK_CHEAT, DAY, 'Knife-Spawn Cheat') then
-	    Exit;
+      Exit;
   end;
 
   if Style = BULLET_STYLE_M2 then

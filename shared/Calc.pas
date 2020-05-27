@@ -20,7 +20,7 @@ type
   end;
 
 function IsLineIntersectingCircle(Line1, Line2, CircleCenter: TVector2;
-  	Radius: Single): TIntersectionResult;
+    Radius: Single): TIntersectionResult;
 function LineCircleCollision(StartPoint, EndPoint, CircleCenter: TVector2;
     Radius: Single; var CollisionPoint: TVector2): Boolean;
 function PointLineDistance(P1, P2, P3: TVector2): Single;

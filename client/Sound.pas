@@ -77,7 +77,7 @@ begin
 
   ALDevice := alcOpenDevice(nil);
   if ALDevice = nil then
-  	Exit;
+    Exit;
   ALContext := alcCreateContext(ALDevice, nil);
   if ALContext = nil then
     Exit;
@@ -114,9 +114,9 @@ var
   FileBuffer: PHYSFS_Buffer;
 begin
   if not Samp.Loaded then
-  	Result.Loaded := False
+    Result.Loaded := False
   else
-  	Result := Samp;
+    Result := Samp;
 
   FileBuffer := PHYSFS_readBuffer(Name);
   if FileBuffer = nil then 
@@ -128,11 +128,11 @@ begin
     Exit;
 
   BadFormat := False;
-	case Spec.channels of
+  case Spec.channels of
     1:
       case Spec.format of
-  	    AUDIO_U8:
-    	    Format := AL_FORMAT_MONO8;
+        AUDIO_U8:
+          Format := AL_FORMAT_MONO8;
         AUDIO_S16SYS:
           Format := AL_FORMAT_MONO16;
         AUDIO_F32SYS:
@@ -141,9 +141,9 @@ begin
           BadFormat := True;
       end;
     2:
-  	  case Spec.format of
-  	    AUDIO_U8:
-    	    Format := AL_FORMAT_STEREO8;
+      case Spec.format of
+        AUDIO_U8:
+          Format := AL_FORMAT_STEREO8;
         AUDIO_S16SYS:
           Format := AL_FORMAT_STEREO16;
         AUDIO_F32SYS:
@@ -159,7 +159,7 @@ begin
     if Samp.Loaded then
       alDeleteBuffers(1, @Samp.Buffer);
     alGenBuffers(1, @Result.Buffer);
-  	alBufferData(Result.Buffer, Format, DataBuffer, DataLength, Spec.freq);
+    alBufferData(Result.Buffer, Format, DataBuffer, DataLength, Spec.freq);
     Result.Loaded := True;
   end;
   SDL_FreeWAV(DataBuffer);
@@ -408,7 +408,7 @@ var
 begin
 
   if not Samp[SampleNum].Loaded then
-  	Exit;
+    Exit;
 
   if CameraFollowSprite > 0 then
   begin
@@ -432,8 +432,8 @@ begin
         FPlaySound(81 + Random(4), ListenerX, ListenerY, EmitterX, EmitterY, Chan);
       SFX_DIST_M79, SFX_DIST_GRENADE, SFX_DIST_GUN1, SFX_DIST_GUN2, SFX_DIST_GUN3, SFX_DIST_GUN4:
         if Dist > 1 then
-        	Dist := Dist - 1
-      	else
+          Dist := Dist - 1
+        else
           Dist := 1 - 2 * Dist;
     end;
   end;
@@ -455,10 +455,10 @@ begin
   if Chan = -1 then
     for i := RESERVED_SOURCES to MAX_SOURCES - 1 do
     begin
-    	alGetSourcei(Sources[i], AL_SOURCE_STATE, State);
+      alGetSourcei(Sources[i], AL_SOURCE_STATE, State);
       if State <> AL_PLAYING then
       begin
-      	Chan := i;
+        Chan := i;
         Break;
       end;
     end;
@@ -475,9 +475,9 @@ begin
       -SOUND_PANWIDTH/SOUND_METERLENGTH);
     alGetSourcei(Sources[Chan], AL_SOURCE_STATE, State);
     if State = AL_PLAYING then
-    	Exit;
+      Exit;
     if State = AL_PAUSED then
-    	alSourceStop(Sources[Chan]);
+      alSourceStop(Sources[Chan]);
     alSourcei(Sources[Chan], AL_BUFFER, Samp[SampleNum].Buffer);
     alSourcePlay(Sources[Chan]);
   end;
@@ -528,9 +528,9 @@ var
 begin
   alGetSourcei(Sources[Channel], AL_SOURCE_STATE, State);
   if (State = AL_PLAYING) and (Paused) then
-  	alSourcePause(Sources[Channel]);
+    alSourcePause(Sources[Channel]);
   if (State = AL_PAUSED) and (not Paused) then
-  	alSourcePlay(Sources[Channel]);
+    alSourcePlay(Sources[Channel]);
 
   Result := False;
 end;
@@ -540,11 +540,11 @@ var
   i: Integer;
 begin
   if Channel = -1 then
-  	for i := 0 to MAX_SOURCES - 1 do
-    	alSourcef(Sources[i], AL_GAIN, Volume)
+    for i := 0 to MAX_SOURCES - 1 do
+      alSourcef(Sources[i], AL_GAIN, Volume)
   else
-  	alSourcef(Sources[Channel], AL_GAIN, Volume);
-	Result := True;
+    alSourcef(Sources[Channel], AL_GAIN, Volume);
+  Result := True;
 end;
 
 {$IFDEF STEAM}

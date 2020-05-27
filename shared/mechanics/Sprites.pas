@@ -1732,8 +1732,8 @@ begin
       begin
         if What > 0 then
           i := Bullet[What].OwnerWeapon
-      	else
-        	i := -1;
+        else
+          i := -1;
         if (i = Guns[BOW].Num) or  // Shooter is Rambo
            (i = Guns[BOW2].Num) or
            (Weapon.Num = Guns[BOW].Num) or  // Shootee is Rambo
@@ -1905,8 +1905,8 @@ begin
 
   {$IFNDEF SERVER}
   if What > 0 then
-  	if (Where = 12) and ((Bullet[What].OwnerWeapon = Guns[RUGER77].Num)) then
-    	How := HEADCHOP_DEATH;
+    if (Where = 12) and ((Bullet[What].OwnerWeapon = Guns[RUGER77].Num)) then
+      How := HEADCHOP_DEATH;
   {$ENDIF}
   case How of
     NORMAL_DEATH:
@@ -1959,7 +1959,7 @@ begin
               PlaySound(SFX_BRYZG, Sprite[Num].Skeleton.Pos[12]);
 
             if Who = MySprite then
-            	PlaySound(SFX_BOOMHEADSHOT);
+              PlaySound(SFX_BOOMHEADSHOT);
           end;
 
         // siup leb!

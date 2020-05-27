@@ -218,7 +218,7 @@ begin
   Compiler.AddType('TRoundToRange', btEnum);
   AClass := Compiler.AddClass(nil, 'TMathAPI');
   with AClass do
-	begin
+  begin
     RegisterMethod('function Sin(A: Extended): Extended');
     RegisterMethod('function Cos(A: Extended): Extended');
     RegisterMethod('function Tan(A: Extended): Extended');

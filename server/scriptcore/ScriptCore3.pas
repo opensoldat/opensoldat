@@ -450,7 +450,7 @@ end;
 procedure TScriptCore3.Deprecated(FnName: string; Msg: string = '');
 begin
   Self.WriteInfo('*DEPRECATED* Function '
-  	+ FnName + ' is deprecated and will be removed in future version. ' + Msg);
+    + FnName + ' is deprecated and will be removed in future version. ' + Msg);
 end;
 
 function TScriptCore3.Compile: Boolean;
@@ -692,7 +692,7 @@ begin
         else
           OldTeamObj := Self.FGame.Game.Teams[OldTeam];
         Result := Self.FGame.Game.Teams[Team].OnBeforeJoin(
-        	Self.FPlayers.Players[Id],
+          Self.FPlayers.Players[Id],
           Self.FGame.Game.Teams[Team],
           OldTeamObj
         );
@@ -736,7 +736,7 @@ begin
               end;
         Self.FGame.Game.Teams[Team].AddPlayer(Self.FPlayers.Players[Id]);
         if Self.FPlayers.Players.Active.IndexOf(Self.FPlayers.Players[ID]) = -1 then
-        	Self.FPlayers.Players.Active.Add(Self.FPlayers.Players[Id]);
+          Self.FPlayers.Players.Active.Add(Self.FPlayers.Players[Id]);
 
         if Assigned(Self.FGame.Game.OnJoin) then
           Self.FGame.Game.OnJoin(Self.FPlayers.Players[Id],
@@ -1211,7 +1211,7 @@ begin
         Result := Self.FGame.Game.OnTCPCommand(Ip, Port, Command) or Result;
       end;
       if Assigned(Self.FGame.Game.OnAdminCommand) then
-      	Result := Self.FGame.Game.OnAdminCommand(nil, Command) or Result;
+        Result := Self.FGame.Game.OnAdminCommand(nil, Command) or Result;
     except
       on e: Exception do
         Self.HandleException(e);

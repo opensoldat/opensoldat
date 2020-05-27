@@ -1216,7 +1216,7 @@ var
   v: array[0..3] of TGfxVertex;
 begin
   if Texture = 0 then
-  	Exit;
+    Exit;
 
   case Style of
     OBJECT_ALPHA_FLAG, OBJECT_BRAVO_FLAG, OBJECT_POINTMATCH_FLAG:  // Flags

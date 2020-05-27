@@ -61,7 +61,7 @@ type
   TOnCommand = function(Player: TScriptActivePlayer; Command: string): Boolean of object;
 
   TKickReason = (TKickNoResponse, TKickNoCheatResponse,
-  	TKickChangeTeam, TKickPing, TKickFlooding, TKickConsole,
+    TKickChangeTeam, TKickPing, TKickFlooding, TKickConsole,
     TKickConnectionCheat, TKickCheat, TKickLeft, TKickVoted,
     TKickAC, TKickSilent);
 
@@ -1077,7 +1077,7 @@ begin
     Exit;
   end;
   {  TKickReason = (TKickNoResponse, TKickNoCheatResponse,
-  	TKickChangeTeam, TKickPing, TKickFlooding, TKickConsole,
+    TKickChangeTeam, TKickPing, TKickFlooding, TKickConsole,
     TKickConnectionCheat, TKickCheat, TKickLeft, TKickVoted,
     TKickAC); }
   case Reason of
@@ -2265,7 +2265,7 @@ begin
     'function(Player: TActivePlayer; Command: string): Boolean');
 
   Compiler.AddType('TKickReason',
-  	'(TKickNoResponse, TKickNoCheatResponse, TKickChangeTeam, TKickPing, ' +
+    '(TKickNoResponse, TKickNoCheatResponse, TKickChangeTeam, TKickPing, ' +
     'TKickFlooding, TKickConsole, TKickConnectionCheat, TKickCheat, TKickLeft, ' +
     'TKickVoted, TKickAC, TKickSilent)');
 

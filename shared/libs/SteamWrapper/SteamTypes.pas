@@ -3756,10 +3756,10 @@ pGSStatsUnloaded_t = ^GSStatsUnloaded_t;
 
 {
 struct CallbackMsg_t
-	HSteamUser m_hSteamUser; // Specific user to whom this callback applies.
-	int m_iCallback; // Callback identifier.  (Corresponds to the k_iCallback enum in the callback structure.)
-	uint8 *m_pubParam; // Points to the callback structure
-	int m_cubParam; // Size of the data pointed to by m_pubParam
+  HSteamUser m_hSteamUser; // Specific user to whom this callback applies.
+  int m_iCallback; // Callback identifier.  (Corresponds to the k_iCallback enum in the callback structure.)
+  uint8 *m_pubParam; // Points to the callback structure
+  int m_cubParam; // Size of the data pointed to by m_pubParam
 }
 
 CallbackMsg_t = record
