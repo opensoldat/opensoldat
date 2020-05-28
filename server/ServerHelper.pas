@@ -257,11 +257,19 @@ begin
   end;
   FindClose(searchResult);
 
-  SelectedBot := BotList[Random(BotList.Count)];
-  SelectedBot := AnsiReplaceStr(SelectedBot, UserDirectory + 'configs/bots/', '');
-  SelectedBot := AnsiReplaceStr(SelectedBot, '.bot', '');
+  if BotList.Count > 0 then
+  begin
+    SelectedBot := BotList[Random(BotList.Count)];
+    SelectedBot := AnsiReplaceStr(SelectedBot, UserDirectory + 'configs/bots/', '');
+    SelectedBot := AnsiReplaceStr(SelectedBot, '.bot', '');
+  end else
+  begin
+    SelectedBot := 'Dummy';
+  end;
+
   if (SelectedBot = 'Boogie Man') or (SelectedBot = 'Dummy') then
     SelectedBot := 'Sniper';
+
   result := SelectedBot;
 end;
 
