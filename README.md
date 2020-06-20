@@ -1,7 +1,6 @@
 <div align="center">
   <img src="https://i.imgur.com/HrYPYjh.png" />
   <h2>Soldat</h2>
-  <a href="http://discord.gg/soldat"><img src="https://img.shields.io/discord/234733999879094272.svg" /></a>
 </div>
 
 Soldat is a unique 2D (side-view) multiplayer action game. It has been influenced by the best of games such as Liero, Worms, Quake, Counter-Strike, and provides a fast-paced gaming experience with tons of blood and flesh.
