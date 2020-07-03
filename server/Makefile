@@ -1,3 +1,40 @@
+ifeq ($(OS),Windows_NT)
+  SYSTEM = windows
+  ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
+    ARCH = x86_64
+  else
+    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+      ARCH = x86_64
+    endif
+    ifeq ($(PROCESSOR_ARCHITECTURE),x86)
+      ARCH = i386
+    endif
+    ifeq ($(PROCESSOR_ARCHITECTURE),ARM64)
+      ARCH = arm
+    endif
+  endif
+else
+  ifeq ($(shell uname), Linux)
+    SYSTEM = linux
+  else
+    ifeq ($(shell uname), Darwin)
+      SYSTEM = osx
+    else
+      SYSTEM = unknown
+    endif
+  endif
+    UNAME_P := $(shell uname -p)
+    ifeq ($(UNAME_P),x86_64)
+      ARCH = x86_64
+    endif
+    ifneq ($(filter %86,$(UNAME_P)),)
+      ARCH = i386
+    endif
+    ifneq ($(filter arm%,$(UNAME_P)),)
+      ARCH = arm
+    endif
+endif
+
 ifeq ($(mode),release)
   CFLAGS = -O3 -Os -CX -OoREGVAR -Xs -XX -vewibq -vn-h-
   ifeq ($(MAKECMDGOALS),windows_x86_64)
@@ -39,13 +76,15 @@ COMPILER = fpc -l -B -MDelphi -Scgi ${CFLAGS} \
 -dPS_USESSUPPORT \
 -vm3123 -vm3124 # hide fgl inlining warnings
 
-all: windows windows_i386 linux linux_i386
+build: $(SYSTEM)_$(ARCH)
 
-windows: windows_i386
+all: windows linux osx
 
-linux: linux_i386
+windows: windows_$(ARCH)
 
-osx: osx_i386
+linux: linux_$(ARCH)
+
+osx: osx_$(ARCH)
 
 windows_i386:
 	$(COMPILER) -o./build/soldatserver.exe -FU./build/win32 -Twin32 -Pi386 soldatserver.lpr
