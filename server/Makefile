@@ -1,11 +1,11 @@
 ifeq ($(mode),release)
   CFLAGS = -O3 -Os -CX -OoREGVAR -Xs -XX -vewibq -vn-h-
-    ifeq ($(MAKECMDGOALS),windows_x86_64)
-      CFLAGS += -WB -WR
-    endif
-    ifeq ($(MAKECMDGOALS),windows_i386)
-      CFLAGS += -WB -WR
-    endif
+  ifeq ($(MAKECMDGOALS),windows_x86_64)
+    CFLAGS += -WB -WR
+  endif
+  ifeq ($(MAKECMDGOALS),windows_i386)
+    CFLAGS += -WB -WR
+  endif
 else
   mode = debug
   CFLAGS = -O1 -g -gl -l -vewnibq -vh- -dDEBUG -dDEVELOPMENT -gs -gw -Ci -Co -Cr -CR -Ct  -gl -gt
