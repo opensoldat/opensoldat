@@ -48,21 +48,27 @@ linux: linux_i386
 osx: osx_i386
 
 windows_i386:
+	mkdir -p build/win32
 	$(COMPILER) -o./build/soldatserver.exe -FU./build/win32 -Twin32 -Pi386 soldatserver.lpr
 
 windows_x86_64:
+	mkdir -p build/win64
 	$(COMPILER) -o./build/soldatserver_x64.exe -FU./build/win64 -Twin64 -Px86_64 soldatserver.lpr
 
 linux_i386:
+	mkdir -p build/linux
 	$(COMPILER) -o./build/soldatserver -k-rpath -k'\$$ORIGIN/' -FU./build/linux -Tlinux -Pi386 soldatserver.lpr
 
 linux_x86_64:
+	mkdir -p build/linux
 	$(COMPILER) -o./build/soldatserver_x64 -k-rpath -k'\$$ORIGIN/' -FU./build/linux -Tlinux -Px86_64 soldatserver.lpr
 
 osx_i386:
+	mkdir -p build/darwin
 	$(COMPILER) -o./build/soldatserver -Fu./client/macOS/Frameworks -Fl../client/macOS/Frameworks -k"-F../client/macOS/Frameworks" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -FU./build/darwin -Tdarwin -Pi386 soldatserver.lpr
 
 osx_x86_64:
+	mkdir -p build/darwin
 	$(COMPILER) -o./build/soldatserver_x64 -Fu./client/macOS/Frameworks -Fl../client/macOS/Frameworks -k"-F../client/macOS/Frameworks" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -FU./build/darwin -Tdarwin -Px86_64 soldatserver.lpr
 
 clean:
