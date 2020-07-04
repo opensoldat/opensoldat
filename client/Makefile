@@ -1,3 +1,5 @@
+.PHONY: build all windows linux osx windows_i386 windows_x86_64 linux_i386 linux_x86_64 osx_i386 osx_x86_64 clean
+
 ifeq ($(OS),Windows_NT)
   SYSTEM = windows
   ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
