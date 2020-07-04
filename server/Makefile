@@ -1,3 +1,5 @@
+.PHONY: build all windows linux osx windows_i386 windows_x86_64 linux_i386 linux_x86_64 osx_i386 osx_x86_64 clean
+
 ifeq ($(mode),release)
   CFLAGS = -O3 -Os -CX -OoREGVAR -Xs -XX -vewibq -vn-h-
     ifeq ($(MAKECMDGOALS),windows_x86_64)
