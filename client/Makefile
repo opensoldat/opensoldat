@@ -87,28 +87,38 @@ linux: linux_$(ARCH)
 osx: osx_$(ARCH)
 
 windows_i386:
-	mkdir -p build/win32
-	$(COMPILER) -o./build/soldat.exe -FU./build/win32 -Twin32 -Pi386 soldat.lpr
+	mkdir -p build/i386-win32
+	$(COMPILER) -o./build/soldat.exe -FU./build/i386-win32 -Twin32 -Pi386 soldat.lpr
 
 windows_x86_64:
-	mkdir -p build/win64
-	$(COMPILER) -o./build/soldat_x64.exe -FU./build/win64 -Twin64 -Px86_64 soldat.lpr
+	mkdir -p build/x86_64-win64
+	$(COMPILER) -o./build/soldat_x64.exe -FU./build/x86_64-win64 -Twin64 -Px86_64 soldat.lpr
 
 linux_i386:
-	mkdir -p build/linux
-	$(COMPILER) -o./build/soldat -k-rpath -k'\$$ORIGIN/' -FU./build/linux -Tlinux -Pi386 soldat.lpr
+	mkdir -p build/i386-linux
+	$(COMPILER) -o./build/soldat -k-rpath -k'\$$ORIGIN/' -FU./build/i386-linux -Tlinux -Pi386 soldat.lpr
 
 linux_x86_64:
-	mkdir -p build/linux
-	$(COMPILER) -o./build/soldat_x64 -k-rpath -k'\$$ORIGIN/' -FU./build/linux -Tlinux -Px86_64 soldat.lpr
+	mkdir -p build/x86_64-linux
+	$(COMPILER) -o./build/soldat_x64 -k-rpath -k'\$$ORIGIN/' -FU./build/x86_64-linux -Tlinux -Px86_64 soldat.lpr
 
 osx_i386:
-	mkdir -p build/darwin
-	$(COMPILER) -o./build/soldat -Fu./macOS/Frameworks -Fl./macOS/Frameworks -Fu./libs/macOS -k"-FmacOS/Frameworks" -k"-framework" -k"OpenAL" -k"-framework" -k"OpenGL" -k"-framework" -k"SDL2" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -dOPENGL_FRAMEWORK  -FU./build/darwin -Tdarwin -Pi386 soldat.lpr
+	mkdir -p build/i386-darwin
+	$(COMPILER) -o./build/soldat -Fu./macOS/Frameworks -Fl./macOS/Frameworks -Fu./libs/macOS -k"-FmacOS/Frameworks" -k"-framework" -k"OpenAL" -k"-framework" -k"OpenGL" -k"-framework" -k"SDL2" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -dOPENGL_FRAMEWORK  -FU./build/i386-darwin -Tdarwin -Pi386 soldat.lpr
 
 osx_x86_64:
-	mkdir -p build/darwin
-	$(COMPILER) -o./build/soldat_x64 -Fu./macOS/Frameworks -Fl./macOS/Frameworks -Fu./libs/macOS -k"-FmacOS/Frameworks" -k"-framework" -k"OpenAL" -k"-framework" -k"OpenGL" -k"-framework" -k"SDL2" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -dOPENGL_FRAMEWORK  -FU./build/darwin -Tdarwin -Px86_64 soldat.lpr
+	mkdir -p build/x86_64-darwin
+	$(COMPILER) -o./build/soldat_x64 -Fu./macOS/Frameworks -Fl./macOS/Frameworks -Fu./libs/macOS -k"-FmacOS/Frameworks" -k"-framework" -k"OpenAL" -k"-framework" -k"OpenGL" -k"-framework" -k"SDL2" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -dOPENGL_FRAMEWORK  -FU./build/x86_64-darwin -Tdarwin -Px86_64 soldat.lpr
 
 clean:
-	rm -rf build/linux/* build/win32/* build/win64/* build/darwin/* build/soldat build/soldat.exe build/soldat_x64 build/soldat_x64.exe
+	rm -rf \
+build/i386-linux/* \
+build/x86_64-linux/* \
+build/i386-win32/* \
+build/x86_64-win64/* \
+build/i386-darwin/* \
+build/x86_64-darwin/* \
+build/soldat \
+build/soldat.exe \
+build/soldat_x64 \
+build/soldat_x64.exe
