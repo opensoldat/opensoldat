@@ -67,8 +67,8 @@ COMPILER = fpc -l -B -MDelphi -Scgi ${CFLAGS} \
 -Fu../3rdparty/Indy10/Lib/Core \
 -Fu../shared \
 -Fu../shared/libs \
--Fu../shared/libs/PhysFS \
 -Fu../shared/libs/GameNetworkingSockets \
+-Fu../shared/libs/PhysFS \
 -Fu../shared/libs/SteamWrapper \
 -Fu../shared/mechanics \
 -Fu../shared/network \
