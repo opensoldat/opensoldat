@@ -1,7 +1,18 @@
 .PHONY: build all windows linux osx windows_i386 windows_x86_64 linux_i386 linux_x86_64 osx_i386 osx_x86_64 clean
 
+TRUE = true
+MKDIR = mkdir -p
+PATHSEP = /
+
 ifeq ($(OS),Windows_NT)
   SYSTEM = windows
+
+  ifdef ComSpec
+    TRUE = echo.>NUL
+    MKDIR = mkdir
+    PATHSEP = \\
+  endif
+
   ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
     ARCH = x86_64
   else
@@ -87,27 +98,27 @@ linux: linux_$(ARCH)
 osx: osx_$(ARCH)
 
 windows_i386:
-	mkdir -p build/i386-win32
+	$(MKDIR) build$(PATHSEP)i386-win32 || $(TRUE)
 	$(COMPILER) -o./build/soldat.exe -FU./build/i386-win32 -Twin32 -Pi386 soldat.lpr
 
 windows_x86_64:
-	mkdir -p build/x86_64-win64
+	$(MKDIR) build$(PATHSEP)x86_64-win64 || $(TRUE)
 	$(COMPILER) -o./build/soldat_x64.exe -FU./build/x86_64-win64 -Twin64 -Px86_64 soldat.lpr
 
 linux_i386:
-	mkdir -p build/i386-linux
+	$(MKDIR) build$(PATHSEP)i386-linux || $(TRUE)
 	$(COMPILER) -o./build/soldat -k-rpath -k'\$$ORIGIN/' -FU./build/i386-linux -Tlinux -Pi386 soldat.lpr
 
 linux_x86_64:
-	mkdir -p build/x86_64-linux
+	$(MKDIR) build$(PATHSEP)x86_64-linux || $(TRUE)
 	$(COMPILER) -o./build/soldat_x64 -k-rpath -k'\$$ORIGIN/' -FU./build/x86_64-linux -Tlinux -Px86_64 soldat.lpr
 
 osx_i386:
-	mkdir -p build/i386-darwin
+	$(MKDIR) build$(PATHSEP)i386-darwin || $(TRUE)
 	$(COMPILER) -o./build/soldat -Fu./macOS/Frameworks -Fl./macOS/Frameworks -Fu./libs/macOS -k"-FmacOS/Frameworks" -k"-framework" -k"OpenAL" -k"-framework" -k"OpenGL" -k"-framework" -k"SDL2" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -dOPENGL_FRAMEWORK  -FU./build/i386-darwin -Tdarwin -Pi386 soldat.lpr
 
 osx_x86_64:
-	mkdir -p build/x86_64-darwin
+	$(MKDIR) build$(PATHSEP)x86_64-darwin || $(TRUE)
 	$(COMPILER) -o./build/soldat_x64 -Fu./macOS/Frameworks -Fl./macOS/Frameworks -Fu./libs/macOS -k"-FmacOS/Frameworks" -k"-framework" -k"OpenAL" -k"-framework" -k"OpenGL" -k"-framework" -k"SDL2" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -dOPENGL_FRAMEWORK  -FU./build/x86_64-darwin -Tdarwin -Px86_64 soldat.lpr
 
 clean:
