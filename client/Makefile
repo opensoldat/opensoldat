@@ -99,6 +99,18 @@ linux: linux_$(ARCH)
 
 osx: osx_$(ARCH)
 
+linux_common: create_build_dir stb game_networking_sockets
+
+create_build_dir: 
+	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM) || $(TRUE)
+
+stb:
+	cd libs$(PATHSEP)stb && make -f makefile && cd ..$(PATHSEP).. || $(TRUE)
+
+game_networking_sockets:
+	test -d "build$(PATHSEP)GameNetworkingSockets" && cd build && cd GameNetworkingSockets && git checkout --recurse-submodules && git pull --recurse-submodules --all -f && cd .. || $(TRUE)
+	test ! -d "build$(PATHSEP)GameNetworkingSockets" && cd build && git clone --recurse-submodules --recursive https://github.com/ValveSoftware/GameNetworkingSockets/ && cd GameNetworkingSockets && cmake . && make && cp -a libGameNetworkingSockets.so ..$(PATHSEP)shared$(PATHSEP)libs$(PATHSEP)GameNetworkingSockets && cd ..$(PATHSEP).. || $(TRUE) 
+
 windows_i386:
 	$(MKDIR) build$(PATHSEP)i386-win32 || $(TRUE)
 	$(COMPILER) -o./build/$(EXECUTABLE).exe -FU./build/i386-win32 -Twin32 -Pi386 $(EXECUTABLE).lpr
@@ -107,13 +119,11 @@ windows_x86_64:
 	$(MKDIR) build$(PATHSEP)x86_64-win64 || $(TRUE)
 	$(COMPILER) -o./build/$(EXECUTABLE)_x64.exe -FU./build/x86_64-win64 -Twin64 -Px86_64 $(EXECUTABLE).lpr
 
-linux_i386:
-	$(MKDIR) build$(PATHSEP)i386-linux || $(TRUE)
+linux_i386: linux_common
 	$(COMPILER) -o./build/$(EXECUTABLE) -k-rpath -k'\$$ORIGIN/' -FU./build/i386-linux -Tlinux -Pi386 $(EXECUTABLE).lpr
 
-linux_x86_64:
-	$(MKDIR) build$(PATHSEP)x86_64-linux || $(TRUE)
-	$(COMPILER) -o./build/$(EXECUTABLE)_x64 -k-rpath -k'\$$ORIGIN/' -FU./build/x86_64-linux -Tlinux -Px86_64 $(EXECUTABLE).lpr
+linux_x86_64: linux_common
+	$(COMPILER) -o./build/$(EXECUTABLE)_x64 -k-rpath -k'\$$ORIGIN/' -FU. /build/x86_64-linux -Tlinux -Px86_64 $(EXECUTABLE).lpr
 
 osx_i386:
 	$(MKDIR) build$(PATHSEP)i386-darwin || $(TRUE)
