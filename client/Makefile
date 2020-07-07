@@ -103,7 +103,7 @@ linux_common: create_build_dir stb game_networking_sockets
 
 create_build_dir: 
 	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM) || $(TRUE)
-
+	echo "480" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
 stb:
 	cd libs$(PATHSEP)stb && make -f makefile && cd ..$(PATHSEP).. || $(TRUE)
 
