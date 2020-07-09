@@ -40,7 +40,7 @@ else
   ifeq ($(shell uname -o), GNU/Linux)
     SYSTEM = linux
     steam = on
-    SYSTEM_ARCH=linux
+    SYSTEM_ARCH = linux
   else
     ifeq ($(shell uname), Darwin)
       SYSTEM = osx
