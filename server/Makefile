@@ -40,10 +40,12 @@ else
   ifeq ($(shell uname -o), GNU/Linux)
     SYSTEM = linux
     steam = on
+    SYSTEM_ARCH=linux
   else
     ifeq ($(shell uname), Darwin)
       SYSTEM = osx
       steam = on
+      SYSTEM_ARCH = darwin
     else
       SYSTEM = unknown
     endif
@@ -118,12 +120,12 @@ windows_$(ARCH):
 linux_$(ARCH):
 	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM) || $(TRUE)
 	echo -e "480\n638500" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
-	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -k-rpath -k'\$$ORIGIN/' -FU./build/$(ARCH)-linux -Tlinux -P$(ARCH) $(EXECUTABLE).lpr
+	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -k-rpath -k'\$$ORIGIN/' -FU./build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
 osx_$(ARCH):
 	$(MKDIR) build$(PATHSEP)$(ARCH)-darwin || $(TRUE)
 	echo -e "480\n638500" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
-	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -Fu./client/macOS/Frameworks -Fl../client/macOS/Frameworks -k"-F../client/macOS/Frameworks" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -FU./build/$(ARCH)-darwin -Tdarwin -P$(ARCH) $(EXECUTABLE).lpr
+	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -Fu./client/macOS/Frameworks -Fl../client/macOS/Frameworks -k"-F../client/macOS/Frameworks" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -FU./build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
 
 clean:

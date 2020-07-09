@@ -29,17 +29,19 @@ ifeq ($(OS),Windows_NT)
     endif
     ifeq ($(PROCESSOR_ARCHITECTURE),ARM64)
       ARCH = arm
-      SYSTEM_ARCH = winarm64
+      SYSTEM_ARCH = arm
     endif
   endif
 else
   ifeq ($(shell uname -o), GNU/Linux)
     SYSTEM = linux
     steam = on
+    SYSTEM_ARCH = linux
   else
     ifeq ($(shell uname), Darwin)
       SYSTEM = osx
       steam = on
+      SYSTEM_ARCH = darwin
     else
       SYSTEM = unknown
     endif
@@ -115,7 +117,7 @@ linux_$(ARCH):
 	cd libs$(PATHSEP)stb && make -f makefile && cd ..$(PATHSEP).. || $(TRUE)
 	test -d "build$(PATHSEP)GameNetworkingSockets" && cd build && cd GameNetworkingSockets && git checkout --recurse-submodules && git pull --recurse-submodules --all -f && cd .. || $(TRUE)
 	test ! -d "build$(PATHSEP)GameNetworkingSockets" && cd build && git clone --recurse-submodules --recursive https://github.com/ValveSoftware/GameNetworkingSockets/ && cd GameNetworkingSockets && cmake . && make && cp -a libGameNetworkingSockets.so ..$(PATHSEP)shared$(PATHSEP)libs$(PATHSEP)GameNetworkingSockets && cd ..$(PATHSEP).. || $(TRUE) 
-	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -k-rpath -k'\$$ORIGIN/' -FU. /build/$(ARCH)-linux -Tlinux -P$(ARCH) $(EXECUTABLE).lpr
+	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -k-rpath -k'\$$ORIGIN/' -FU. /build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
 osx_$(ARCH):
 	$(MKDIR) build$(PATHSEP)$(ARCH)-darwin || $(TRUE)
@@ -123,7 +125,7 @@ osx_$(ARCH):
 	cd libs$(PATHSEP)stb && make -f makefile && cd ..$(PATHSEP).. || $(TRUE)
 	test -d "build$(PATHSEP)GameNetworkingSockets" && cd build && cd GameNetworkingSockets && git checkout --recurse-submodules && git pull --recurse-submodules --all -f && cd .. || $(TRUE)
 	test ! -d "build$(PATHSEP)GameNetworkingSockets" && cd build && git clone --recurse-submodules --recursive https://github.com/ValveSoftware/GameNetworkingSockets/ && cd GameNetworkingSockets && cmake . && make && cp -a libGameNetworkingSockets.so ..$(PATHSEP)shared$(PATHSEP)libs$(PATHSEP)GameNetworkingSockets && cd ..$(PATHSEP).. || $(TRUE) 
-	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -Fu./macOS/Frameworks -Fl./macOS/Frameworks -Fu./libs/macOS -k"-FmacOS/Frameworks" -k"-framework" -k"OpenAL" -k"-framework" -k"OpenGL" -k"-framework" -k"SDL2" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -dOPENGL_FRAMEWORK  -FU./build/$(ARCH)-darwin -Tdarwin -P$(ARCH) $(EXECUTABLE).lpr
+	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -Fu./macOS/Frameworks -Fl./macOS/Frameworks -Fu./libs/macOS -k"-FmacOS/Frameworks" -k"-framework" -k"OpenAL" -k"-framework" -k"OpenGL" -k"-framework" -k"SDL2" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -dOPENGL_FRAMEWORK  -FU./build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
 clean:
 	rm -rf \
