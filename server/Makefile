@@ -18,6 +18,7 @@ ifeq ($(OS),Windows_NT)
   ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
     ARCH = x86_64
     EXECUTABLE_ARCH = $(EXECUTABLE)_x64
+    SYSTEM_ARCH = win64
   else
     ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
       ARCH = x86_64
@@ -64,10 +65,7 @@ endif
 
 ifeq ($(mode),release)
   CFLAGS = -O3 -Os -CX -OoREGVAR -Xs -XX -vewibq -vn-h-
-  ifeq ($(MAKECMDGOALS),windows_x86_64)
-    CFLAGS += -WB -WR
-  endif
-  ifeq ($(MAKECMDGOALS),windows_i386)
+  ifeq ($(MAKECMDGOALS),windows_$(ARCH))
     CFLAGS += -WB -WR
   endif
 else

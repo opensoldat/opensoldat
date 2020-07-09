@@ -61,10 +61,7 @@ endif
 
 ifeq ($(mode),release)
   CFLAGS = -O3 -Os -CX -OoREGVAR -Xs -XX -vewibq -vn-h- -dTESTING
-  ifeq ($(MAKECMDGOALS),windows_x86_64)
-    CFLAGS += -WB -WR
-  endif
-  ifeq ($(MAKECMDGOALS),windows_i386)
+  ifeq ($(MAKECMDGOALS),windows_$(ARCH))
     CFLAGS += -WB -WR
   endif
 else
