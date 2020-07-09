@@ -2953,7 +2953,7 @@ begin
         NetworkStats := UDP.GetQuickConnectionStatus(UDP.Peer);
         SetFontStyle(FONT_SMALLEST);
         GfxDrawText('Ping: ' + NetworkStats.m_nPing.ToString, 460 * x, 40 * y);
-        GfxDrawText('Quality: Local ' + Single(NetworkStats.m_flConnectionQualityLocal * 100).ToString(ffFixed, 7, 0) + 
+        GfxDrawText('Quality: Local ' + Single(NetworkStats.m_flConnectionQualityLocal * 100).ToString(ffFixed, 7, 0) +
           '% Remote -  ' + Single(NetworkStats.m_flConnectionQualityRemote * 100).ToString(ffFixed, 7, 0) + ' %', 460 * x, 50 * y);
         GfxDrawText('Traffic Out: ' + NetworkStats.m_flOutPacketsPerSec.ToString(ffFixed, 7, 1) + ' pkt/s ' + NetworkStats.m_flOutBytesPerSec.ToString(ffFixed, 7, 1) + ' B/s', 460 * x, 60 * y);
         GfxDrawText('Traffic In: ' + NetworkStats.m_flInPacketsPerSec.ToString(ffFixed, 7, 1) + ' pkt/s ' + NetworkStats.m_flInBytesPerSec.ToString(ffFixed, 7, 1) + ' B/s', 460 * x, 70 * y);

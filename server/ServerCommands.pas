@@ -284,7 +284,7 @@ begin
   begin
     j := RemoteIPs.IndexOf(Name);
     RemoteIPs.Delete(j);
-    MainConsole.Console('IP number ' + Name + 
+    MainConsole.Console('IP number ' + Name +
       ' removed from Remote Admins', CLIENT_MESSAGE_COLOR, Sender);
     SaveTxtLists;
   end;

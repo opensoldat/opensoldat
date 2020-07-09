@@ -916,7 +916,7 @@ begin
                 begin
                   if Sprite[HoldingSprite].Player.ControlMethod = BOT then
                     if Random(Sprite[HoldingSprite].Brain.ChatFreq div 3) = 0 then
-                      ServerSendStringMessage(WideString(Sprite[HoldingSprite].Brain.ChatWinning), 
+                      ServerSendStringMessage(WideString(Sprite[HoldingSprite].Brain.ChatWinning),
                         ALL_PLAYERS, HoldingSprite, MSGTYPE_PUB);
                 end;
 
@@ -1572,7 +1572,7 @@ begin
   // send net info
   {$IFDEF SERVER}
   ServerThingMustSnapshot(Num);
-  {$ENDIF}  
+  {$ENDIF}
 end;
 
 procedure TThing.MoveSkeleton(x1, y1: Single; FromZero: Boolean);

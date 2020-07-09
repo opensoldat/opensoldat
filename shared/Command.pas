@@ -2,7 +2,7 @@ unit Command;
 
 interface
 
-uses 
+uses
   classes, contnrs, sysutils, variants, Constants;
 
 procedure CommandInit();
@@ -10,7 +10,7 @@ function ParseInput(Input: String): Boolean; overload;
 function ParseInput(Input: String; Sender: Byte): Boolean; overload;
 function LoadConfig(ConfigName: AnsiString): Boolean;
 
-const 
+const
   MAX_COMMANDS = 1024;
 
 type
@@ -33,13 +33,13 @@ type
   procedure RunDeferredCommands();
   function CommandTarget(Target: AnsiString; Sender: Byte): TCommandTargets;
 
-var 
+var
   Commands: TFPHashList;
   DeferredCommands: TStringList;
   DeferredInitialized: Boolean = False;
 
 implementation
-  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Cvar, strutils, Game, Net 
+  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Cvar, strutils, Game, Net
     {$IFDEF DEVELOPMENT} ,GameNetworkingSockets ,ctypes ,TraceLog {$ENDIF}
     {$IFDEF SERVER}, NetworkUtils{$ENDIF};
 
@@ -635,7 +635,7 @@ begin
   CommandAdd('netconfig_list', CommandNetConfgList, 'List GNS cvars', []);
 
   CommandAdd('netconfig_loglevel', CommandNetLogLevel, 'Set GNS log level', []);
-  
+
   {$ENDIF}
 end;
 

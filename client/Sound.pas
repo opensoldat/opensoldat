@@ -119,9 +119,9 @@ begin
     Result := Samp;
 
   FileBuffer := PHYSFS_readBuffer(Name);
-  if FileBuffer = nil then 
+  if FileBuffer = nil then
     Exit;
-  
+
   WavFile := SDL_RWFromMem(FileBuffer, Length(FileBuffer));
 
   if SDL_LoadWAV_RW(WavFile, 1, @Spec, @DataBuffer, @DataLength) = nil then

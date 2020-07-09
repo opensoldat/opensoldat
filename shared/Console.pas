@@ -91,7 +91,7 @@ begin
 
   {$IFDEF SERVER}
   if TerminalColors then
-    WriteLn(Format(#27'[38;2;%D;%D;%Dm%S'#27'[0m', 
+    WriteLn(Format(#27'[38;2;%D;%D;%Dm%S'#27'[0m',
       [(Col and $00FF0000) shr 16, // r
       (Col and $0000FF00) shr 8,  // g
       (Col and $000000FF), // b

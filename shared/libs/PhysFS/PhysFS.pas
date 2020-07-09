@@ -50,7 +50,7 @@ begin
 end;
 
 function PHYSFS_readAsStream(Name: PChar): TStream;
-var 
+var
   FileBuffer: PHYSFS_Buffer;
   FileStream: TStream;
   i: Integer;
@@ -61,13 +61,13 @@ begin
 
   for i := 0 to Length(FileBuffer)-1 do
     FileStream.WriteByte(FileBuffer[i]);
-  
+
   FileStream.Position := 0;
   Result := FileStream;
 end;
 
 procedure PHYSFS_ReadLn(FileHandle: PHYSFS_File; var Line: AnsiString);
-var 
+var
   c: Char = ' ';
   b: ShortString = '';
 begin

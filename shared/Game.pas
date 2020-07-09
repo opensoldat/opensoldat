@@ -163,9 +163,9 @@ uses
   Sound, GameMenus, ClientGame, GameRendering, GameStrings, InterfaceGraphics,
   {$ENDIF}
   Net, Demo,
-  {$IFNDEF SERVER} 
+  {$IFNDEF SERVER}
   NetworkClientGame
-  {$ELSE} 
+  {$ELSE}
   NetworkServerGame, NetworkServerSprite
   {$ENDIF};
 

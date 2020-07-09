@@ -14,7 +14,7 @@ procedure MakeRain;
 procedure MakeSandStorm;
 procedure MakeSnow;
 implementation
-uses 
+uses
   Client, Cvar, Sound, Constants;
 
 // Backgorund animation and sound for rain

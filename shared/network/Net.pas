@@ -1107,7 +1107,7 @@ var
   InitSettings: SteamNetworkingConfigValue_t;
 begin
   Debug('Connecting to: ' + Host + ':' + IntToStr(Port));
-  
+
   Result := True;
 
   ServerAddress.Clear;
@@ -1264,7 +1264,7 @@ begin
 
     MsgID_SyncCvars:
       ClientHandleSyncCvars(IncomingMsg);
-    
+
     {$IFDEF STEAM}
     MsgID_VoiceData:
       ClientHandleVoiceData(IncomingMsg);
@@ -1447,7 +1447,7 @@ begin
   else
     //break;
   end;
-  
+
 end;
 
 procedure TServerNetwork.HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
@@ -1521,7 +1521,7 @@ begin
 
     MsgID_ClientFreeCam:
       ServerHandleClientFreeCam(IncomingMsg);
-    
+
     {$IFDEF STEAM}
     MsgID_VoiceData:
       ServerHandleVoiceData(IncomingMsg);

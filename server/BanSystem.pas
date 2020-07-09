@@ -44,7 +44,7 @@ var
 
 implementation
 
-uses 
+uses
   Server, fpmasks, classes, sysutils, Util, ServerHelper;
 
 procedure AddBannedIP(IP: ShortString; Reason: string;

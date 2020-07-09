@@ -24,7 +24,7 @@ procedure DeInitTranslation();
 implementation
 
 function InitTranslation(Filename: String): Boolean;
-var 
+var
   TranslationStream: TStream;
 begin
   Result := False;

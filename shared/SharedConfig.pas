@@ -230,7 +230,7 @@ begin
   Result := False;
   ini := nil;
   conf := nil;
-                                                             
+
   if not FileExists(FilePath) then
     Exit;
 

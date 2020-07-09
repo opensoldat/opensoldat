@@ -123,7 +123,7 @@ begin
     cschat := '(RADIO) ' + cschat;
   if Player.Muted = 1 then
     cschat := '(MUTED) ' + cschat;
-  
+
   MainConsole.Console(cschat, CHAT_MESSAGE_COLOR);
 
   if Player.Muted = 1 then

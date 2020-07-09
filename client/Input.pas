@@ -86,7 +86,7 @@ begin
   Binds[id].keyMod := Modifier;
 
   Debug('[INPUT] BindKey id: ' + IntToStr(id) + ' Key: ' + key + ' (' +
-        IntToStr(Binds[id].keyId) + '), Mod: ' + IntToStr(Binds[id].keyMod) + 
+        IntToStr(Binds[id].keyId) + '), Mod: ' + IntToStr(Binds[id].keyMod) +
         ' Command: ' + command);
   SetLength(Binds, Length(Binds) + 1);
   Result := True;

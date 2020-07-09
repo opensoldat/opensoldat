@@ -310,7 +310,7 @@ type
   PSteamNetworkingIPAddr = ^SteamNetworkingIPAddr;
 {$PACKRECORDS 8}
 
-type 
+type
  SteamNetworkingIdentity = record
   /// Type of identity.
   m_eType: ESteamNetworkingIdentityType;
@@ -439,7 +439,7 @@ type ESteamNetworkingConnectionState = (
   /// read it back.  Typically this is not a problem, as application protocols that utilize
   /// the lingering functionality are designed for the remote host to wait for the response
   /// before sending any more data.
-  k_ESteamNetworkingConnectionState_Linger = -2, 
+  k_ESteamNetworkingConnectionState_Linger = -2,
 
   /// Connection is completely inactive and ready to be destroyed
   k_ESteamNetworkingConnectionState_Dead = -3,
@@ -481,7 +481,7 @@ type ESteamNetConnectionEnd =
   // 2xxx: Application ended the connection in some sort of exceptional
   //       or unusual manner that might indicate a bug or configuration
   //       issue.
-  // 
+  //
   k_ESteamNetConnectionEnd_AppException_Min = 2000,
     k_ESteamNetConnectionEnd_AppException_Generic = k_ESteamNetConnectionEnd_AppException_Min,
     // Use codes in this range for "unusual" disconnection
@@ -793,7 +793,7 @@ type SteamNetworkingMessage_t = record
   /// - You might have closed the connection, so fetching the user data
   ///   would not be possible.
   ///
-  /// Not used when sending messages, 
+  /// Not used when sending messages,
   m_nConnUserData: int64;
 
   /// Local timestamp when the message was received
@@ -819,7 +819,7 @@ type SteamNetworkingMessage_t = record
   //void (*m_pfnRelease)(SteamNetworkingMessage_t *pMsg);
   //procedure m_pfnRelease(); cdecl;
   m_pfnRelease: procedure(pMsg: Pointer);
-  
+
   /// When using ISteamNetworkingMessages, the channel number the message was received on
   /// (Not used for messages sent or received on "connections")
   m_nChannel: Integer;
@@ -904,7 +904,7 @@ const k_nSteamNetworkingSend_NoDelay: Integer = 4;
 // If a message is dropped for these reasons, k_EResultIgnored will be returned.
 //FIXME: const k_nSteamNetworkingSend_UnreliableNoDelay: Integer = k_nSteamNetworkingSend_Unreliable or k_nSteamNetworkingSend_NoDelay or k_nSteamNetworkingSend_NoNagle;
 
-// Reliable message send. Can send up to k_cbMaxSteamNetworkingSocketsMessageSizeSend bytes in a single message. 
+// Reliable message send. Can send up to k_cbMaxSteamNetworkingSocketsMessageSizeSend bytes in a single message.
 // Does fragmentation/re-assembly of messages under the hood, as well as a sliding window for
 // efficient sends of large chunks of data.
 //
@@ -1059,7 +1059,7 @@ type ESteamNetworkingConfigValue = (
   k_ESteamNetworkingConfig_SendBufferSize = 9,
 
   /// [connection int32] Minimum/maximum send rate clamp, 0 is no limit.
-  /// This value will control the min/max allowed sending rate that 
+  /// This value will control the min/max allowed sending rate that
   /// bandwidth estimation is allowed to reach.  Default is 0 (no-limit)
   k_ESteamNetworkingConfig_SendRateMin = 10,
   k_ESteamNetworkingConfig_SendRateMax = 11,
@@ -1069,7 +1069,7 @@ type ESteamNetworkingConfigValue = (
   /// queued for a delay equal to the Nagle timer value.  This is to ensure
   /// that if the application sends several small messages rapidly, they are
   /// coalesced into a single packet.
-  /// See historical RFC 896.  Value is in microseconds. 
+  /// See historical RFC 896.  Value is in microseconds.
   /// Default is 5000us (5ms).
   k_ESteamNetworkingConfig_NagleTime = 12,
 
@@ -1148,8 +1148,8 @@ type ESteamNetworkingConfigValue = (
   /// packet, so setting this to 1 may greatly disrupt communications.
   k_ESteamNetworkingConfig_SDRClient_ConsecutitivePingTimeoutsFailInitial = 19,
 
-  /// [int32 global] If N consecutive pings to a port fail, after having received successful 
-  /// communication, mark that port as unavailable for a while, and try a 
+  /// [int32 global] If N consecutive pings to a port fail, after having received successful
+  /// communication, mark that port as unavailable for a while, and try a
   /// different one.
   k_ESteamNetworkingConfig_SDRClient_ConsecutitivePingTimeoutsFail = 20,
 
@@ -1190,7 +1190,7 @@ type ESteamNetworkingConfigValue = (
 
   //
   // Log levels for debuging information.  A higher priority
-  // (lower numeric value) will cause more stuff to be printed.  
+  // (lower numeric value) will cause more stuff to be printed.
   //
   k_ESteamNetworkingConfig_LogLevel_AckRTT = 13, // [connection int32] RTT calculations for inline pings and replies
   k_ESteamNetworkingConfig_LogLevel_PacketDecode = 14, // [connection int32] log SNP packets send
@@ -1501,7 +1501,7 @@ type
     function CreateSocketPair(pOutConnection1: PHSteamNetConnection; pOutConnection2: PHSteamNetConnection; bUseNetworkLoopback: Boolean; const pIdentity1: PSteamNetworkingIdentity; const pIdentity2: PSteamNetworkingIdentity): Boolean;
     function GetIdentity(pIdentity: PSteamNetworkingIdentity): Boolean;
 
-    function InitAuthentication(): ESteamNetworkingAvailability; 
+    function InitAuthentication(): ESteamNetworkingAvailability;
     function GetAuthenticationStatus(pDetails: PSteamNetAuthenticationStatus_t): ESteamNetworkingAvailability;
 
     function CreatePollGroup(): HSteamNetPollGroup;
@@ -1556,11 +1556,11 @@ type
     //function SetConnectionConfigValueInt32(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;cdecl;
     //function SetConnectionConfigValueFloat(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;cdecl;
     //function SetConnectionConfigValueString(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;cdecl;
-   
+
     {$ENDIF}
     function SetConfigValue(eValue: ESteamNetworkingConfigValue; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr;
       eDataType: ESteamNetworkingConfigDataType; const pValue: Pointer): Boolean;
-    
+
     {$IFDEF STEAM2}
     function SetConfigValueStruct(opt: PSteamNetworkingConfigValue_t; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr): Boolean;
     {$ENDIF}
@@ -1570,7 +1570,7 @@ type
     function GetFirstConfigValue(): ESteamNetworkingConfigValue;
     {$IFDEF STEAM}
     //procedure SteamNetworkingIPAddr_ToString(pAddr: PSteamNetworkingIPAddr; buf: PChar; cbBuf: csize_t; bWithPort: Boolean); cdecl;
-    //function SteamNetworkingIPAddr_ParseString(pAddr: PSteamNetworkingIPAddr; pszStr: PChar): Boolean; 
+    //function SteamNetworkingIPAddr_ParseString(pAddr: PSteamNetworkingIPAddr; pszStr: PChar): Boolean;
     //procedure SteamNetworkingIdentity_ToString(const pIdentity: PSteamNetworkingIdentity; buf: PChar;cbBuf: csize_t);
     //function SteamNetworkingIdentity_ParseString(pIdentity: PSteamNetworkingIdentity; sizeofIdentity: csize_t; pszStr: PChar): Boolean;
     {$ENDIF}
@@ -1586,7 +1586,7 @@ type
     function GetIPv4(): uint32;
     procedure SetIPv6LocalHost(nPort: uint16);
     function IsLocalHost(): Boolean;
-    procedure ToString(buf: PChar; cbBuf: csize_t; bWithPort: Boolean); 
+    procedure ToString(buf: PChar; cbBuf: csize_t; bWithPort: Boolean);
     function ParseString(pszStr: PChar): Boolean;
   end;
 
@@ -1735,7 +1735,7 @@ function TSteamNetworkingSockets.ReceiveMessagesOnPollGroup(hPollGroup: HSteamNe
 begin
   Result := SteamAPI_ISteamNetworkingSockets_ReceiveMessagesOnPollGroup(GameNetworkingSocketsInterface, hPollGroup, ppOutMessages, nMaxMessages);
 end;
-function TSteamNetworkingSockets.InitAuthentication(): ESteamNetworkingAvailability; 
+function TSteamNetworkingSockets.InitAuthentication(): ESteamNetworkingAvailability;
 begin
   Result := SteamAPI_ISteamNetworkingSockets_InitAuthentication(GameNetworkingSocketsInterface);
 end;
@@ -1825,7 +1825,7 @@ function TSteamNetworkingIPAddrHelper.IsLocalHost(): Boolean;
 begin
   Result := SteamAPI_SteamNetworkingIPAddr_IsLocalHost(@Self);
 end;
-procedure TSteamNetworkingIPAddrHelper.ToString(buf: PChar; cbBuf: csize_t; bWithPort: Boolean); 
+procedure TSteamNetworkingIPAddrHelper.ToString(buf: PChar; cbBuf: csize_t; bWithPort: Boolean);
 begin
   SteamAPI_SteamNetworkingIPAddr_ToString(@Self, buf, cbBuf, bWithPort);
 end;
