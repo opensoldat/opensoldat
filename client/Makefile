@@ -29,8 +29,9 @@ ifeq ($(OS),Windows_NT)
     endif
   endif
 else
-  ifeq ($(shell uname), Linux)
+  ifeq ($(shell uname -o), GNU/Linux)
     SYSTEM = linux
+    steam = on
   else
     ifeq ($(shell uname), Darwin)
       SYSTEM = osx
@@ -38,16 +39,16 @@ else
       SYSTEM = unknown
     endif
   endif
-    UNAME_P := $(shell uname -p)
-    ifeq ($(UNAME_P),x86_64)
-      ARCH = x86_64
-    endif
-    ifneq ($(filter %86,$(UNAME_P)),)
-      ARCH = i386
-    endif
-    ifneq ($(filter arm%,$(UNAME_P)),)
-      ARCH = arm
-    endif
+  UNAME_M := $(shell uname -m)
+  ifeq ($(UNAME_M),x86_64)
+    ARCH = x86_64
+  endif
+  ifneq ($(filter %86,$(UNAME_M)),)
+    ARCH = i386
+  endif
+  ifneq ($(filter arm%,$(UNAME_M)),)
+    ARCH = arm
+  endif
 endif
 
 ifeq ($(mode),release)
@@ -119,10 +120,10 @@ windows_x86_64:
 	$(MKDIR) build$(PATHSEP)x86_64-win64 || $(TRUE)
 	$(COMPILER) -o./build/$(EXECUTABLE)_x64.exe -FU./build/x86_64-win64 -Twin64 -Px86_64 $(EXECUTABLE).lpr
 
-linux_i386: linux_common
+linux_$(ARCH): linux_common
 	$(COMPILER) -o./build/$(EXECUTABLE) -k-rpath -k'\$$ORIGIN/' -FU./build/i386-linux -Tlinux -Pi386 $(EXECUTABLE).lpr
 
-linux_x86_64: linux_common
+linux_$(ARCH): linux_common
 	$(COMPILER) -o./build/$(EXECUTABLE)_x64 -k-rpath -k'\$$ORIGIN/' -FU. /build/x86_64-linux -Tlinux -Px86_64 $(EXECUTABLE).lpr
 
 osx_i386:
