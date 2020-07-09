@@ -113,18 +113,18 @@ linux: linux_$(ARCH)
 
 osx: osx_$(ARCH)
 
+unix_common:
+	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM_ARCH) || $(TRUE)
+	echo -e "480\n638500" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
+
 windows_$(ARCH):
 	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM_ARCH) || $(TRUE)
 	$(COMPILER) -o./build/$(EXECUTABLE_ARCH).exe -FU./build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
-linux_$(ARCH):
-	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM) || $(TRUE)
-	echo -e "480\n638500" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
+linux_$(ARCH): unix_common
 	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -k-rpath -k'\$$ORIGIN/' -FU./build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
-osx_$(ARCH):
-	$(MKDIR) build$(PATHSEP)$(ARCH)-darwin || $(TRUE)
-	echo -e "480\n638500" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
+osx_$(ARCH): unix_common
 	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -Fu./client/macOS/Frameworks -Fl../client/macOS/Frameworks -k"-F../client/macOS/Frameworks" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -FU./build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
 

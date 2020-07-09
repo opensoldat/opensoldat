@@ -107,24 +107,21 @@ linux: linux_$(ARCH)
 
 osx: osx_$(ARCH)
 
+unix_common:
+	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM_ARCH) || $(TRUE)
+	echo -e "480\n638490" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
+	cd libs$(PATHSEP)stb && make -f makefile && cd ..$(PATHSEP).. || $(TRUE)
+	test -d "build$(PATHSEP)GameNetworkingSockets" && cd build && cd GameNetworkingSockets && git checkout --recurse-submodules && git pull --recurse-submodules --all -f && cd .. || $(TRUE)
+	test ! -d "build$(PATHSEP)GameNetworkingSockets" && cd build && git clone --recurse-submodules --recursive https://github.com/ValveSoftware/GameNetworkingSockets/ && cd GameNetworkingSockets && cmake . && make && cp -a libGameNetworkingSockets.so ..$(PATHSEP)shared$(PATHSEP)libs$(PATHSEP)GameNetworkingSockets && cd ..$(PATHSEP).. || $(TRUE) 
+
 windows_$(ARCH):
 	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM_ARCH) || $(TRUE)
 	$(COMPILER) -o./build/$(EXECUTABLE_ARCH).exe -FU./build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
-linux_$(ARCH):
-	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM) || $(TRUE)
-	echo -e "480\n638490" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
-	cd libs$(PATHSEP)stb && make -f makefile && cd ..$(PATHSEP).. || $(TRUE)
-	test -d "build$(PATHSEP)GameNetworkingSockets" && cd build && cd GameNetworkingSockets && git checkout --recurse-submodules && git pull --recurse-submodules --all -f && cd .. || $(TRUE)
-	test ! -d "build$(PATHSEP)GameNetworkingSockets" && cd build && git clone --recurse-submodules --recursive https://github.com/ValveSoftware/GameNetworkingSockets/ && cd GameNetworkingSockets && cmake . && make && cp -a libGameNetworkingSockets.so ..$(PATHSEP)shared$(PATHSEP)libs$(PATHSEP)GameNetworkingSockets && cd ..$(PATHSEP).. || $(TRUE) 
+linux_$(ARCH): unix_common
 	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -k-rpath -k'\$$ORIGIN/' -FU. /build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
-osx_$(ARCH):
-	$(MKDIR) build$(PATHSEP)$(ARCH)-darwin || $(TRUE)
-	echo -e "480\n638490" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
-	cd libs$(PATHSEP)stb && make -f makefile && cd ..$(PATHSEP).. || $(TRUE)
-	test -d "build$(PATHSEP)GameNetworkingSockets" && cd build && cd GameNetworkingSockets && git checkout --recurse-submodules && git pull --recurse-submodules --all -f && cd .. || $(TRUE)
-	test ! -d "build$(PATHSEP)GameNetworkingSockets" && cd build && git clone --recurse-submodules --recursive https://github.com/ValveSoftware/GameNetworkingSockets/ && cd GameNetworkingSockets && cmake . && make && cp -a libGameNetworkingSockets.so ..$(PATHSEP)shared$(PATHSEP)libs$(PATHSEP)GameNetworkingSockets && cd ..$(PATHSEP).. || $(TRUE) 
+osx_$(ARCH): unix_common
 	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -Fu./macOS/Frameworks -Fl./macOS/Frameworks -Fu./libs/macOS -k"-FmacOS/Frameworks" -k"-framework" -k"OpenAL" -k"-framework" -k"OpenGL" -k"-framework" -k"SDL2" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -dOPENGL_FRAMEWORK  -FU./build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
 
 clean:
