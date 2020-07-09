@@ -8,7 +8,7 @@ PATHSEP = /
 
 ifeq ($(OS),Windows_NT)
   SYSTEM = windows
-
+  
   ifdef ComSpec
     TRUE = echo.>NUL
     MKDIR = mkdir
@@ -17,15 +17,22 @@ ifeq ($(OS),Windows_NT)
 
   ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
     ARCH = x86_64
+    EXECUTABLE_ARCH = $(EXECUTABLE)_x64
   else
     ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
       ARCH = x86_64
+      EXECUTABLE_ARCH = $(EXECUTABLE)_x64
+      SYSTEM_ARCH = win64
     endif
     ifeq ($(PROCESSOR_ARCHITECTURE),x86)
       ARCH = i386
+      EXECUTABLE_ARCH = $(EXECUTABLE)
+      SYSTEM_ARCH = win32
     endif
     ifeq ($(PROCESSOR_ARCHITECTURE),ARM64)
       ARCH = arm
+      EXECUTABLE_ARCH = $(EXECUTABLE)_arm
+      SYSTEM_ARCH = arm
     endif
   endif
 else
@@ -35,6 +42,7 @@ else
   else
     ifeq ($(shell uname), Darwin)
       SYSTEM = osx
+      steam = on
     else
       SYSTEM = unknown
     endif
@@ -42,12 +50,15 @@ else
   UNAME_M := $(shell uname -m)
   ifeq ($(UNAME_M),x86_64)
     ARCH = x86_64
+    EXECUTABLE_ARCH = $(EXECUTABLE)_x64
   endif
   ifneq ($(filter %86,$(UNAME_M)),)
     ARCH = i386
+    EXECUTABLE_ARCH = $(EXECUTABLE)
   endif
   ifneq ($(filter arm%,$(UNAME_M)),)
     ARCH = arm
+    EXECUTABLE_ARCH = $(EXECUTABLE)_arm
   endif
 endif
 
@@ -102,31 +113,20 @@ linux: linux_$(ARCH)
 
 osx: osx_$(ARCH)
 
-linux_common:
+windows_$(ARCH):
+	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM_ARCH) || $(TRUE)
+	$(COMPILER) -o./build/$(EXECUTABLE_ARCH).exe -FU./build/$(ARCH)-$(SYSTEM_ARCH) -T$(SYSTEM_ARCH) -P$(ARCH) $(EXECUTABLE).lpr
+
+linux_$(ARCH):
 	$(MKDIR) build$(PATHSEP)$(ARCH)-$(SYSTEM) || $(TRUE)
 	echo -e "480\n638500" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
+	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -k-rpath -k'\$$ORIGIN/' -FU./build/$(ARCH)-linux -Tlinux -P$(ARCH) $(EXECUTABLE).lpr
 
-windows_i386:
-	$(MKDIR) build$(PATHSEP)i386-win32 || $(TRUE)
-	$(COMPILER) -o./build/$(EXECUTABLE).exe -FU./build/i386-win32 -Twin32 -Pi386 $(EXECUTABLE).lpr
+osx_$(ARCH):
+	$(MKDIR) build$(PATHSEP)$(ARCH)-darwin || $(TRUE)
+	echo -e "480\n638500" &> build$(PATHSEP)steam_appid.txt || $(TRUE)
+	$(COMPILER) -o./build/$(EXECUTABLE_ARCH) -Fu./client/macOS/Frameworks -Fl../client/macOS/Frameworks -k"-F../client/macOS/Frameworks" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -FU./build/$(ARCH)-darwin -Tdarwin -P$(ARCH) $(EXECUTABLE).lpr
 
-windows_x86_64:
-	$(MKDIR) build$(PATHSEP)x86_64-win64 || $(TRUE)
-	$(COMPILER) -o./build/$(EXECUTABLE)_x64.exe -FU./build/x86_64-win64 -Twin64 -Px86_64 $(EXECUTABLE).lpr
-
-linux_i386: linux_common
-	$(COMPILER) -o./build/$(EXECUTABLE) -k-rpath -k'\$$ORIGIN/' -FU./build/i386-linux -Tlinux -Pi386 $(EXECUTABLE).lpr
-
-linux_x86_64: linux_common
-	$(COMPILER) -o./build/$(EXECUTABLE)_x64 -k-rpath -k'\$$ORIGIN/' -FU./build/x86_64-linux -Tlinux -Px86_64 $(EXECUTABLE).lpr
-
-osx_i386:
-	$(MKDIR) build$(PATHSEP)i386-darwin || $(TRUE)
-	$(COMPILER) -o./build/$(EXECUTABLE) -Fu./client/macOS/Frameworks -Fl../client/macOS/Frameworks -k"-F../client/macOS/Frameworks" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -FU./build/i386-darwin -Tdarwin -Pi386 $(EXECUTABLE).lpr
-
-osx_x86_64:
-	$(MKDIR) build$(PATHSEP)x86_64-darwin || $(TRUE)
-	$(COMPILER) -o./build/$(EXECUTABLE)_x64 -Fu./client/macOS/Frameworks -Fl../client/macOS/Frameworks -k"-F../client/macOS/Frameworks" -k"-rpath" -k"@executable_path" -k"-rpath" -k"@executable_path/../Frameworks" -FU./build/x86_64-darwin -Tdarwin -Px86_64 $(EXECUTABLE).lpr
 
 clean:
 	rm -rf \
