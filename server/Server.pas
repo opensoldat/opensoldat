@@ -490,7 +490,6 @@ var
   bFailed: Boolean;
   Data: Pointer;
 begin
-  
   SteamAPI_ManualDispatch_RunFrame(SteamAPI.SteamPipeHandle);
   while SteamAPI_ManualDispatch_GetNextCallback(SteamAPI.SteamPipeHandle, @callback) do
   begin
@@ -515,7 +514,6 @@ begin
     SteamAPI_ManualDispatch_FreeLastCallback(SteamAPI.SteamPipeHandle);
   end;
 end;
-
 {$ENDIF}
 
 procedure ActivateServer;
@@ -567,7 +565,7 @@ begin
   MainConsole.ScrollTickMax := 150;
   MainConsole.NewMessageWait := 150;
   MainConsole.AlphaCount := 255;
-  
+
   if GetEnvironmentVariable('COLORTERM') <> '' then
     MainConsole.TerminalColors := True;
 

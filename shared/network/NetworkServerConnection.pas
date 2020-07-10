@@ -462,7 +462,7 @@ begin
 
   StringToArray(PlayersList.ModName, fs_mod.Value);
   PlayersList.ModChecksum := CustomModChecksum;
-  
+
   StringToArray(PlayersList.MapName, Map.Name);
   PlayersList.MapChecksum := MapChecksum;
 

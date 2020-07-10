@@ -97,7 +97,7 @@ begin
     col := TEAMCHAT_MESSAGE_COLOR;
     prefix := iif(MsgType = MSGTYPE_RADIO, '(RADIO)', _('(TEAM)')) + ' ';
   end;
-    
+
   if Length(cs) < MORECHATTEXT then
     MainConsole.Console(prefix + '[' + WideString(Sprite[i].Player.Name) + '] ' + cs, col)
   else

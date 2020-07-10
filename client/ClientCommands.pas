@@ -10,7 +10,7 @@ implementation
 
 uses
   {$IFDEF STEAM}Steam,{$ENDIF}
-  Client, Command, Util, strutils, Game, ClientGame, Sound, 
+  Client, Command, Util, strutils, Game, ClientGame, Sound,
   GameRendering, NetworkClientMessages, Demo, GameStrings, Net,
   Sprites, Constants, classes, sysutils, Input;
 
@@ -51,7 +51,7 @@ begin
 end;
 
 procedure CommandConnect(Args: array of AnsiString; Sender: Byte);
-var 
+var
   S: String;
 begin
   if Length(Args) <= 1 then

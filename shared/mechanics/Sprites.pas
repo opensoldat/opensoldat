@@ -1845,11 +1845,11 @@ begin
       begin
         if Player.ControlMethod = BOT then
           if Random(Brain.ChatFreq div 2) = 0 then
-            ServerSendStringMessage(WideString(Brain.ChatDead), 
+            ServerSendStringMessage(WideString(Brain.ChatDead),
               ALL_PLAYERS, Num, MSGTYPE_PUB);
         if (Who <> Num) and (Sprite[Who].Player.ControlMethod = BOT) then
           if Random(Sprite[Who].Brain.ChatFreq div 3) = 0 then
-            ServerSendStringMessage(WideString(Sprite[Who].Brain.ChatKill), 
+            ServerSendStringMessage(WideString(Sprite[Who].Brain.ChatKill),
               ALL_PLAYERS, Who, MSGTYPE_PUB);
       end;
 
@@ -2934,9 +2934,9 @@ begin
 
       teamcol := TeamCollides(w, Player.Team, False);
 
-      if ((Map.PolyType[w] <> POLY_TYPE_DOESNT) and 
+      if ((Map.PolyType[w] <> POLY_TYPE_DOESNT) and
           (Map.PolyType[w] <> POLY_TYPE_ONLY_BULLETS) and teamcol and
-          (Map.PolyType[w] <> POLY_TYPE_ONLY_FLAGGERS) and 
+          (Map.PolyType[w] <> POLY_TYPE_ONLY_FLAGGERS) and
           (Map.PolyType[w] <> POLY_TYPE_NOT_FLAGGERS)) or
           ((HoldedThing <> 0) and (Map.PolyType[w] = POLY_TYPE_ONLY_FLAGGERS)) or
           ((HoldedThing = 0) and (Map.PolyType[w] = POLY_TYPE_NOT_FLAGGERS)) then
@@ -3367,7 +3367,7 @@ begin
       if Random(10 * Brain.ChatFreq) = 0 then
         ServerSendStringMessage(WideString(Brain.ChatLowHealth), ALL_PLAYERS, Num, MSGTYPE_PUB);
     end;
-  {$ENDIF} 
+  {$ENDIF}
 end;
 
 procedure TSprite.FreeControls;

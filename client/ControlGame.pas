@@ -637,7 +637,7 @@ var
 begin
   Event := Default(TSDL_Event);
   ChatEnabled := Length(ChatText) > 0;
-  
+
   while SDL_PollEvent(@Event) = 1 do
   begin
     case Event.type_ of
@@ -647,7 +647,7 @@ begin
       end;
 
       SDL_KEYDOWN: begin
-        if not KeyDown(Event.key) then 
+        if not KeyDown(Event.key) then
           KeyStatus[Event.key.keysym.scancode] := True;
       end;
 
@@ -670,7 +670,7 @@ begin
         begin
           Str := WideString(UTF8String(RawByteString(PChar(@Event.text.text[0]))));
           Str := FilterChatText(Str);
-          
+
           if (ChatText = '/') and (Str = '/') and (Length(LastChatText) > 1) then
           begin
             ChatChanged := True;

@@ -524,7 +524,7 @@ begin
     Sprite[MySprite].Player.PingTime :=
       Sprite[MySprite].Player.PingTicks * 1000 div 60;
   end;
-  
+
   ClientPong(PMsg_Ping(NetMessage^.m_pData)^.PingNum);
 
   ClientStopMovingCounter := CLIENTSTOPMOVE_RETRYS;

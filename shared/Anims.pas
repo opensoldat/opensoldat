@@ -73,7 +73,7 @@ var
 begin
   if not PHYSFS_Exists(PChar(Filename)) then
     Exit;
-  
+
   NumFrames := 1;
 
   // default settings

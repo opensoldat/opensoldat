@@ -1426,7 +1426,7 @@ constructor TSteam.Init;
 begin
   if not SteamAPI_Init() then
     raise Exception.Create('SteamAPI_Init has failed');
-  
+
   SteamPipeHandle := SteamAPI_GetHSteamPipe();
 
   if SteamPipeHandle = 0 then
