@@ -33,9 +33,9 @@ Soldat compiles on Windows, Linux and macOS.
 
 ### Compilation using Makefiles
 
-1. Compile options: make build -e ARCH=(x86_64|x86|arm) SYSTEM=(windows|linux|osx) \
-                    SYSTEM_ARCH=(win64,win32,arm,linux,darwin) steam=(on|off) \
-		    ARCH_EXT=(_x64|_arm|"")
+1. Compile options: `make build -e ARCH=(x86_64|x86|arm) SYSTEM=(windows|linux|osx) \
+                     SYSTEM_ARCH=(win64,win32,arm,linux,darwin) steam=(on|off) \
+                     ARCH_EXT=(_x64|_arm|"")`
 2. Compile server: `cd server; make linux`
 3. Compile client: `cd client; make linux`
 4. Run server: `server/build/soldatserver$(ARCH_EXT)`
