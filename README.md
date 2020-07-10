@@ -33,7 +33,6 @@ Soldat compiles on Windows, Linux and macOS.
 
 ### Compilation using Makefiles
 
-0. Create build directory structure: `mkdir -p server/build/linux; mkdir -p client/build/linux`
 1. Compile server: `cd server; make linux_x86_64` (on Windows: `make windows_x86_64`, on MacOS: `make osx_x86_64`)
 2. Compile client: `cd client; make linux_x86_64`
 3. Run server: `server/build/soldatserver_x64`
