@@ -1,5 +1,14 @@
-unit Steam;
+{*******************************************************}
+{                                                       }
+{       Steam Unit for SOLDAT                           }
+{                                                       }
+{       Copyright (c) 2020 Soldat Team                  }
+{                                                       }
+{       For use with SteamWorks SDK 1.48a               }
+{                                                       }
+{*******************************************************}
 
+unit Steam;
 
 interface
 
