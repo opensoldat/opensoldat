@@ -33,7 +33,14 @@ Soldat compiles on Windows, Linux and macOS.
 
 ### Compilation using Makefiles
 
-1. Compile server: `cd server; make linux_x86_64` (on Windows: `make windows_x86_64`, on MacOS: `make osx_x86_64`)
-2. Compile client: `cd client; make linux_x86_64`
-3. Run server: `server/build/soldatserver_x64`
-4. Run client: `client/build/soldat_x64 -join 127.0.0.1 23073`
+#### Compile server
+
+1. Open commandline in server folder
+2. run `make`
+3. the executable can be found in the build folder (run with `soldatserver`)
+
+#### Compile client
+
+1. Open commandline in client folder
+2. run `make`
+3. the executable can be found in the build folder (run with `soldat -join 127.0.0.1 23073`)
