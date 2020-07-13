@@ -1,7 +1,17 @@
+{*******************************************************}
+{                                                       }
+{       Steam Unit for SOLDAT                           }
+{                                                       }
+{       Copyright (c) 2020 Soldat Team                  }
+{                                                       }
+{       For use with SteamWorks SDK 1.48a               }
+{                                                       }
+{*******************************************************}
+
 unit Steam;
 
-
 interface
+
 uses
   cmem, sysutils, ctypes, SteamTypes, GameNetworkingSockets;
 
@@ -49,7 +59,6 @@ procedure SteamAPI_ManualDispatch_FreeLastCallback(hSteamPipe: HSteamPipe); cdec
 /// Return the call result for the specified call on the specified pipe.  You really should
 /// only call this in a handler for SteamAPICallCompleted_t callback.
 function SteamAPI_ManualDispatch_GetAPICallResult(hSteamPipe: HSteamPipe; hSteamAPICall: SteamAPICall_t; pCallback: Pointer; cubCallback: Integer; iCallbackExpected: Integer; pbFailed: PBoolean): Boolean; cdecl; external STEAMLIB;
-
 
 
 function SteamInternal_CreateInterface(ver: PChar): Pointer; cdecl; external STEAMLIB;
@@ -293,22 +302,18 @@ function SteamAPI_ISteamMatchmaking_SetLobbyOwner(SteamInterface: ISteamMatchmak
 function SteamAPI_ISteamMatchmaking_SetLinkedLobby(SteamInterface: ISteamMatchmaking; steamIDLobby: TSteamID; steamIDLobbyDependent: TSteamID): Boolean; cdecl; external STEAMLIB;
 
 
-
 procedure SteamAPI_ISteamMatchmakingServerListResponse_ServerResponded(SteamInterface: ISteamMatchmakingServerListResponse; hRequest: HServerListRequest; iServer: Longint); cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamMatchmakingServerListResponse_ServerFailedToRespond(SteamInterface: ISteamMatchmakingServerListResponse; hRequest: HServerListRequest; iServer: Longint); cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamMatchmakingServerListResponse_RefreshComplete(SteamInterface: ISteamMatchmakingServerListResponse; hRequest: HServerListRequest; response: EMatchMakingServerResponse); cdecl; external STEAMLIB;
-
 
 
 procedure SteamAPI_ISteamMatchmakingPingResponse_ServerResponded(SteamInterface: ISteamMatchmakingPingResponse; server: Pgameserveritem_t); cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamMatchmakingPingResponse_ServerFailedToRespond(SteamInterface: ISteamMatchmakingPingResponse); cdecl; external STEAMLIB;
 
 
-
 procedure SteamAPI_ISteamMatchmakingPlayersResponse_AddPlayerToList(SteamInterface: ISteamMatchmakingPlayersResponse; pchName: PChar; nScore: Longint; flTimePlayed: Single); cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamMatchmakingPlayersResponse_PlayersFailedToRespond(SteamInterface: ISteamMatchmakingPlayersResponse); cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamMatchmakingPlayersResponse_PlayersRefreshComplete(SteamInterface: ISteamMatchmakingPlayersResponse); cdecl; external STEAMLIB;
-
 
 
 procedure SteamAPI_ISteamMatchmakingRulesResponse_RulesResponded(SteamInterface: ISteamMatchmakingRulesResponse; pchRule: PChar; pchValue: PChar); cdecl; external STEAMLIB;
@@ -1021,10 +1026,8 @@ function SteamAPI_ISteamNetworkingSockets_GetCertificateRequest(SteamInterface: 
 function SteamAPI_ISteamNetworkingSockets_SetCertificate(SteamInterface: ISteamNetworkingSockets; pCertificate: Pointer; cbCertificate: Longint; errMsg: PSteamNetworkingErrMsg): Boolean; cdecl; external STEAMLIB;
 
 
-
 function SteamAPI_ISteamNetworkingConnectionCustomSignaling_SendSignal(SteamInterface: ISteamNetworkingConnectionCustomSignaling; hConn: HSteamNetConnection; info: PSteamNetConnectionInfo_t; pMsg: Pointer; cbMsg: Longint): Boolean; cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamNetworkingConnectionCustomSignaling_Release(SteamInterface: ISteamNetworkingConnectionCustomSignaling); cdecl; external STEAMLIB;
-
 
 
 function SteamAPI_ISteamNetworkingCustomSignalingRecvContext_OnConnectRequest(SteamInterface: ISteamNetworkingCustomSignalingRecvContext; hConn: HSteamNetConnection; identityPeer: PSteamNetworkingIdentity): ISteamNetworkingConnectionCustomSignaling; cdecl; external STEAMLIB;
@@ -1065,8 +1068,6 @@ procedure SteamAPI_ISteamNetworkingUtils_SteamNetworkingIPAddr_ToString(SteamInt
 function SteamAPI_ISteamNetworkingUtils_SteamNetworkingIPAddr_ParseString(SteamInterface: ISteamNetworkingUtils; pAddr: pSteamNetworkingIPAddr; pszStr: PChar): Boolean; cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamNetworkingUtils_SteamNetworkingIdentity_ToString(SteamInterface: ISteamNetworkingUtils; identity: PSteamNetworkingIdentity; buf: PChar; cbBuf: uint32); cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SteamNetworkingIdentity_ParseString(SteamInterface: ISteamNetworkingUtils; pIdentity: pSteamNetworkingIdentity; pszStr: PChar): Boolean; cdecl; external STEAMLIB;
-
-
 
 
 function SteamAPI_SteamGameServer_v013(): ISteamGameServer; cdecl; external STEAMLIB;
