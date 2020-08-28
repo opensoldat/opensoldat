@@ -144,7 +144,8 @@
             <Verbosity>
               <ShowHints Value="False"/>
             </Verbosity>
-            <CustomOptions Value="-dDEVELOPMENT"/>
+            <CustomOptions Value="-dDEBUG
+-dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
       </Item4>
@@ -222,7 +223,8 @@
             </Debugging>
           </Linking>
           <Other>
-            <CustomOptions Value="-dDEVELOPMENT"/>
+            <CustomOptions Value="-dDEBUG
+-dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
       </Item6>
@@ -306,7 +308,8 @@
               <ShowNotes Value="False"/>
               <ShowHints Value="False"/>
             </Verbosity>
-            <CustomOptions Value="-dDEVELOPMENT"/>
+            <CustomOptions Value="-dDEBUG
+-dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
       </Item8>
@@ -395,7 +398,8 @@
               <ShowNotes Value="False"/>
               <ShowHints Value="False"/>
             </Verbosity>
-            <CustomOptions Value="-dDEVELOPMENT"/>
+            <CustomOptions Value="-dDEBUG
+-dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
       </Item10>
@@ -478,7 +482,8 @@
             </Debugging>
           </Linking>
           <Other>
-            <CustomOptions Value="-dDEVELOPMENT"/>
+            <CustomOptions Value="-dDEBUG
+-dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
       </Item12>
@@ -835,7 +840,8 @@
         <ShowNotes Value="False"/>
         <ShowHints Value="False"/>
       </Verbosity>
-      <CustomOptions Value="-dDEVELOPMENT"/>
+      <CustomOptions Value="-dDEBUG
+-dDEVELOPMENT"/>
     </Other>
   </CompilerOptions>
   <Debugging>
