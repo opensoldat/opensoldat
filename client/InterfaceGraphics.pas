@@ -1887,6 +1887,7 @@ var
   WideScreenCut: Boolean;
   Str: WideString;
   NetworkStats: SteamNetworkingQuickConnectionStatus;
+  SniperLine: Boolean;
 begin
   SpriteMe := NIL;
   T := @Textures;
@@ -2161,8 +2162,10 @@ begin
       and not (DemoPlayer.Active and (not demo_showcrosshair.Value))
       and not ((SpectNumber > 0) and (SpectNumber <= 32) and (Sprite[SpectNumber].Player.DemoPlayer = False)) then
     begin
+      SniperLine := ui_sniperline.Value and sv_sniperline.Value;
+
       // Set base scale for the crosshair
-      if SniperLine = 1 then
+      if SniperLine then
         CursorScale := 0.5
       else
         CursorScale := 1;
@@ -2199,7 +2202,7 @@ begin
       end
       else
       begin
-        if SniperLine = 1 then
+        if SniperLine then
           Alfa := ui_status_transparency.Value div 2
         else
           Alfa := ui_status_transparency.Value;
@@ -2207,7 +2210,7 @@ begin
         CursorColor := $FFFFFF;
       end;
 
-      if SniperLine = 1 then
+      if SniperLine then
       begin
         CharacterOffset.x := GameWidthHalf - CameraX + SpriteMe.Skeleton.Pos[15].x;
         CharacterOffset.y := GameHeightHalf - CameraY + SpriteMe.Skeleton.Pos[15].y;

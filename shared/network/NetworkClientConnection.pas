@@ -414,6 +414,9 @@ begin
     end;
   end;
 
+  if ui_sniperline.Value and not sv_sniperline.Value then
+    MainConsole.Console(_('Sniper Line disabled on this server'), WARNING_MESSAGE_COLOR);
+
   StartHealth := DEFAULT_HEALTH;
   if sv_realisticmode.Value then
   begin

@@ -367,12 +367,7 @@ begin
 
   Action := Bind.Action;
 
-  if Action = TAction.SniperLine then
-  begin
-    if not sv_sniperline.Value then
-      SniperLine := not SniperLine;
-  end
-  else if Action = TAction.StatsMenu then
+  if Action = TAction.StatsMenu then
   begin
     if not EscMenu.Active then
     begin
