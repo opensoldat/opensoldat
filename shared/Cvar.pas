@@ -3,7 +3,7 @@ unit Cvar;
 interface
 
 uses
-  Classes, Contnrs, Sysutils, Variants, Command, Constants, Util, GameStrings;
+  Classes, Contnrs, Sysutils, Variants, Command, Constants, Util;
 {
   Cvar tags
   sv_ - server cvar
@@ -184,16 +184,6 @@ begin
     GOALTICKS := Round(DEFAULT_GOALTICKS * NewValue);
     Result := True;
   end;
-end;
-
-function ui_sniperlineChange(Cvar: TCvarBase; NewValue: Boolean): Boolean;
-begin
-  if GameLoopRun and not sv_sniperline.Value then
-  begin
-    MainConsole.Console(_('Sniper Line disabled on this server'), WARNING_MESSAGE_COLOR);
-    Result := False;
-  end else
-    Result := True;
 end;
 
 {$ELSE}
@@ -787,7 +777,7 @@ begin
   ui_killconsole := TBooleanCvar.Add('ui_killconsole', 'Enables kill console', True, True, [CVAR_CLIENT], nil);
   ui_killconsole_length := TIntegerCvar.Add('ui_killconsole_length', 'Sets length of kill console', 15, 15, [CVAR_CLIENT], nil, 0, 50);
   ui_hidespectators := TBooleanCvar.Add('ui_hidespectators', 'Hides spectators from the fragsmenu', False, False, [CVAR_CLIENT], nil);
-  ui_sniperline := TBooleanCvar.Add('ui_sniperline', 'Draws a line between the player and the cursor', False, False, [CVAR_CLIENT], @ui_sniperlineChange);
+  ui_sniperline := TBooleanCvar.Add('ui_sniperline', 'Draws a line between the player and the cursor', False, False, [CVAR_CLIENT], nil);
 
   // Client cvars
   cl_sensitivity := TSingleCvar.Add('cl_sensitivity', 'Mouse sensitivity', 1.0, 1.0, [CVAR_CLIENT], nil, 0.0, 1.0);

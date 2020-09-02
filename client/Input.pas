@@ -17,7 +17,7 @@ type
   {$scopedenums on}
   TAction = (None, Left, Right, Jump, Crouch, Fire, Jet, Reload, ChangeWeapon, VoiceChat,
     ThrowGrenade, DropWeapon, Prone, FlagThrow, StatsMenu, GameStats,
-    MiniMap, PlayerName, FragsList, Radio, RecordDemo, VolumeUp, VolumeDown,
+    MiniMap, PlayerName, FragsList, SniperLine, Radio, RecordDemo, VolumeUp, VolumeDown,
     MouseSensitivityUp, MouseSensitivityDown, Cmd, Chat, TeamChat, Snap, Weapons, Bind);
 
   PBind = ^TBind;

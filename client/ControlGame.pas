@@ -367,7 +367,14 @@ begin
 
   Action := Bind.Action;
 
-  if Action = TAction.StatsMenu then
+  if Action = TAction.SniperLine then
+  begin
+    if sv_sniperline.Value then
+      ui_sniperline.SetValue(not ui_sniperline.Value)
+    else
+      MainConsole.Console(_('Sniper Line disabled on this server'), WARNING_MESSAGE_COLOR);
+  end
+  else if Action = TAction.StatsMenu then
   begin
     if not EscMenu.Active then
     begin
