@@ -185,7 +185,6 @@ begin
     Result := True;
   end;
 end;
-
 {$ELSE}
 function killlimitChange(var Cvar: TStringCvar; NewValue: Integer): Boolean;
 begin
