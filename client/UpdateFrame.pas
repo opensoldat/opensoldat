@@ -21,7 +21,9 @@ uses
 procedure Update_Frame;
 
 implementation
-uses ClientGame, InterfaceGraphics, GameMenus, Input;
+
+uses
+  ClientGame, InterfaceGraphics, GameMenus, Input;
 
 var
   IdleCounter, OldMouseX: Integer;

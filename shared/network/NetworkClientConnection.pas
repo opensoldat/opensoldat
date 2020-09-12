@@ -13,7 +13,8 @@ uses
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
   // soldat units
-  LogFile, GameNetworkingSockets, Net, Sprites, Weapons, Constants, GameStrings, Cvar, PhysFS;
+  LogFile, GameNetworkingSockets, Net, Sprites, Weapons, Constants, GameStrings,
+  Cvar, PhysFS;
 
 procedure ClientRequestGame;
 procedure ClientSendPlayerInfo;

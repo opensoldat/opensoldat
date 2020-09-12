@@ -3,7 +3,8 @@ unit FileClient;
 interface
 
 uses
-  SysUtils, Classes, sha1, strutils, fphttpclient, sslsockets, fpopenssl, GameRendering, Constants;
+  SysUtils, Classes, sha1, strutils, fphttpclient, sslsockets, fpopenssl,
+  GameRendering, Constants, Version;
 
 const MAX_DL_SIZE = 150000000; // max download size in bytes
 
@@ -36,7 +37,9 @@ type
     DownloadRetry: Byte = 0;
 
 implementation
-  uses Client, Util;
+
+uses
+  Client, Util;
 
 constructor TDownloadThread.Create(DownloadURL: String; Name: String; Checksum: TSHA1Digest);
 begin

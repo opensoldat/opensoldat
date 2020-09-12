@@ -2,7 +2,8 @@ unit MapFile;
 
 interface
 
-uses Vector, Waypoints, Util;
+uses
+  Vector, Waypoints, Util;
 
 type
   PMapColor = ^TMapColor;

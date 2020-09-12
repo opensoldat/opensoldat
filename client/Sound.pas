@@ -10,7 +10,8 @@ unit Sound;
 {$H+}
 interface
 
-uses SDL2, Vector, openal, PhysFS, contnrs, fgl;
+uses
+  SDL2, Vector, openal, PhysFS, contnrs, fgl;
 
 type
   SoundSample = record

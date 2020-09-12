@@ -42,7 +42,12 @@ type
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, TraceLog, PhysFS, Game, LogFile;
+  {$IFDEF SERVER}
+  Server,
+  {$ELSE}
+  Client,
+  {$ENDIF}
+  SysUtils, TraceLog, PhysFS, Game, LogFile;
 
 const
   SCALE = 3;

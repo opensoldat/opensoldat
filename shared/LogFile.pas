@@ -30,8 +30,12 @@ var
 implementation
 
 uses
-  {$IFNDEF SERVER}Util,{$ENDIF}
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, Constants, TraceLog, Cvar;
+  {$IFDEF SERVER}
+  Server,
+  {$ELSE}
+  Util, Client,
+  {$ENDIF}
+  SysUtils, Constants, TraceLog, Cvar;
 
 procedure NewLogFile(var F: TStringList; Name: string);
 var

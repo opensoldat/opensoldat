@@ -15,7 +15,8 @@ uses
   {$IFNDEF SERVER}
   Sparks,
   {$ENDIF}
-  Vector, Constants, PolyMap, Parts, Sprites, Bullets, Things, Waypoints, Anims, Weapons, Sha1, Util;
+  Vector, Constants, PolyMap, Parts, Sprites, Bullets, Things, Waypoints, Anims,
+  Weapons, Sha1, Util;
 
 type
   TKillSort = record

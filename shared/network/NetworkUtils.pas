@@ -10,7 +10,10 @@ uses
   Version, StrUtils,
 
   // soldat units
-  Sprites, Weapons, Constants {$IFNDEF SERVER} ,Sound {$ENDIF};
+  {$IFNDEF SERVER}
+  Sound,
+  {$ENDIF}
+  Sprites, Weapons, Constants;
 
 {$IFDEF SERVER}
 function IsRemoteAdminIP(IP: string): Boolean;

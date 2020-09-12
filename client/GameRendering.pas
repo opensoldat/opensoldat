@@ -2,7 +2,8 @@ unit GameRendering;
 
 interface
 
-uses Gfx, SDL2;
+uses
+  Gfx, SDL2;
 
 type
   TGameRenderingParams = record
