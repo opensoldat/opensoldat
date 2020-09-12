@@ -1,8 +1,10 @@
 unit InterfaceGraphics;
 
 interface
+
 uses
   Vector, Sprites, Constants;
+
 var
   // Chat stuff
   ChatMessage: array[1..MAX_SPRITES] of WideString;

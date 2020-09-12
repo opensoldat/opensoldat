@@ -256,6 +256,7 @@ end;
 
 initialization
   LogLock := TCriticalSection.Create;
+
 finalization
   FreeAndNil(LogLock);
 

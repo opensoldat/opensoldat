@@ -16,8 +16,8 @@ const
  {$ELSE}
   STBLIB = 'stb.so';
  {$ENDIF}
-// stb_image
 
+// stb_image
 function stbi_xload_file(filename: PAnsiChar; w, h, f: PInteger): PByte;
   cdecl; external STBLIB;
 
