@@ -51,8 +51,8 @@ uses
   NetworkClientConnection, GameMenus, Demo, Console,
   Weapons, Constants, Game, GameRendering;
 
-procedure JoinServer();
-procedure StartGame();
+procedure JoinServer;
+procedure StartGame;
 procedure ShutDown;
 procedure ExitToMenu;
 procedure RestartGraph;
@@ -1030,7 +1030,7 @@ begin
       GameLoopRun := True;
       RenderGameInfo(_('Loading'));
       ClientRequestGame;
-      StartGameLoop();
+      StartGameLoop;
     end
     else
     begin

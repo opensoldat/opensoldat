@@ -7,7 +7,7 @@ uses
 
 procedure RenderGostek(var Soldier: TSprite);
 procedure LoadGostekData(Data: TStringList);
-procedure ApplyGostekConstraints();
+procedure ApplyGostekConstraints;
 
 implementation
 

@@ -129,7 +129,7 @@ begin
   Inc(DownloadRetry);
   if DownloadRetry = 1 then
     if FStatus = 1 then
-      JoinServer();
+      JoinServer;
   FreeAndNil(DownloadThread);
 end;
 
