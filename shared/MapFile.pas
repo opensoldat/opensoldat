@@ -7,7 +7,7 @@ uses
 
 type
   PMapColor = ^TMapColor;
-  TMapColor = array[0..3] of Byte; // [r,g,b,a]
+  TMapColor = array[0..3] of Byte;  // [r,g,b,a]
 
   PMapVertex = ^TMapVertex;
   TMapVertex = record

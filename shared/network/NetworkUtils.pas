@@ -1,7 +1,9 @@
+// helper functions
+
 unit NetworkUtils;
 
 interface
-// helper functions
+
 uses
   // delphi and system units
   SysUtils, Classes,
