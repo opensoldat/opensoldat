@@ -206,7 +206,7 @@ begin
       if cl_runs.Value < 3 then
         NoobShow := True;
 
-      //fixmehelloer - stop playing weather in escmenu
+      // TODO: stop playing weather in escmenu
     end
     else
     begin
