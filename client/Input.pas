@@ -100,7 +100,8 @@ begin
 
   for i := Low(Binds) to High(Binds) - 1 do
   begin
-    if (Binds[i].KeyId = KeyCode) and ((Binds[i].keyMod and KeyMods <> 0) or (Binds[i].keyMod = KeyMods)) then
+    if (Binds[i].KeyId = KeyCode) and ((Binds[i].keyMod and KeyMods <> 0) or
+      (Binds[i].keyMod = KeyMods)) then
     begin
       Result := @Binds[i];
       Exit;

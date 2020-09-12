@@ -1073,10 +1073,10 @@ begin
     if SpriteC.Stat > 0 then
     begin
       Inc(SpriteC.Brain.OnePlaceCount);
-      if ((SpriteC.Brain.OnePlaceCount > 120) and (SpriteC.Brain.OnePlaceCount < 220)) or
-          ((SpriteC.Brain.OnePlaceCount > 350) and (SpriteC.Brain.OnePlaceCount < 620)) or
-          ((SpriteC.Brain.OnePlaceCount > 700) and (SpriteC.Brain.OnePlaceCount < 740)) or
-          ((SpriteC.Brain.OnePlaceCount > 900) and (SpriteC.Brain.OnePlaceCount < 1100)) or
+      if  ((SpriteC.Brain.OnePlaceCount >  120) and (SpriteC.Brain.OnePlaceCount <  220)) or
+          ((SpriteC.Brain.OnePlaceCount >  350) and (SpriteC.Brain.OnePlaceCount <  620)) or
+          ((SpriteC.Brain.OnePlaceCount >  700) and (SpriteC.Brain.OnePlaceCount <  740)) or
+          ((SpriteC.Brain.OnePlaceCount >  900) and (SpriteC.Brain.OnePlaceCount < 1100)) or
           ((SpriteC.Brain.OnePlaceCount > 1300) and (SpriteC.Brain.OnePlaceCount < 1500)) then
       begin
         SpriteC.Control.Fire := True;

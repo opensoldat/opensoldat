@@ -34,8 +34,8 @@ type
       destructor Destroy; override;
   end;
 
-  var
-    DownloadRetry: Byte = 0;
+var
+  DownloadRetry: Byte = 0;
 
 implementation
 

@@ -1042,7 +1042,7 @@ end;
 
 procedure ShowMessage(MessageText: AnsiString); overload;
 begin
- ShowMessage(WideString(MessageText));
+  ShowMessage(WideString(MessageText));
 end;
 
 procedure ShowMessage(MessageText: WideString); overload;
