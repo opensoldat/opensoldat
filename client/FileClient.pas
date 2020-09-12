@@ -8,7 +8,6 @@ uses
 const MAX_DL_SIZE = 150000000; // max download size in bytes
 
 type
-
   TDownloadThread = Class(TThread)
     private
       FURL: String;

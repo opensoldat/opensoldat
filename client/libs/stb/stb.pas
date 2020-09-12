@@ -35,7 +35,6 @@ function stbi_load_from_memory(buffer: Pointer; len: Integer; w, h, c: PInteger;
 
 
 // stb_image_write
-
 function stbi_write_png(filename: PAnsiChar; w, h, comp: Integer; data: Pointer; stride: Integer): Integer;
   cdecl; external STBLIB;
 

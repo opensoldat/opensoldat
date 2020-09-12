@@ -18,7 +18,6 @@ procedure WriteLogFile(var F: TStringList; Name: string);
 procedure AddLineToLogFile(var F: TStringList; S: string; Name: string; WithDate: Boolean = True);
 procedure NewLogFiles;
 
-
 var
   GameLog: TStringList;
   ConsoleLogFileName: String;

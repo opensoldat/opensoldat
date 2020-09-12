@@ -232,7 +232,6 @@ begin
   Alpha[ALPHA_NADES] := Trunc(0.75 * Alpha[ALPHA_BASE]);
 
   // blood
-
   if Alpha[ALPHA_BLOOD] > 0 then
   begin
     Visible := Visible + [
@@ -245,7 +244,6 @@ begin
   end;
 
   // jets
-
   if (Soldier.Control.Jetpack) and (Soldier.JetsCount > 0) then
   begin
     Visible := Visible - [GOSTEK_LEFT_FOOT, GOSTEK_RIGHT_FOOT];
@@ -253,12 +251,10 @@ begin
   end;
 
   // vest
-
   if Soldier.Vest > 0 then
     Include(Visible, GOSTEK_VEST);
 
   // grenades
-
   if Soldier.TertiaryWeapon.Num = Guns[FRAGGRENADE].Num then
     Index := GOSTEK_FRAG_GRENADE1
   else
@@ -270,7 +266,6 @@ begin
     Include(Visible, Index + i);
 
   // chain
-
   case Soldier.Player.Chain of
     1: Visible := Visible +
       [GOSTEK_SILVER_LCHAIN, GOSTEK_SILVER_RCHAIN, GOSTEK_SILVER_PENDANT];
@@ -279,12 +274,10 @@ begin
   end;
 
   // cygar
-
   if (Soldier.HasCigar = 5) or (Soldier.HasCigar = 10) then
     Include(Visible, GOSTEK_CIGAR);
 
   // head & hair
-
   if Soldier.DeadMeat then
   begin
     Visible := Visible - [GOSTEK_HEAD, GOSTEK_HEAD_DMG];

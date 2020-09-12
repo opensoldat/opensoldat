@@ -637,7 +637,6 @@ begin
     else if TObject(CvarsSync[CvarID]) is TStringCvar then
       TStringCvar(CvarsSync.Items[CvarID]).SetValue(PacketStreamReader.ReadString);
   end;
-
 end;
 
 end.

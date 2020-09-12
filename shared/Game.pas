@@ -933,7 +933,6 @@ begin
       if Sprite[i].Player.Team = TEAM_DELTA then
         Inc(TeamPlayersNum[TEAM_DELTA]);
       {$ENDIF}
-
     end;
   end;
 end;

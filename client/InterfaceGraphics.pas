@@ -156,7 +156,6 @@ end;
 procedure LoadDefaultInterfaceData;
 begin
   // Create default INTERFACE
-
   IntAlign.Weapon    := 1;
   IntAlign.Bullets   := 1;
   IntAlign.HealthBar := 0;
@@ -290,7 +289,6 @@ begin
   if PHYSFS_exists(PChar(ModDir + 'custom-interfaces/' + InterfaceName +
     '/health.bmp')) then
   begin
-
     relinfo.HealthBar_Rel_X := Int.HealthIco_X;
     relinfo.HealthBar_Rel_Y := Int.HealthIco_Y;
     relinfo.JetBar_Rel_X := Int.HealthIco_X;
