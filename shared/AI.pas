@@ -772,7 +772,7 @@ begin
                 ((sv_gamemode.Value <> GAMESTYLE_INF) and
                 (sv_gamemode.Value <> GAMESTYLE_CTF) and
                 (sv_gamemode.Value <> GAMESTYLE_HTF)) then
-              {not infiltration escape path}
+              // not infiltration escape path
               if (BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 1) or
                   ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 2) and
                   (SpriteC.Brain.OnePlaceCount < 60)) or
@@ -987,22 +987,21 @@ begin
               else
                 SpriteC.Brain.GoThing := False;
 
-              {Pickup knife!}
+              // Pickup knife!
               if ((Thing[i].Style = OBJECT_COMBAT_KNIFE) and
                   (SpriteC.Weapon.Num = Guns[NOWEAPON].Num) and
                   (SpriteC.Brain.FavWeapon = Guns[KNIFE].Num)) then
               begin
                 SpriteC.Control.Fire := False;
                 SpriteC.Brain.TargetNum := 0;
-                // ServerSendStringMessage(' Looking for knife...',
-                  // SpriteC.Num);
+                //ServerSendStringMessage(' Looking for knife...', SpriteC.Num);
                 SpriteC.Brain.GoThing := True;
                 GoToThing(SpriteC.Num, i);
               end;
             end;
           end;
       end;
-    {<see flag?}
+    // <see flag?
 
     if not SeeThing then
       SpriteC.Brain.GoThing := False;
@@ -1026,7 +1025,7 @@ begin
           end;
         end;
 
-    {release grenade}
+    // release grenade
     if (SpriteC.BodyAnimation.ID = Throw.ID) and
         (SpriteC.BodyAnimation.CurrFrame > 35) then
       SpriteC.Control.ThrowNade := False;
@@ -1040,7 +1039,7 @@ begin
       SpriteC.Control.Up := True;
     end;
 
-    {waypoint is shit}
+    // waypoint is shit
     if SpriteC.Brain.WaypointTime > WAYPOINT_TIMEOUT then
     begin
       SpriteC.FreeControls;
@@ -1049,7 +1048,7 @@ begin
       SpriteC.Brain.WaypointTime := 0;
     end;
 
-    {fall damage save}
+    // fall damage save
     D := SpriteParts.Velocity[SpriteC.Num].Y;
     if D > 3.35 then
       SpriteC.Brain.FallSave := 1;
@@ -1058,7 +1057,7 @@ begin
     if SpriteC.Brain.FallSave > 0 then
       SpriteC.Control.Jetpack := True;
 
-    {Bot Chat}
+    // Bot Chat
     if bots_chat.Value then
       if Random(SpriteC.Brain.ChatFreq * 150) = 0 then
       begin
@@ -1090,7 +1089,7 @@ begin
         SpriteC.Brain.OnePlaceCount := 0;
     end;
 
-    {destroy weapon if fav weapon hands}
+    // destroy weapon if fav weapon hands
     {if NoWeapon.Name = SpriteC.Brain.FavWeapon then
         if SpriteC.Weapon.Num <> Guns[NOWEAPON].Num then
           SpriteC.Weapon := Guns[NOWEAPON];}
