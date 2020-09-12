@@ -1096,5 +1096,5 @@ begin
           SpriteC.Weapon := Guns[NOWEAPON];}
   end;  // Bot
 end;
-end.
 
+end.
