@@ -255,6 +255,8 @@ function LoadInterfaceData(InterfaceName: string): Boolean;
 var
   AddrFile: PHYSFS_Buffer;
   AddrRec: TInterface;
+const
+  CUSTOM_INTERFACE_DIR = 'custom-intercases/';
 begin
   Result := False;
   IntAlign.Weapon    := 0;
@@ -273,7 +275,7 @@ begin
     Exit;
   end;
 
-  if not PHYSFS_exists(PChar(ModDir + 'custom-interfaces/' + InterfaceName +
+  if not PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
     '/setup.sif')) then
   begin
     ShowMessage(_('Could not find setup.sif. Loading default interface instead.'));
@@ -283,12 +285,13 @@ begin
 
   Result := True;
 
-  AddrFile := PHYSFS_readBuffer(PChar(ModDir + 'custom-interfaces/' + InterfaceName + '/setup.sif'));
+  AddrFile := PHYSFS_readBuffer(PChar(ModDir + CUSTOM_INTERFACE_DIR +
+    InterfaceName + '/setup.sif'));
 
   AddrRec := PInterface(@AddrFile[0])^;
   Int := AddrRec;
 
-  if PHYSFS_exists(PChar(ModDir + 'custom-interfaces/' + InterfaceName +
+  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
     '/health.bmp')) then
   begin
     relinfo.HealthBar_Rel_X := Int.HealthIco_X;
@@ -303,7 +306,7 @@ begin
     relinfo.NadesBar_Rel_Y := Int.HealthIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + 'custom-interfaces/' + InterfaceName +
+  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
     '/jet.bmp')) then
   begin
     relinfo.HealthBar_Rel_X := Int.JetIco_X;
@@ -318,7 +321,7 @@ begin
     relinfo.NadesBar_Rel_Y := Int.JetIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + 'custom-interfaces/' + InterfaceName +
+  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
     '/ammo.bmp')) then
   begin
     relinfo.HealthBar_Rel_X := Int.AmmoIco_X;
@@ -333,21 +336,21 @@ begin
     relinfo.NadesBar_Rel_Y := Int.AmmoIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + 'custom-interfaces/' + InterfaceName +
+  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
     '/health.bmp')) then
   begin
     relinfo.HealthBar_Rel_X := Int.HealthIco_X;
     relinfo.HealthBar_Rel_Y := Int.HealthIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + 'custom-interfaces/' + InterfaceName +
+  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
     '/jet.bmp')) then
   begin
     relinfo.JetBar_Rel_X := Int.JetIco_X;
     relinfo.JetBar_Rel_Y := Int.JetIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + 'custom-interfaces/' + InterfaceName +
+  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
     '/ammo.bmp')) then
   begin
     relinfo.AmmoBar_Rel_X := Int.AmmoIco_X;
