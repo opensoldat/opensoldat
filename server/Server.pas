@@ -1342,7 +1342,7 @@ begin
     Exit;
 
   // check if admin should be kicked
-  if ((Why = KICK_PING) or (Why = KICK_FLOODING) or (Why = KICK_VOTED)) and
+  if ((Why in [KICK_PING, KICK_FLOODING, KICK_VOTED]) and
      (Length(Sprite[i].Player.IP) > 5) then
   begin
     if IsRemoteAdminIP(Sprite[i].Player.IP) or
@@ -1400,10 +1400,8 @@ begin
   if not Sprite[i].Active then
     Exit;
   {$IFDEF SCRIPT}
-  if (why = KICK_AC) or (why = KICK_CHEAT) or (why = KICK_CONSOLE) or
-    (why = KICK_PING) or (why = KICK_NORESPONSE) or
-    (why = KICK_NOCHEATRESPONSE) or (why = KICK_FLOODING) or
-    (why = KICK_VOTED) or (why = KICK_SILENT) then
+  if why in [KICK_AC, KICK_CHEAT, KICK_CONSOLE, KICK_PING, KICK_NORESPONSE,
+      KICK_NOCHEATRESPONSE, KICK_FLOODING, KICK_VOTED, KICK_SILENT] then
     ScrptDispatcher.OnLeaveGame(i, true);
   {$ENDIF}
 
