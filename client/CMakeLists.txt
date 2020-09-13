@@ -5,17 +5,16 @@ find_package(OpenAL REQUIRED)
 find_package(Freetype REQUIRED)
 add_subdirectory(libs/stb)
 
-add_flag_append(CMAKE_Pascal_FLAGS "-l -B -MDelphi -Scgi")
-add_flag_append(CMAKE_Pascal_FLAGS_DEBUG
-                "-O1 -g -gl -l -vewnhiq -dDEBUG -dDEVELOPMENT")
-add_flag_append(CMAKE_Pascal_FLAGS_RELEASE
-                "-O3 -Os -CX -OoREGVAR -Xs -XX -vewibq -vn-h- -dTESTING")
-
 if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_LESS 3.0)
   message(
     FATAL_ERROR
       "Your FreePascal installation is too old (fpc ${CMAKE_Pascal_COMPILER_VERSION})!"
   )
+endif()
+
+# Hide inline warning
+if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_GREATER 3.1)
+  add_flag_append(CMAKE_Pascal_FLAGS "-vm6058")
 endif()
 
 # generic folder where our libraries reside
@@ -74,5 +73,9 @@ if(BUILD_SMOD)
 endif()
 
 if(UNIX)
-  target_link_libraries(soldat stb GameNetworkingSockets protobuf)
+  if(BUILD_STEAM)
+    target_link_libraries(soldat stb)
+  else()
+    target_link_libraries(soldat stb GameNetworkingSockets protobuf)
+  endif()
 endif()

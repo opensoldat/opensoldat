@@ -1,16 +1,14 @@
 enable_language(Pascal)
 
-add_flag_append(CMAKE_Pascal_FLAGS "-l -B -MDelphi -Scgi")
-add_flag_append(CMAKE_Pascal_FLAGS_DEBUG
-                "-O1 -g -gl -l -vewnhiq -dDEBUG -dDEVELOPMENT")
-add_flag_append(CMAKE_Pascal_FLAGS_RELEASE
-                "-O3 -Os -CX -OoREGVAR -Xs -XX -vewibq -vn-h- -dTESTING")
-
 if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_LESS 3.0)
   message(
     FATAL_ERROR
       "Your FreePascal installation is too old (fpc ${CMAKE_Pascal_COMPILER_VERSION})!"
   )
+endif()
+
+if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_GREATER 3.1)
+  add_flag_append(CMAKE_Pascal_FLAGS "-vm6058")
 endif()
 
 # generic folder where our libraries reside
@@ -38,7 +36,7 @@ add_flag_append(CMAKE_Pascal_FLAGS "-Fl${PHYSFS_LIBRARY_DIR}")
 add_flag_append(CMAKE_Pascal_FLAGS "-dSERVER")
 
 # Hide fgl inlining warnings
-add_flag_append(CMAKE_Pascal_FLAGS "-vm3123 -vm3124")
+add_flag_append(CMAKE_Pascal_FLAGS "-vm6058")
 
 option(BUILD_SCRIPTCORE "Build ScriptCore" True)
 option(BUILD_RCON "Build Rcon" True)
@@ -59,4 +57,10 @@ set_source_files_properties(soldatserver.lpr PROPERTIES OBJECT_DEPENDS
 
 add_executable(soldatserver soldatserver.lpr)
 
-target_link_libraries(soldat GameNetworkingSockets)
+if(UNIX)
+  if(BUILD_STEAM)
+    target_link_libraries(soldat)
+  else()
+    target_link_libraries(soldat GameNetworkingSockets)
+  endif()
+endif()

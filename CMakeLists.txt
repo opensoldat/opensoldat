@@ -1,9 +1,13 @@
 project(soldat)
 
 cmake_minimum_required(VERSION 3.14)
-
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
 include(${CMAKE_MODULE_PATH}/utils.cmake)
+
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "No build type selected, default to Debug")
+  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type (default Debug)" FORCE)
+endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
@@ -19,13 +23,30 @@ if(BUILD_SMOD)
   smod_builder()
 endif()
 
-# GameNetworkingSockets
-add_subdirectory(shared/libs/GameNetworkingSockets)
+option(BUILD_STEAM "Build steam version" False)
+
+if(BUILD_STEAM)
+  # Create steam_appid.txt
+  file(WRITE ${PROJECT_BINARY_DIR}/bin/steam_appid.txt "638490")
+else()
+  # GameNetworkingSockets
+  add_subdirectory(shared/libs/GameNetworkingSockets)
+endif()
 
 # Find PhysFS
 if(NOT PHYSFS_LIBRARY OR NOT PHYSFS_INCLUDE_DIR)
   find_package(PhysFS REQUIRED)
 endif()
+
+
+add_flag_append(CMAKE_Pascal_FLAGS "-l -B -MDelphi -Scgi")
+add_flag_append(CMAKE_Pascal_FLAGS_DEBUG
+                "-O1 -g -gl -l -vewnhiq -dDEBUG -dDEVELOPMENT")
+add_flag_append(CMAKE_Pascal_FLAGS_RELEASE
+                "-O3 -CX -OoREGVAR -Xs -XX -vewnhiq -dTESTING")
+
+# Hide fgl inlining warnings
+add_flag_append(CMAKE_Pascal_FLAGS "-vm3123 -vm3124")
 
 # Define shared unit search paths
 add_flag_prepend(CMAKE_Pascal_FLAGS
@@ -97,7 +118,6 @@ if(CROSS_DARWIN_32)
   add_flag_prepend(CMAKE_Pascal_FLAGS "-Tdarwin -Pi386")
 endif()
 
-option(BUILD_STEAM "Build steam version" False)
 if(BUILD_STEAM)
   add_flag_prepend(CMAKE_Pascal_FLAGS "-dSTEAM")
 endif()
