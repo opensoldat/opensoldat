@@ -878,18 +878,10 @@ uses
   {$ENDIF}
   ;
 
-
-{$IFNDEF STEAM}
-procedure ProcessEventsCallback(pInfo: PSteamNetConnectionStatusChangedCallback_t; Context: intptr); cdecl;
+procedure ProcessEventsCallback(pInfo: PSteamNetConnectionStatusChangedCallback_t); cdecl;
 begin
-  if Context <> 0 then
-    {$IFDEF SERVER}
-    TServerNetwork(Context).ProcessEvents(pInfo);
-    {$ELSE}
-    TClientNetwork(Context).ProcessEvents(pInfo);
-    {$ENDIF}
+  UDP.ProcessEvents(pInfo);
 end;
-{$ENDIF}
 
 {$PUSH}
 {$WARN 5024 OFF : Parameter "$1" not used}
@@ -906,11 +898,8 @@ begin
   NetworkingSockets := TSteamNetworkingSockets.Init();
   NetworkingUtils := TSteamNetworkingUtils.Init();
 
-  {$IFNDEF SERVER}
-  {$IFNDEF STEAM}
-  //SteamAPI_ISteamNetworkingSockets_SetCertificate(NetworkingSockets.GameNetworkingSocketsInterface, @Cert, CertSize, @CertError);
-  {$ENDIF}
-  {$ENDIF}
+  NetworkingUtils.SetGlobalCallback_SteamNetConnectionStatusChanged(@ProcessEventsCallback);
+
   NetworkingUtils.SetDebugOutputFunction(k_ESteamNetworkingSocketsDebugOutputType_Msg, DebugNet);
   //NetworkingUtils.SetDebugOutputFunction(k_ESteamNetworkingSocketsDebugOutputType_Everything, DebugNet);
 end;
@@ -1038,7 +1027,7 @@ var
   IncomingMsg: PSteamNetworkingMessage_t;
 begin
   {$IFNDEF STEAM}
-  NetworkingSockets.RunConnectionStatusChangedCallbacks(ProcessEventsCallback, IntPtr(Self));
+  NetworkingSockets.RunCallbacks();
   {$ENDIF}
   if FPeer = k_HSteamNetConnection_Invalid then
     Exit;
@@ -1060,7 +1049,7 @@ procedure TClientNetwork.ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCa
 begin
   if pInfo.m_hConn = k_HSteamNetConnection_Invalid then
   begin
-    //WriteLn('[NET] Invalid connection handle');
+    WriteLn('[NET] Invalid connection handle');
     Exit;
   end;
   {$IFDEF DEVELOPMENT}
@@ -1088,7 +1077,7 @@ begin
       end;
       k_ESteamNetworkingConnectionState_Connecting:
       begin
-          WriteLn('[NET] Connection request from: ' + PChar(pInfo.m_info.m_szConnectionDescription));
+        WriteLn('[NET] Connection request from: ' + PChar(pInfo.m_info.m_szConnectionDescription));
       end;
       k_ESteamNetworkingConnectionState_Connected:
       begin
@@ -1337,7 +1326,7 @@ var
   IncomingMsg: PSteamNetworkingMessage_t;
 begin
   {$IFNDEF STEAM}
-  NetworkingSockets.RunConnectionStatusChangedCallbacks(ProcessEventsCallback, IntPtr(Self));
+  NetworkingSockets.RunCallbacks();
   {$ENDIF}
 
   NumMsgs := NetworkingSockets.ReceiveMessagesOnPollGroup(FPollGroup, @IncomingMsg, 1);
@@ -1362,7 +1351,6 @@ begin
   {$IFDEF DEVELOPMENT}
   WriteLn('[NET] Received SteamNetConnectionStatusChangedCallback_t ', ToStr(pInfo^, TypeInfo(SteamNetConnectionStatusChangedCallback_t)));
   {$ENDIF}
-
   case pInfo.m_info.m_eState of
     k_ESteamNetworkingConnectionState_None:
     begin
@@ -1411,6 +1399,7 @@ begin
       if pInfo.m_info.m_hListenSocket <> 0 then
       begin
         WriteLn('[NET] Connection request from: ' + PChar(pInfo.m_info.m_szConnectionDescription));
+
         //  A new connection arrives on a listen socket. m_info.m_hListenSocket will be set, m_eOldState = k_ESteamNetworkingConnectionState_None,
         //and m_info.m_eState = k_ESteamNetworkingConnectionState_Connecting. See AcceptConnection.
         //  and (pInfo.m_info.m_eState = k_ESteamNetworkingConnectionState_Connecting)
