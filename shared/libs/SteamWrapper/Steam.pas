@@ -4,7 +4,7 @@
 {                                                       }
 {       Copyright (c) 2020 Soldat Team                  }
 {                                                       }
-{       For use with SteamWorks SDK 1.48a               }
+{       For use with SteamWorks SDK 1.50                }
 {                                                       }
 {*******************************************************}
 
@@ -109,7 +109,7 @@ function SteamAPI_ISteamClient_GetISteamParties(SteamInterface: ISteamClient; hS
 function SteamAPI_ISteamClient_GetISteamRemotePlay(SteamInterface: ISteamClient; hSteamUser: HSteamUser; hSteamPipe: HSteamPipe; pchVersion: PChar): ISteamRemotePlay; cdecl; external STEAMLIB;
 
 
-function SteamAPI_SteamUser_v020(): ISteamUser; cdecl; external STEAMLIB;
+function SteamAPI_SteamUser_v021(): ISteamUser; cdecl; external STEAMLIB;
 
 function SteamAPI_ISteamUser_GetHSteamUser(SteamInterface: ISteamUser): HSteamUser; cdecl; external STEAMLIB;
 function SteamAPI_ISteamUser_BLoggedOn(SteamInterface: ISteamUser): Boolean; cdecl; external STEAMLIB;
@@ -222,8 +222,8 @@ function SteamAPI_ISteamFriends_GetNumChatsWithUnreadPriorityMessages(SteamInter
 procedure SteamAPI_ISteamFriends_ActivateGameOverlayRemotePlayTogetherInviteDialog(SteamInterface: ISteamFriends; steamIDLobby: TSteamID); cdecl; external STEAMLIB;
 
 
-function SteamAPI_SteamUtils_v009(): ISteamUtils; cdecl; external STEAMLIB;
-function SteamAPI_SteamGameServerUtils_v009(): ISteamUtils; cdecl; external STEAMLIB;
+function SteamAPI_SteamUtils_v010(): ISteamUtils; cdecl; external STEAMLIB;
+function SteamAPI_SteamGameServerUtils_v010(): ISteamUtils; cdecl; external STEAMLIB;
 
 function SteamAPI_ISteamUtils_GetSecondsSinceAppActive(SteamInterface: ISteamUtils): uint32; cdecl; external STEAMLIB;
 function SteamAPI_ISteamUtils_GetSecondsSinceComputerActive(SteamInterface: ISteamUtils): uint32; cdecl; external STEAMLIB;
@@ -982,8 +982,8 @@ function SteamAPI_ISteamRemotePlay_BGetSessionClientResolution(SteamInterface: I
 function SteamAPI_ISteamRemotePlay_BSendRemotePlayTogetherInvite(SteamInterface: ISteamRemotePlay; steamIDFriend: TSteamID): Boolean; cdecl; external STEAMLIB;
 
 
-function SteamAPI_SteamNetworkingSockets_v008(): ISteamNetworkingSockets; cdecl; external STEAMLIB;
-function SteamAPI_SteamGameServerNetworkingSockets_v008(): ISteamNetworkingSockets; cdecl; external STEAMLIB;
+function SteamAPI_SteamNetworkingSockets_v009(): ISteamNetworkingSockets; cdecl; external STEAMLIB;
+function SteamAPI_SteamGameServerNetworkingSockets_v009(): ISteamNetworkingSockets; cdecl; external STEAMLIB;
 
 function SteamAPI_ISteamNetworkingSockets_CreateListenSocketIP(SteamInterface: ISteamNetworkingSockets; localAddress: PSteamNetworkingIPAddr; nOptions: Longint; pOptions: pSteamNetworkingConfigValue_t): HSteamListenSocket; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingSockets_ConnectByIPAddress(SteamInterface: ISteamNetworkingSockets; address: PSteamNetworkingIPAddr; nOptions: Longint; pOptions: pSteamNetworkingConfigValue_t): HSteamNetConnection; cdecl; external STEAMLIB;
@@ -1056,9 +1056,13 @@ procedure SteamAPI_ISteamNetworkingUtils_SetDebugOutputFunction(SteamInterface: 
 function SteamAPI_ISteamNetworkingUtils_SetGlobalConfigValueInt32(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; val: int32): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SetGlobalConfigValueFloat(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; val: Single): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SetGlobalConfigValueString(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; val: PChar): Boolean; cdecl; external STEAMLIB;
+function SteamAPI_ISteamNetworkingUtils_SetGlobalConfigValuePtr(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; val: PChar): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SetConnectionConfigValueInt32(SteamInterface: ISteamNetworkingUtils; hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SetConnectionConfigValueFloat(SteamInterface: ISteamNetworkingUtils; hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: Single): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SetConnectionConfigValueString(SteamInterface: ISteamNetworkingUtils; hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: PChar): Boolean; cdecl; external STEAMLIB;
+function SteamAPI_ISteamNetworkingUtils_SetGlobalCallback_SteamNetConnectionStatusChanged(SteamInterface: ISteamNetworkingUtils; fnCallback: FnSteamNetConnectionStatusChanged): Boolean; cdecl; external STEAMLIB;
+function SteamAPI_ISteamNetworkingUtils_SetGlobalCallback_SteamNetAuthenticationStatusChanged(SteamInterface: ISteamNetworkingUtils; fnCallback: FnSteamNetAuthenticationStatusChanged): Boolean; cdecl; external STEAMLIB;
+function SteamAPI_ISteamNetworkingUtils_SetGlobalCallback_SteamRelayNetworkStatusChanged(SteamInterface: ISteamNetworkingUtils; fnCallback: FnSteamRelayNetworkStatusChanged): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SetConfigValue(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr; eDataType: ESteamNetworkingConfigDataType; pArg: Pointer): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SetConfigValueStruct(SteamInterface: ISteamNetworkingUtils; opt: PSteamNetworkingConfigValue_t; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_GetConfigValue(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr; pOutDataType: pESteamNetworkingConfigDataType; var pResult; cbResult: pcsize_t): ESteamNetworkingGetConfigValueResult; cdecl; external STEAMLIB;
@@ -1434,8 +1438,8 @@ begin
     raise Exception.Create('SteamPipeHandle is null');
 
   UGC := TSteamUGC.Init(SteamAPI_SteamUGC_v014());
-  Utils := TSteamUtils.Init(SteamAPI_SteamUtils_v009());
-  User := TSteamUser.Init(SteamAPI_SteamUser_v020());
+  Utils := TSteamUtils.Init(SteamAPI_SteamUtils_v010());
+  User := TSteamUser.Init(SteamAPI_SteamUser_v021());
   Screenshots := TSteamScreenshots.Init(SteamAPI_SteamScreenshots_v003());
   Friends := TSteamFriends.Init(SteamAPI_SteamFriends_v017());
 end;
@@ -1448,7 +1452,7 @@ begin
   SteamPipeHandle := SteamGameServer_GetHSteamPipe();
 
   UGC := TSteamUGC.Init(SteamAPI_SteamGameServerUGC_v014());
-  Utils := TSteamUtils.Init(SteamAPI_SteamGameServerUtils_v009());
+  Utils := TSteamUtils.Init(SteamAPI_SteamGameServerUtils_v010());
   GameServer := TSteamGameServer.Init(SteamAPI_SteamGameServer_v013());
   GameServerStats := TSteamGameServerStats.Init(SteamAPI_SteamGameServerStats_v001());
 end;
