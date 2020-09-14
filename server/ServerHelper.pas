@@ -22,7 +22,6 @@ procedure UpdateWaveRespawnTime;
 function RandomBot: string;
 procedure DoBalanceBots(LeftGame: Byte; NewTeam: Byte);
 
-
 implementation
 
 uses
@@ -285,6 +284,7 @@ begin
      (sv_gamemode.Value <> GAMESTYLE_HTF) and
      (sv_gamemode.Value <> GAMESTYLE_INF) then
     Exit;
+
   Teams[1] := 0;
   Teams[2] := 0;
   Teams[3] := 0;
@@ -311,7 +311,6 @@ begin
           Exit;
         end;
       end;
-
   end else
   begin
     // Player Joined Game}
