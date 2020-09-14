@@ -281,7 +281,8 @@ var
 begin
   if not sv_botbalance.Value then
     Exit;
-  if (sv_gamemode.Value <> GAMESTYLE_CTF) and (sv_gamemode.Value <> GAMESTYLE_HTF) and
+  if (sv_gamemode.Value <> GAMESTYLE_CTF) and
+     (sv_gamemode.Value <> GAMESTYLE_HTF) and
      (sv_gamemode.Value <> GAMESTYLE_INF) then
     Exit;
   Teams[1] := 0;

@@ -416,7 +416,7 @@ constructor TSingleCvar.Create(Name, Description: AnsiString; Value, DefaultValu
 begin
   inherited Create(Name, Description, Value, DefaultValue, Flags, OnChange);
   Self.FMinValue := MinValue;
-  Self.FMaxValue:= MaxValue;
+  Self.FMaxValue := MaxValue;
 end;
 
 class function TSingleCvar.Add(Name, Description: AnsiString; Value, DefaultValue: Single; Flags: TCvarFlags; OnChange: TCallback; MinValue, MaxValue: Single): TSingleCvar;
