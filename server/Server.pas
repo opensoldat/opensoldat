@@ -1342,7 +1342,7 @@ begin
     Exit;
 
   // check if admin should be kicked
-  if ((Why in [KICK_PING, KICK_FLOODING, KICK_VOTED]) and
+  if (Why in [KICK_PING, KICK_FLOODING, KICK_VOTED]) and
      (Length(Sprite[i].Player.IP) > 5) then
   begin
     if IsRemoteAdminIP(Sprite[i].Player.IP) or
