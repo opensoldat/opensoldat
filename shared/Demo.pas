@@ -14,7 +14,9 @@ uses
   {$IFNDEF SERVER}
   GameStrings, ClientGame,
   {$ENDIF}
-  SysUtils, Classes, Vector, Sprites, {$IFNDEF SERVER}GameNetworkingSockets,{$ENDIF} Net;
+  SysUtils, Classes, Vector, Sprites,
+  {$IFNDEF SERVER}GameNetworkingSockets,{$ENDIF}
+  Net;
 
 
 const

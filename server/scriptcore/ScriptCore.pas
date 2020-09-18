@@ -34,8 +34,8 @@ type
     // called by TPSScript when the script is being compiled.
     // used to register all the API functions
     procedure OnCompile(Script: TPSScript);
-    // function _onUses(Compiler: TPSPascalCompiler; const Name: string):
-    // Boolean;
+    //function _onUses(Compiler: TPSPascalCompiler; const Name: string):
+    //Boolean;
     // called by TPSScript when any event is being called.
     // used to refresh all the global API variables
     procedure OnExecute(Script: TPSScript);
@@ -54,7 +54,7 @@ type
     function CallFunc(const Params: array of Variant; FuncName: string;
       DefaultReturn: Variant): Variant; override;
     procedure OnClockTick; override;
-    // procedure OnScriptShutdown(ServerShutdown: Boolean);
+    //procedure OnScriptShutdown(ServerShutdown: Boolean);
 
     function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer; override;
@@ -127,7 +127,7 @@ begin
     TPSPluginItem(Self.PascalScript.Plugins.Add).Plugin := DllPlugin;
   end;
   Self.FAppOnIdleTimer := 60;
-  // Self.PascalScript.Comp.OnUses := OnUses;
+  //Self.PascalScript.Comp.OnUses := OnUses;
   Self.PascalScript.OnCompile := Self.OnCompile;
   Self.PascalScript.OnExecute := Self.OnExecute;
 end;
@@ -288,7 +288,7 @@ begin
   end;
 end;
 
-// procedure OnScriptShutdown(ServerShutdown: Boolean);
+//procedure OnScriptShutdown(ServerShutdown: Boolean);
 
 function TScriptCore.OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
   Forwarded: Boolean; Password: string): Integer;

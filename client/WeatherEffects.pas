@@ -7,13 +7,18 @@
 {*******************************************************}
 
 unit WeatherEffects;
+
 interface
+
 uses
   Game, Weapons, Vector, Sprites, Net, Sparks;
+
 procedure MakeRain;
 procedure MakeSandStorm;
 procedure MakeSnow;
+
 implementation
+
 uses
   Client, Cvar, Sound, Constants;
 
@@ -109,4 +114,5 @@ begin
 
   PlaySound(SFX_WIND, CHANNEL_WEATHER);
 end;
+
 end.

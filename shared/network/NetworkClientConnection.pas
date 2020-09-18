@@ -13,7 +13,8 @@ uses
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
   // soldat units
-  LogFile, GameNetworkingSockets, Net, Sprites, Weapons, Constants, GameStrings, Cvar, PhysFS;
+  LogFile, GameNetworkingSockets, Net, Sprites, Weapons, Constants, GameStrings,
+  Cvar, PhysFS;
 
 procedure ClientRequestGame;
 procedure ClientSendPlayerInfo;
@@ -637,7 +638,6 @@ begin
     else if TObject(CvarsSync[CvarID]) is TStringCvar then
       TStringCvar(CvarsSync.Items[CvarID]).SetValue(PacketStreamReader.ReadString);
   end;
-
 end;
 
 end.

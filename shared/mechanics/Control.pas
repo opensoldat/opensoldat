@@ -78,7 +78,6 @@ var
   PlayerPressedLeftRight: Boolean = False;
   Unprone: Boolean;
 begin
-
   case SpriteC.Style of
     1:  // Gostek
       begin
@@ -2153,7 +2152,6 @@ begin
           SpriteC.FreeControls;
         {$ENDIF}
       end;
-
   end;
 end;
 
