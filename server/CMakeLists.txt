@@ -36,7 +36,9 @@ add_flag_append(CMAKE_Pascal_FLAGS "-Fl${PHYSFS_LIBRARY_DIR}")
 add_flag_append(CMAKE_Pascal_FLAGS "-dSERVER")
 
 # Hide fgl inlining warnings
-add_flag_append(CMAKE_Pascal_FLAGS "-vm6058")
+if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_GREATER 3.1)
+  add_flag_append(CMAKE_Pascal_FLAGS "-vm6058")
+endif()
 
 option(BUILD_SCRIPTCORE "Build ScriptCore" True)
 option(BUILD_RCON "Build Rcon" True)
