@@ -59,10 +59,6 @@ set_source_files_properties(soldatserver.lpr PROPERTIES OBJECT_DEPENDS
 
 add_executable(soldatserver soldatserver.lpr)
 
-if(UNIX)
-  if(BUILD_STEAM)
-    target_link_libraries(soldat)
-  else()
-    target_link_libraries(soldat GameNetworkingSockets)
-  endif()
+if((UNIX OR WIN32) AND NOT BUILD_STEAM)
+  target_link_libraries(soldatserver GameNetworkingSockets)
 endif()
