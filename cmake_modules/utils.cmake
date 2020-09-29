@@ -24,16 +24,16 @@ macro(smod_builder)
     OUTPUT ${EXECUTABLE_OUTPUT_PATH}/soldat.smod PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${SOLDAT_ASSETS_DIR}
     COMMAND ${CMAKE_COMMAND} -E make_directory ${SOLDAT_ASSETS_DIR}/configs/
+
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOLDAT_ASSETS_DIST}/shared/
-            ${SOLDAT_ASSETS_DIR}/
-    COMMAND
-      ${CMAKE_COMMAND} -E copy ${SOLDAT_ASSETS_DIST}/client/configs/client.cfg
-      ${SOLDAT_ASSETS_DIR}/configs
-    COMMAND
-      ${CMAKE_COMMAND} -E copy ${SOLDAT_ASSETS_DIST}/server/configs/server.cfg
-      ${SOLDAT_ASSETS_DIR}/configs
+                                               ${SOLDAT_ASSETS_DIR}/
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOLDAT_ASSETS_DIST}/client/configs/
+                                               ${SOLDAT_ASSETS_DIR}/configs
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOLDAT_ASSETS_DIST}/server/configs/
+                                               ${SOLDAT_ASSETS_DIR}/configs
     COMMAND ${CMAKE_COMMAND} -E copy ${SOLDAT_ASSETS_DIST}/client/play-regular.ttf
-            ${EXECUTABLE_OUTPUT_PATH}
+                                     ${EXECUTABLE_OUTPUT_PATH}
+
     COMMAND ${CMAKE_COMMAND} -E tar "cf" ${EXECUTABLE_OUTPUT_PATH}/soldat.smod
             --format=zip -- .
     #COMMAND ${CMAKE_COMMAND} -E remove_directory ${SOLDAT_ASSETS_DIR}
