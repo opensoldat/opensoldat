@@ -76,6 +76,6 @@ if(UNIX)
   target_link_libraries(soldat stb)
 endif()
 
-if(NOT APPLE AND NOT BUILD_STEAM)
-  target_link_libraries(soldat GameNetworkingSockets protobuf)
+if(NOT BUILD_STEAM)
+  target_link_libraries(soldat GameNetworkingSockets)
 endif()
