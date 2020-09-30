@@ -192,7 +192,7 @@ if(NOT CMAKE_Pascal_COMPILE_OBJECT)
 
     #-Cn is mandatory as it's what creates the ppas.* script
     set(CMAKE_Pascal_COMPILE_OBJECT
-        "<CMAKE_Pascal_COMPILER> -Cn -FE${EXECUTABLE_OUTPUT_PATH} -FU${OBJECT_FILES_DIRECTORY} ${CMAKE_Pascal_UNIX_FLAGS} <FLAGS> <CMAKE_Pascal_LINK_FLAGS> <SOURCE>")
+        "<CMAKE_Pascal_COMPILER> -Cn -FE${EXECUTABLE_OUTPUT_PATH} -FU<OBJECT_DIR> ${CMAKE_Pascal_UNIX_FLAGS} <FLAGS> <CMAKE_Pascal_LINK_FLAGS> <SOURCE>")
 endif(NOT CMAKE_Pascal_COMPILE_OBJECT)
 
 # link Pascal objects in a single executable
