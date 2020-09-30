@@ -710,6 +710,7 @@ begin
   LoadInterfaceArchives(UserDirectory + 'custom-interfaces/');
 
   PHYSFS_CopyFileFromArchive('configs/client.cfg', UserDirectory + '/configs/client.cfg');
+  PHYSFS_CopyFileFromArchive('configs/taunts.cfg', UserDirectory + '/configs/taunts.cfg');
 
   LoadConfig('client.cfg');
 
