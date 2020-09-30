@@ -93,7 +93,7 @@ jobs:
           set PHYSFSDIR=C:\vcpkg\installed\x64-windows
           mkdir build
           cd build
-          cmake -G "NMake Makefiles" -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DBUILD_SMOD=0 -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake"  -DSDL2_BUILDING_LIBRARY=1 ..
+          cmake -G "NMake Makefiles" -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake"  -DSDL2_BUILDING_LIBRARY=1 ..
           nmake
         shell: cmd
 
