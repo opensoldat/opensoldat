@@ -17,9 +17,34 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 #set(CMAKE_VERBOSE_MAKEFILE on)
 
+# RPATH settings. This needs to be set before executing
+# enable_language(Pascal). Those settings will make sure
+# our binaries can find dynamic libraries. It's only necessary
+# on UNIX, will be ignored elsewhere.
+if(UNIX)
+  if(APPLE)
+    set(target_library_install_dir "../Frameworks/")
+    set(CMAKE_INSTALL_PREFIX "Soldat.app/Contents/MacOS/")
+    set(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks")
+    set(CMAKE_BUILD_WITH_INSTALL_NAME_DIR TRUE)
+    set(CMAKE_INSTALL_NAME_DIR "@executable_path/../Frameworks")
+  else()
+    set(CMAKE_INSTALL_RPATH
+      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/:${CMAKE_INSTALL_PREFIX}/${target_library_install_dir}/"
+    )
+  endif()
+
+  set(CMAKE_SKIP_BUILD_RPATH FALSE)
+  set(CMAKE_SKIP_INSTALL_RPATH FALSE)
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+endif()
+
 # As of my understanding, this should execute CMakePascalInformation.cmake,
 # which sets CMake variables to enable integration with fpc.
+# The above RPATH settings will be respected.
 enable_language(Pascal)
+
 if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_LESS 3.0)
   message(
     FATAL_ERROR
@@ -118,26 +143,6 @@ else()
   # GameNetworkingSockets
   add_subdirectory(shared/libs/GameNetworkingSockets)
 endif()
-
-# Install options.
-if(APPLE)
-  set(target_library_install_dir "../Frameworks/")
-  set(CMAKE_INSTALL_PREFIX "Soldat.app/Contents/MacOS/")
-  set(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks")
-  set(CMAKE_BUILD_WITH_INSTALL_NAME_DIR TRUE)
-  set(CMAKE_INSTALL_NAME_DIR "@executable_path/../Frameworks")
-endif()
-
-if(UNIX)
-  set(CMAKE_INSTALL_RPATH
-      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/:${CMAKE_INSTALL_PREFIX}/${target_library_install_dir}/"
-  )
-endif()
-
-set(CMAKE_SKIP_BUILD_RPATH FALSE)
-set(CMAKE_SKIP_INSTALL_RPATH FALSE)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 option(BUILD_CLIENT "Build client" True)
 if(BUILD_CLIENT)
