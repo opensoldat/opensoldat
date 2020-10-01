@@ -41,7 +41,10 @@ begin
     Exit;
 
   TempStr := Args[0];
-  TeamSet := StrToIntDef(TempStr[7], 0);
+  if Length(TempStr) < 7 then
+    TeamSet := 0
+  else
+    TeamSet := StrToIntDef(TempStr[7], 0);
   AddBotPlayer(Name, TeamSet);
 end;
 
