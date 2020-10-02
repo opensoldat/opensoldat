@@ -153,3 +153,31 @@ option(BUILD_SERVER "Build server" True)
 if(BUILD_SERVER)
   add_subdirectory(server)
 endif()
+
+# Install step that does 3 things:
+# 1) Cleans binary directory by removing unnecessary files from compilation.
+# 2) Resets file permissions (for example removes executable flag from shared
+#    libraries on linux).
+# 3) Copies cleaned directory to path specified by CMAKE_INSTALL_PREFIX.
+#
+# It's likely not the best approach, but should get the job done.
+# CMake v3.16 has file(GET_RUNTIME_DEPENDENCIES), which would probably be
+# more suitable for this. That approach comes with its own set of limitations though.
+# For instance, .smod dependency will most likely not be detected. Also, we would
+# probably need to filter out some dependencies manually, as we probably don't want
+# to provide all .so files on linux - users can get those easily from package managers.
+install(
+  DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  FILES_MATCHING
+  PATTERN "*.sh" EXCLUDE
+  PATTERN "*.bat" EXCLUDE
+  PATTERN "*.res" EXCLUDE
+  PATTERN "*.dll"
+  PATTERN "*.so"
+  PATTERN "*.dylib"
+  PATTERN "*.smod"
+  # Ignore subdirectories, just in case... it's not necessary on clean build,
+  # only if you ran client/server executables before installing.
+  REGEX "configs|demos|logs|maps|mods|screens" EXCLUDE
+)

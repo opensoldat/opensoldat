@@ -74,14 +74,17 @@ ADD_DEPENDENCIES(GameNetworkingSockets GameNetworkingSockets)
 ## Install
 ##############################################################
 
-install(TARGETS
-    GameNetworkingSockets
+# Commented out, because we don't really need this step when installing
+# Soldat. Reenable this if you would like to export GNS libraries to a
+# custom destination.
+#install(TARGETS
+#    GameNetworkingSockets
 
-    DESTINATION ${GNS_INSTALL_DIR}
-    RUNTIME  DESTINATION ${GNS_INSTALL_DIR}/bin
-    LIBRARY  DESTINATION ${GNS_INSTALL_DIR}/lib
-    ARCHIVE  DESTINATION ${GNS_INSTALL_DIR}/lib
-    INCLUDES DESTINATION ${GNS_INSTALL_DIR}/include
-)
+#    DESTINATION ${GNS_INSTALL_DIR}
+#    RUNTIME  DESTINATION ${GNS_INSTALL_DIR}/bin
+#    LIBRARY  DESTINATION ${GNS_INSTALL_DIR}/lib
+#    ARCHIVE  DESTINATION ${GNS_INSTALL_DIR}/lib
+#    INCLUDES DESTINATION ${GNS_INSTALL_DIR}/include
+#)
 
 MESSAGE(STATUS "***  GameNetworkingSockets -- DONE --")

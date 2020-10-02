@@ -37,3 +37,8 @@ add_executable(soldatserver soldatserver.lpr)
 if(NOT BUILD_STEAM)
   target_link_libraries(soldatserver GameNetworkingSockets)
 endif()
+
+install(
+  PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldatserver>
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+)

@@ -52,3 +52,12 @@ endif()
 if(NOT BUILD_STEAM)
   target_link_libraries(soldat GameNetworkingSockets)
 endif()
+
+install(
+  PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldat>
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
+install(
+  FILES ${EXECUTABLE_OUTPUT_PATH}/play-regular.ttf
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
