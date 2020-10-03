@@ -34,6 +34,10 @@ set_source_files_properties(soldatserver.lpr PROPERTIES OBJECT_DEPENDS
 
 add_executable(soldatserver soldatserver.lpr)
 
+if(ADD_ASSETS)
+  add_dependencies(soldatserver soldat_smod)
+endif()
+
 if(NOT BUILD_STEAM)
   target_link_libraries(soldatserver GameNetworkingSockets)
 endif()

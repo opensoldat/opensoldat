@@ -41,8 +41,8 @@ set_source_files_properties(soldat.lpr PROPERTIES OBJECT_DEPENDS "${sources}")
 
 add_executable(soldat soldat.lpr)
 
-if(BUILD_SMOD)
-  add_dependencies(soldat create_smod)
+if(ADD_ASSETS)
+  add_dependencies(soldat soldat_smod soldat_font)
 endif()
 
 if(UNIX)

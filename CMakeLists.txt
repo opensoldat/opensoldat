@@ -130,9 +130,10 @@ if(NOT PHYSFS_LIBRARY OR NOT PHYSFS_INCLUDE_DIR)
   find_package(PhysFS REQUIRED)
 endif()
 
-option(BUILD_SMOD "Build soldat.smod" True)
-if(BUILD_SMOD)
-  smod_builder()
+option(ADD_ASSETS "Include soldat.smod and font file" True)
+if(ADD_ASSETS)
+  include(${CMAKE_MODULE_PATH}/SoldatAssets.cmake)
+  download_assets()
 endif()
 
 option(BUILD_STEAM "Build steam version" False)
