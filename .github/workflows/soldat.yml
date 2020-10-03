@@ -13,15 +13,37 @@ jobs:
 
       - name: Compile soldat
         run: |
-          mkdir build
-          cd build
-          cmake -DBUILD_SMOD=0 ..
+          mkdir game-build
+          cd game-build
+          cmake .. -DCMAKE_INSTALL_PREFIX=./soldat -DCMAKE_BUILD_TYPE=Release
           make
+          make install
 
-      - uses: actions/upload-artifact@v2
+      - name: Compile server only
+        run: |
+          mkdir server-build
+          cd server-build
+          cmake .. -DBUILD_CLIENT=0 -DCMAKE_INSTALL_PREFIX=./soldatserver -DCMAKE_BUILD_TYPE=Release
+          make
+          make install
+
+      # We use .tar to preserve file permissions.
+      - name: Tar files
+        run: |
+          tar -cvf soldat.tar -C game-build soldat
+          tar -cvf soldatserver.tar -C server-build soldatserver
+
+      - name: Upload game build
+        uses: actions/upload-artifact@v2
         with:
-          name: linux-build
-          path: build/bin/
+          name: soldat-linux-x64
+          path: soldat.tar
+
+      - name: Upload server-only build
+        uses: actions/upload-artifact@v2
+        with:
+          name: soldatserver-linux-x64
+          path: soldatserver.tar
 
   macos:
     runs-on: macos-latest

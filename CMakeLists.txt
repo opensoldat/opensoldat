@@ -136,12 +136,14 @@ if(BUILD_SMOD)
 endif()
 
 option(BUILD_STEAM "Build steam version" False)
-if(BUILD_STEAM)
-  # Create steam_appid.txt
-  file(WRITE ${PROJECT_BINARY_DIR}/bin/steam_appid.txt "638490")
-else()
-  # GameNetworkingSockets
-  add_subdirectory(shared/libs/GameNetworkingSockets)
+if(BUILD_CLIENT OR BUILD_SERVER)
+  if(BUILD_STEAM)
+    # Create steam_appid.txt
+    file(WRITE ${PROJECT_BINARY_DIR}/bin/steam_appid.txt "638490")
+  else()
+    # GameNetworkingSockets
+    add_subdirectory(shared/libs/GameNetworkingSockets)
+  endif()
 endif()
 
 option(BUILD_CLIENT "Build client" True)
