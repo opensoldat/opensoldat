@@ -1,5 +1,16 @@
 project(soldat)
 
+option(ADD_ASSETS "Include soldat.smod and font file" True)
+option(BUILD_CLIENT "Build client" True)
+option(BUILD_SERVER "Build server" True)
+option(BUILD_STEAM "Build steam version" False)
+option(CROSS_LINUX_64 "Cross compile to Linux 64bit" False)
+option(CROSS_LINUX_32 "Cross compile to Linux 32bit" False)
+option(CROSS_WINDOWS_64 "Cross compile to Windows x86_64" False)
+option(CROSS_WINDOWS_32 "Cross compile to Windows i386" False)
+option(CROSS_DARWIN_64 "Cross compile to macOS x86_64" False)
+option(CROSS_DARWIN_32 "Cross compile to macOS i386" False)
+
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
 include(${CMAKE_MODULE_PATH}/utils.cmake)
@@ -90,32 +101,26 @@ add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared/network")
 # generic folder where our libraries reside
 add_flag_append(CMAKE_Pascal_FLAGS "-Fl${LIBRARY_OUTPUT_PATH}")
 
-option(CROSS_LINUX_64 "Cross compile to Linux 64bit" False)
 if(CROSS_LINUX_64)
   add_flag_prepend(CMAKE_Pascal_FLAGS "-Tlinux -Px86_64")
 endif()
 
-option(CROSS_LINUX_32 "Cross compile to Linux 32bit" False)
 if(CROSS_LINUX_32)
   add_flag_prepend(CMAKE_Pascal_FLAGS "-Tlinux -Pi386")
 endif()
 
-option(CROSS_WINDOWS_64 "Cross compile to Windows x86_64" False)
 if(CROSS_WINDOWS_64)
   add_flag_prepend(CMAKE_Pascal_FLAGS "-Twin64 -Px86_64")
 endif()
 
-option(CROSS_WINDOWS_32 "Cross compile to Windows i386" False)
 if(CROSS_WINDOWS_32)
   add_flag_prepend(CMAKE_Pascal_FLAGS "-Twin32 -Pi386")
 endif()
 
-option(CROSS_DARWIN_64 "Cross compile to macOS x86_64" False)
 if(CROSS_DARWIN_64)
   add_flag_prepend(CMAKE_Pascal_FLAGS "-Tdarwin -Px86_64")
 endif()
 
-option(CROSS_DARWIN_32 "Cross compile to macOS i386" False)
 if(CROSS_DARWIN_32)
   add_flag_prepend(CMAKE_Pascal_FLAGS "-Tdarwin -Pi386")
 endif()
@@ -130,13 +135,11 @@ if(NOT PHYSFS_LIBRARY OR NOT PHYSFS_INCLUDE_DIR)
   find_package(PhysFS REQUIRED)
 endif()
 
-option(ADD_ASSETS "Include soldat.smod and font file" True)
 if(ADD_ASSETS)
   include(${CMAKE_MODULE_PATH}/SoldatAssets.cmake)
   download_assets()
 endif()
 
-option(BUILD_STEAM "Build steam version" False)
 if(BUILD_CLIENT OR BUILD_SERVER)
   if(BUILD_STEAM)
     # Create steam_appid.txt
@@ -147,12 +150,10 @@ if(BUILD_CLIENT OR BUILD_SERVER)
   endif()
 endif()
 
-option(BUILD_CLIENT "Build client" True)
 if(BUILD_CLIENT)
   add_subdirectory(client)
 endif()
 
-option(BUILD_SERVER "Build server" True)
 if(BUILD_SERVER)
   add_subdirectory(server)
 endif()
