@@ -399,7 +399,7 @@ begin
   GOALTICKS := DEFAULT_GOALTICKS;
 
   // Reset network state and show the status string (if any)
-  //ShouldRenderFrames := False;
+  ShouldRenderFrames := False;
   //NetEncActive := False;
   ResetSyncCvars;
 
