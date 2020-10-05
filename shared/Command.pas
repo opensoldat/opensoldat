@@ -401,16 +401,24 @@ begin
     Result := True;
     Exit;
   end;
+
   ACvar := TCvarBase.Find(InputArray[0]);
   if ACvar <> nil then
   begin
-    {$IFNDEF SERVER}
-    if CVAR_SYNC in ACvar.Flags then
-    begin
-      Result := False;
+    if CVAR_SERVER in ACvar.Flags then
+      {$IFNDEF SERVER}
+      // Ignore server-related cvars on client.
       Exit;
-    end;
-    {$ENDIF}
+      {$ELSE}
+      // On server, only allow accessing/editing server-related
+      // cvars when the player is an admin, or if input is coming
+      // from outside the game (from remote connection like ARSSE,
+      // from scripts, or when reading config file).
+      if (Sender >= 1) and (Sender <= MAX_PLAYERS) then
+        if not (IsRemoteAdminIP(Sprite[Sender].Player.IP) or IsAdminIP(Sprite[Sender].Player.IP)) then
+          Exit;
+      {$ENDIF}
+
     if Length(InputArray) = 1 then
     begin
       MainConsole.Console(Format('%s is "%s" (%s)',
