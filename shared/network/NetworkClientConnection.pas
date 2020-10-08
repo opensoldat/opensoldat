@@ -459,7 +459,7 @@ end;
 procedure ClientHandleUnAccepted(NetMessage: PSteamNetworkingMessage_t);
 var
   UnAcceptedMsg: PMsg_UnAccepted;
-  Text: WideString;
+  Text: String;
   TextLen: Integer;
 begin
   if not VerifyPacketLargerOrEqual(sizeof(UnAcceptedMsg), NetMessage^.m_cbSize, MsgID_UnAccepted) then
@@ -468,7 +468,7 @@ begin
   UnAcceptedMsg := PMsg_UnAccepted(NetMessage^.m_pData);
   TextLen := NetMessage^.m_cbSize - SizeOf(TMsg_UnAccepted);
 
-  if (TextLen > 0) and (UnAcceptedMsg.Text[TextLen-1] = #0) then
+  if (TextLen > 0) and (PChar(UnAcceptedMsg.Text)[TextLen-1] = #0) then
     Text := PChar(UnAcceptedMsg.Text)
   else
     Text := '';
