@@ -69,6 +69,7 @@ begin
   StrPCopy(RequestMsg.Password, JoinPassword);
   UDP.SendData(RequestMsg^, Size, k_nSteamNetworkingSend_Reliable);
   RequestingGame := True;
+  ReceivedUnAccepted := False;
 end;
 
 // SEND INFO ABOUT NAME, COLOR, PASS etc. TO SERVER OR CHANGE TEAM
@@ -501,6 +502,7 @@ begin
       RenderGameInfo(_('Rejected by Anti-Cheat:') + ' ' + Text);
   end;
 
+  ReceivedUnAccepted := True;
   ClientDisconnect;
   ExitToMenu;
 end;

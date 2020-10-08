@@ -825,6 +825,7 @@ var
   ClientVarsRecieved: Boolean;
   RequestingGame: Boolean;
   NoHeartbeatTime: Integer = 0;
+  ReceivedUnAccepted: Boolean;
   VoteMapName: String;
   VoteMapCount: Word;
   {$ELSE}
@@ -1085,7 +1086,10 @@ begin
         else
           WriteLn('[NET] Connection error #3', pInfo.m_info.m_szEndDebug);
 
-        RenderGameInfo('Network error: ' + WideString(pInfo.m_info.m_szEndDebug));
+        // No need to inform players about closed connection when
+        // they already received the UnAccepted packet.
+        if not ReceivedUnAccepted then
+          RenderGameInfo('Network error: ' + WideString(pInfo.m_info.m_szEndDebug));
         NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, nil, false);
       end;
       k_ESteamNetworkingConnectionState_Connecting:
