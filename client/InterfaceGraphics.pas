@@ -256,7 +256,7 @@ var
   AddrFile: PHYSFS_Buffer;
   AddrRec: TInterface;
 const
-  CUSTOM_INTERFACE_DIR = 'custom-intercases/';
+  CUSTOM_INTERFACE_DIR = 'custom-interfaces/';
 begin
   Result := False;
   IntAlign.Weapon    := 0;
