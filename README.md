@@ -43,4 +43,4 @@ Soldat compiles on Windows, Linux and macOS.
 
 1. Open commandline in client folder
 2. run `make`
-3. the executable can be found in the build folder (run with `soldat -join 127.0.0.1 23073`)
+3. the executable can be found in the build folder (run with `soldat -join 127.0.0.1 23073 test`)
