@@ -473,25 +473,33 @@ end;
 procedure ParseCommandLine();
 var
   CommandLine: AnsiString = '';
-  CommandLineParser: TStringList;
+  CommandLineNoDash: AnsiString = '';
   i: Integer;
+  j: Integer;
+  commandBegin : Integer;
 begin
-  for i:=1 to argc do
+  i := 0;
+  commandBegin := 0;
+  while i <= argc do
   begin
-    if CommandLine <> '' then
-      CommandLine := CommandLine + ' ';
-    CommandLine := CommandLine + argv[i];
-  end;
+    if ((i > commandBegin) and (argv[i] <> '') and (argv[i][0] = '-')) or
+       (i = argc) then
+    begin
+      CommandLine := '';
+      for j:=commandBegin To i-1 do
+      begin
+        if CommandLine <> '' then
+          CommandLine := CommandLine + ' ';
+        CommandLine := CommandLine + argv[j];
+      end;
 
-  CommandLineParser := TStringList.Create;
-  CommandLineParser.Delimiter := '-';
-  CommandLineParser.StrictDelimiter := True;
-  CommandLineParser.DelimitedText := CommandLine;
+      CommandLineNoDash := copy(CommandLine, 2, Length(CommandLine) - 1);
 
-  for i:=0 To CommandLineParser.Count-1 do
-  begin
-    if CommandLineParser[i] <> '' then
-      ParseInput(CommandLineParser[i]);
+      ParseInput(CommandLineNoDash);
+
+      commandBegin := i;
+    end;
+    i := i + 1;
   end;
 end;
 
