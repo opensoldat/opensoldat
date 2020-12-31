@@ -48,7 +48,7 @@ STBIDEF unsigned char *stbi_xload(stbi__context *s, int *x, int *y, int *frames,
 	int comp;
 	unsigned char *result = 0;
 
-	if ((result = stbi__gif_test(s)))
+	if (stbi__gif_test(s))
 		return stbi__load_gif_main(s, delays, x, y, frames, &comp, 4);
 
 	stbi__result_info ri;
