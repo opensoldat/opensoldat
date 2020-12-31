@@ -2333,7 +2333,7 @@ begin
     FData := stbi_xload_mem(@FileBuffer[0], Length(FileBuffer), @FWidth, @FHeight, @FNumFrames, @FDelays);
 
     if FNumFrames > 1 then begin
-      for i := 0 to FNumFrames do begin
+      for i := 0 to FNumFrames - 1 do begin
         FDelays[i] := FDelays[i] div 10;
       end;
     end;
