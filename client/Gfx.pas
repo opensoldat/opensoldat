@@ -2325,12 +2325,19 @@ end;
 constructor TGfxImage.Create(Filename: string; ColorKey: TGfxColor);
 var
   FileBuffer: PHYSFS_Buffer;
+  i: Integer;
 begin
   FileBuffer := PhysFS_readBuffer(PChar(Filename));
   FDelays := Nil;
-  if Length(FileBuffer) > 0 then
-    FData := stbi_xload_mem(@FileBuffer[0], Length(FileBuffer), @FWidth, @FHeight, @FNumFrames, @FDelays)
-  else
+  if Length(FileBuffer) > 0 then begin
+    FData := stbi_xload_mem(@FileBuffer[0], Length(FileBuffer), @FWidth, @FHeight, @FNumFrames, @FDelays);
+
+    if FNumFrames > 1 then begin
+      for i := 0 to FNumFrames do begin
+        FDelays[i] := FDelays[i] div 10;
+      end;
+    end;
+  end else
     FData := nil;
 
   if FData <> nil then
