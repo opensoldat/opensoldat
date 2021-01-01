@@ -21,27 +21,65 @@ This repository contains the source code of the so-called 1.8 version. Compared 
 
 Soldat compiles on Windows, Linux and macOS.
 
-1. Install [Lazarus IDE](https://www.lazarus-ide.org/) (or a standalone [FreePascal Compiler](https://freepascal.org) if you want to use Makefiles)
-2. Download [pre-built libraries](https://github.com/Soldat/prebuilt-libs/archive/master.zip) and copy libraries from `win64_dlls` to `client/build` and `server/build`
-3. Clone [base repository](https://github.com/soldat/base) and run `create_smod.sh` from it to create a game base archive
-4. Copy `soldat.smod` to `client/build` and `server/build`
-5. Copy `base/client/play-regular.ttf` to `client/build`
+### Compilation using CMake
 
-### Compilation using Lazarus IDE
+This approach automates some build steps. Soldat's assets will be downloaded for you, and you will not have to worry about downloading pre-built libraries. This is the simplest way to build Soldat for Linux.
 
-1. Open `server/soldatserver.lpi` with Lazarus, press F9 to compile and start the server
-2. Start another instance of Lazarus and open `client/soldat.lpi`, press F9 to build the game client
+CMake 3.14+ is required.
 
-### Compilation using Makefiles
+#### Build steps for Linux (Ubuntu)
 
-#### Compile server
+1. `sudo apt-get install build-essential g++ cmake git fpc libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6`
+2. `mkdir build && cd build`
+3. `cmake ..`
+4. `make`
 
-1. Open commandline in server folder
-2. run `make`
-3. the executable can be found in the build folder (run with `soldatserver`)
+#### Build steps for Windows
 
-#### Compile client
+1. Install [freepascal 3.0.4](https://sourceforge.net/projects/freepascal/files/Win32/3.0.4/) (install `fpc-3.0.4.i386-win32.exe` first, and then `fpc-3.0.4.i386-win32.cross.x86_64-win64.exe`)
+2. Install [Visual Studio with C++ compiler/build tools](https://visualstudio.microsoft.com/en) and [vcpkg](https://github.com/Microsoft/vcpkg)
+3. Open Developer command prompt for Visual Studio
+4. `vcpkg.exe --triplet x64-windows install sdl2 physfs openssl protobuf freetype openal-soft`
+5. `set PATH=%PATH%;C:\fpc\3.0.4\bin\i386-win32`
+6. `set OPENSSL_ROOT_DIR=C:\vcpkg\installed\x64-windows`
+7. `set PHYSFSDIR=C:\vcpkg\installed\x64-windows`
+8. `mkdir build`
+9. `cd build`
+10. `cmake -G "NMake Makefiles" -DCROSS_WINDOWS_64=1 -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake" -DSDL2_BUILDING_LIBRARY=1 ..`
+11. `nmake`
 
-1. Open commandline in client folder
-2. run `make`
-3. the executable can be found in the build folder (run with `soldat -join 127.0.0.1 23073 test`)
+#### Available flags
+
+The build can be customized by passing flags to `cmake` command. For example, you can choose whether you want to build the client, the server, or both. You can decide if you want to include Soldat's assets in the build. There are also options for cross-compilation.
+
+Check the `CMakeLists.txt` files in this repository to see the available options and their default values.
+
+Example: `cmake .. -DCMAKE_BUILD_TYPE=Release -DADD_ASSETS=1 -DBUILD_CLIENT=0` to get a release build of the server with Soldat's assets
+
+### Compilation using other methods
+
+If you decide to follow the approaches below, you will have to download Soldat's assets and pre-built libraries for the game to work.
+1. Download pre-built libraries. The best way would probably be to download libraries from the latest build of Soldat (from Github Actions, or Releases), so that you get the latest version. Otherwise, you can find them [here](https://github.com/Soldat/prebuilt-libs/archive/master.zip) (includes libraries for 3 platforms - pick the ones you need)
+2. Copy libraries to `client/build` and `server/build`
+3. Get `soldat.smod` file from [base repository](https://github.com/soldat/base). You can either download the file from the latest release (recommended), or generate the `.smod` file yourself following the provided instructions
+4. Copy `soldat.smod` file to `client/build` and `server/build`
+5. Download `play-regular.ttf` file from [base repository](https://github.com/soldat/base), either from the latest release or from `base/client` folder
+6. Copy `play-regular.ttf` file to `client/build`
+
+#### Compilation using Lazarus IDE
+
+1. Install [Lazarus IDE](https://www.lazarus-ide.org/)
+2. Open `server/soldatserver.lpi` with Lazarus, press F9 to compile and start the server
+3. Start another instance of Lazarus and open `client/soldat.lpi`, press F9 to build the game client
+
+#### Compilation using Makefiles
+
+1. Install [FreePascal Compiler](https://freepascal.org)
+2. Run `make` from `server` folder. The executable can be found in the `build` folder
+3. Run `make` from `client` folder. The executable can be found in the `build` folder
+
+## Running Soldat
+
+You need to start the server first, and then join the game with client.
+1. Run `soldatserver`
+2. Run `soldat -join 127.0.0.1 23073 test` (more generically `-join ip port server_password`)
