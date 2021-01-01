@@ -1,5 +1,3 @@
-unit Vector;
-
 {******************************************************************************}
 {                                                                              }
 {       Vector Unit for SOLDAT                                                 }
@@ -65,6 +63,8 @@ unit Vector;
 { For more information about the LGPL: http://www.gnu.org/copyleft/lesser.html }
 {                                                                              }
 {******************************************************************************}
+
+unit Vector;
 
 interface
 

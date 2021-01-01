@@ -1,6 +1,7 @@
 <div align="center">
   <img src="https://i.imgur.com/HrYPYjh.png" />
   <h2>Soldat</h2>
+  <a href="https://discord.soldat.pl"><img src="https://img.shields.io/discord/234733999879094272.svg" /></a>
 </div>
 
 Soldat is a unique 2D (side-view) multiplayer action game. It has been influenced by the best of games such as Liero, Worms, Quake, Counter-Strike, and provides a fast-paced gaming experience with tons of blood and flesh.
@@ -14,7 +15,7 @@ This repository contains the source code of the so-called 1.8 version. Compared 
 - OpenAL
 - FreeType 2.6.1
 - PhysFS 3.0.2
-- GameNetworkingSockets
+- [GameNetworkingSockets v1.2.0](https://github.com/ValveSoftware/GameNetworkingSockets/releases/tag/v1.2.0)
 
 ## Building Soldat
 
@@ -43,4 +44,4 @@ Soldat compiles on Windows, Linux and macOS.
 
 1. Open commandline in client folder
 2. run `make`
-3. the executable can be found in the build folder (run with `soldat -join 127.0.0.1 23073`)
+3. the executable can be found in the build folder (run with `soldat -join 127.0.0.1 23073 test`)

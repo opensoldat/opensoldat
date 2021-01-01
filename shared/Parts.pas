@@ -73,7 +73,6 @@ implementation
 uses
   SysUtils, PhysFS;
 
-
 procedure ParticleSystem.DoVerletTimeStep;
 var
   I: Integer;
@@ -84,19 +83,16 @@ begin
   SatisfyConstraints;
 end;
 
-
 procedure ParticleSystem.DoVerletTimeStepFor(I, J: Integer);
 begin
   Verlet(I);
   SatisfyConstraintsFor(J);
 end;
 
-
 procedure ParticleSystem.DoEulerTimeStepFor(I: Integer);
 begin
   Euler(I);
 end;
-
 
 procedure ParticleSystem.DoEulerTimeStep;
 var
@@ -106,7 +102,6 @@ begin
     if Active[I] then
       Euler(I);
 end;
-
 
 procedure ParticleSystem.Euler(I: Integer);
 var
@@ -127,7 +122,6 @@ begin
   Forces[I].X := 0;
   Forces[I].Y := 0;
 end;
-
 
 procedure ParticleSystem.Verlet(I: Integer);
 var
@@ -151,7 +145,6 @@ begin
   Forces[I].X := 0;
   Forces[I].Y := 0;
 end;
-
 
 procedure ParticleSystem.SatisfyConstraints;
 var
@@ -182,7 +175,6 @@ begin
         end;
 end;
 
-
 procedure ParticleSystem.SatisfyConstraintsFor(I: Integer);
 var
   Delta, D: TVector2;
@@ -208,7 +200,6 @@ begin
   end;
 end;
 
-
 procedure ParticleSystem.CreatePart(Start, Vel: TVector2; Mass: Single; Num: Integer);
 begin
   // Num is now the active Part
@@ -219,7 +210,6 @@ begin
   OldPos[Num] := Start;
   OneOverMass[Num] := 1 / Mass;
 end;
-
 
 procedure ParticleSystem.MakeConstraint(PA, PB: Integer; Rest: Single);
 begin
@@ -232,7 +222,6 @@ begin
     Restlength := Rest;
   end;
 end;
-
 
 procedure ParticleSystem.Clone(Other: ParticleSystem);
 var
@@ -260,7 +249,6 @@ begin
     end;
   end;
 end;
-
 
 procedure ParticleSystem.LoadPOObject(Filename: string; Scale: Single);
 var
@@ -328,7 +316,6 @@ begin
   PHYSFS_close(F);
   {$I+}
 end;
-
 
 procedure ParticleSystem.StopAllParts;
 var

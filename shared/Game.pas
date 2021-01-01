@@ -15,7 +15,8 @@ uses
   {$IFNDEF SERVER}
   Sparks,
   {$ENDIF}
-  Vector, Constants, PolyMap, Parts, Sprites, Bullets, Things, Waypoints, Anims, Weapons, Sha1, Util;
+  Vector, Constants, PolyMap, Parts, Sprites, Bullets, Things, Waypoints, Anims,
+  Weapons, Sha1, Util;
 
 type
   TKillSort = record
@@ -912,28 +913,12 @@ begin
   begin
     if Sprite[i].Active then
     begin
+      if Sprite[i].Player.Team in [TEAM_ALPHA..TEAM_DELTA] then
       {$IFDEF SERVER}
-      if Sprite[i].Active and (Sprite[i].Player.Team = TEAM_ALPHA) then
-        Inc(TeamAliveNum[TEAM_ALPHA]);
-      if Sprite[i].Active and (Sprite[i].Player.Team = TEAM_BRAVO) then
-        Inc(TeamAliveNum[TEAM_BRAVO]);
-      if Sprite[i].Active and (Sprite[i].Player.Team = TEAM_CHARLIE) then
-        Inc(TeamAliveNum[TEAM_CHARLIE]);
-      if Sprite[i].Active and (Sprite[i].Player.Team = TEAM_DELTA) then
-        Inc(TeamAliveNum[TEAM_DELTA]);
+        Inc(TeamAliveNum[Sprite[i].Player.Team]);
       {$ELSE}
-      if Sprite[i].Player.Team = TEAM_NONE then
-        Inc(TeamPlayersNum[TEAM_NONE]);
-      if Sprite[i].Player.Team = TEAM_ALPHA then
-        Inc(TeamPlayersNum[TEAM_ALPHA]);
-      if Sprite[i].Player.Team = TEAM_BRAVO then
-        Inc(TeamPlayersNum[TEAM_BRAVO]);
-      if Sprite[i].Player.Team = TEAM_CHARLIE then
-        Inc(TeamPlayersNum[TEAM_CHARLIE]);
-      if Sprite[i].Player.Team = TEAM_DELTA then
-        Inc(TeamPlayersNum[TEAM_DELTA]);
+        Inc(TeamPlayersNum[Sprite[i].Player.Team]);
       {$ENDIF}
-
     end;
   end;
 end;

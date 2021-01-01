@@ -5,22 +5,24 @@
 {       Copyright (c) 2002-2003 Michal Marcinkowski     }
 {                                                       }
 {*******************************************************}
+
 unit Sound;
 
 {$H+}
 interface
 
-uses SDL2, Vector, openal, PhysFS, contnrs, fgl;
+uses
+  SDL2, Vector, openal, PhysFS, contnrs, fgl;
 
 type
-  SoundSample = record
+  TSoundSample = record
     Loaded: Boolean;
     Buffer: ALuint;
   end;
 
   TScriptSound = record
     Name: string[26];
-    Samp: SoundSample;
+    Samp: TSoundSample;
   end;
 
 const
@@ -30,7 +32,7 @@ const
   CHANNEL_WEATHER = 127;
 
 var
-  Samp: array[1..MAX_SAMPLES] of SoundSample;
+  Samp: array[1..MAX_SAMPLES] of TSoundSample;
   ScriptSamp: array of TScriptSound;
   VolumeInternal: Single;
   ALDevice: PALCdevice;
@@ -44,7 +46,7 @@ var
 
 function InitSound(): Boolean;
 function SoundNameToID(Name: string): ShortInt;
-function LoadSample(Name: PChar; samp: SoundSample): SoundSample;
+function LoadSample(Name: PChar; samp: TSoundSample): TSoundSample;
 function ScaleVolumeSetting(VolumeSetting: Byte): Single;
 procedure LoadSounds(ModDir: string);
 procedure CloseSound;
@@ -103,7 +105,7 @@ begin
   {$ENDIF}
 end;
 
-function LoadSample(Name: PChar; Samp: SoundSample): SoundSample;
+function LoadSample(Name: PChar; Samp: TSoundSample): TSoundSample;
 var
   Spec: TSDL_AudioSpec;
   DataBuffer: PUInt8;

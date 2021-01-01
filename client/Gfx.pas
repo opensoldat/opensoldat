@@ -482,7 +482,8 @@ begin
     begin
       glVertexAttribPointer(0, 2, GL_FLOAT, False, sizeof(TGfxVertex), Pointer(0));
       glVertexAttribPointer(1, 2, GL_FLOAT, False, sizeof(TGfxVertex), Pointer(8));
-      glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, True, sizeof(TGfxVertex), Pointer(16));
+      // Workaround for MESA 20.1+ breakage: Pass ByteBool(1) instead of True
+      glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, ByteBool(1), sizeof(TGfxVertex), Pointer(16));
     end
     else
     begin

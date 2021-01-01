@@ -29,7 +29,8 @@ procedure ClientHandlePlaySound(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Client, Game, Demo, GameMenus, NetworkClientConnection, PhysFS, InterfaceGraphics, NetworkUtils;
+  Client, Game, Demo, GameMenus, NetworkClientConnection, PhysFS,
+  InterfaceGraphics, NetworkUtils;
 
 procedure ClientHandleVoteOn(NetMessage: PSteamNetworkingMessage_t);
 var

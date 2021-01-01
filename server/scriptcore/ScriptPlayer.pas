@@ -120,7 +120,7 @@ type
     procedure SetDummy(Dummy: Boolean);
   public
     destructor Destroy; override;
-    //Not exported
+    // Not exported
     property Sprite: TSprite read GetSprite;
     property Team: Byte read GetTeam;
     property Name: string read GetName;

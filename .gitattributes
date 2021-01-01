@@ -14,8 +14,6 @@
 
 # checkout with LF line endings
 *.sh  text eol=lf
-*.hit text eol=lf
-hit   text eol=lf
 
 # do not modify binary files at all
 *.bmp binary

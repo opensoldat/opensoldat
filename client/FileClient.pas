@@ -3,12 +3,13 @@ unit FileClient;
 interface
 
 uses
-  SysUtils, Classes, sha1, strutils, fphttpclient, sslsockets, fpopenssl, GameRendering, Constants;
+  SysUtils, Classes, sha1, strutils, fphttpclient, sslsockets, fpopenssl,
+  GameRendering, Constants, Version;
 
-const MAX_DL_SIZE = 150000000; // max download size in bytes
+const
+  MAX_DL_SIZE = 150000000;  // max download size in bytes
 
 type
-
   TDownloadThread = Class(TThread)
     private
       FURL: String;
@@ -33,11 +34,13 @@ type
       destructor Destroy; override;
   end;
 
-  var
-    DownloadRetry: Byte = 0;
+var
+  DownloadRetry: Byte = 0;
 
 implementation
-  uses Client, Util;
+
+uses
+  Client, Util;
 
 constructor TDownloadThread.Create(DownloadURL: String; Name: String; Checksum: TSHA1Digest);
 begin
@@ -93,7 +96,7 @@ begin
   with Client do
   try
     try
-      AddHeader('User-Agent', 'soldatclient/1.8.0');
+      AddHeader('User-Agent', 'soldatclient/' + SOLDAT_VERSION);
       AllowRedirect := False;
       IOTimeout := 1000;
       OnDataReceived := DoProgress;
@@ -129,7 +132,7 @@ begin
   Inc(DownloadRetry);
   if DownloadRetry = 1 then
     if FStatus = 1 then
-      JoinServer();
+      JoinServer;
   FreeAndNil(DownloadThread);
 end;
 

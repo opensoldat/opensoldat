@@ -9,7 +9,7 @@ uses
   sv_ - server cvar
   cl_ - client cvar
   mp_ - multiplayer cvars
-  r_ - renderer settings
+  r_  - renderer settings
   ui_ - interface settings
   fs_ - filesystem settings
 }
@@ -20,15 +20,15 @@ const
 type
   {
     CVAR_IMMUTABLE - can't be changed after set
-    CVAR_ARCHIVE - save cvar to cfg file
-    CVAR_SPONLY - only in singleplayer mode
-    CVAR_NOTIFY - notify players after change
-    CVAR_MODIFIED - this flag is set after cvar changed initial value
-    CVAR_CLIENT - client cvar
-    CVAR_SERVER - server cvar
-    CVAR_SYNC - sync cvar to client cvar
-    CVAR_SCRIPT - cvar set by script
-    CVAR_INITONLY - cvar can be changed only at startup
+    CVAR_ARCHIVE   - save cvar to cfg file
+    CVAR_SPONLY    - only in singleplayer mode
+    CVAR_NOTIFY    - notify players after change
+    CVAR_MODIFIED  - this flag is set after cvar changed initial value
+    CVAR_CLIENT    - client cvar
+    CVAR_SERVER    - server cvar
+    CVAR_SYNC      - sync cvar to client cvar
+    CVAR_SCRIPT    - cvar set by script
+    CVAR_INITONLY  - cvar can be changed only at startup
   }
   TCvarFlag = (CVAR_IMMUTABLE, CVAR_ARCHIVE, CVAR_SPONLY, CVAR_NOTIFY,
       CVAR_MODIFIED, CVAR_CLIENT, CVAR_SERVER, CVAR_SYNC, CVAR_SCRIPT,
@@ -416,7 +416,7 @@ constructor TSingleCvar.Create(Name, Description: AnsiString; Value, DefaultValu
 begin
   inherited Create(Name, Description, Value, DefaultValue, Flags, OnChange);
   Self.FMinValue := MinValue;
-  Self.FMaxValue:= MaxValue;
+  Self.FMaxValue := MaxValue;
 end;
 
 class function TSingleCvar.Add(Name, Description: AnsiString; Value, DefaultValue: Single; Flags: TCvarFlags; OnChange: TCallback; MinValue, MaxValue: Single): TSingleCvar;
