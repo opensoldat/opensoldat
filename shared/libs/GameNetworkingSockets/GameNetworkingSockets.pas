@@ -19,7 +19,6 @@ const
   {$ENDIF}
   {$IFDEF DARWIN}
   GNSLIB = 'libGameNetworkingSockets.dylib';
-  {$linklib GameNetworkingSockets}
   {$ENDIF}
   {$IFDEF LINUX}
   GNSLIB = 'libGameNetworkingSockets.so';
@@ -1095,276 +1094,268 @@ type PESteamNetworkingConfigDataType = ^ESteamNetworkingConfigDataType;
 {$push}
 {$notes off}
 type ESteamNetworkingConfigValue = (
-	k_ESteamNetworkingConfig_Invalid = 0,
+  k_ESteamNetworkingConfig_Invalid = 0,
 
-	/// [global float, 0--100] Randomly discard N pct of packets instead of sending/recv
-	/// This is a global option only, since it is applied at a low level
-	/// where we don't have much context
-	k_ESteamNetworkingConfig_FakePacketLoss_Send = 2,
-	k_ESteamNetworkingConfig_FakePacketLoss_Recv = 3,
+  /// [global float, 0--100] Randomly discard N pct of packets instead of sending/recv
+  /// This is a global option only, since it is applied at a low level
+  /// where we don't have much context
+  k_ESteamNetworkingConfig_FakePacketLoss_Send = 2,
+  k_ESteamNetworkingConfig_FakePacketLoss_Recv = 3,
 
-	/// [global int32].  Delay all outbound/inbound packets by N ms
-	k_ESteamNetworkingConfig_FakePacketLag_Send = 4,
-	k_ESteamNetworkingConfig_FakePacketLag_Recv = 5,
+  /// [global int32].  Delay all outbound/inbound packets by N ms
+  k_ESteamNetworkingConfig_FakePacketLag_Send = 4,
+  k_ESteamNetworkingConfig_FakePacketLag_Recv = 5,
 
-	/// [global float] 0-100 Percentage of packets we will add additional delay
-	/// to (causing them to be reordered)
-	k_ESteamNetworkingConfig_FakePacketReorder_Send = 6,
-	k_ESteamNetworkingConfig_FakePacketReorder_Recv = 7,
+  /// [global float] 0-100 Percentage of packets we will add additional delay
+  /// to (causing them to be reordered)
+  k_ESteamNetworkingConfig_FakePacketReorder_Send = 6,
+  k_ESteamNetworkingConfig_FakePacketReorder_Recv = 7,
 
-	/// [global int32] Extra delay, in ms, to apply to reordered packets.
-	k_ESteamNetworkingConfig_FakePacketReorder_Time = 8,
+  /// [global int32] Extra delay, in ms, to apply to reordered packets.
+  k_ESteamNetworkingConfig_FakePacketReorder_Time = 8,
 
-	/// [global float 0--100] Globally duplicate some percentage of packets we send
-	k_ESteamNetworkingConfig_FakePacketDup_Send = 26,
-	k_ESteamNetworkingConfig_FakePacketDup_Recv = 27,
+  /// [global float 0--100] Globally duplicate some percentage of packets we send
+  k_ESteamNetworkingConfig_FakePacketDup_Send = 26,
+  k_ESteamNetworkingConfig_FakePacketDup_Recv = 27,
 
-	/// [global int32] Amount of delay, in ms, to delay duplicated packets.
-	/// (We chose a random delay between 0 and this value)
-	k_ESteamNetworkingConfig_FakePacketDup_TimeMax = 28,
+  /// [global int32] Amount of delay, in ms, to delay duplicated packets.
+  /// (We chose a random delay between 0 and this value)
+  k_ESteamNetworkingConfig_FakePacketDup_TimeMax = 28,
 
-	/// [connection int32] Timeout value (in ms) to use when first connecting
-	k_ESteamNetworkingConfig_TimeoutInitial = 24,
+  /// [connection int32] Timeout value (in ms) to use when first connecting
+  k_ESteamNetworkingConfig_TimeoutInitial = 24,
 
-	/// [connection int32] Timeout value (in ms) to use after connection is established
-	k_ESteamNetworkingConfig_TimeoutConnected = 25,
+  /// [connection int32] Timeout value (in ms) to use after connection is established
+  k_ESteamNetworkingConfig_TimeoutConnected = 25,
 
-	/// [connection int32] Upper limit of buffered pending bytes to be sent,
-	/// if this is reached SendMessage will return k_EResultLimitExceeded
-	/// Default is 512k (524288 bytes)
-	k_ESteamNetworkingConfig_SendBufferSize = 9,
+  /// [connection int32] Upper limit of buffered pending bytes to be sent,
+  /// if this is reached SendMessage will return k_EResultLimitExceeded
+  /// Default is 512k (524288 bytes)
+  k_ESteamNetworkingConfig_SendBufferSize = 9,
 
-	/// [connection int32] Minimum/maximum send rate clamp, 0 is no limit.
-	/// This value will control the min/max allowed sending rate that 
+  /// [connection int32] Minimum/maximum send rate clamp, 0 is no limit.
   /// This value will control the min/max allowed sending rate that
-	/// This value will control the min/max allowed sending rate that 
-  /// This value will control the min/max allowed sending rate that
-	/// This value will control the min/max allowed sending rate that 
-	/// bandwidth estimation is allowed to reach.  Default is 0 (no-limit)
-	k_ESteamNetworkingConfig_SendRateMin = 10,
-	k_ESteamNetworkingConfig_SendRateMax = 11,
+  /// bandwidth estimation is allowed to reach.  Default is 0 (no-limit)
+  k_ESteamNetworkingConfig_SendRateMin = 10,
+  k_ESteamNetworkingConfig_SendRateMax = 11,
 
-	/// [connection int32] Nagle time, in microseconds.  When SendMessage is called, if
-	/// the outgoing message is less than the size of the MTU, it will be
-	/// queued for a delay equal to the Nagle timer value.  This is to ensure
-	/// that if the application sends several small messages rapidly, they are
-	/// coalesced into a single packet.
-	/// See historical RFC 896.  Value is in microseconds. 
+  /// [connection int32] Nagle time, in microseconds.  When SendMessage is called, if
+  /// the outgoing message is less than the size of the MTU, it will be
+  /// queued for a delay equal to the Nagle timer value.  This is to ensure
+  /// that if the application sends several small messages rapidly, they are
+  /// coalesced into a single packet.
   /// See historical RFC 896.  Value is in microseconds.
-	/// See historical RFC 896.  Value is in microseconds. 
-  /// See historical RFC 896.  Value is in microseconds.
-	/// See historical RFC 896.  Value is in microseconds. 
-	/// Default is 5000us (5ms).
-	k_ESteamNetworkingConfig_NagleTime = 12,
+  /// Default is 5000us (5ms).
+  k_ESteamNetworkingConfig_NagleTime = 12,
 
-	/// [connection int32] Don't automatically fail IP connections that don't have
-	/// strong auth.  On clients, this means we will attempt the connection even if
-	/// we don't know our identity or can't get a cert.  On the server, it means that
-	/// we won't automatically reject a connection due to a failure to authenticate.
-	/// (You can examine the incoming connection and decide whether to accept it.)
-	///
-	/// This is a dev configuration value, and you should not let users modify it in
-	/// production.
-	k_ESteamNetworkingConfig_IP_AllowWithoutAuth = 23,
+  /// [connection int32] Don't automatically fail IP connections that don't have
+  /// strong auth.  On clients, this means we will attempt the connection even if
+  /// we don't know our identity or can't get a cert.  On the server, it means that
+  /// we won't automatically reject a connection due to a failure to authenticate.
+  /// (You can examine the incoming connection and decide whether to accept it.)
+  ///
+  /// This is a dev configuration value, and you should not let users modify it in
+  /// production.
+  k_ESteamNetworkingConfig_IP_AllowWithoutAuth = 23,
 
-	/// [connection int32] Do not send UDP packets with a payload of
-	/// larger than N bytes.  If you set this, k_ESteamNetworkingConfig_MTU_DataSize
-	/// is automatically adjusted
-	k_ESteamNetworkingConfig_MTU_PacketSize = 32,
+  /// [connection int32] Do not send UDP packets with a payload of
+  /// larger than N bytes.  If you set this, k_ESteamNetworkingConfig_MTU_DataSize
+  /// is automatically adjusted
+  k_ESteamNetworkingConfig_MTU_PacketSize = 32,
 
-	/// [connection int32] (read only) Maximum message size you can send that
-	/// will not fragment, based on k_ESteamNetworkingConfig_MTU_PacketSize
-	k_ESteamNetworkingConfig_MTU_DataSize = 33,
+  /// [connection int32] (read only) Maximum message size you can send that
+  /// will not fragment, based on k_ESteamNetworkingConfig_MTU_PacketSize
+  k_ESteamNetworkingConfig_MTU_DataSize = 33,
 
-	/// [connection int32] Allow unencrypted (and unauthenticated) communication.
-	/// 0: Not allowed (the default)
-	/// 1: Allowed, but prefer encrypted
-	/// 2: Allowed, and preferred
-	/// 3: Required.  (Fail the connection if the peer requires encryption.)
-	///
-	/// This is a dev configuration value, since its purpose is to disable encryption.
-	/// You should not let users modify it in production.  (But note that it requires
-	/// the peer to also modify their value in order for encryption to be disabled.)
-	k_ESteamNetworkingConfig_Unencrypted = 34,
+  /// [connection int32] Allow unencrypted (and unauthenticated) communication.
+  /// 0: Not allowed (the default)
+  /// 1: Allowed, but prefer encrypted
+  /// 2: Allowed, and preferred
+  /// 3: Required.  (Fail the connection if the peer requires encryption.)
+  ///
+  /// This is a dev configuration value, since its purpose is to disable encryption.
+  /// You should not let users modify it in production.  (But note that it requires
+  /// the peer to also modify their value in order for encryption to be disabled.)
+  k_ESteamNetworkingConfig_Unencrypted = 34,
 
-	/// [global int32] 0 or 1.  Some variables are "dev" variables.  They are useful
-	/// for debugging, but should not be adjusted in production.  When this flag is false (the default),
-	/// such variables will not be enumerated by the ISteamnetworkingUtils::GetFirstConfigValue
-	/// ISteamNetworkingUtils::GetConfigValueInfo functions.  The idea here is that you
-	/// can use those functions to provide a generic mechanism to set any configuration
-	/// value from a console or configuration file, looking up the variable by name.  Depending
-	/// on your game, modifying other configuration values may also have negative effects, and
-	/// you may wish to further lock down which variables are allowed to be modified by the user.
-	/// (Maybe no variables!)  Or maybe you use a whitelist or blacklist approach.
-	///
-	/// (This flag is itself a dev variable.)
-	k_ESteamNetworkingConfig_EnumerateDevVars = 35,
+  /// [global int32] 0 or 1.  Some variables are "dev" variables.  They are useful
+  /// for debugging, but should not be adjusted in production.  When this flag is false (the default),
+  /// such variables will not be enumerated by the ISteamnetworkingUtils::GetFirstConfigValue
+  /// ISteamNetworkingUtils::GetConfigValueInfo functions.  The idea here is that you
+  /// can use those functions to provide a generic mechanism to set any configuration
+  /// value from a console or configuration file, looking up the variable by name.  Depending
+  /// on your game, modifying other configuration values may also have negative effects, and
+  /// you may wish to further lock down which variables are allowed to be modified by the user.
+  /// (Maybe no variables!)  Or maybe you use a whitelist or blacklist approach.
+  ///
+  /// (This flag is itself a dev variable.)
+  k_ESteamNetworkingConfig_EnumerateDevVars = 35,
 
-	/// [connection int32] Set this to 1 on outbound connections and listen sockets,
-	/// to enable "symmetric connect mode", which is useful in the following
-	/// common peer-to-peer use case:
-	///
-	/// - The two peers are "equal" to each other.  (Neither is clearly the "client"
-	///   or "server".)
-	/// - Either peer may initiate the connection, and indeed they may do this
-	///   at the same time
-	/// - The peers only desire a single connection to each other, and if both
-	///   peers initiate connections simultaneously, a protocol is needed for them
-	///   to resolve the conflict, so that we end up with a single connection.
-	///
-	/// This use case is both common, and involves subtle race conditions and tricky
-	/// pitfalls, which is why the API has support for dealing with it.
-	///
-	/// If an incoming connection arrives on a listen socket or via custom signaling,
-	/// and the application has not attempted to make a matching outbound connection
-	/// in symmetric mode, then the incoming connection can be accepted as usual.
-	/// A "matching" connection means that the relevant endpoint information matches.
-	/// (At the time this comment is being written, this is only supported for P2P
-	/// connections, which means that the peer identities must match, and the virtual
-	/// port must match.  At a later time, symmetric mode may be supported for other
-	/// connection types.)
-	///
-	/// If connections are initiated by both peers simultaneously, race conditions
-	/// can arise, but fortunately, most of them are handled internally and do not
-	/// require any special awareness from the application.  However, there
-	/// is one important case that application code must be aware of:
-	/// If application code attempts an outbound connection using a ConnectXxx
-	/// function in symmetric mode, and a matching incoming connection is already
-	/// waiting on a listen socket, then instead of forming a new connection,
-	/// the ConnectXxx call will accept the existing incoming connection, and return
-	/// a connection handle to this accepted connection.
-	/// IMPORTANT: in this case, a SteamNetConnectionStatusChangedCallback_t
-	/// has probably *already* been posted to the queue for the incoming connection!
-	/// (Once callbacks are posted to the queue, they are not modified.)  It doesn't
-	/// matter if the callback has not been consumed by the app.  Thus, application
-	/// code that makes use of symmetric connections must be aware that, when processing a
-	/// SteamNetConnectionStatusChangedCallback_t for an incoming connection, the
-	/// m_hConn may refer to a new connection that the app has has not
-	/// seen before (the usual case), but it may also refer to a connection that
-	/// has already been accepted implicitly through a call to Connect()!  In this
-	/// case, AcceptConnection() will return k_EResultDuplicateRequest.
-	///
-	/// Only one symmetric connection to a given peer (on a given virtual port)
-	/// may exist at any given time.  If client code attempts to create a connection,
-	/// and a (live) connection already exists on the local host, then either the
-	/// existing connection will be accepted as described above, or the attempt
-	/// to create a new connection will fail.  Furthermore, linger mode functionality
-	/// is not supported on symmetric connections.
-	///
-	/// A more complicated race condition can arise if both peers initiate a connection
-	/// at roughly the same time.  In this situation, each peer will receive an incoming
-	/// connection from the other peer, when the application code has already initiated
-	/// an outgoing connection to that peer.  The peers must resolve this conflict and
-	/// decide who is going to act as the "server" and who will act as the "client".
-	/// Typically the application does not need to be aware of this case as it is handled
-	/// internally.  On both sides, the will observe their outbound connection being
-	/// "accepted", although one of them one have been converted internally to act
-	/// as the "server".
-	///
-	/// In general, symmetric mode should be all-or-nothing: do not mix symmetric
-	/// connections with a non-symmetric connection that it might possible "match"
-	/// with.  If you use symmetric mode on any connections, then both peers should
-	/// use it on all connections, and the corresponding listen socket, if any.  The
-	/// behaviour when symmetric and ordinary connections are mixed is not defined by
-	/// this API, and you should not rely on it.  (This advice only applies when connections
-	/// might possibly "match".  For example, it's OK to use all symmetric mode
-	/// connections on one virtual port, and all ordinary, non-symmetric connections
-	/// on a different virtual port, as there is no potential for ambiguity.)
-	///
-	/// When using the feature, you should set it in the following situations on
-	/// applicable objects:
-	///
-	/// - When creating an outbound connection using ConnectXxx function
-	/// - When creating a listen socket.  (Note that this will automatically cause
-	///   any accepted connections to inherit the flag.)
-	/// - When using custom signaling, before accepting an incoming connection.
-	///
-	/// Setting the flag on listen socket and accepted connections will enable the
-	/// API to automatically deal with duplicate incoming connections, even if the
-	/// local host has not made any outbound requests.  (In general, such duplicate
-	/// requests from a peer are ignored internally and will not be visible to the
-	/// application code.  The previous connection must be closed or resolved first.)
-	k_ESteamNetworkingConfig_SymmetricConnect = 37,
+  /// [connection int32] Set this to 1 on outbound connections and listen sockets,
+  /// to enable "symmetric connect mode", which is useful in the following
+  /// common peer-to-peer use case:
+  ///
+  /// - The two peers are "equal" to each other.  (Neither is clearly the "client"
+  ///   or "server".)
+  /// - Either peer may initiate the connection, and indeed they may do this
+  ///   at the same time
+  /// - The peers only desire a single connection to each other, and if both
+  ///   peers initiate connections simultaneously, a protocol is needed for them
+  ///   to resolve the conflict, so that we end up with a single connection.
+  ///
+  /// This use case is both common, and involves subtle race conditions and tricky
+  /// pitfalls, which is why the API has support for dealing with it.
+  ///
+  /// If an incoming connection arrives on a listen socket or via custom signaling,
+  /// and the application has not attempted to make a matching outbound connection
+  /// in symmetric mode, then the incoming connection can be accepted as usual.
+  /// A "matching" connection means that the relevant endpoint information matches.
+  /// (At the time this comment is being written, this is only supported for P2P
+  /// connections, which means that the peer identities must match, and the virtual
+  /// port must match.  At a later time, symmetric mode may be supported for other
+  /// connection types.)
+  ///
+  /// If connections are initiated by both peers simultaneously, race conditions
+  /// can arise, but fortunately, most of them are handled internally and do not
+  /// require any special awareness from the application.  However, there
+  /// is one important case that application code must be aware of:
+  /// If application code attempts an outbound connection using a ConnectXxx
+  /// function in symmetric mode, and a matching incoming connection is already
+  /// waiting on a listen socket, then instead of forming a new connection,
+  /// the ConnectXxx call will accept the existing incoming connection, and return
+  /// a connection handle to this accepted connection.
+  /// IMPORTANT: in this case, a SteamNetConnectionStatusChangedCallback_t
+  /// has probably *already* been posted to the queue for the incoming connection!
+  /// (Once callbacks are posted to the queue, they are not modified.)  It doesn't
+  /// matter if the callback has not been consumed by the app.  Thus, application
+  /// code that makes use of symmetric connections must be aware that, when processing a
+  /// SteamNetConnectionStatusChangedCallback_t for an incoming connection, the
+  /// m_hConn may refer to a new connection that the app has has not
+  /// seen before (the usual case), but it may also refer to a connection that
+  /// has already been accepted implicitly through a call to Connect()!  In this
+  /// case, AcceptConnection() will return k_EResultDuplicateRequest.
+  ///
+  /// Only one symmetric connection to a given peer (on a given virtual port)
+  /// may exist at any given time.  If client code attempts to create a connection,
+  /// and a (live) connection already exists on the local host, then either the
+  /// existing connection will be accepted as described above, or the attempt
+  /// to create a new connection will fail.  Furthermore, linger mode functionality
+  /// is not supported on symmetric connections.
+  ///
+  /// A more complicated race condition can arise if both peers initiate a connection
+  /// at roughly the same time.  In this situation, each peer will receive an incoming
+  /// connection from the other peer, when the application code has already initiated
+  /// an outgoing connection to that peer.  The peers must resolve this conflict and
+  /// decide who is going to act as the "server" and who will act as the "client".
+  /// Typically the application does not need to be aware of this case as it is handled
+  /// internally.  On both sides, the will observe their outbound connection being
+  /// "accepted", although one of them one have been converted internally to act
+  /// as the "server".
+  ///
+  /// In general, symmetric mode should be all-or-nothing: do not mix symmetric
+  /// connections with a non-symmetric connection that it might possible "match"
+  /// with.  If you use symmetric mode on any connections, then both peers should
+  /// use it on all connections, and the corresponding listen socket, if any.  The
+  /// behaviour when symmetric and ordinary connections are mixed is not defined by
+  /// this API, and you should not rely on it.  (This advice only applies when connections
+  /// might possibly "match".  For example, it's OK to use all symmetric mode
+  /// connections on one virtual port, and all ordinary, non-symmetric connections
+  /// on a different virtual port, as there is no potential for ambiguity.)
+  ///
+  /// When using the feature, you should set it in the following situations on
+  /// applicable objects:
+  ///
+  /// - When creating an outbound connection using ConnectXxx function
+  /// - When creating a listen socket.  (Note that this will automatically cause
+  ///   any accepted connections to inherit the flag.)
+  /// - When using custom signaling, before accepting an incoming connection.
+  ///
+  /// Setting the flag on listen socket and accepted connections will enable the
+  /// API to automatically deal with duplicate incoming connections, even if the
+  /// local host has not made any outbound requests.  (In general, such duplicate
+  /// requests from a peer are ignored internally and will not be visible to the
+  /// application code.  The previous connection must be closed or resolved first.)
+  k_ESteamNetworkingConfig_SymmetricConnect = 37,
 
-	/// [connection int32] For connection types that use "virtual ports", this can be used
-	/// to assign a local virtual port.  For incoming connections, this will always be the
-	/// virtual port of the listen socket (or the port requested by the remote host if custom
-	/// signaling is used and the connection is accepted), and cannot be changed.  For
-	/// connections initiated locally, the local virtual port will default to the same as the
-	/// requested remote virtual port, if you do not specify a different option when creating
-	/// the connection.  The local port is only relevant for symmetric connections, when
-	/// determining if two connections "match."  In this case, if you need the local and remote
-	/// port to differ, you can set this value.
-	///
-	/// You can also read back this value on listen sockets.
-	///
-	/// This value should not be read or written in any other context.
-	k_ESteamNetworkingConfig_LocalVirtualPort = 38,
+  /// [connection int32] For connection types that use "virtual ports", this can be used
+  /// to assign a local virtual port.  For incoming connections, this will always be the
+  /// virtual port of the listen socket (or the port requested by the remote host if custom
+  /// signaling is used and the connection is accepted), and cannot be changed.  For
+  /// connections initiated locally, the local virtual port will default to the same as the
+  /// requested remote virtual port, if you do not specify a different option when creating
+  /// the connection.  The local port is only relevant for symmetric connections, when
+  /// determining if two connections "match."  In this case, if you need the local and remote
+  /// port to differ, you can set this value.
+  ///
+  /// You can also read back this value on listen sockets.
+  ///
+  /// This value should not be read or written in any other context.
+  k_ESteamNetworkingConfig_LocalVirtualPort = 38,
 
-	//
-	// Callbacks
-	//
+  //
+  // Callbacks
+  //
 
-	// On Steam, you may use the default Steam callback dispatch mechanism.  If you prefer
-	// to not use this dispatch mechanism (or you are not running with Steam), or you want
-	// to associate specific functions with specific listen sockets or connections, you can
-	// register them as configuration values.
-	//
-	// Note also that ISteamNetworkingUtils has some helpers to set these globally.
+  // On Steam, you may use the default Steam callback dispatch mechanism.  If you prefer
+  // to not use this dispatch mechanism (or you are not running with Steam), or you want
+  // to associate specific functions with specific listen sockets or connections, you can
+  // register them as configuration values.
+  //
+  // Note also that ISteamNetworkingUtils has some helpers to set these globally.
 
-	/// [connection FnSteamNetConnectionStatusChanged] Callback that will be invoked
-	/// when the state of a connection changes.
-	///
-	/// IMPORTANT: callbacks are dispatched to the handler that is in effect at the time
-	/// the event occurs, which might be in another thread.  For example, immediately after
-	/// creating a listen socket, you may receive an incoming connection.  And then immediately
-	/// after this, the remote host may close the connection.  All of this could happen
-	/// before the function to create the listen socket has returned.  For this reason,
-	/// callbacks usually must be in effect at the time of object creation.  This means
-	/// you should set them when you are creating the listen socket or connection, or have
-	/// them in effect so they will be inherited at the time of object creation.
-	///
-	/// For example:
-	///
-	/// exterm void MyStatusChangedFunc( SteamNetConnectionStatusChangedCallback_t *info );
-	/// SteamNetworkingConfigValue_t opt; opt.SetPtr( k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged, MyStatusChangedFunc );
-	/// SteamNetworkingIPAddr localAddress; localAddress.Clear();
-	/// HSteamListenSocket hListenSock = SteamNetworkingSockets()->CreateListenSocketIP( localAddress, 1, &opt );
-	///
-	/// When accepting an incoming connection, there is no atomic way to switch the
-	/// callback.  However, if the connection is DOA, AcceptConnection() will fail, and
-	/// you can fetch the state of the connection at that time.
-	///
-	/// If all connections and listen sockets can use the same callback, the simplest
-	/// method is to set it globally before you create any listen sockets or connections.
-	k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged = 201,
+  /// [connection FnSteamNetConnectionStatusChanged] Callback that will be invoked
+  /// when the state of a connection changes.
+  ///
+  /// IMPORTANT: callbacks are dispatched to the handler that is in effect at the time
+  /// the event occurs, which might be in another thread.  For example, immediately after
+  /// creating a listen socket, you may receive an incoming connection.  And then immediately
+  /// after this, the remote host may close the connection.  All of this could happen
+  /// before the function to create the listen socket has returned.  For this reason,
+  /// callbacks usually must be in effect at the time of object creation.  This means
+  /// you should set them when you are creating the listen socket or connection, or have
+  /// them in effect so they will be inherited at the time of object creation.
+  ///
+  /// For example:
+  ///
+  /// exterm void MyStatusChangedFunc( SteamNetConnectionStatusChangedCallback_t *info );
+  /// SteamNetworkingConfigValue_t opt; opt.SetPtr( k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged, MyStatusChangedFunc );
+  /// SteamNetworkingIPAddr localAddress; localAddress.Clear();
+  /// HSteamListenSocket hListenSock = SteamNetworkingSockets()->CreateListenSocketIP( localAddress, 1, &opt );
+  ///
+  /// When accepting an incoming connection, there is no atomic way to switch the
+  /// callback.  However, if the connection is DOA, AcceptConnection() will fail, and
+  /// you can fetch the state of the connection at that time.
+  ///
+  /// If all connections and listen sockets can use the same callback, the simplest
+  /// method is to set it globally before you create any listen sockets or connections.
+  k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged = 201,
 
-	/// [global FnSteamNetAuthenticationStatusChanged] Callback that will be invoked
-	/// when our auth state changes.  If you use this, install the callback before creating
-	/// any connections or listen sockets, and don't change it.
-	/// See: ISteamNetworkingUtils::SetGlobalCallback_SteamNetAuthenticationStatusChanged
-	k_ESteamNetworkingConfig_Callback_AuthStatusChanged = 202,
+  /// [global FnSteamNetAuthenticationStatusChanged] Callback that will be invoked
+  /// when our auth state changes.  If you use this, install the callback before creating
+  /// any connections or listen sockets, and don't change it.
+  /// See: ISteamNetworkingUtils::SetGlobalCallback_SteamNetAuthenticationStatusChanged
+  k_ESteamNetworkingConfig_Callback_AuthStatusChanged = 202,
 
-	/// [global FnSteamRelayNetworkStatusChanged] Callback that will be invoked
-	/// when our auth state changes.  If you use this, install the callback before creating
-	/// any connections or listen sockets, and don't change it.
-	/// See: ISteamNetworkingUtils::SetGlobalCallback_SteamRelayNetworkStatusChanged
-	k_ESteamNetworkingConfig_Callback_RelayNetworkStatusChanged = 203,
+  /// [global FnSteamRelayNetworkStatusChanged] Callback that will be invoked
+  /// when our auth state changes.  If you use this, install the callback before creating
+  /// any connections or listen sockets, and don't change it.
+  /// See: ISteamNetworkingUtils::SetGlobalCallback_SteamRelayNetworkStatusChanged
+  k_ESteamNetworkingConfig_Callback_RelayNetworkStatusChanged = 203,
 
-	/// [global FnSteamNetworkingMessagesSessionRequest] Callback that will be invoked
-	/// when a peer wants to initiate a SteamNetworkingMessagesSessionRequest.
-	/// See: ISteamNetworkingUtils::SetGlobalCallback_MessagesSessionRequest
-	k_ESteamNetworkingConfig_Callback_MessagesSessionRequest = 204,
+  /// [global FnSteamNetworkingMessagesSessionRequest] Callback that will be invoked
+  /// when a peer wants to initiate a SteamNetworkingMessagesSessionRequest.
+  /// See: ISteamNetworkingUtils::SetGlobalCallback_MessagesSessionRequest
+  k_ESteamNetworkingConfig_Callback_MessagesSessionRequest = 204,
 
-	/// [global FnSteamNetworkingMessagesSessionFailed] Callback that will be invoked
-	/// when a session you have initiated, or accepted either fails to connect, or loses
-	/// connection in some unexpected way.
-	/// See: ISteamNetworkingUtils::SetGlobalCallback_MessagesSessionFailed
-	k_ESteamNetworkingConfig_Callback_MessagesSessionFailed = 205,
+  /// [global FnSteamNetworkingMessagesSessionFailed] Callback that will be invoked
+  /// when a session you have initiated, or accepted either fails to connect, or loses
+  /// connection in some unexpected way.
+  /// See: ISteamNetworkingUtils::SetGlobalCallback_MessagesSessionFailed
+  k_ESteamNetworkingConfig_Callback_MessagesSessionFailed = 205,
 
-	//
-	// P2P settings
-	//
+  //
+  // P2P settings
+  //
 
 //	/// [listen socket int32] When you create a P2P listen socket, we will automatically
 //	/// open up a UDP port to listen for LAN connections.  LAN connections can be made
@@ -1377,97 +1368,89 @@ type ESteamNetworkingConfigValue = (
 //	/// on the LAN.
 //	k_ESteamNetworkingConfig_P2P_Discovery_Client_RemotePort = 102,
 
-	/// [connection string] Comma-separated list of STUN servers that can be used
-	/// for NAT piercing.  If you set this to an empty string, NAT piercing will
-	/// not be attempted.  Also if "public" candidates are not allowed for
-	/// P2P_Transport_ICE_Enable, then this is ignored.
-	k_ESteamNetworkingConfig_P2P_STUN_ServerList = 103,
+  /// [connection string] Comma-separated list of STUN servers that can be used
+  /// for NAT piercing.  If you set this to an empty string, NAT piercing will
+  /// not be attempted.  Also if "public" candidates are not allowed for
+  /// P2P_Transport_ICE_Enable, then this is ignored.
+  k_ESteamNetworkingConfig_P2P_STUN_ServerList = 103,
 
-	/// [connection int32] What types of ICE candidates to share with the peer.
-	/// See k_nSteamNetworkingConfig_P2P_Transport_ICE_Enable_xxx values
-	k_ESteamNetworkingConfig_P2P_Transport_ICE_Enable = 104,
+  /// [connection int32] What types of ICE candidates to share with the peer.
+  /// See k_nSteamNetworkingConfig_P2P_Transport_ICE_Enable_xxx values
+  k_ESteamNetworkingConfig_P2P_Transport_ICE_Enable = 104,
 
-	/// [connection int32] When selecting P2P transport, add various
-	/// penalties to the scores for selected transports.  (Route selection
-	/// scores are on a scale of milliseconds.  The score begins with the
-	/// route ping time and is then adjusted.)
-	k_ESteamNetworkingConfig_P2P_Transport_ICE_Penalty = 105,
-	k_ESteamNetworkingConfig_P2P_Transport_SDR_Penalty = 106,
-	//k_ESteamNetworkingConfig_P2P_Transport_LANBeacon_Penalty = 107,
+  /// [connection int32] When selecting P2P transport, add various
+  /// penalties to the scores for selected transports.  (Route selection
+  /// scores are on a scale of milliseconds.  The score begins with the
+  /// route ping time and is then adjusted.)
+  k_ESteamNetworkingConfig_P2P_Transport_ICE_Penalty = 105,
+  k_ESteamNetworkingConfig_P2P_Transport_SDR_Penalty = 106,
+  //k_ESteamNetworkingConfig_P2P_Transport_LANBeacon_Penalty = 107,
 
-	//
-	// Settings for SDR relayed connections
-	//
+  //
+  // Settings for SDR relayed connections
+  //
 
-	/// [int32 global] If the first N pings to a port all fail, mark that port as unavailable for
-	/// a while, and try a different one.  Some ISPs and routers may drop the first
-	/// packet, so setting this to 1 may greatly disrupt communications.
-	k_ESteamNetworkingConfig_SDRClient_ConsecutitivePingTimeoutsFailInitial = 19,
+  /// [int32 global] If the first N pings to a port all fail, mark that port as unavailable for
+  /// a while, and try a different one.  Some ISPs and routers may drop the first
+  /// packet, so setting this to 1 may greatly disrupt communications.
+  k_ESteamNetworkingConfig_SDRClient_ConsecutitivePingTimeoutsFailInitial = 19,
 
-	/// [int32 global] If N consecutive pings to a port fail, after having received successful 
   /// [int32 global] If N consecutive pings to a port fail, after having received successful
-	/// [int32 global] If N consecutive pings to a port fail, after having received successful 
-  /// [int32 global] If N consecutive pings to a port fail, after having received successful
-	/// [int32 global] If N consecutive pings to a port fail, after having received successful 
-	/// communication, mark that port as unavailable for a while, and try a 
   /// communication, mark that port as unavailable for a while, and try a
-	/// communication, mark that port as unavailable for a while, and try a 
-  /// communication, mark that port as unavailable for a while, and try a
-	/// communication, mark that port as unavailable for a while, and try a 
-	/// different one.
-	k_ESteamNetworkingConfig_SDRClient_ConsecutitivePingTimeoutsFail = 20,
+  /// different one.
+  k_ESteamNetworkingConfig_SDRClient_ConsecutitivePingTimeoutsFail = 20,
 
-	/// [int32 global] Minimum number of lifetime pings we need to send, before we think our estimate
-	/// is solid.  The first ping to each cluster is very often delayed because of NAT,
-	/// routers not having the best route, etc.  Until we've sent a sufficient number
-	/// of pings, our estimate is often inaccurate.  Keep pinging until we get this
-	/// many pings.
-	k_ESteamNetworkingConfig_SDRClient_MinPingsBeforePingAccurate = 21,
+  /// [int32 global] Minimum number of lifetime pings we need to send, before we think our estimate
+  /// is solid.  The first ping to each cluster is very often delayed because of NAT,
+  /// routers not having the best route, etc.  Until we've sent a sufficient number
+  /// of pings, our estimate is often inaccurate.  Keep pinging until we get this
+  /// many pings.
+  k_ESteamNetworkingConfig_SDRClient_MinPingsBeforePingAccurate = 21,
 
-	/// [int32 global] Set all steam datagram traffic to originate from the same
-	/// local port. By default, we open up a new UDP socket (on a different local
-	/// port) for each relay.  This is slightly less optimal, but it works around
-	/// some routers that don't implement NAT properly.  If you have intermittent
-	/// problems talking to relays that might be NAT related, try toggling
-	/// this flag
-	k_ESteamNetworkingConfig_SDRClient_SingleSocket = 22,
+  /// [int32 global] Set all steam datagram traffic to originate from the same
+  /// local port. By default, we open up a new UDP socket (on a different local
+  /// port) for each relay.  This is slightly less optimal, but it works around
+  /// some routers that don't implement NAT properly.  If you have intermittent
+  /// problems talking to relays that might be NAT related, try toggling
+  /// this flag
+  k_ESteamNetworkingConfig_SDRClient_SingleSocket = 22,
 
-	/// [global string] Code of relay cluster to force use.  If not empty, we will
-	/// only use relays in that cluster.  E.g. 'iad'
-	k_ESteamNetworkingConfig_SDRClient_ForceRelayCluster = 29,
+  /// [global string] Code of relay cluster to force use.  If not empty, we will
+  /// only use relays in that cluster.  E.g. 'iad'
+  k_ESteamNetworkingConfig_SDRClient_ForceRelayCluster = 29,
 
-	/// [connection string] For debugging, generate our own (unsigned) ticket, using
-	/// the specified  gameserver address.  Router must be configured to accept unsigned
-	/// tickets.
-	k_ESteamNetworkingConfig_SDRClient_DebugTicketAddress = 30,
+  /// [connection string] For debugging, generate our own (unsigned) ticket, using
+  /// the specified  gameserver address.  Router must be configured to accept unsigned
+  /// tickets.
+  k_ESteamNetworkingConfig_SDRClient_DebugTicketAddress = 30,
 
-	/// [global string] For debugging.  Override list of relays from the config with
-	/// this set (maybe just one).  Comma-separated list.
-	k_ESteamNetworkingConfig_SDRClient_ForceProxyAddr = 31,
+  /// [global string] For debugging.  Override list of relays from the config with
+  /// this set (maybe just one).  Comma-separated list.
+  k_ESteamNetworkingConfig_SDRClient_ForceProxyAddr = 31,
 
-	/// [global string] For debugging.  Force ping times to clusters to be the specified
-	/// values.  A comma separated list of <cluster>=<ms> values.  E.g. "sto=32,iad=100"
-	///
-	/// This is a dev configuration value, you probably should not let users modify it
-	/// in production.
-	k_ESteamNetworkingConfig_SDRClient_FakeClusterPing = 36,
+  /// [global string] For debugging.  Force ping times to clusters to be the specified
+  /// values.  A comma separated list of <cluster>=<ms> values.  E.g. "sto=32,iad=100"
+  ///
+  /// This is a dev configuration value, you probably should not let users modify it
+  /// in production.
+  k_ESteamNetworkingConfig_SDRClient_FakeClusterPing = 36,
 
-	//
-	// Log levels for debugging information of various subsystems.
-	// Higher numeric values will cause more stuff to be printed.
-	// See ISteamNetworkingUtils::SetDebugOutputFunction for more
-	// information
-	//
-	// The default for all values is k_ESteamNetworkingSocketsDebugOutputType_Warning.
-	//
-	k_ESteamNetworkingConfig_LogLevel_AckRTT = 13, // [connection int32] RTT calculations for inline pings and replies
-	k_ESteamNetworkingConfig_LogLevel_PacketDecode = 14, // [connection int32] log SNP packets send/recv
-	k_ESteamNetworkingConfig_LogLevel_Message = 15, // [connection int32] log each message send/recv
-	k_ESteamNetworkingConfig_LogLevel_PacketGaps = 16, // [connection int32] dropped packets
-	k_ESteamNetworkingConfig_LogLevel_P2PRendezvous = 17, // [connection int32] P2P rendezvous messages
-	k_ESteamNetworkingConfig_LogLevel_SDRRelayPings = 18, // [global int32] Ping relays
+  //
+  // Log levels for debugging information of various subsystems.
+  // Higher numeric values will cause more stuff to be printed.
+  // See ISteamNetworkingUtils::SetDebugOutputFunction for more
+  // information
+  //
+  // The default for all values is k_ESteamNetworkingSocketsDebugOutputType_Warning.
+  //
+  k_ESteamNetworkingConfig_LogLevel_AckRTT = 13, // [connection int32] RTT calculations for inline pings and replies
+  k_ESteamNetworkingConfig_LogLevel_PacketDecode = 14, // [connection int32] log SNP packets send/recv
+  k_ESteamNetworkingConfig_LogLevel_Message = 15, // [connection int32] log each message send/recv
+  k_ESteamNetworkingConfig_LogLevel_PacketGaps = 16, // [connection int32] dropped packets
+  k_ESteamNetworkingConfig_LogLevel_P2PRendezvous = 17, // [connection int32] P2P rendezvous messages
+  k_ESteamNetworkingConfig_LogLevel_SDRRelayPings = 18, // [global int32] Ping relays
 
-	k_ESteamNetworkingConfigValue__Force32Bit = $7fffffff
+  k_ESteamNetworkingConfigValue__Force32Bit = $7fffffff
 );
 type PESteamNetworkingConfigValue = ^ESteamNetworkingConfigValue;
 {$pop}

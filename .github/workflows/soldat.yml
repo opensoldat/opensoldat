@@ -13,40 +13,37 @@ jobs:
 
       - name: Compile soldat
         run: |
-          mkdir build
-          cd build
-          cmake -DBUILD_SMOD=0 ..
+          mkdir game-build
+          cd game-build
+          cmake .. -DCMAKE_INSTALL_PREFIX=./soldat -DCMAKE_BUILD_TYPE=Release
           make
+          make install
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: linux-build
-          path: build/bin/
-
-  macos:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          submodules: true
-
-      - name: Install dependencies
+      - name: Compile server only
         run: |
-          brew install openssl@1.1 protobuf fpc cmake sdl2 physfs freetype2
-
-      - name: Compile soldat
-        run: |
-          mkdir build
-          cd build
-          export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@1.1/lib/pkgconfig
-          cmake -DBUILD_SMOD=0 -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@1.1) ..
+          mkdir server-build
+          cd server-build
+          cmake .. -DBUILD_CLIENT=0 -DCMAKE_INSTALL_PREFIX=./soldatserver -DCMAKE_BUILD_TYPE=Release
           make
+          make install
 
-      - uses: actions/upload-artifact@v2
+      # We use .tar to preserve file permissions.
+      - name: Tar files
+        run: |
+          tar -cvf soldat.tar -C game-build soldat
+          tar -cvf soldatserver.tar -C server-build soldatserver
+
+      - name: Upload game build
+        uses: actions/upload-artifact@v2
         with:
-          name: macos-build
-          path: build/bin/
+          name: soldat-linux-x64
+          path: soldat.tar
+
+      - name: Upload server-only build
+        uses: actions/upload-artifact@v2
+        with:
+          name: soldatserver-linux-x64
+          path: soldatserver.tar
 
   windows:
     runs-on: windows-latest
@@ -93,7 +90,7 @@ jobs:
           set PHYSFSDIR=C:\vcpkg\installed\x64-windows
           mkdir build
           cd build
-          cmake -G "NMake Makefiles" -DCROSS_WINDOWS_64=1 -DBUILD_SMOD=0 -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake"  -DSDL2_BUILDING_LIBRARY=1 ..
+          cmake -G "NMake Makefiles" -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake"  -DSDL2_BUILDING_LIBRARY=1 ..
           nmake
         shell: cmd
 

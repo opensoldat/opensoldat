@@ -36,8 +36,8 @@ const
 
 function BindKey(key, action, command: string; Modifier: Word): Boolean;
 function FindKeyBind(KeyMods: Word; KeyCode: TSDL_ScanCode): PBind;
-procedure StartInput();
-procedure UnbindAll();
+procedure StartInput;
+procedure UnbindAll;
 
 var
   KeyStatus: array [0..512] of Boolean;
@@ -100,7 +100,8 @@ begin
 
   for i := Low(Binds) to High(Binds) - 1 do
   begin
-    if (Binds[i].KeyId = KeyCode) and ((Binds[i].keyMod and KeyMods <> 0) or (Binds[i].keyMod = KeyMods)) then
+    if (Binds[i].KeyId = KeyCode) and ((Binds[i].keyMod and KeyMods <> 0) or
+      (Binds[i].keyMod = KeyMods)) then
     begin
       Result := @Binds[i];
       Exit;
@@ -108,12 +109,12 @@ begin
   end;
 end;
 
-procedure UnbindAll();
+procedure UnbindAll;
 begin
   SetLength(Binds, 0);
 end;
 
-procedure StartInput();
+procedure StartInput;
 begin
   SDL_SetRelativeMouseMode(SDL_TRUE);
   SDL_StopTextInput;

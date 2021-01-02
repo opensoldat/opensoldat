@@ -60,8 +60,13 @@ FetchContent_Declare(
 
 FetchContent_Populate(gamenetworkingsockets)
 
-set(GAMENETWORKINGSOCKETS_BUILD_EXAMPLES OFF)
-set(GAMENETWORKINGSOCKETS_BUILD_TESTS OFF)
+option(GAMENETWORKINGSOCKETS_BUILD_EXAMPLES OFF)
+option(GAMENETWORKINGSOCKETS_BUILD_TESTS OFF)
+
+# Soldat expects libGameNetworkingSockets.dll on Windows.
+if(MSVC)
+  set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
+endif(MSVC)
 
 ADD_SUBDIRECTORY( ${GNS_SOURCE_DIR} EXCLUDE_FROM_ALL)
 ADD_DEPENDENCIES(GameNetworkingSockets GameNetworkingSockets)
@@ -69,14 +74,17 @@ ADD_DEPENDENCIES(GameNetworkingSockets GameNetworkingSockets)
 ## Install
 ##############################################################
 
-install(TARGETS
-    GameNetworkingSockets
+# Commented out, because we don't really need this step when installing
+# Soldat. Reenable this if you would like to export GNS libraries to a
+# custom destination.
+#install(TARGETS
+#    GameNetworkingSockets
 
-    DESTINATION ${GNS_INSTALL_DIR}
-    RUNTIME  DESTINATION ${GNS_INSTALL_DIR}/bin
-    LIBRARY  DESTINATION ${GNS_INSTALL_DIR}/lib
-    ARCHIVE  DESTINATION ${GNS_INSTALL_DIR}/lib
-    INCLUDES DESTINATION ${GNS_INSTALL_DIR}/include
-)
+#    DESTINATION ${GNS_INSTALL_DIR}
+#    RUNTIME  DESTINATION ${GNS_INSTALL_DIR}/bin
+#    LIBRARY  DESTINATION ${GNS_INSTALL_DIR}/lib
+#    ARCHIVE  DESTINATION ${GNS_INSTALL_DIR}/lib
+#    INCLUDES DESTINATION ${GNS_INSTALL_DIR}/include
+#)
 
 MESSAGE(STATUS "***  GameNetworkingSockets -- DONE --")

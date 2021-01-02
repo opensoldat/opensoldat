@@ -55,7 +55,7 @@ procedure ShutDown;
 procedure NextMap;
 procedure SpawnThings(style, amount: Byte);
 function KickPlayer(num: Byte; Ban: Boolean; why: Integer; time: Integer;
-  Reason: string = ''): Boolean; //True if kicked
+  Reason: string = ''): Boolean;  // True if kicked
 function PrepareMapChange(Name: String): Boolean;
 {$IFDEF STEAM}
 {$IFDEF STEAMSTATS}
@@ -64,7 +64,6 @@ procedure GSStatsStored(Callback: PGSStatsStored_t);
 procedure StoreStats(Player: TSteamID);
 {$ENDIF}
 procedure RunManualCallbacks;
-
 {$ENDIF}
 
 const PATH_MAX = 4095;
@@ -442,8 +441,7 @@ begin
   if MapChangeItemID = ItemID then
   begin
     PrepareMapChange('workshop/' + IntToStr(ItemID));
-  end else
-  if SteamAPI.UGC.GetItemInstallInfo(ItemID, @FileSizeOnDisk, @Path, PATH_MAX, @TimeStamp) then
+  end else if SteamAPI.UGC.GetItemInstallInfo(ItemID, @FileSizeOnDisk, @Path, PATH_MAX, @TimeStamp) then
   begin
     Result := Path;
   end else
@@ -1140,19 +1138,27 @@ begin
     if sv_maxgrenades.Value > 0 then
       SpawnThings(OBJECT_GRENADE_KIT, Map.Grenades);
   end else
+  begin
     MainConsole.Console('Survival Mode ON', MODE_MESSAGE_COLOR);
+  end;
 
 
   // stat gun
   if sv_stationaryguns.Value then
+  begin
     for i := 1 to MAX_SPAWNPOINTS do
+    begin
       if Map.SpawnPoints[i].Active then
+      begin
         if Map.SpawnPoints[i].Team = 16 then
         begin
           a.x := Map.SpawnPoints[i].X;
           a.y := Map.SpawnPoints[i].Y;
           CreateThing(a, 255, OBJECT_STATIONARY_GUN, 255);
         end;
+      end;
+    end;
+  end;
 
   case sv_gamemode.Value of
     GAMESTYLE_DEATHMATCH: sv_killlimit.SetValue(sv_dm_limit.Value);
@@ -1336,7 +1342,7 @@ begin
     Exit;
 
   // check if admin should be kicked
-  if ((Why = KICK_PING) or (Why = KICK_FLOODING) or (Why = KICK_VOTED)) and
+  if (Why in [KICK_PING, KICK_FLOODING, KICK_VOTED]) and
      (Length(Sprite[i].Player.IP) > 5) then
   begin
     if IsRemoteAdminIP(Sprite[i].Player.IP) or
@@ -1394,10 +1400,8 @@ begin
   if not Sprite[i].Active then
     Exit;
   {$IFDEF SCRIPT}
-  if (why = KICK_AC) or (why = KICK_CHEAT) or (why = KICK_CONSOLE) or
-    (why = KICK_PING) or (why = KICK_NORESPONSE) or
-    (why = KICK_NOCHEATRESPONSE) or (why = KICK_FLOODING) or
-    (why = KICK_VOTED) or (why = KICK_SILENT) then
+  if why in [KICK_AC, KICK_CHEAT, KICK_CONSOLE, KICK_PING, KICK_NORESPONSE,
+      KICK_NOCHEATRESPONSE, KICK_FLOODING, KICK_VOTED, KICK_SILENT] then
     ScrptDispatcher.OnLeaveGame(i, true);
   {$ENDIF}
 

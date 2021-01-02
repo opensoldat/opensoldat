@@ -249,18 +249,17 @@ begin
   if FileSize < 0.5 then
   begin
     Result := IntToStr(Bytes) + ' B';
-  end
-  else
-    if (FileSize > 1024) then
-    begin
-      FileSize := FileSize div 1024;
+  end else if (FileSize > 1024) then
+  begin
+    FileSize := FileSize div 1024;
 
-      Result := IntToStr(FileSize) + ' Mb';
-      if FileSize > 1024 then
-        Result := IntToStr(FileSize div 1024) + ' Gb';
-    end
-    else
-      Result := IntToStr(FileSize) + ' Kb';
+    Result := IntToStr(FileSize) + ' Mb';
+    if FileSize > 1024 then
+      Result := IntToStr(FileSize div 1024) + ' Gb';
+  end else
+  begin
+    Result := IntToStr(FileSize) + ' Kb';
+  end;
 end;
 
 function VerifyMapChecksum(Map: TMapInfo; Checksum: TSHA1Digest): Boolean;

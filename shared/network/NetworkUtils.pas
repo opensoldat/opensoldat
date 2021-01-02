@@ -1,7 +1,9 @@
+// helper functions
+
 unit NetworkUtils;
 
 interface
-// helper functions
+
 uses
   // delphi and system units
   SysUtils, Classes,
@@ -10,7 +12,10 @@ uses
   Version, StrUtils,
 
   // soldat units
-  Sprites, Weapons, Constants {$IFNDEF SERVER} ,Sound {$ENDIF};
+  {$IFNDEF SERVER}
+  Sound,
+  {$ENDIF}
+  Sprites, Weapons, Constants;
 
 {$IFDEF SERVER}
 function IsRemoteAdminIP(IP: string): Boolean;

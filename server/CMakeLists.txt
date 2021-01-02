@@ -1,19 +1,3 @@
-enable_language(Pascal)
-
-if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_LESS 3.0)
-  message(
-    FATAL_ERROR
-      "Your FreePascal installation is too old (fpc ${CMAKE_Pascal_COMPILER_VERSION})!"
-  )
-endif()
-
-if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_GREATER 3.1)
-  add_flag_append(CMAKE_Pascal_FLAGS "-vm6058")
-endif()
-
-# generic folder where our libraries reside
-add_flag_append(CMAKE_Pascal_FLAGS "-Fl${LIBRARY_OUTPUT_PATH}")
-
 if(APPLE)
   add_flag_append(CMAKE_Pascal_FLAGS "-Fu./macOS/Frameworks")
   add_flag_append(CMAKE_Pascal_FLAGS "-Fl./macOS/Frameworks")
@@ -29,14 +13,7 @@ add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/server/scriptcore")
 add_flag_prepend(CMAKE_Pascal_FLAGS
                  "-Fu${CMAKE_SOURCE_DIR}/3rdparty/pascalscript/Source")
 
-# Link to PhysFS
-get_filename_component(PHYSFS_LIBRARY_DIR ${PHYSFS_LIBRARY} PATH)
-add_flag_append(CMAKE_Pascal_FLAGS "-Fl${PHYSFS_LIBRARY_DIR}")
-
 add_flag_append(CMAKE_Pascal_FLAGS "-dSERVER")
-
-# Hide fgl inlining warnings
-add_flag_append(CMAKE_Pascal_FLAGS "-vm6058")
 
 option(BUILD_SCRIPTCORE "Build ScriptCore" True)
 option(BUILD_RCON "Build Rcon" True)
@@ -57,10 +34,15 @@ set_source_files_properties(soldatserver.lpr PROPERTIES OBJECT_DEPENDS
 
 add_executable(soldatserver soldatserver.lpr)
 
-if(UNIX)
-  if(BUILD_STEAM)
-    target_link_libraries(soldat)
-  else()
-    target_link_libraries(soldat GameNetworkingSockets)
-  endif()
+if(ADD_ASSETS)
+  add_dependencies(soldatserver soldat_smod)
 endif()
+
+if(NOT BUILD_STEAM)
+  target_link_libraries(soldatserver GameNetworkingSockets)
+endif()
+
+install(
+  PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldatserver>
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+)

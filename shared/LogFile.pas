@@ -18,7 +18,6 @@ procedure WriteLogFile(var F: TStringList; Name: string);
 procedure AddLineToLogFile(var F: TStringList; S: string; Name: string; WithDate: Boolean = True);
 procedure NewLogFiles;
 
-
 var
   GameLog: TStringList;
   ConsoleLogFileName: String;
@@ -31,8 +30,12 @@ var
 implementation
 
 uses
-  {$IFNDEF SERVER}Util,{$ENDIF}
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, Constants, TraceLog, Cvar;
+  {$IFDEF SERVER}
+  Server,
+  {$ELSE}
+  Util, Client,
+  {$ENDIF}
+  SysUtils, Constants, TraceLog, Cvar;
 
 procedure NewLogFile(var F: TStringList; Name: string);
 var
@@ -253,6 +256,7 @@ end;
 
 initialization
   LogLock := TCriticalSection.Create;
+
 finalization
   FreeAndNil(LogLock);
 

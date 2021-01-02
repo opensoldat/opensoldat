@@ -16,8 +16,8 @@ const
  {$ELSE}
   STBLIB = 'stb.so';
  {$ENDIF}
-// stb_image
 
+// stb_image
 function stbi_xload_file(filename: PAnsiChar; w, h, f: PInteger): PByte;
   cdecl; external STBLIB;
 
@@ -35,7 +35,6 @@ function stbi_load_from_memory(buffer: Pointer; len: Integer; w, h, c: PInteger;
 
 
 // stb_image_write
-
 function stbi_write_png(filename: PAnsiChar; w, h, comp: Integer; data: Pointer; stride: Integer): Integer;
   cdecl; external STBLIB;
 

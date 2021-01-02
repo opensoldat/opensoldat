@@ -129,7 +129,7 @@ begin
     HeartbeatTime := MainTickCounter;
     HeartbeatTimeWarnings := 0;
 
-    r_zoom.SetValue(0.0); // Reset zoom
+    r_zoom.SetValue(0.0);  // Reset zoom
 
     if MapChangeCounter < 999999999 then
       MapChangeCounter := -60;

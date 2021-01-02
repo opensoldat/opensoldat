@@ -1,24 +1,7 @@
-enable_language(Pascal)
-
 find_package(SDL2 REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(Freetype REQUIRED)
 add_subdirectory(libs/stb)
-
-if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_LESS 3.0)
-  message(
-    FATAL_ERROR
-      "Your FreePascal installation is too old (fpc ${CMAKE_Pascal_COMPILER_VERSION})!"
-  )
-endif()
-
-# Hide inline warning
-if(${CMAKE_Pascal_COMPILER_VERSION} VERSION_GREATER 3.1)
-  add_flag_append(CMAKE_Pascal_FLAGS "-vm6058")
-endif()
-
-# generic folder where our libraries reside
-add_flag_append(CMAKE_Pascal_FLAGS "-Fl${LIBRARY_OUTPUT_PATH}")
 
 if(APPLE)
   # add_flag_append(CMAKE_Pascal_FLAGS "-Fu./macOS/Frameworks")
@@ -40,16 +23,6 @@ if(APPLE)
   endif()
 endif()
 
-# Link to PhysFS
-get_filename_component(PHYSFS_LIBRARY_DIR ${PHYSFS_LIBRARY} PATH)
-add_flag_append(CMAKE_Pascal_FLAGS "-Fl${PHYSFS_LIBRARY_DIR}")
-
-# Link to FreeType get_filename_component(FREETYPE_LIBRARY_DIR
-# ${FREETYPE_LIBRARY} PATH) add_flag_append(CMAKE_Pascal_FLAGS
-# "-Fl${FREETYPE_LIBRARY_DIR}") Link to OpenAL
-add_flag_append(CMAKE_Pascal_FLAGS "-Fl${OPENAL_LIBRARY_DIR}")
-get_filename_component(OPENAL_LIBRARY_DIR ${OPENAL_LIBRARY} PATH)
-
 # Include unit search paths
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fl${CMAKE_SOURCE_DIR}/client/libs")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/client/libs")
@@ -68,14 +41,23 @@ set_source_files_properties(soldat.lpr PROPERTIES OBJECT_DEPENDS "${sources}")
 
 add_executable(soldat soldat.lpr)
 
-if(BUILD_SMOD)
-  add_dependencies(soldat create_smod)
+if(ADD_ASSETS)
+  add_dependencies(soldat soldat_smod soldat_font)
 endif()
 
 if(UNIX)
-  if(BUILD_STEAM)
-    target_link_libraries(soldat stb)
-  else()
-    target_link_libraries(soldat stb GameNetworkingSockets protobuf)
-  endif()
+  target_link_libraries(soldat stb)
 endif()
+
+if(NOT BUILD_STEAM)
+  target_link_libraries(soldat GameNetworkingSockets)
+endif()
+
+install(
+  PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldat>
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
+install(
+  FILES ${EXECUTABLE_OUTPUT_PATH}/play-regular.ttf
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+)

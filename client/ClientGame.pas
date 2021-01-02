@@ -216,7 +216,6 @@ end;
 procedure GameLoop;
 var
   MainControl: Integer;
-  //j: Integer;
   HeavySendersNum: Integer;
   Adjust: Single;
   CurrentTime, FrameTime, SimTime: Extended;
