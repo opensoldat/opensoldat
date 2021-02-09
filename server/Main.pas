@@ -189,34 +189,8 @@ begin
 end;
 {$ENDIF}
 
-function IsRoot: Boolean;
-begin
-  {$IFDEF MSWINDOWS}
-  Result := False;  // Ignore for Windows users
-  {$ELSE}
-  Result := (FpGeteuid() = 0);
-  {$ENDIF}
-end;
-
 procedure RunServer;
 begin
-  if IsRoot then
-  begin
-    WriteLn('You are running soldatserver as root! Don''t do that! ' +
-      'There are not many valid' + #10 +
-      'reasons for this and it can, in theory, cause great damage!');
-    Exit;
-
-    // TODO: Add -r and --allow-root commandline option
-    {if not AllowRoot then
-      Exit;
-
-    WriteLn('You have been warned.' + #10 +
-      'Hit CTRL+C now if you don''t want to run soldatserver as root.' + #10 +
-      'Soldatserver will start in 30 seconds.');
-    Sleep(30000);}
-  end;
-
   SetSigHooks;
 
   try
