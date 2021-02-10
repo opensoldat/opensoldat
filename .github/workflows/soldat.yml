@@ -13,25 +13,19 @@ jobs:
 
       - name: Compile soldat
         run: |
-          mkdir game-build
-          cd game-build
+          mkdir build
+          cd build
           cmake .. -DCMAKE_INSTALL_PREFIX=./soldat -DCMAKE_BUILD_TYPE=Release
           make
           make install
-
-      - name: Compile server only
-        run: |
-          mkdir server-build
-          cd server-build
           cmake .. -DBUILD_CLIENT=0 -DCMAKE_INSTALL_PREFIX=./soldatserver -DCMAKE_BUILD_TYPE=Release
-          make
           make install
 
       # We use .tar to preserve file permissions.
       - name: Tar files
         run: |
-          tar -cvf soldat.tar -C game-build soldat
-          tar -cvf soldatserver.tar -C server-build soldatserver
+          tar -cvf soldat.tar -C build soldat
+          tar -cvf soldatserver.tar -C build soldatserver
 
       - name: Upload game build
         uses: actions/upload-artifact@v2
@@ -98,3 +92,29 @@ jobs:
         with:
           name: windows-build
           path: build/bin/
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          brew install openssl@1.1 protobuf fpc cmake sdl2 physfs freetype2
+
+      - name: Compile soldat
+        run: |
+          mkdir build
+          cd build
+          export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@1.1/lib/pkgconfig
+          cmake -DCMAKE_INSTALL_PREFIX=./soldat -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@1.1) ..
+          make
+          make install
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: macos-build
+          path: build/soldat
