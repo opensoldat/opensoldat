@@ -48,6 +48,14 @@ CMake 3.14+ is required.
 10. `cmake -G "NMake Makefiles" -DCROSS_WINDOWS_64=1 -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake" -DSDL2_BUILDING_LIBRARY=1 ..`
 11. `nmake`
 
+#### Build steps for macOS
+
+1. `brew install openssl@1.1 protobuf fpc cmake sdl2 physfs freetype2`
+2. `mkdir build && cd build`
+3. `export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@1.1/lib/pkgconfig`
+4. `cmake -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@1.1) ..`
+5. `make`
+
 #### Available flags
 
 The build can be customized by passing flags to `cmake` command. For example, you can choose whether you want to build the client, the server, or both. You can decide if you want to include Soldat's assets in the build. There are also options for cross-compilation.
