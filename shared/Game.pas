@@ -525,7 +525,7 @@ begin
   begin
     AMapsList.LoadFromFile(MapsListPath);
     i := 1;
-    while i < MapsList.Count do
+    while i < AMapsList.Count do
     begin
       if AMapsList[i] = '' then
       begin
