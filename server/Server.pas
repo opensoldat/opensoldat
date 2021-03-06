@@ -709,22 +709,7 @@ begin
 
   AddLineToLogFile(GameLog, 'Loading Maps List', ConsoleLogFileName);
   MapsList := TStringList.Create;
-  MapsList.Clear;
-
-  if FileExists(UserDirectory + 'configs/' + sv_maplist.Value) then
-  begin
-    MapsList.LoadFromFile(UserDirectory + 'configs/' + sv_maplist.Value);
-    i := 1;
-    while i < MapsList.Count do
-    begin
-      if MapsList[i] = '' then
-      begin
-        MapsList.Delete(i);
-        Dec(i);
-      end;
-      Inc(i);
-    end;
-  end;
+  ReloadMapsList(MapsList);
 
   if MapsList.Count = 0 then
   begin
