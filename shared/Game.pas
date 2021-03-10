@@ -535,6 +535,18 @@ begin
       Inc(i);
     end;
   end;
+
+  if MapsList.Count = 0 then
+  begin
+    WriteLn('');
+    WriteLn('  No maps list found (adding default). ' +
+      'Please add maps in configs/mapslist.txt');
+    WriteLn('');
+    if not IsTeamGame then
+      MapsList.Add('Arena')
+    else
+      MapsList.Add('ctf_Ash');
+  end;
 end;
 {$ENDIF}
 

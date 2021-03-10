@@ -711,18 +711,6 @@ begin
   MapsList := TStringList.Create;
   ReloadMapsList(MapsList);
 
-  if MapsList.Count = 0 then
-  begin
-    WriteLn('');
-    WriteLn('  No maps list found (adding default). ' +
-      'Please add maps in configs/mapslist.txt');
-    WriteLn('');
-    if not IsTeamGame then
-      MapsList.Add('Arena')
-    else
-      MapsList.Add('ctf_Ash');
-  end;
-
   for i := 1 to MAX_SPRITES do
     for j := 1 to MAX_SPRITES do
       OldHelmetMsg[i, j].WearHelmet := 1;
