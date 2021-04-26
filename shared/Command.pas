@@ -485,7 +485,7 @@ begin
 
     if CurrentCommand <> '' then
     begin
-      Writeln(copy(CurrentCommand, 2));
+      ParseInput(copy(CurrentCommand, 2));
     end;
 
     CurrentCommand := argv[i];
