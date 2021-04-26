@@ -472,34 +472,23 @@ end;
 
 procedure ParseCommandLine();
 var
-  CommandLine: AnsiString = '';
-  CommandLineNoDash: AnsiString = '';
+  CurrentCommand: AnsiString = '';
   i: Integer;
-  j: Integer;
-  commandBegin : Integer;
 begin
-  i := 0;
-  commandBegin := 0;
-  while i <= argc do
+  for i := 1 to argc do
   begin
-    if ((i > commandBegin) and (argv[i] <> '') and (argv[i][0] = '-')) or
-       (i = argc) then
+    if (argv[i] <> '') and (argv[i][0] <> '-') then
     begin
-      CommandLine := '';
-      for j:=commandBegin To i-1 do
-      begin
-        if CommandLine <> '' then
-          CommandLine := CommandLine + ' ';
-        CommandLine := CommandLine + argv[j];
-      end;
-
-      CommandLineNoDash := copy(CommandLine, 2, Length(CommandLine) - 1);
-
-      ParseInput(CommandLineNoDash);
-
-      commandBegin := i;
+      CurrentCommand := CurrentCommand + ' ' + argv[i];
+      continue;
     end;
-    i := i + 1;
+
+    if CurrentCommand <> '' then
+    begin
+      Writeln(copy(CurrentCommand, 2));
+    end;
+
+    CurrentCommand := argv[i];
   end;
 end;
 
