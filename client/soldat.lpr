@@ -16,7 +16,7 @@ program soldat;
 {$linklib freetype}
 {$linklib stb}
 {$linklib physfs}
-{$linklib enet}
+{$linklib GameNetworkingSockets}
 {$ENDIF}
 
 uses
