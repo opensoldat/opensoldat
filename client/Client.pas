@@ -138,6 +138,7 @@ var
   ui_killconsole: TBooleanCvar;
   ui_killconsole_length: TIntegerCvar;
   ui_hidespectators: TBooleanCvar;
+  ui_sniperline: TBooleanCvar;
 
   cl_sensitivity: TSingleCvar;
   cl_endscreenshot: TBooleanCvar;
@@ -237,8 +238,6 @@ var
 
   WeaponActive: array[1..MAIN_WEAPONS] of Byte; // sync
   WeaponsInGame: Integer; // sync
-
-  SniperLine: Byte = 0;
 
   Trails: Byte = 1;
   Spectator: Byte = 0;  // TODO: Remove
