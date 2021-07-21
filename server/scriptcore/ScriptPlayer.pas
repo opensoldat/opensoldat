@@ -2517,7 +2517,7 @@ begin
       @ScriptActivePlayerSetOnKitPickup, 'OnKitPickup');
     RegisterEventPropertyHelper(@ScriptActivePlayerGetOnBeforeRespawn,
       @ScriptActivePlayerSetOnBeforeRespawn, 'OnBeforeRespawn');
-    RegisterEventPropertyHelper(@ScriptActivePlayerGetOnBeforeRespawn,
+    RegisterEventPropertyHelper(@ScriptActivePlayerGetOnAfterRespawn,
       @ScriptActivePlayerSetOnAfterRespawn, 'OnAfterRespawn');
     RegisterEventPropertyHelper(@ScriptActivePlayerGetOnDamage,
       @ScriptActivePlayerSetOnDamage, 'OnDamage');
