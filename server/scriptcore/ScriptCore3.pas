@@ -400,20 +400,20 @@ begin
         Debugger := TPascalDebugger(Self.FExec);
         Error := Debugger.LastError;
         Debugger.GetPosition(UnitName, Col, Row);
-        if Assigned(Self.FUnit.ScriptUnit.OnUnhandledException) and
-           Self.CallEvent(Self.FUnit.ScriptUnit.OnUnhandledException,
+        if Assigned(Self.FUnit.ScriptUnit.OnUnhandledException) then
+          if Self.CallEvent(Self.FUnit.ScriptUnit.OnUnhandledException,
              [Error, E.Message, UnitName, FunctionName, Row, Col]) then
-           Exit;
+            Exit;
         Message := 'In unit ' + UnitName + '(' + IntToStr(Row) + ':' +
           IntToStr(Col) + ') [' + FunctionName + ']: ' +
             Debugger.GetErrorString(Error, E.Message, Debugger.Exec.ExceptionProcNo, Debugger.Exec.ExceptionPos);
       end
       else
       begin
-        if Assigned(Self.FUnit.ScriptUnit.OnUnhandledException) and
-          Self.CallEvent(Self.FUnit.ScriptUnit.OnUnhandledException,
+        if Assigned(Self.FUnit.ScriptUnit.OnUnhandledException) then
+          if Self.CallEvent(Self.FUnit.ScriptUnit.OnUnhandledException,
             [Error, E.Message, '', FunctionName, 0, 0]) then
-          Exit;
+            Exit;
         Message := 'In function [' + FunctionName + ']: ' + Self.FExec.GetErrorString2(Error, E.Message);
       end;
     except
