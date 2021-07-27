@@ -115,7 +115,7 @@ begin
   Exec.AddFunction(@Now, 'Now');
   Exec.AddFunction(@DateTimeToUnix, 'DateTimeToUnix');
   Exec.AddFunction(@UnixToDateTime, 'UnixToDateTime');
-  Exec.AddFunction(@MyStrToDate, 'DateToStr');
+  Exec.AddFunction(@MyDateToStr, 'DateToStr');
   Exec.AddFunction(@MyFormatDateTime, 'FormatDateTime');
   Exec.AddFunction(@MyStrToDate, 'StrToDate');
 end;
