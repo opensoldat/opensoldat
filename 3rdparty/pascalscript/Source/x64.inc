@@ -362,11 +362,59 @@ type
   PSVStorageClass = ^TSVStorageClass;
   TSVStorageClass = (SVSSE, SVINT, SVMEM);
 
-function ClassifyStorage(AType: TPSTypeRec): TSVStorageClass;
+// Get alignment of non-aggregate types.
+function GetSimpleAlignment(AType: TPSTypeRec): Integer;
+begin
+  case AType.BaseType of
+    btU8, btS8, btChar:
+      Result := 1;
+    btU16, btS16, {$IFNDEF PS_NOWIDESTRING}btWideChar{$ENDIF}:
+      Result := 2;
+    btU32, btS32, btSingle:
+      Result := 4;
+    btString, btArray, btPointer, btPChar, {$IFNDEF PS_NOINT64}btS64,{$ENDIF}
+    {$IFNDEF PS_NOWIDESTRING}btWideString,{$ENDIF} btStaticArray, btSet,
+    btCurrency, btClass, btInterface, btUnicodeString, btEnum, btExtClass,
+    btDouble, btProcPtr, btNotificationVariant:
+      Result := 8;
+  end;
+end;
+
+function ContainsUnaligned(Rec: TPSTypeRec_Record; var Alignment: Integer
+  ): Boolean;
 var
-  i: Integer;
+  i, SubAlignment: Integer;
+begin
+  Result := False;
+  Alignment := 0;
+  SubAlignment := 0;
+
+  for i := 0 to Rec.FieldTypes.Count - 1 do
+  begin
+    if TPSTypeRec(Rec.FieldTypes[i]).BaseType = btRecord then
+      Result := Result or
+        ContainsUnaligned(TPSTypeRec_Record(Rec.FieldTypes[i]), SubAlignment)
+    else
+      SubAlignment := GetSimpleAlignment(Rec.FieldTypes[i]);
+
+    if SubAlignment > Alignment then
+      Alignment := SubAlignment;
+
+    if (IPointer(Rec.RealFieldOffsets[i]) mod SubAlignment) <> 0 then
+      Result := True;
+  end;
+end;
+
+function ClassifyStorage(AType: TPSTypeRec; var Alignment: Integer): TSVStorageClass;
+var
+  i, Dummy: Integer;
+  Rec: TPSTypeRec_Record;
   SubClass: TSVStorageClass;
 begin
+  Dummy := 0;
+  if AType.BaseType <> btRecord then
+    Alignment := GetSimpleAlignment(AType);
+
   case AType.BaseType of
     btSingle, btDouble:
       Result := SVSSE;
@@ -379,16 +427,24 @@ begin
     btExtended:
       Result := SVMEM;
     btRecord: begin
-      if AType.RealSize > 8 then
+      Rec := TPSTypeRec_Record(AType);
+
+      if ContainsUnaligned(Rec, Alignment) then
+      begin
+        Result := SVMEM;
+        Exit;
+      end;
+
+      if Rec.RealSize > 8 then
       begin
         Result := SVMEM;
         Exit;
       end;
 
       Result := SVSSE;
-      for i := 0 to TPSTypeRec_Record(AType).FieldTypes.Count - 1 do
+      for i := 0 to Rec.FieldTypes.Count - 1 do
       begin
-        SubClass := ClassifyStorage(TPSTypeRec_Record(AType).FieldTypes[i]);
+        SubClass := ClassifyStorage(Rec.FieldTypes[i], Dummy);
         if Ord(SubClass) > Ord(Result) then
           Result := SubClass;
       end;
@@ -557,7 +613,7 @@ _XMM0: Double;
     // @SoldatPatch
     {$IFDEF LINUX}
     ip: IPointer;
-    i: Integer;
+    i, Alignment: Integer;
     Rec: TPSTypeRec_Record;
     Field: TPSVariantIFC;
     {$ENDIF}
@@ -643,10 +699,14 @@ _XMM0: Double;
             else
               StoreReg(IPointer(fVar.Dta));
             {$ELSE}
-            case ClassifyStorage(fVar^.aType) of
+            case ClassifyStorage(fVar^.aType, Alignment) of
               SVSSE: StoreReg(Double(fVar.Dta^));
               SVINT: StoreReg(IPointer(fVar.Dta^));
-              SVMEM: StoreStack(fvar.Dta^, fVar^.aType.RealSize);
+              SVMEM: begin
+                if Length(Stack) mod Alignment <> 0 then
+                  SetLength(Stack, Length(Stack)+ (Alignment-(Length(Stack) mod 16)));
+                StoreStack(fvar.Dta^, fVar^.aType.RealSize);
+              end;
             end;
             {$ENDIF}
           end;
