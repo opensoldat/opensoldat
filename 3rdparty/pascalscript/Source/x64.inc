@@ -177,6 +177,8 @@ type
     _XMM6,              // 88
     _XMM7: Double;      // 96
     SingleBits: Integer; //104
+    // @SoldatPatch
+    _ST0: Extended;     // 108
   end;
 
 procedure x64call(
@@ -335,6 +337,13 @@ asm
   movq [rsi],xmm0            // move quadword to _XMM0
   @skipresre:
 
+  // @SoldatPatch
+  // st0 res
+  bt qword ptr [rax+104], 9  // if atype.basetype  <> btExtended
+  jnc @skipextres            // then goto skipextres else begin
+  fstp tbyte ptr [rax+108]   // pop real10 to Registers._ST0
+  @skipextres:
+
 
   pop rdx
   pop r9   // xmm0
@@ -342,6 +351,49 @@ asm
   pop rdi  // address
   leave
   ret
+end;
+{$ENDIF}
+
+// @SoldatPatch
+{$IFDEF LINUX}
+// System V x86-64 storage class implementation.
+// This is NOT thoroughly tested and probably not 100% correct for all records.
+type
+  PSVStorageClass = ^TSVStorageClass;
+  TSVStorageClass = (SVSSE, SVINT, SVMEM);
+
+function ClassifyStorage(AType: TPSTypeRec): TSVStorageClass;
+var
+  i: Integer;
+  SubClass: TSVStorageClass;
+begin
+  case AType.BaseType of
+    btSingle, btDouble:
+      Result := SVSSE;
+    btU8, btS8, btU16, btS16, btU32, btS32, btString, btArray, btPointer,
+    btPChar, {$IFNDEF PS_NOINT64}btS64,{$ENDIF} btChar,
+    {$IFNDEF PS_NOWIDESTRING}btWideString, btWideChar,{$ENDIF} btProcPtr,
+    btStaticArray, btVariant, btSet, btCurrency, btClass, btInterface,
+    btNotificationVariant, btUnicodeString, btEnum, btExtClass:
+      Result := SVINT;
+    btExtended:
+      Result := SVMEM;
+    btRecord: begin
+      if AType.RealSize > 8 then
+      begin
+        Result := SVMEM;
+        Exit;
+      end;
+
+      Result := SVSSE;
+      for i := 0 to TPSTypeRec_Record(AType).FieldTypes.Count - 1 do
+      begin
+        SubClass := ClassifyStorage(TPSTypeRec_Record(AType).FieldTypes[i]);
+        if Ord(SubClass) > Ord(Result) then
+          Result := SubClass;
+      end;
+    end;
+  end;
 end;
 {$ENDIF}
 
@@ -505,6 +557,9 @@ _XMM0: Double;
     // @SoldatPatch
     {$IFDEF LINUX}
     ip: IPointer;
+    i: Integer;
+    Rec: TPSTypeRec_Record;
+    Field: TPSVariantIFC;
     {$ENDIF}
   begin
     Result := False;
@@ -581,18 +636,35 @@ _XMM0: Double;
           end;
         btRecord:
           begin
+            // @SoldatPatch
+            {$IFNDEF LINUX}
             if fvar^.aType.RealSize <= sizeof(IPointer) then
               StoreReg(IPointer(fvar.dta^))
             else
               StoreReg(IPointer(fVar.Dta));
+            {$ELSE}
+            case ClassifyStorage(fVar^.aType) of
+              SVSSE: StoreReg(Double(fVar.Dta^));
+              SVINT: StoreReg(IPointer(fVar.Dta^));
+              SVMEM: StoreStack(fvar.Dta^, fVar^.aType.RealSize);
+            end;
+            {$ENDIF}
           end;
         btVariant
         , btStaticArray:
           begin
             StoreReg(IPointer(fVar.Dta));
           end;
-        btExtended, btDouble: {8 bytes} begin
+        // @SoldatPatch
+        btDouble: {8 bytes} begin
             StoreReg(double(fvar.dta^));
+          end;
+        btExtended: begin
+            {$IFNDEF LINUX}
+            StoreReg(double(fvar.dta^));
+            {$ELSE}
+            StoreStack(fvar.dta^, 16);
+            {$ENDIF}
           end;
         btCurrency: {8 bytes} begin
             StoreReg(IPointer(fvar.dta^));
@@ -736,6 +808,11 @@ begin
       if not GetPtr(rp(Params[I])) then Exit;
     end;
     if assigned(res) then begin
+      // @SoldatPatch
+      {$IFDEF LINUX}
+      if res^.aType.BaseType = btExtended then
+        Registers.SingleBits := Registers.SingleBits or 512;
+      {$ENDIF}
 {$IFNDEF PS_RESBEFOREPARAMETERS}
       case res^.aType.BaseType of
         {$IFDEF x64_string_result_as_varparameter}
@@ -776,7 +853,12 @@ begin
           end;
         btSingle:      tbtsingle(res.Dta^) := _XMM0;
         btDouble:      tbtdouble(res.Dta^) := _XMM0;
-        btExtended:    tbtextended(res.Dta^) := _XMM0;
+        // @SoldatPatch
+        {$IFDEF LINUX}
+        btExtended:    tbtextended(res.Dta^) := Registers._ST0;
+        {$ELSE}
+        btExtended:    tbtdouble(res.Dta^) := _XMM0;
+        {$ENDIF}
         btchar,btU8, btS8:    tbtu8(res.dta^) := _RAX;
         btWideChar, btu16, bts16:  tbtu16(res.dta^) := _RAX;
         btClass : IPointer(res.dta^) := _RAX;
