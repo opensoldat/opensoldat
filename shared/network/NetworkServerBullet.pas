@@ -49,7 +49,7 @@ begin
 
   for j := 1 to MAX_SPRITES do
     if Sprite[j].Active and
-       (Sprite[j].Player.ControlMethod = HUMAN) and (j <> Bullet[i].Owner) then
+       (Sprite[j].Player.ControlMethod = HUMAN) and ((j <> Bullet[i].Owner) or Forced) then
        if (ToNum = 0) or (j = ToNum) then
         if BulletCanSend(Bulletparts.Pos[i].X, Bulletparts.Pos[i].Y,
          Sprite[j].Player.Camera, Bulletparts.Velocity[i].X) or Forced then
