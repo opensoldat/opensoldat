@@ -24,6 +24,7 @@ uses
   procedure UpdateHWBanList;
 
 type
+  // These records are packed so they can be sent over the wall to PascalScript.
   TBanIP = packed record
     IP: string;
     Time: Integer;
