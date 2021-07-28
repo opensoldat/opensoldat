@@ -167,12 +167,12 @@ end;
 
 function TScriptMath.DegToRad(A: Extended): Extended;
 begin
-  Result := Math.cotan(a);
+  Result := Math.DegToRad(a);
 end;
 
 function TScriptMath.RadToDeg(A: Extended): Extended;
 begin
-  Result := Math.cotan(a);
+  Result := Math.RadToDeg(a);
 end;
 
 function TScriptMath.DegNormalize(A: Extended): Extended;
@@ -214,8 +214,8 @@ procedure TScriptMathAPI.CompilerRegister(Compiler: TPascalCompiler);
 var
   AClass: TPascalCompiletimeClass;
 begin
-  Compiler.AddType('TValueSign', btEnum);
-  Compiler.AddType('TRoundToRange', btEnum);
+  Compiler.AddType('TValueSign', btS8);
+  Compiler.AddType('TRoundToRange', btS8);
   AClass := Compiler.AddClass(nil, 'TMathAPI');
   with AClass do
   begin
@@ -235,10 +235,10 @@ begin
     RegisterMethod('function Max(A, B: Extended): Extended');
     RegisterMethod('function Abs(A: Extended): Extended');
     RegisterMethod('function Exp(A: Extended): Extended');
-    RegisterMethod('function Sign(A: Extended): TValueSign');
+    RegisterMethod('function Sign(A: Extended): ShortInt');
     RegisterMethod('function IsNaN(A: Extended): Boolean');
     RegisterMethod('function Round(A: Extended): Integer');
-    RegisterMethod('function RoundTo(A: Extended; B: TRoundToRange): Extended');
+    RegisterMethod('function RoundTo(A: Extended; B: ShortInt): Extended');
     RegisterMethod('function DegToRad(A: Extended): Extended');
     RegisterMethod('function RadToDeg(A: Extended): Extended');
     RegisterMethod('function DegNormalize(A: Extended): Extended');
