@@ -377,6 +377,8 @@ begin
     btCurrency, btClass, btInterface, btUnicodeString, btEnum, btExtClass,
     btDouble, btProcPtr, btNotificationVariant:
       Result := 8;
+    btExtended:
+      Result := 16;
   end;
 end;
 
@@ -704,7 +706,7 @@ _XMM0: Double;
               SVINT: StoreReg(IPointer(fVar.Dta^));
               SVMEM: begin
                 if Length(Stack) mod Alignment <> 0 then
-                  SetLength(Stack, Length(Stack)+ (Alignment-(Length(Stack) mod 16)));
+                  SetLength(Stack, Length(Stack)+ (Alignment-(Length(Stack) mod Alignment)));
                 StoreStack(fvar.Dta^, fVar^.aType.RealSize);
               end;
             end;
