@@ -154,7 +154,7 @@ begin
   if Style = BULLET_STYLE_M2 then
   begin
     OnStatGun := False;
-    for i := 0 to MAX_THINGS do
+    for i := 1 to MAX_THINGS do
       if (Thing[i].Style = OBJECT_STATIONARY_GUN) {Stat Gun} and (OnStatGun = False) then
         if Distance(Sprite[p].Skeleton.Pos[1].x, Sprite[p].Skeleton.Pos[1].y,
            Thing[i].Skeleton.pos[1].x, Thing[i].Skeleton.pos[1].y) < STAT_RADIUS * 2 then
