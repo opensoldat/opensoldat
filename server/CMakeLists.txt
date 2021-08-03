@@ -37,6 +37,11 @@ if(ADD_ASSETS)
   add_dependencies(soldatserver soldat_smod)
 endif()
 
+if(BUILD_SCRIPTCORE AND ADD_BFT)
+  add_subdirectory(scriptcore/test)
+  add_dependencies(soldatserver bft)
+endif()
+
 if(NOT BUILD_STEAM)
   target_link_libraries(soldatserver GameNetworkingSockets)
 endif()
