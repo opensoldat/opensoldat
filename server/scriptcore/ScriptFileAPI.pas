@@ -659,21 +659,6 @@ begin
     'function(List: TStringList; Index1, Index2: Integer): Integer');
   Compiler.AddType('TSeekOrigin', '(soBeginning, soCurrent, soEnd)');
 
-  with Compiler.AddConstant('soFromBeginning', 'Integer') do
-  begin
-    SetInt(1);
-  end;
-
-  with Compiler.AddConstant('soFromCurrent', 'Integer') do
-  begin
-    SetInt(2);
-  end;
-
-  with Compiler.AddConstant('soFromEnd', 'Integer') do
-  begin
-    SetInt(3);
-  end;
-
   with StringList do
   begin
     RegisterMethod('procedure Free');
