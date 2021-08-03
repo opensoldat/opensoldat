@@ -58,6 +58,17 @@ type
     constructor Create(API: TScriptFileAPI);
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string);
+    function Read(var Buffer: String; Count:LongInt): LongInt;
+    function Write(const Buffer: String; Count:LongInt): LongInt;
+    procedure ReadBuffer(var Buffer: String; Count:LongInt);
+    procedure WriteBuffer(const Buffer: String; Count:LongInt);
+  end;
+
+  TMyStringStream = class(TStringStream)
+  public
+    constructor Create;
+    function Read(var Buffer: String; Count: LongInt): LongInt;
+    function Write(const Buffer: String; Count: LongInt): LongInt;
   end;
 
   TScriptFile = class(TObject)
@@ -228,6 +239,41 @@ begin
   if not Self.FAPI.CheckAccess(Path) then
     raise EAccessDenied.Create('Path is out of sandbox');
   inherited SaveToFile(Path);
+end;
+
+function TMyMemoryStream.Read(var Buffer: String; Count: LongInt): LongInt;
+begin
+  Result := inherited Read(Buffer[1], Count);
+end;
+
+function TMyMemoryStream.Write(const Buffer: String; Count: LongInt): LongInt;
+begin
+  Result := inherited Write(Buffer[1], Count);
+end;
+
+procedure TMyMemoryStream.ReadBuffer(var Buffer: String; Count: LongInt);
+begin
+  inherited ReadBuffer(Buffer[1], Count);
+end;
+
+procedure TMyMemoryStream.WriteBuffer(const Buffer: String; Count: LongInt);
+begin
+  inherited WriteBuffer(Buffer[1], Count);
+end;
+
+constructor TMyStringStream.Create;
+begin
+  inherited Create;
+end;
+
+function TMyStringStream.Read(var Buffer: String; Count: LongInt): LongInt;
+begin
+  Result := inherited Read(Buffer[1], Count);
+end;
+
+function TMyStringStream.Write(const Buffer: String; Count: LongInt): LongInt;
+begin
+  Result := inherited Write(Buffer[1], Count);
 end;
 
 constructor TScriptFile.Create(API: TScriptFileAPI);
@@ -484,7 +530,7 @@ begin
   Self.Size := Result;
 end;
 
-procedure DataStringReadHelper(Self: TStringStream; var Result: string);
+procedure DataStringReadHelper(Self: TMyStringStream; var Result: string);
 begin
   Result := Self.DataString;
 end;
@@ -611,6 +657,7 @@ begin
   Compiler.AddType('TDuplicates', '(dupIgnore, dupAccept, dupError)');
   Compiler.AddType('TStringListSortCompare',
     'function(List: TStringList; Index1, Index2: Integer): Integer');
+  Compiler.AddType('TSeekOrigin', '(soBeginning, soCurrent, soEnd)');
 
   with Compiler.AddConstant('soFromBeginning', 'Integer') do
   begin
@@ -626,6 +673,7 @@ begin
   begin
     SetInt(3);
   end;
+
   with StringList do
   begin
     RegisterMethod('procedure Free');
@@ -712,11 +760,11 @@ begin
   begin
     IsAbstract := True;
     RegisterMethod('procedure Free');
-    RegisterMethod('function Read(var Buffer:string;Count:LongInt):LongInt');
-    RegisterMethod('function Write(const Buffer:string;Count:LongInt):LongInt');
-    RegisterMethod('function Seek(Offset:LongInt;Origin:Word):LongInt');
-    RegisterMethod('procedure ReadBuffer(Buffer:string;Count:LongInt)');
-    RegisterMethod('procedure WriteBuffer(Buffer:string;Count:LongInt)');
+    RegisterMethod('function Read(var Buffer:String;Count:LongInt):LongInt');
+    RegisterMethod('function Write(const Buffer:String;Count:LongInt):LongInt');
+    RegisterMethod('function Seek(Offset:LongInt;Origin:TSeekOrigin):LongInt');
+    RegisterMethod('procedure ReadBuffer(var Buffer:String;Count:LongInt)');
+    RegisterMethod('procedure WriteBuffer(const Buffer:String;Count:LongInt)');
     RegisterMethod('function CopyFrom(Source:TStream;Count:Int64):LongInt');
     RegisterProperty('Position', 'Int64', iptRW);
     RegisterProperty('Size', 'Int64', iptRW);
@@ -730,14 +778,18 @@ begin
     RegisterMethod('procedure SaveToStream(Stream:TStream)');
     RegisterMethod('procedure SaveToFile(FileName:string)');
     RegisterMethod('procedure SetSize(NewSize:LongInt)');
+    RegisterMethod('function Read(var Buffer:String;Count:LongInt):LongInt');
+    RegisterMethod('function Write(const Buffer:String;Count:LongInt):LongInt');
+    RegisterMethod('procedure ReadBuffer(var Buffer:String;Count:LongInt)');
+    RegisterMethod('procedure WriteBuffer(const Buffer:String;Count:LongInt)');
   end;
 
   with Compiler.AddClass(Stream, 'TStringStream') do
   begin
-    RegisterMethod('constructor Create(const AString: string)');
+    RegisterMethod('constructor Create');
     RegisterMethod('function Read(var Buffer: string; Count: Longint): Longint');
     RegisterMethod('function ReadString(Count: Longint): string');
-    RegisterMethod('function Seek(Offset: Longint; Origin: Word): Longint');
+    RegisterMethod('function Seek(Offset: Longint; Origin: TSeekOrigin): Longint');
     RegisterMethod('function Write(const Buffer: string; Count: Longint): Longint');
     RegisterMethod('procedure WriteString(const AString: string)');
     RegisterProperty('DataString', 'string', iptR);
@@ -876,16 +928,20 @@ begin
     RegisterMethod(@TMyMemoryStream.SaveToStream, 'SaveToStream');
     RegisterMethod(@TMyMemoryStream.SaveToFile, 'SaveToFile');
     RegisterMethod(@TMyMemoryStream.SetSize, 'SetSize');
+    RegisterMethod(@TMyMemoryStream.Read, 'Read');
+    RegisterMethod(@TMyMemoryStream.ReadBuffer, 'ReadBuffer');
+    RegisterMethod(@TMyMemoryStream.Write, 'Write');
+    RegisterMethod(@TMyMemoryStream.Write, 'WriteBuffer');
   end;
 
-  with Exec.AddClass(TStringStream) do
+  with Exec.AddClass(TMyStringStream, 'TStringStream') do
   begin
-    RegisterConstructor(@TStringStream.Create, 'Create');
-    RegisterMethod(@TStringStream.Read, 'Read');
-    RegisterMethod(@TStringStream.ReadString, 'ReadString');
-    RegisterMethod(@TStringStream.Seek, 'Seek');
-    RegisterMethod(@TStringStream.Write, 'Write');
-    RegisterMethod(@TStringStream.WriteString, 'WriteString');
+    RegisterConstructor(@TMyStringStream.Create, 'Create');
+    RegisterMethod(@TMyStringStream.Read, 'Read');
+    RegisterMethod(@TMyStringStream.ReadString, 'ReadString');
+    RegisterMethod(@TMyStringStream.Seek, 'Seek');
+    RegisterMethod(@TMyStringStream.Write, 'Write');
+    RegisterMethod(@TMyStringStream.WriteString, 'WriteString');
     RegisterPropertyHelper(@DataStringReadHelper, nil, 'DataString');
   end;
 
