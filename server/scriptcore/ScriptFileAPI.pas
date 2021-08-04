@@ -177,7 +177,7 @@ end;
 
 constructor TMyStringList.Create(API: TScriptFileAPI);
 begin
-  inherited Create;
+  inherited Create(Nil);
   Self.FAPI := API;
   Self.OnChange := Self.MyOnChange;
   Self.OnChanging := Self.MyOnChanging;
