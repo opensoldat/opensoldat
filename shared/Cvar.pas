@@ -944,10 +944,14 @@ begin
   bots_chat := TBooleanCvar.Add('bots_chat', 'Enables/disables bots chatting', True, True, [CVAR_SERVER], nil);
 
   // ScriptCore cvars
-  sc_enable := TBooleanCvar.Add('sc_enable', 'Enables/Disables scripting', True, True, [CVAR_SERVER], nil);
-  sc_onscriptcrash := TStringCvar.Add('sc_onscriptcrash', 'What action to take when a script crashes. Available parameters are recompile, shutdown, ignore and disable', 'ignore', 'ignore', [CVAR_SERVER], nil, 0, 10);
-  sc_maxscripts := TIntegerCvar.Add('sc_maxscripts', 'Set the maximum number of scripts which can be loaded by this server.', 0, 255, [CVAR_SERVER], nil, 0, 255);
-  sc_safemode := TBooleanCvar.Add('sc_safemode', 'Enables/Disables Safe Mode for Scripts', False, False, [CVAR_SERVER], nil);
+  sc_enable := TBooleanCvar.Add('sc_enable', 'Enables/Disables scripting', True, True, [CVAR_SERVER, CVAR_INITONLY], nil);
+  sc_onscriptcrash := TStringCvar.Add('sc_onscriptcrash', 'What action to take when a script crashes. Available parameters are recompile, shutdown, ignore and disable', 'ignore', 'ignore', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 10);
+  sc_maxscripts := TIntegerCvar.Add('sc_maxscripts', 'Set the maximum number of scripts which can be loaded by this server.', 0, 255, [CVAR_SERVER, CVAR_INITONLY], nil, 0, 255);
+  sc_safemode := TBooleanCvar.Add('sc_safemode', 'Enables/Disables Safe Mode for Scripts', False, False, [CVAR_SERVER, CVAR_INITONLY], nil);
+  sc_allowdlls := TBooleanCvar.Add('sc_allowdlls', 'Enables/Disables loading external dlls', False, False, [CVAR_SERVER, CVAR_INITONLY], nil);
+  sc_sandboxed := TIntegerCvar.Add('sc_sandboxed', 'ScriptCore global sandbox level ', 2, 2, [CVAR_SERVER, CVAR_INITONLY], nil, 0, 2);
+  sc_defines := TStringCvar.Add('sc_defines', 'ScriptCore global defines (comma separated)', '', '', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 255);
+  sc_searchpaths := TStringCvar.Add('sc_searchpaths', 'ScriptCore global search paths (comma separated)', '', '', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 255);
 
   // Fileserver cvars
   fileserver_enable := TBooleanCvar.Add('fileserver_enable', 'Enables/Disables built-in fileserver', True, True, [CVAR_SERVER, CVAR_INITONLY], nil);

@@ -156,9 +156,6 @@ type
     property API: TList read FApi;
   end;
 
-var
-  GlobalConfig: TScriptCore3Conf;
-
 function CheckFunction(Dir: string): TScriptCore3;
 
 implementation
@@ -218,14 +215,14 @@ begin
         Result := TScriptCore3.Create;
         Result.FName := Name;
         Result.FConfig.LoadConfig(IniFile, 'Config', 'SearchPaths', 'Defines');
-        if Result.FConfig.SandboxLevel < GlobalConfig.SandboxLevel then
+        if Result.FConfig.SandboxLevel < sc_sandboxed.Value then
         begin
           Result.WriteInfo('Script''s sandbox level denied by global config.');
           Result.Free;
           Result := nil;
           Exit;
         end;
-        if Result.FConfig.AllowDlls and not GlobalConfig.AllowDlls then
+        if Result.FConfig.AllowDlls and not sc_allowdlls.Value then
         begin
           Result.WriteInfo('AllowDlls denied by global config.');
           Result.Free;
@@ -240,8 +237,8 @@ begin
         Result.FDebug := IniFile.ReadBool('Config', 'Debug', False);
         if Result.FLegacyMode then
           Result.SetHybridMode;
-        Result.FConfig.Defines.AddStrings(GlobalConfig.Defines);
-        Result.FConfig.SearchPaths.AddStrings(GlobalConfig.SearchPaths);
+        Result.FConfig.Defines.CommaText := sc_defines.Value;
+        Result.FConfig.SearchPaths.CommaText := sc_searchpaths.Value;
       end
       else
         ScrptDispatcher.WriteInfo('[' + Dir + '] CONFIG section not found');
@@ -1220,11 +1217,5 @@ begin
     Self.Lock.Release;
   end;
 end;
-
-initialization
-  GlobalConfig.Create;
-
-finalization
-  GlobalConfig.Destroy;
 
 end.
