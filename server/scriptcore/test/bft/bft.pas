@@ -1237,7 +1237,8 @@ begin
   MyStringList2 := File.CreateStringListFromFile('~/stringlist.txt');
   File.Delete('~/stringlist.txt');
 
-  if MyStringList.Text <> 'Asdf'#10'Qwerty'#10'Uiop'#10 then
+  if (MyStringList.Text <> 'Asdf'#10'Qwerty'#10'Uiop'#10 ) and
+    (MyStringList.Text <> 'Asdf'#13#10'Qwerty'#13#10'Uiop'#13#10) then
   begin
     Result := 'TStringList.Text';
     Exit;
