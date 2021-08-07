@@ -187,6 +187,10 @@ var
   sc_onscriptcrash: TStringCvar;
   sc_maxscripts: TIntegerCvar;
   sc_safemode: TBooleanCvar;
+  sc_allowdlls: TBooleanCvar;
+  sc_sandboxed: TIntegerCvar;
+  sc_defines: TStringCvar;
+  sc_searchpaths: TStringCvar;
 
   fileserver_enable: TBooleanCvar;
   fileserver_port: TIntegerCvar;
