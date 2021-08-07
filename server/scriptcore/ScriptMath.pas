@@ -235,10 +235,10 @@ begin
     RegisterMethod('function Max(A, B: Extended): Extended');
     RegisterMethod('function Abs(A: Extended): Extended');
     RegisterMethod('function Exp(A: Extended): Extended');
-    RegisterMethod('function Sign(A: Extended): ShortInt');
+    RegisterMethod('function Sign(A: Extended): TValueSign');
     RegisterMethod('function IsNaN(A: Extended): Boolean');
     RegisterMethod('function Round(A: Extended): Integer');
-    RegisterMethod('function RoundTo(A: Extended; B: ShortInt): Extended');
+    RegisterMethod('function RoundTo(A: Extended; B: TRoundToRange): Extended');
     RegisterMethod('function DegToRad(A: Extended): Extended');
     RegisterMethod('function RadToDeg(A: Extended): Extended');
     RegisterMethod('function DegNormalize(A: Extended): Extended');
