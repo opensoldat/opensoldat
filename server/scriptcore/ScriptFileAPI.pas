@@ -69,6 +69,7 @@ type
     constructor Create;
     function Read(var Buffer: String; Count: LongInt): LongInt;
     function Write(const Buffer: String; Count: LongInt): LongInt;
+    function ReadString(Count: LongInt): String;
   end;
 
   TScriptFile = class(TObject)
@@ -177,7 +178,7 @@ end;
 
 constructor TMyStringList.Create(API: TScriptFileAPI);
 begin
-  inherited Create(Nil);
+  inherited Create;
   Self.FAPI := API;
   Self.OnChange := Self.MyOnChange;
   Self.OnChanging := Self.MyOnChanging;
@@ -261,9 +262,9 @@ begin
   inherited WriteBuffer(Buffer[1], Count);
 end;
 
-constructor TMyStringStream.Create;
+constructor TMyStringStream.Create();
 begin
-  inherited Create;
+  inherited Create('');
 end;
 
 function TMyStringStream.Read(var Buffer: String; Count: LongInt): LongInt;
@@ -274,6 +275,17 @@ end;
 function TMyStringStream.Write(const Buffer: String; Count: LongInt): LongInt;
 begin
   Result := inherited Write(Buffer[1], Count);
+end;
+
+function TMyStringStream.ReadString(Count: LongInt): String;
+begin
+  Result := inherited ReadString(Count);
+  {$IFDEF FPC}
+  {$IF (FPC_FULLVERSION >= 30200) and (FPC_FULLVERSION < 30202)}
+  // https://github.com/graemeg/freepascal/commit/78bba42fbe9627cc7ec9b87748d0c64f86a5d10c
+  Self.Position := Self.Position + Length(Result);
+  {$ENDIF}
+  {$ENDIF}
 end;
 
 constructor TScriptFile.Create(API: TScriptFileAPI);
@@ -747,7 +759,7 @@ begin
     RegisterMethod('procedure Free');
     RegisterMethod('function Read(var Buffer:String;Count:LongInt):LongInt');
     RegisterMethod('function Write(const Buffer:String;Count:LongInt):LongInt');
-    RegisterMethod('function Seek(Offset:LongInt;Origin:TSeekOrigin):LongInt');
+    RegisterMethod('function Seek(Offset:Int64;Origin:TSeekOrigin):Int64');
     RegisterMethod('procedure ReadBuffer(var Buffer:String;Count:LongInt)');
     RegisterMethod('procedure WriteBuffer(const Buffer:String;Count:LongInt)');
     RegisterMethod('function CopyFrom(Source:TStream;Count:Int64):LongInt');
@@ -774,7 +786,7 @@ begin
     RegisterMethod('constructor Create');
     RegisterMethod('function Read(var Buffer: string; Count: Longint): Longint');
     RegisterMethod('function ReadString(Count: Longint): string');
-    RegisterMethod('function Seek(Offset: Longint; Origin: TSeekOrigin): Longint');
+    RegisterMethod('function Seek(Offset: Int64; Origin: TSeekOrigin): Int64');
     RegisterMethod('function Write(const Buffer: string; Count: Longint): Longint');
     RegisterMethod('procedure WriteString(const AString: string)');
     RegisterProperty('DataString', 'string', iptR);
@@ -799,7 +811,25 @@ begin
   SIRegisterTPARSER(Compiler.Compiler);
 end;
 
+// These procedural types/variables are used to obtain pointers to the correct
+// function overloads. See discussion:
+// https://forum.lazarus.freepascal.org/index.php?topic=23620.0.
+type
+  TSeekFn = function(const Offset: Int64; Origin: TSeekOrigin): Int64 of object;
+  TReadFn = function(var Buffer: String; Count: LongInt): LongInt of object;
+  TReadBufferFn = procedure(var Buffer: String; Count: LongInt) of object;
+  TWriteFn = function(const Buffer: String; Count: LongInt): LongInt of object;
+  TWriteBufferFn = procedure(const Buffer: String; Count: LongInt) of object;
+  TReadStringFn = function(Count: LongInt): String of object;
+
 procedure TScriptFileAPI.RuntimeRegisterApi(Exec: TPascalExec);
+var
+  SeekPointer: TSeekFn;
+  ReadPointer: TReadFn;
+  ReadBufferPointer: TReadBufferFn;
+  WritePointer: TWriteFn;
+  WriteBufferPointer: TWriteBufferFn;
+  ReadStringPointer: TReadStringFn;
 begin
   RIRegisterTBITS(Exec.ClassImporter);
   RIRegisterTPARSER(Exec.ClassImporter);
@@ -913,19 +943,27 @@ begin
     RegisterMethod(@TMyMemoryStream.SaveToStream, 'SaveToStream');
     RegisterMethod(@TMyMemoryStream.SaveToFile, 'SaveToFile');
     RegisterMethod(@TMyMemoryStream.SetSize, 'SetSize');
-    RegisterMethod(@TMyMemoryStream.Read, 'Read');
-    RegisterMethod(@TMyMemoryStream.ReadBuffer, 'ReadBuffer');
-    RegisterMethod(@TMyMemoryStream.Write, 'Write');
-    RegisterMethod(@TMyMemoryStream.Write, 'WriteBuffer');
+    ReadPointer := TMyMemoryStream.Read;
+    RegisterMethod(@ReadPointer, 'Read');
+    ReadBufferPointer := TMyMemoryStream.ReadBuffer;
+    RegisterMethod(@ReadBufferPointer, 'ReadBuffer');
+    WritePointer := TMyMemoryStream.Write;
+    RegisterMethod(@WritePointer, 'Write');
+    WriteBufferPointer := TMyMemoryStream.WriteBuffer;
+    RegisterMethod(@WriteBufferPointer, 'WriteBuffer');
   end;
 
   with Exec.AddClass(TMyStringStream, 'TStringStream') do
   begin
     RegisterConstructor(@TMyStringStream.Create, 'Create');
-    RegisterMethod(@TMyStringStream.Read, 'Read');
-    RegisterMethod(@TMyStringStream.ReadString, 'ReadString');
-    RegisterMethod(@TMyStringStream.Seek, 'Seek');
-    RegisterMethod(@TMyStringStream.Write, 'Write');
+    ReadPointer := TMyStringStream.Read;
+    RegisterMethod(@ReadPointer, 'Read');
+    ReadStringPointer := TMyStringStream.ReadString;
+    RegisterMethod(@ReadStringPointer, 'ReadString');
+    SeekPointer := TMyStringStream.Seek;
+    RegisterMethod(@SeekPointer, 'Seek');
+    WritePointer := TMyStringStream.Write;
+    RegisterMethod(@WritePointer, 'Write');
     RegisterMethod(@TMyStringStream.WriteString, 'WriteString');
     RegisterPropertyHelper(@DataStringReadHelper, nil, 'DataString');
   end;
