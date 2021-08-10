@@ -560,7 +560,7 @@ begin
     Map.AddObject(NewObject);
     NewObject.Free;
 
-    Dec(ObjectStyle);
+    Dec(ObjectStyle, 1);
     if ObjectStyle < OBJECT_ALPHA_FLAG then
       ObjectStyle := OBJECT_STATIONARY_GUN;
 
@@ -619,7 +619,7 @@ begin
       if not Players.Active[i].Active then
         SLog('Player in "Active" not actually active.', FAILURE);
 
-    Inc(TestCount);
+    Inc(TestCount, 1);
   end;
 end;
 
@@ -1838,7 +1838,7 @@ begin
     if TestIsFailed(Tests[i]) then
     begin
       PrintFailedTest(Tests[i]);
-      Inc(FailCount);
+      Inc(FailCount, 1);
     end;
   end;
 

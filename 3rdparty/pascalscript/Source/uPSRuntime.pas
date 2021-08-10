@@ -9291,14 +9291,14 @@ begin
   Result:=true;
   arr:=NewTPSVariantIFC(Stack[Stack.Count-1],true);
   case arr.aType.BaseType of
-    btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)-1);     //Byte
-    btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)-1);     //ShortInt
-    btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)-1);    //Word
-    btS16        : Stack.SetInt(-1,Tbts16(arr.dta^)-1);    //SmallInt
-    btU32        : Stack.SetInt(-1,Tbtu32(arr.dta^)-1);    //Cardinal/LongWord
-    btS32        : Stack.SetInt(-1,Tbts32(arr.dta^)-1);    //Integer/LongInt
+    btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)-Stack.GetInt(-2));     //Byte
+    btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)-Stack.GetInt(-2));     //ShortInt
+    btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)-Stack.GetInt(-2));    //Word
+    btS16        : Stack.SetInt(-1,Tbts16(arr.dta^)-Stack.GetInt(-2));    //SmallInt
+    btU32        : Stack.SetInt(-1,Tbtu32(arr.dta^)-Stack.GetInt(-2));    //Cardinal/LongWord
+    btS32        : Stack.SetInt(-1,Tbts32(arr.dta^)-Stack.GetInt(-2));    //Integer/LongInt
 {$IFNDEF PS_NOINT64}
-    btS64        : Stack.SetInt64(-1,Tbts64(arr.dta^)-1);
+    btS64        : Stack.SetInt64(-1,Tbts64(arr.dta^)-Stack.GetInt64(-2));
 {$ENDIF}
     else Result:=false;
   end;
@@ -9311,14 +9311,14 @@ begin
   Result:=true;
   arr:=NewTPSVariantIFC(Stack[Stack.Count-1],true);
   case arr.aType.BaseType of
-    btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)+1);     //Byte
-    btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)+1);     //ShortInt
-    btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)+1);    //Word
-    btS16        : Stack.SetInt(-1,Tbts16(arr.dta^)+1);    //SmallInt
-    btU32        : Stack.SetInt(-1,Tbtu32(arr.dta^)+1);    //Cardinal/LongWord
-    btS32        : Stack.SetInt(-1,Tbts32(arr.dta^)+1);    //Integer/LongInt
+    btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)+Stack.GetInt(-2));     //Byte
+    btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)+Stack.GetInt(-2));     //ShortInt
+    btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)+Stack.GetInt(-2));    //Word
+    btS16        : Stack.SetInt(-1,Tbts16(arr.dta^)+Stack.GetInt(-2));    //SmallInt
+    btU32        : Stack.SetInt(-1,Tbtu32(arr.dta^)+Stack.GetInt(-2));    //Cardinal/LongWord
+    btS32        : Stack.SetInt(-1,Tbts32(arr.dta^)+Stack.GetInt(-2));    //Integer/LongInt
 {$IFNDEF PS_NOINT64}
-    btS64        : Stack.SetInt64(-1,Tbts64(arr.dta^)+1);
+    btS64        : Stack.SetInt64(-1,Tbts64(arr.dta^)+Stack.GetInt64(-2));
 {$ENDIF}
     else Result:=false;
   end;
