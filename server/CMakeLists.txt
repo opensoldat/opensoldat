@@ -19,6 +19,7 @@ option(BUILD_RCON "Build Rcon" True)
 
 if(BUILD_SCRIPTCORE)
   add_flag_append(CMAKE_Pascal_FLAGS "-dSCRIPT")
+  add_flag_append(CMAKE_Pascal_FLAGS "-dPS_USESSUPPORT")
 endif()
 
 if(BUILD_RCON)
