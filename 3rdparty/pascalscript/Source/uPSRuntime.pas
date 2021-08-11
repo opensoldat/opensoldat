@@ -9291,6 +9291,7 @@ begin
   Result:=true;
   arr:=NewTPSVariantIFC(Stack[Stack.Count-1],true);
   case arr.aType.BaseType of
+    // @SoldatPatch
     btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)-Stack.GetInt(-2));     //Byte
     btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)-Stack.GetInt(-2));     //ShortInt
     btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)-Stack.GetInt(-2));    //Word
@@ -9311,6 +9312,7 @@ begin
   Result:=true;
   arr:=NewTPSVariantIFC(Stack[Stack.Count-1],true);
   case arr.aType.BaseType of
+    // @SoldatPatch
     btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)+Stack.GetInt(-2));     //Byte
     btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)+Stack.GetInt(-2));     //ShortInt
     btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)+Stack.GetInt(-2));    //Word

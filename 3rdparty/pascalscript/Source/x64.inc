@@ -496,6 +496,7 @@ _XMM0: Double;
       2: begin inc(RegUsage); Registers._R8:=Data; end;
       3: begin inc(RegUsage); Registers._R9:=Data; end;
     else begin
+      // @SoldatPatch
       if Length(Stack) mod 8 <> 0 then
         SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
       SetLength(Stack, Length(Stack)+8);
@@ -516,6 +517,7 @@ _XMM0: Double;
       4: begin inc(RegUsage); Registers._R8:=Data; end;
       5: begin inc(RegUsage); Registers._R9:=Data; end;
     else begin
+      // @SoldatPatch
       if Length(Stack) mod 8 <> 0 then
         SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
       SetLength(Stack, Length(Stack)+8);
@@ -549,6 +551,7 @@ _XMM0: Double;
       2: begin inc(RegUsage); Registers._XMM2:=Data; end;
       3: begin inc(RegUsage); Registers._XMM3:=Data; end;
     else begin
+      // @SoldatPatch
       if Length(Stack) mod 8 <> 0 then
         SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
       SetLength(Stack, Length(Stack)+8);
@@ -566,8 +569,9 @@ _XMM0: Double;
       2: begin inc(RegUsage); Registers.SingleBits := Registers.SingleBits or 4;Registers._XMM2:=Data; end;
       3: begin inc(RegUsage); Registers.SingleBits := Registers.SingleBits or 8; Registers._XMM3:=Data; end;
     else begin
-      if Length(Stack) mod 4 <> 0 then
-        SetLength(Stack, Length(Stack)+ (4-(Length(Stack) mod 4)));
+      // @SoldatPatch
+      if Length(Stack) mod 8 <> 0 then
+        SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
       SetLength(Stack, Length(Stack)+8);
       p := @Stack[LEngth(Stack)-8];
       Single(p^) := data;
@@ -588,6 +592,7 @@ _XMM0: Double;
       6: begin inc(RegUsageFloat); Registers._XMM6:=Data; end;
       7: begin inc(RegUsageFloat); Registers._XMM7:=Data; end;
     else begin
+      // @SoldatPatch
       if Length(Stack) mod 8 <> 0 then
         SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
       SetLength(Stack, Length(Stack)+8);
@@ -609,11 +614,12 @@ _XMM0: Double;
       6: begin inc(RegUsageFloat); Registers.SingleBits := Registers.SingleBits or 64; Registers._XMM6:=Data; end;
       7: begin inc(RegUsageFloat); Registers.SingleBits := Registers.SingleBits or 128; Registers._XMM7:=Data; end;
     else begin
-      if Length(Stack) mod 4 <> 0 then
-        SetLength(Stack, Length(Stack)+ (4-(Length(Stack) mod 4)));
-      SetLength(Stack, Length(Stack)+4);
-      p := @Stack[LEngth(Stack)-4];
-      Single(p^) := data;
+      // @SoldatPatch
+      if Length(Stack) mod 8 <> 0 then
+        SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
+      SetLength(Stack, Length(Stack)+8);
+      p := @Stack[LEngth(Stack)-8];
+      Double(p^) := data;
     end;
     end;
   end;

@@ -13146,6 +13146,7 @@ begin
       OrgName:='x';
       Mode:=pmInOut;
     end;
+    // @SoldatPatch
     with AddParam do
     begin
       OrgName:='y';
@@ -13158,6 +13159,7 @@ begin
       OrgName:='x';
       Mode:=pmInOut;
     end;
+    // @SoldatPatch
     with AddParam do
     begin
       OrgName:='y';
