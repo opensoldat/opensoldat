@@ -1809,10 +1809,27 @@ begin
   Result := '';
 end;
 
+function DefinesTest: String;
+begin
+  Result := 'Unknown failure';
+
+  {$IFNDEF TEST_DEFINE}
+  Result := 'Defines 1';
+  Exit;
+  {$ENDIF}
+
+  {$IFNDEF TEST_DEFINE2}
+  Result := 'Defines 2';
+  Exit;
+  {$ENDIF}
+
+  Result := '';
+end;
+
 procedure RunAllTests;
 var
   i, FailCount: Integer;
-  Tests: Array[0..5] of TTest;
+  Tests: Array[0..6] of TTest;
 begin
   // Register tests.
   Tests[0].Name := 'BanLists'; // ScriptBanLists.pas
@@ -1827,6 +1844,8 @@ begin
   Tests[4].Fn := @MathTest;
   Tests[5].Name := 'Events'; // Events
   Tests[5].Fn := @EventsTest;
+  Tests[6].Name := 'Defines'; // Defines
+  Tests[6].Fn := @DefinesTest;
 
   // Run tests.
   for i := Low(Tests) to High(Tests) do

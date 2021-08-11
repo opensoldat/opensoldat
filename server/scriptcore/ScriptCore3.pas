@@ -182,12 +182,15 @@ var
   IniFile: TMemIniFile;
   MainFile, Name: string;
   Version: Single;
+  GlobalVals: TStringList;
 begin
   Result := nil;
+  GlobalVals := nil;
   IniFile := nil;
   if FileExists(Dir + '/config.ini') then
   begin
     try
+      GlobalVals := TStringList.Create;
       IniFile := TMemIniFile.Create(Dir + '/config.ini');
       if IniFile.SectionExists('Config') then
       begin
@@ -240,13 +243,16 @@ begin
         Result.FDebug := IniFile.ReadBool('Config', 'Debug', False);
         if Result.FLegacyMode then
           Result.SetHybridMode;
-        Result.FConfig.Defines.CommaText := sc_defines.Value;
-        Result.FConfig.SearchPaths.CommaText := sc_searchpaths.Value;
+        GlobalVals.CommaText := sc_defines.Value;
+        Result.FConfig.Defines.AddStrings(GlobalVals);
+        GlobalVals.CommaText := sc_searchpaths.Value;
+        Result.FConfig.SearchPaths.AddStrings(GlobalVals);
       end
       else
         ScrptDispatcher.WriteInfo('[' + Dir + '] CONFIG section not found');
     finally
       IniFile.Free;
+      GlobalVals.Free;
     end;
   end;
 end;
