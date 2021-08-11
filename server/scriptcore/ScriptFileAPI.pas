@@ -59,7 +59,9 @@ type
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string);
     function Read(var Buffer: String; Count:LongInt): LongInt;
+      {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
     function Write(const Buffer: String; Count:LongInt): LongInt;
+      {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
     procedure ReadBuffer(var Buffer: String; Count:LongInt);
     procedure WriteBuffer(const Buffer: String; Count:LongInt);
   end;
@@ -68,7 +70,9 @@ type
   public
     constructor Create;
     function Read(var Buffer: String; Count: LongInt): LongInt;
+      {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
     function Write(const Buffer: String; Count: LongInt): LongInt;
+      {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
     function ReadString(Count: LongInt): String;
   end;
 
