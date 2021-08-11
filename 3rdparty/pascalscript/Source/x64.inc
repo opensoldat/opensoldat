@@ -358,9 +358,17 @@ end;
 {$IFDEF LINUX}
 // System V x86-64 storage class implementation.
 // This is NOT thoroughly tested and probably not 100% correct for all records.
+// It does not support vector or complex types (neither does PascalScript in
+// general). Also static arrays and sets probably don't work.
 type
   PSVStorageClass = ^TSVStorageClass;
-  TSVStorageClass = (SVSSE, SVINT, SVMEM);
+  TSVStorageClass = (SVNO_CLASS, SVSSE, SVINT, SVMEM);
+
+const
+  MAX_CLASSES = 2;
+
+type
+  TStorageClasses = Array[0..MAX_CLASSES - 1] of TSVStorageClass;
 
 // Get alignment of non-aggregate types.
 function GetSimpleAlignment(AType: TPSTypeRec): Integer;
@@ -407,49 +415,84 @@ begin
   end;
 end;
 
-function ClassifyStorage(AType: TPSTypeRec; var Alignment: Integer): TSVStorageClass;
+function ClassifyStorage(AType: TPSTypeRec; var Alignment: Integer): TStorageClasses;
 var
-  i, Dummy: Integer;
+  i, j, Dummy: Integer;
+  Len, StartEightByte, EndEightByte, EightByte: Integer;
   Rec: TPSTypeRec_Record;
-  SubClass: TSVStorageClass;
+  SubClasses: TStorageClasses;
 begin
+  for i := Low(Result) to High(Result) do
+    Result[i] := SVNO_CLASS;
+
   Dummy := 0;
   if AType.BaseType <> btRecord then
     Alignment := GetSimpleAlignment(AType);
 
   case AType.BaseType of
     btSingle, btDouble:
-      Result := SVSSE;
+      Result[0] := SVSSE;
     btU8, btS8, btU16, btS16, btU32, btS32, btString, btArray, btPointer,
     btPChar, {$IFNDEF PS_NOINT64}btS64,{$ENDIF} btChar,
     {$IFNDEF PS_NOWIDESTRING}btWideString, btWideChar,{$ENDIF} btProcPtr,
     btStaticArray, btVariant, btSet, btCurrency, btClass, btInterface,
     btNotificationVariant, btUnicodeString, btEnum, btExtClass:
-      Result := SVINT;
+      Result[0] := SVINT;
     btExtended:
-      Result := SVMEM;
+      Result[0] := SVMEM;
     btRecord: begin
       Rec := TPSTypeRec_Record(AType);
 
       if ContainsUnaligned(Rec, Alignment) then
       begin
-        Result := SVMEM;
+        Result[0] := SVMEM;
         Exit;
       end;
 
-      if Rec.RealSize > 8 then
+      if Rec.RealSize > 16 then
       begin
-        Result := SVMEM;
+        Result[0] := SVMEM;
         Exit;
       end;
 
-      Result := SVSSE;
       for i := 0 to Rec.FieldTypes.Count - 1 do
       begin
-        SubClass := ClassifyStorage(Rec.FieldTypes[i], Dummy);
-        if Ord(SubClass) > Ord(Result) then
-          Result := SubClass;
+        SubClasses := ClassifyStorage(Rec.FieldTypes[i], Dummy);
+        for j := Low(SubClasses) to High(SubClasses) do
+        begin
+          if SubClasses[j] = SVNO_CLASS then
+            Break;
+
+          if ((TPSTypeRec(Rec.FieldTypes[i]).RealSize - (j * 8)) - 1) < 7 then
+            Len := (TPSTypeRec(Rec.FieldTypes[i]).RealSize - (j * 8)) - 1
+          else
+            Len := 7;
+
+          StartEightByte := (IPointer(Rec.RealFieldOffsets[i]) + (j * 8)) div 8;
+          EndEightByte := (IPointer(Rec.RealFieldOffsets[i]) + (j * 8) + Len) div 8;
+
+          // Sanity check.
+          if StartEightByte > High(Result) then
+            StartEightByte := High(Result);
+          if EndEightByte > High(Result) then
+            EndEightByte := High(Result);
+
+          for EightByte := StartEightByte to EndEightByte do
+          begin
+            if Ord(SubClasses[j]) > Ord(Result[EightByte + j]) then
+              Result[EightByte + j] := SubClasses[j];
+          end;
+        end;
       end;
+    end;
+  end;
+
+  for i := Low(Result) to High(Result) do
+  begin
+    if Result[i] = SVMEM then
+    begin
+      Result[0] := SVMEM;
+      Break;
     end;
   end;
 end;
@@ -634,8 +677,8 @@ _XMM0: Double;
     {$IFDEF LINUX}
     ip: IPointer;
     i, Alignment: Integer;
-    Rec: TPSTypeRec_Record;
-    Field: TPSVariantIFC;
+    StorageClasses: TStorageClasses;
+    RegUsageCheck, RegUsageFloatCheck: Integer;
     {$ENDIF}
   begin
     Result := False;
@@ -719,13 +762,48 @@ _XMM0: Double;
             else
               StoreReg(IPointer(fVar.Dta));
             {$ELSE}
-            case ClassifyStorage(fVar^.aType, Alignment) of
-              SVSSE: StoreReg(Double(fVar.Dta^));
-              SVINT: StoreReg(IPointer(fVar.Dta^));
-              SVMEM: begin
+            StorageClasses := ClassifyStorage(fVar.aType, Alignment);
+            if StorageClasses[0] = SVMEM then
+            begin
+              if Length(Stack) mod Alignment <> 0 then
+                SetLength(Stack, Length(Stack)+ (Alignment-(Length(Stack) mod Alignment)));
+              StoreStack(fvar.Dta^, fVar^.aType.RealSize);
+            end
+            else
+            begin
+              RegUsageCheck := RegUsage;
+              RegUsageFloatCheck := RegUsageFloat;
+
+              for i := Low(StorageClasses) to High(StorageClasses) do
+              begin
+                if StorageClasses[i] = SVINT then
+                  Inc(RegUsageCheck);
+                if StorageClasses[i] = SVSSE then
+                  Inc(RegUsageFloatCheck);
+              end;
+
+              if (RegUsageCheck > 6) or (RegUsageFloatCheck > 8) then
+              begin
                 if Length(Stack) mod Alignment <> 0 then
                   SetLength(Stack, Length(Stack)+ (Alignment-(Length(Stack) mod Alignment)));
                 StoreStack(fvar.Dta^, fVar^.aType.RealSize);
+              end
+              else
+              begin
+                p := fVar.Dta;
+                for i := Low(StorageClasses) to High(StorageClasses) do
+                begin
+                  if StorageClasses[i] = SVINT then
+                  begin
+                    StoreReg(IPointer(p^));
+                    Inc(p, 8);
+                  end;
+                  if StorageClasses[i] = SVSSE then
+                  begin
+                    StoreReg(Double(p^));
+                    Inc(p, 8);
+                  end;
+                end;
               end;
             end;
             {$ENDIF}
