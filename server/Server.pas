@@ -185,7 +185,6 @@ var
 
   sc_enable: TBooleanCvar;
   sc_onscriptcrash: TStringCvar;
-  sc_maxscripts: TIntegerCvar;
   sc_safemode: TBooleanCvar;
   sc_allowdlls: TBooleanCvar;
   sc_sandboxed: TIntegerCvar;
@@ -641,7 +640,6 @@ begin
 
   {$IFDEF SCRIPT}
   ScrptDispatcher.SafeMode := sc_safemode.Value;
-  ScrptDispatcher.MaxScripts := sc_maxscripts.Value;
   {$ENDIF}
 
   if net_ip.Value = '' then

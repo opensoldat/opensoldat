@@ -59,8 +59,6 @@ type
   public
     // for backward compatibility
     SafeMode: Boolean;
-    // max script number that can be launched
-    MaxScripts: Byte;
     // directory where scripts reside in
     // COMMENT: perhaps that should be a const?
     Dir: string;
@@ -193,7 +191,6 @@ begin
   Self.FScripts := TList.Create;
   Self.FScriptsToUnregister := TList.Create;
   SafeMode := True;
-  MaxScripts := 255;
   Dir := 'scripts';
 end;
 
@@ -264,11 +261,9 @@ procedure TScriptDispatcher.FindScripts(Name: string = '');
 var
   I, J: Integer;
   DirInfo: TSearchRec;
-  ScriptCount: Byte;
   Script: TScript;
   Folders: TStringList;
 begin
-  ScriptCount := 0;
   Folders := TStringList.Create;
   try
     Self.DoLock;
@@ -313,13 +308,6 @@ begin
     Folders.Sort;
     for I := Folders.Count - 1 downto 0 do
     begin
-      if ScriptCount >= sc_maxscripts.Value then
-      begin
-        Self.WriteInfo('Reached max scripts value of ' + IntToStr(ScriptCount) +
-          ', done loading scripts.');
-        Break;
-      end;
-
       for J := 0 to Self.FCheckFunctions.Count - 1 do
       begin
         Script := TCheckFunction(Self.FCheckFunctions[J])(Self.Dir +
@@ -327,7 +315,6 @@ begin
         if (Script <> nil) and ((Script.Name = Name) or (Name = '')) then
         begin
           Self.FScripts.Add(Script);
-          Inc(ScriptCount);
           Break;
         end;
       end;
