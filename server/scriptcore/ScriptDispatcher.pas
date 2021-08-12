@@ -313,6 +313,13 @@ begin
     Folders.Sort;
     for I := Folders.Count - 1 downto 0 do
     begin
+      if ScriptCount >= sc_maxscripts.Value then
+      begin
+        Self.WriteInfo('Reached max scripts value of ' + IntToStr(ScriptCount) +
+          ', done loading scripts.');
+        Break;
+      end;
+
       for J := 0 to Self.FCheckFunctions.Count - 1 do
       begin
         Script := TCheckFunction(Self.FCheckFunctions[J])(Self.Dir +
@@ -324,10 +331,6 @@ begin
           Break;
         end;
       end;
-      // FIXME: this will actually make dispatcher load N last, not N first scripts.
-      // Behavior might be even funnier when function called with name parameter
-      if ScriptCount = sc_maxscripts.Value then
-        Break;
     end;
   finally
     Folders.Free;
