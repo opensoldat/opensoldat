@@ -390,108 +390,71 @@ begin
   end;
 end;
 
-function ContainsUnaligned(Rec: TPSTypeRec_Record; var Alignment: Integer
-  ): Boolean;
+procedure ClassifyStorage(var Classes: TStorageClasses; AType: TPSTypeRec;
+  var Alignment: Integer; Offset: Integer);
 var
   i, SubAlignment: Integer;
+  StartEightByte, EndEightByte: Integer;
+  Rec: TPSTypeRec_Record;
+  FieldClass: TSVStorageClass;
 begin
-  Result := False;
-  Alignment := 0;
-  SubAlignment := 0;
+  if Offset = 0 then
+    for i := Low(Classes) to High(Classes) do
+      Classes[i] := SVNO_CLASS;
 
+  // Simple case
+  if AType.BaseType <> btRecord then
+  begin
+    Alignment := GetSimpleAlignment(AType);
+
+    case AType.BaseType of
+      btSingle, btDouble:
+        FieldClass := SVSSE;
+      btU8, btS8, btU16, btS16, btU32, btS32, btString, btArray, btPointer,
+      btPChar, {$IFNDEF PS_NOINT64}btS64,{$ENDIF} btChar,
+      {$IFNDEF PS_NOWIDESTRING}btWideString, btWideChar,{$ENDIF} btProcPtr,
+      btStaticArray, btVariant, btSet, btCurrency, btClass, btInterface,
+      btNotificationVariant, btUnicodeString, btEnum, btExtClass:
+        FieldClass := SVINT;
+      btExtended:
+        FieldClass := SVMEM;
+    end;
+
+    if Offset mod Alignment <> 0 then
+      FieldClass := SVMEM;
+
+    StartEightByte := Offset div 8;
+    // Alignment is the same as type size for non-aggregate types we support.
+    EndEightByte := (Offset + Alignment - 1) div 8;
+
+    for i := StartEightByte to EndEightByte do
+      if Ord(FieldClass) > Ord(Classes[i]) then
+        Classes[i] := FieldClass;
+
+    Exit;
+  end;
+
+  // Record case
+  Rec := TPSTypeRec_Record(AType);
+
+  if Rec.RealSize > 16 then
+    Classes[0] := SVMEM;
+
+  Alignment := 0;
   for i := 0 to Rec.FieldTypes.Count - 1 do
   begin
-    if TPSTypeRec(Rec.FieldTypes[i]).BaseType = btRecord then
-      Result := Result or
-        ContainsUnaligned(TPSTypeRec_Record(Rec.FieldTypes[i]), SubAlignment)
-    else
-      SubAlignment := GetSimpleAlignment(Rec.FieldTypes[i]);
+    ClassifyStorage(Classes, Rec.FieldTypes[i], SubAlignment,
+      Offset + IPointer(Rec.RealFieldOffsets[i]));
 
     if SubAlignment > Alignment then
       Alignment := SubAlignment;
-
-    if (IPointer(Rec.RealFieldOffsets[i]) mod SubAlignment) <> 0 then
-      Result := True;
-  end;
-end;
-
-function ClassifyStorage(AType: TPSTypeRec; var Alignment: Integer): TStorageClasses;
-var
-  i, j, Dummy: Integer;
-  Len, StartEightByte, EndEightByte, EightByte: Integer;
-  Rec: TPSTypeRec_Record;
-  SubClasses: TStorageClasses;
-begin
-  for i := Low(Result) to High(Result) do
-    Result[i] := SVNO_CLASS;
-
-  Dummy := 0;
-  if AType.BaseType <> btRecord then
-    Alignment := GetSimpleAlignment(AType);
-
-  case AType.BaseType of
-    btSingle, btDouble:
-      Result[0] := SVSSE;
-    btU8, btS8, btU16, btS16, btU32, btS32, btString, btArray, btPointer,
-    btPChar, {$IFNDEF PS_NOINT64}btS64,{$ENDIF} btChar,
-    {$IFNDEF PS_NOWIDESTRING}btWideString, btWideChar,{$ENDIF} btProcPtr,
-    btStaticArray, btVariant, btSet, btCurrency, btClass, btInterface,
-    btNotificationVariant, btUnicodeString, btEnum, btExtClass:
-      Result[0] := SVINT;
-    btExtended:
-      Result[0] := SVMEM;
-    btRecord: begin
-      Rec := TPSTypeRec_Record(AType);
-
-      if ContainsUnaligned(Rec, Alignment) then
-      begin
-        Result[0] := SVMEM;
-        Exit;
-      end;
-
-      if Rec.RealSize > 16 then
-      begin
-        Result[0] := SVMEM;
-        Exit;
-      end;
-
-      for i := 0 to Rec.FieldTypes.Count - 1 do
-      begin
-        SubClasses := ClassifyStorage(Rec.FieldTypes[i], Dummy);
-        for j := Low(SubClasses) to High(SubClasses) do
-        begin
-          if SubClasses[j] = SVNO_CLASS then
-            Break;
-
-          if ((TPSTypeRec(Rec.FieldTypes[i]).RealSize - (j * 8)) - 1) < 7 then
-            Len := (TPSTypeRec(Rec.FieldTypes[i]).RealSize - (j * 8)) - 1
-          else
-            Len := 7;
-
-          StartEightByte := (IPointer(Rec.RealFieldOffsets[i]) + (j * 8)) div 8;
-          EndEightByte := (IPointer(Rec.RealFieldOffsets[i]) + (j * 8) + Len) div 8;
-
-          // Sanity check.
-          if StartEightByte > High(Result) then
-            StartEightByte := High(Result);
-          if EndEightByte > High(Result) then
-            EndEightByte := High(Result);
-
-          for EightByte := StartEightByte to EndEightByte do
-          begin
-            if Ord(SubClasses[j]) > Ord(Result[EightByte + j]) then
-              Result[EightByte + j] := SubClasses[j];
-          end;
-        end;
-      end;
-    end;
   end;
 
-  for i := Low(Result) to High(Result) do
+  for i := Low(Classes) to High(Classes) do
   begin
-    if Result[i] = SVMEM then
+    if Classes[i] = SVMEM then
     begin
-      Result[0] := SVMEM;
+      Classes[0] := SVMEM;
       Break;
     end;
   end;
@@ -762,7 +725,7 @@ _XMM0: Double;
             else
               StoreReg(IPointer(fVar.Dta));
             {$ELSE}
-            StorageClasses := ClassifyStorage(fVar.aType, Alignment);
+            ClassifyStorage(StorageClasses, fVar.aType, Alignment, 0);
             if StorageClasses[0] = SVMEM then
             begin
               if Length(Stack) mod Alignment <> 0 then
