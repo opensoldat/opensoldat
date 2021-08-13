@@ -91,7 +91,6 @@ type
     procedure WriteInfo(Msg: string);
     procedure Deprecated(FnName: string; Msg: string = '');
     function Compile: Boolean;
-    function GetByteCode: Boolean;
     procedure OnException(Sender: TPascalExec; ExError: TPSError;
       const ExParam: string; ExObject: TObject; ProcNo, Position: Cardinal);
     procedure SetHybridMode;
@@ -171,11 +170,6 @@ uses
   ScriptDispatcher,
   ScriptExceptions,
   Variants;
-
-const
-  // I'd suggest to leave those constants here (instead of moving to Constants.pas), as they should be used only localy
-  BYTECODEEXT = '.psb';
-  DEBUGSYMBOLSEXT = '.psd';
 
 function CheckFunction(Dir: string): TScriptCore3;
 var
@@ -466,10 +460,10 @@ var
   Compiler: TPascalCompiler;
   Messages: TStringList;
   I: Shortint;
-  BytecodeFile: TFileStream;
 begin
   Result := False;
   Self.WriteInfo('Compilation started');
+
   Compiler := TPascalCompiler.Create(Self.FDir, Self.FMainFileName);
   Compiler.Defines := Self.FConfig.FDefines;
   Compiler.Api := Self.FApi;
@@ -477,6 +471,7 @@ begin
     Compiler.SupportDLLs := True;
   for I := 0 to Self.FConfig.FSearchPaths.Count - 1 do
     Compiler.AddSearchPath(Self.FDir + Self.FConfig.FSearchPaths[I]);
+
   try
     Result := Compiler.Compile;
   except
@@ -486,98 +481,27 @@ begin
         E.Message);
     end;
   end;
+
   Messages := Compiler.GetMessages();
   for I := 0 to Messages.Count - 1 do
     Self.WriteInfo(Messages[I]);
+
   if not Result then
   begin
     Self.WriteInfo('Compilation failed');
     Exit;
   end;
-  if Self.Debug then
-  begin
-    Self.FDebugSymbols := Compiler.Debugcode;
-    BytecodeFile := TFileStream.Create(Self.FDir +
-      ChangeFileExt(Self.FMainFileName, DEBUGSYMBOLSEXT), fmCreate);
-    BytecodeFile.WriteAnsiString(Self.FDebugSymbols);
-    BytecodeFile.Free;
-  end;
-  Self.FBytecode := Compiler.Bytecode;
-  BytecodeFile := TFileStream.Create(Self.FDir +
-    ChangeFileExt(Self.FMainFileName, BYTECODEEXT), fmCreate);
-  BytecodeFile.WriteAnsiString(Self.FBytecode);
-  BytecodeFile.Free;
-  Self.WriteInfo('Compilation complete');
-end;
 
-function TScriptCore3.GetByteCode: Boolean;
-var
-  SearchRec: TSearchRec;
-  BytecodeTime: Integer;
-  BytecodeFileName: string;
-  FileStream: TFileStream;
-  I: Shortint;
-begin
-  BytecodeFileName := Self.FDir + ChangeFileExt(Self.FMainFileName, BYTECODEEXT);
-  if not FileExists(BytecodeFileName) then
-  begin
-    Result := Self.Compile;
-  end
-  else
-  begin
-    FindFirst(BytecodeFileName, 0, SearchRec);
-    BytecodeTime := SearchRec.Time;
-    FindClose(SearchRec);
-    FindFirst(ParamStr(0), 0, SearchRec);
-    FindClose(SearchRec);
-    if SearchRec.Time > BytecodeTime then
-    begin
-      Result := Self.Compile;
-      Exit;
-    end;
-    FindFirst('server.ini', 0, SearchRec);
-    FindClose(SearchRec);
-    if SearchRec.Time > BytecodeTime then
-    begin
-      Result := Self.Compile;
-      Exit;
-    end;
-    for I := 0 to Self.FConfig.FSearchPaths.Count - 1 do
-      if DirectoryExists(IncludeTrailingPathDelimiter(Self.FDir +
-        Self.FConfig.FSearchPaths[I])) then
-      begin
-        FindFirst(Self.FDir + Self.FConfig.FSearchPaths[I] + '/*', faAnyFile, SearchRec);
-        repeat
-          if SearchRec.Time > BytecodeTime then
-          begin
-            Result := Self.Compile;
-            FindClose(SearchRec);
-            Exit;
-          end;
-        until FindNext(SearchRec) <> 0;
-      end;
-    FindClose(SearchRec);
-    // if arrived here then file exists and does not require recompiling
-    FileStream := TFileStream.Create(BytecodeFileName, fmOpenRead);
-    Self.FBytecode := FileStream.ReadAnsiString;
-    FileStream.Free;
-    // debug file also should exist at this point
-    if Self.FDebug then
-    begin
-      FileStream := TFileStream.Create(ChangeFileExt(BytecodeFileName,
-        DEBUGSYMBOLSEXT), fmOpenRead);
-      Self.FDebugSymbols := FileStream.ReadAnsiString;
-      FileStream.Free;
-    end;
-    Result := True;
-  end;
+  if Self.Debug then
+    Self.FDebugSymbols := Compiler.Debugcode;
+  Self.FBytecode := Compiler.Bytecode;
 end;
 
 function TScriptCore3.Prepare: Boolean;
 begin
   Result := False;
-  if not Self.GetByteCode then
-    Exit;  // any error message should be displayed in GetByteCode();
+  if not Self.Compile then
+    Exit;  // any error message should be displayed in Compile();
   Self.FExec.Free;  // just in case
   Self.WriteInfo('Loading bytecode');
   try
