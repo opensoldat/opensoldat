@@ -467,11 +467,12 @@ begin
   begin
     if ChatText = '' then
     begin
-      ChatText := '/';
       ChatType := MSGTYPE_CMD;
-      ChatChanged := True;
-      CursorPosition := 1;
+      ChatText := '/';
       VoteKickReasonType := False;
+
+      ChatChanged := True;
+      CursorPosition := Length(ChatText);
       SDL_StartTextInput;
     end;
   end
@@ -479,20 +480,21 @@ begin
   begin
     if ChatText = '' then
     begin
-      SDL_StartTextInput;
-      ChatChanged := True;
-      ChatText := ' ';
-      ChatType := MSGTYPE_PUB;
-
-      if Length(FireChatText) > 0 then
-        ChatText := FireChatText;
-
       // force spectator chat to teamchat in survival mode when Round hasn't ended
       if (sv_survivalmode.Value) and Sprite[MySprite].IsSpectator() and
          not SurvivalEndRound and (sv_survivalmode_antispy.Value) then
-        ChatType := MSGTYPE_TEAM;
+        ChatType := MSGTYPE_TEAM
+      else
+        ChatType := MSGTYPE_PUB;
 
+      if Length(FireChatText) > 0 then
+        ChatText := FireChatText
+      else
+        ChatText := ' ';
+
+      ChatChanged := True;
       CursorPosition := Length(ChatText);
+      SDL_StartTextInput;
     end;
   end
   else if Action = TAction.TeamChat then
@@ -500,11 +502,12 @@ begin
     if (ChatText = '') and (MySprite > 0) and
       (Sprite[MySprite].IsSpectator() or IsTeamGame()) then
     begin
-      SDL_StartTextInput;
-      ChatText := ' ';
       ChatType := MSGTYPE_TEAM;
+      ChatText := ' ';
+
       ChatChanged := True;
       CursorPosition := Length(ChatText);
+      SDL_StartTextInput;
     end;
   end
   else if Action = TAction.Snap then
