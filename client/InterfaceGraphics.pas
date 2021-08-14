@@ -1513,19 +1513,19 @@ end;
 
 procedure RenderChatInput(w, h: Single; t: Extended);
 var
-  Str: WideString = '';
+  StrPrefix: WideString = '';
+  Str, StrBeforeCursor: WideString;
   rc: TGfxRect;
-  StrHalf: WideString;
   x, y: Single;
 begin
   if ChatType = MSGTYPE_PUB then
-    Str := 'Say:'
+    StrPrefix := 'Say:'
   else if ChatType = MSGTYPE_TEAM then
-    Str := 'Team Say:'
+    StrPrefix := 'Team Say:'
   else if ChatType = MSGTYPE_CMD then
-    Str := 'Cmd:';
+    StrPrefix := 'Cmd: '; // adding trailing space for unified formatting
 
-  if Str <> '' then
+  if StrPrefix <> '' then
   begin
     SetFontStyle(FONT_SMALL);
 
@@ -1544,7 +1544,7 @@ begin
 
     t := t - ChatInputTime;
 
-    Str := Str + iif(ChatText[Length(ChatText)] = ' ', ChatText + ' ', ChatText);
+    Str := StrPrefix + ChatText;
     rc := GfxTextMetrics(Str);
 
     if RectWidth(rc) >= (w - 80) then
@@ -1552,20 +1552,23 @@ begin
 
     GfxTextVerticalAlign(GFX_BASELINE);
     GfxDrawText(Str, 5, 420 * _iscala.y);
-    StrHalf := Str;
 
-    if CursorPosition < Length(ChatText) then
-      SetLength(StrHalf, CursorPosition + 4 + Ord(ChatText[1] = '/'));
-
-    x := RectWidth(GfxTextMetrics(StrHalf));
-
+    // cursor blinking
     if (t - Floor(t)) <= 0.5 then
     begin
-      x := PixelAlignX(5 + x) + 2 * PixelSize.x;
-      y := PixelAlignY(420 * _iscala.y - 1.2 * RectHeight(rc));
-      w := PixelSize.x;
-      h := PixelAlignY(1.2 * 1.2 * RectHeight(rc));
+      StrBeforeCursor := Str;
+      if CursorPosition < Length(ChatText) then
+        SetLength(StrBeforeCursor, CursorPosition + Length(StrPrefix));
 
+      // for some reason GfxTextMetrics ignores the last trailing space while calculating rectangle width...
+      x := RectWidth(GfxTextMetrics(StrBeforeCursor + iif(StrBeforeCursor[Length(StrBeforeCursor)] = ' ', ' ', '') ));
+
+      x := PixelAlignX(5 + x) + 2 * PixelSize.x;
+      y := PixelAlignY(420 * _iscala.y - RectHeight(rc));
+      w := PixelSize.x;
+      h := PixelAlignY(1.4 * RectHeight(rc));
+
+      // drawing cursor
       GfxDrawQuad(nil,
         GfxVertex(x + 0, y + 0, 0, 0, RGBA(255, 230, 170)),
         GfxVertex(x + w, y + 0, 0, 0, RGBA(255, 230, 170)),
