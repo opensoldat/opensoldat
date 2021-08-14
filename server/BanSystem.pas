@@ -132,7 +132,7 @@ begin
   j := 1;
   for i := 1 to (TempArray.Count) do
   begin
-    Buff := SplitStr(TempArray[i - 1], ':', 4);
+    Buff := TempArray[i - 1].Split(':', 4);
     if Trim(Buff[0]) = '' then
       Continue;
     SetLength(BannedIPList, j + 1);
@@ -281,7 +281,7 @@ begin
   j := 1;
   for i := 1 to (TempArray.Count) do
   begin
-    Buff := SplitStr(TempArray[i - 1], ':', 4);
+    Buff := TempArray[i - 1].Split(':', 4);
     if Trim(Buff[0]) = '' then
       Continue;
 

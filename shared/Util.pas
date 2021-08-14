@@ -24,13 +24,6 @@ type
     WorkshopID: uint64;
     Path: String;
   end;
-// how often does character appear in str
-function CharCount(Character: string; Str: string): Integer;
-
-// splits a string, ie: 1|2|3 with a limit of 1, into 1 and 2|3
-function SplitStr(const Source: string; const Delimiter: string;
-  const limit: Integer = -1): TStringArray;
-
 
 // Gets a specific piece of a string
 function GetPiece(const Source: string; const Delimiter: string;
@@ -39,7 +32,6 @@ function GetPiece(const Source: string; const Delimiter: string;
 function Iif(const Condition: Boolean; const TruePart: Variant;
   const FalsePart: Variant): Variant;
 function Choose(const Index: Integer; const Choices: array of Variant): Variant;
-
 
 function ColorToHex(Color: TColor): LongWord;
 function StringToColor(const S: string): TColor;
@@ -67,16 +59,6 @@ implementation
 uses
   {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Constants, PhysFS, Md5, Game {$IFDEF STEAM}, Steam{$ENDIF};
 
-function CharCount(Character: string; Str: string): Integer;
-var
-  I: Integer;
-begin
-  Result := 0;
-  for I := 1 to Length(Str) do
-    if Str[I] = Character then
-      Inc(Result);
-end;
-
 function Iif(const Condition: Boolean; const TruePart: Variant;
   const FalsePart: Variant): Variant;
 begin
@@ -92,40 +74,16 @@ begin
   Result := Choices[index];
 end;
 
-function SplitStr(const Source: string; const Delimiter: string;
-  const Limit: Integer = -1): TStringArray;
-var
-  SubStart, SubEnd: PChar;
-  Index: Integer;
-begin
-  Index := 0;
-  SubStart := PChar(Source);
-  SubEnd := StrPos(SubStart, PChar(delimiter));
-  if (Limit > -1) then
-    SetLength(Result, Limit + 1)
-  else
-    SetLength(Result, Length(Source));
-
-  while not (SubEnd = nil) do
-  begin
-    if Index = Limit then
-      Break;
-
-    Result[Index] := Copy(Source, SubStart - PChar(Source) + 1,
-      SubEnd - SubStart);
-    SubStart := SubEnd;
-    Inc(SubStart, Length(Delimiter));
-    SubEnd := StrPos(SubStart, PChar(Delimiter));
-    Inc(Index);
-  end;
-  SetLength(Result, Index + 1);
-  Result[Index] := Copy(Source, SubStart - PChar(Source) + 1, MaxInt);
-end;
-
 function GetPiece(const Source: string; const Delimiter: string;
   const Piece: Integer): string;
+var
+  SplitList: TStringArray;
 begin
-  Result := SplitStr(Source, Delimiter, Piece)[Piece - 1];
+  SplitList := Source.Split(Delimiter, Piece);
+  if Piece <= Length(SplitList) then
+    Result := SplitList[Piece - 1]
+  else
+    Result := '';
 end;
 
 function PosEx(const SubStr, S: string; Offset: Cardinal = 1): Integer;

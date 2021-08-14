@@ -78,7 +78,7 @@ begin
 
   ChatMessage[i] := cs;
   ChatTeam[i] := (MsgType = MSGTYPE_TEAM);
-  d := CharCount(' ', String(cs));
+  d := String(cs).CountChar(' ');
 
   if d = 0 then
     ChatDelay[i] := Length(cs) * CHARDELAY
