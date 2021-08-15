@@ -205,8 +205,8 @@ begin
             if (Length(ChatText) > 0) and KeyStatus[301] then
             begin
               SDL_StopTextInput;
-              if (ChatType = MSGTYPE_PUB) then
-                FireChatText := ChatText;
+              FireChatType := ChatType;
+              FireChatText := ChatText;
               ChatText := '';
             end;
 
