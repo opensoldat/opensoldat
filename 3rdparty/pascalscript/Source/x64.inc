@@ -358,7 +358,7 @@ end;
 {$ENDIF}
 
 // @SoldatPatch
-{$IFDEF LINUX}
+{$IFNDEF WINDOWS}
 // System V x86-64 storage class implementation.
 // This is NOT thoroughly tested and probably not 100% correct for all records.
 // It does not support vector or complex types (neither does PascalScript in
@@ -644,7 +644,7 @@ _XMM0: Double;
   end;
   {$ENDIF}
   // @SoldatPatch
-  {$IFDEF LINUX}
+  {$IFNDEF WINDOWS}
   procedure DoClassifyStorage(var Classes: TStorageClasses; AType: TPSTypeRec;
     var Alignment: Integer; RegUsageCheck, RegUsageFloatCheck: Integer);
   var
@@ -671,7 +671,7 @@ _XMM0: Double;
     //tempstr: tbtstring;
     p: Pointer;
     // @SoldatPatch
-    {$IFDEF LINUX}
+    {$IFNDEF WINDOWS}
     ip: IPointer;
     i, Alignment: Integer;
     StorageClasses: TStorageClasses;
@@ -752,7 +752,7 @@ _XMM0: Double;
         btRecord:
           begin
             // @SoldatPatch
-            {$IFNDEF LINUX}
+            {$IFDEF WINDOWS}
             fvar^.aType.CalcSize;
             if fvar^.aType.RealSize <= sizeof(IPointer) then
               StoreReg(IPointer(fvar.dta^))
@@ -798,7 +798,7 @@ _XMM0: Double;
             StoreReg(double(fvar.dta^));
           end;
         btExtended: begin
-            {$IFNDEF LINUX}
+            {$IFDEF WINDOWS}
             StoreReg(double(fvar.dta^));
             {$ELSE}
             if Length(Stack) mod 16 <> 0 then
@@ -846,7 +846,7 @@ _XMM0: Double;
         btProcPtr:
           begin
             // @SoldatPatch
-            {$IFDEF LINUX}
+            {$IFNDEF WINDOWS}
             // Code pointer
             ip := IPointer(@MyAllMethodsHandler);
             StoreReg(ip);
@@ -861,10 +861,8 @@ _XMM0: Double;
             StoreStack(p^, Pointersize2);
             FreeMem(p);
             // @SoldatPatch
-            {$IFDEF WINDOWS}
             if RegUsage < 4 then
               Registers.Patch_btProcPtr := True;
-            {$ENDIF}
             {$ENDIF}
           end;
 
@@ -940,7 +938,7 @@ begin
           GetPtr(res);
         // @SoldatPatch
         btRecord: begin
-          {$IFDEF LINUX}
+          {$IFNDEF WINDOWS}
           res^.aType.CalcSize;
           ClassifyStorage(StorageClasses, res^.aType, Alignment);
           if StorageClasses[0] = SVMEM then
@@ -968,7 +966,7 @@ begin
 
     if assigned(res) then begin
       // @SoldatPatch
-      {$IFDEF LINUX}
+      {$IFNDEF WINDOWS}
       if res^.aType.BaseType = btExtended then
         Registers.SingleBits := Registers.SingleBits or 512;
       {$ENDIF}
@@ -1006,7 +1004,7 @@ begin
         btRecord, btSet:
           begin
             // @SoldatPatch
-            {$IFDEF LINUX}
+            {$IFNDEF WINDOWS}
             if StorageClasses[0] <> SVMEM then
             begin
               ResultReg := 0;
@@ -1049,7 +1047,7 @@ begin
         btSingle:      tbtsingle(res.Dta^) := _XMM0;
         btDouble:      tbtdouble(res.Dta^) := _XMM0;
         // @SoldatPatch
-        {$IFDEF LINUX}
+        {$IFNDEF WINDOWS}
         btExtended:    tbtextended(res.Dta^) := Registers._ST0;
         {$ELSE}
         btExtended:    tbtdouble(res.Dta^) := _XMM0;
