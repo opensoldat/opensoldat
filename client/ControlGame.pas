@@ -89,6 +89,8 @@ begin
           while (CursorPosition < Len) do
           begin
             Inc(CursorPosition);
+            if (CursorPosition = Len) then
+              break;
             if (ChatText[CursorPosition] = ' ')
               and (ChatText[CursorPosition + 1] <> ' ') then
               break;
@@ -100,6 +102,8 @@ begin
           while (CursorPosition > 1) do
           begin
             Dec(CursorPosition);
+            if (CursorPosition = 0) then
+              break;
             if (ChatText[CursorPosition] = ' ')
               and (ChatText[CursorPosition + 1] <> ' ') then
               break;
