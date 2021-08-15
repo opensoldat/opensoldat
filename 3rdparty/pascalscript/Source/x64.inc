@@ -344,6 +344,9 @@ asm
   fstp tbyte ptr [rax+108]   // pop real10 to Registers._ST0
   @skipextres:
 
+  // @SoldatPatch: For returning record results
+  mov [rax+16], rdx
+  movq [rax+48], xmm1
 
   pop rdx
   pop r9   // xmm0
@@ -390,7 +393,7 @@ begin
   end;
 end;
 
-procedure ClassifyStorage(var Classes: TStorageClasses; AType: TPSTypeRec;
+procedure ClassifyStorageInt(var Classes: TStorageClasses; AType: TPSTypeRec;
   var Alignment: Integer; Offset: Integer);
 var
   i, SubAlignment: Integer;
@@ -398,10 +401,6 @@ var
   Rec: TPSTypeRec_Record;
   FieldClass: TSVStorageClass;
 begin
-  if Offset = 0 then
-    for i := Low(Classes) to High(Classes) do
-      Classes[i] := SVNO_CLASS;
-
   // Simple case
   if AType.BaseType <> btRecord then
   begin
@@ -437,13 +436,15 @@ begin
   // Record case
   Rec := TPSTypeRec_Record(AType);
 
+  Rec.CalcSize;
   if Rec.RealSize > 16 then
     Classes[0] := SVMEM;
 
   Alignment := 0;
+
   for i := 0 to Rec.FieldTypes.Count - 1 do
   begin
-    ClassifyStorage(Classes, Rec.FieldTypes[i], SubAlignment,
+    ClassifyStorageInt(Classes, Rec.FieldTypes[i], SubAlignment,
       Offset + IPointer(Rec.RealFieldOffsets[i]));
 
     if SubAlignment > Alignment then
@@ -459,6 +460,17 @@ begin
     end;
   end;
 end;
+
+procedure ClassifyStorage(var Classes: TStorageClasses; AType: TPSTypeRec;
+  var Alignment: Integer);
+var
+  i: Integer;
+begin
+  for i := Low(Classes) to High(Classes) do
+    Classes[i] := SVNO_CLASS;
+
+  ClassifyStorageInt(Classes, AType, Alignment, 0);
+end;
 {$ENDIF}
 
 function TPSExec.InnerfuseCall(_Self, Address: Pointer; CallingConv: TPSCallingConvention; Params: TPSList; res: PPSVariantIFC): Boolean;
@@ -469,6 +481,11 @@ _XMM0: Double;
   Registers: TRegisters;
 {$IFNDEF WINDOWS}
   RegUsageFloat: Byte;
+  // @SoldatPatch
+  Alignment: Integer;
+  StorageClasses: TStorageClasses;
+  p: Pointer;
+  ResultReg, ResultRegFloat: Integer;
 {$ENDIF}
 {$IFDEF FPC}
   IsConstructor,IsVirtualCons: Boolean;
@@ -538,10 +555,6 @@ _XMM0: Double;
   var
     p: Pointer;
   begin
-    if Len > 8 then
-      if Length(Stack) mod 16 <> 0 then begin
-        SetLength(Stack, Length(Stack)+ (16-(Length(Stack) mod 16)));
-      end;
     SetLength(Stack, Length(Stack)+Len);
     p := @Stack[Length(Stack)-Len];
     Move(aData, p^, Len);
@@ -630,6 +643,27 @@ _XMM0: Double;
     end;
   end;
   {$ENDIF}
+  // @SoldatPatch
+  {$IFDEF LINUX}
+  procedure DoClassifyStorage(var Classes: TStorageClasses; AType: TPSTypeRec;
+    var Alignment: Integer; RegUsageCheck, RegUsageFloatCheck: Integer);
+  var
+    i: Integer;
+  begin
+    ClassifyStorage(Classes, AType, Alignment);
+
+    for i := Low(Classes) to High(Classes) do
+    begin
+      if Classes[i] = SVINT then
+        Inc(RegUsageCheck);
+      if Classes[i] = SVSSE then
+        Inc(RegUsageFloatCheck);
+    end;
+
+    if (RegUsageCheck > 6) or (RegUsageFloatCheck > 8) then
+      Classes[0] := SVMEM;
+  end;
+  {$ENDIF}
   function GetPtr(fVar: PPSVariantIFC): Boolean;
   var
     varPtr: Pointer;
@@ -641,7 +675,6 @@ _XMM0: Double;
     ip: IPointer;
     i, Alignment: Integer;
     StorageClasses: TStorageClasses;
-    RegUsageCheck, RegUsageFloatCheck: Integer;
     {$ENDIF}
   begin
     Result := False;
@@ -720,52 +753,36 @@ _XMM0: Double;
           begin
             // @SoldatPatch
             {$IFNDEF LINUX}
+            fvar^.aType.CalcSize;
             if fvar^.aType.RealSize <= sizeof(IPointer) then
               StoreReg(IPointer(fvar.dta^))
             else
               StoreReg(IPointer(fVar.Dta));
             {$ELSE}
-            ClassifyStorage(StorageClasses, fVar.aType, Alignment, 0);
+            fvar^.aType.CalcSize;
+            DoClassifyStorage(StorageClasses, fVar.aType, Alignment, RegUsage, RegUsageFloat);
             if StorageClasses[0] = SVMEM then
             begin
               if Length(Stack) mod Alignment <> 0 then
                 SetLength(Stack, Length(Stack)+ (Alignment-(Length(Stack) mod Alignment)));
               StoreStack(fvar.Dta^, fVar^.aType.RealSize);
+              if Length(Stack) mod 8 <> 0 then
+                SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
             end
             else
             begin
-              RegUsageCheck := RegUsage;
-              RegUsageFloatCheck := RegUsageFloat;
-
+              p := fVar.Dta;
               for i := Low(StorageClasses) to High(StorageClasses) do
               begin
                 if StorageClasses[i] = SVINT then
-                  Inc(RegUsageCheck);
-                if StorageClasses[i] = SVSSE then
-                  Inc(RegUsageFloatCheck);
-              end;
-
-              if (RegUsageCheck > 6) or (RegUsageFloatCheck > 8) then
-              begin
-                if Length(Stack) mod Alignment <> 0 then
-                  SetLength(Stack, Length(Stack)+ (Alignment-(Length(Stack) mod Alignment)));
-                StoreStack(fvar.Dta^, fVar^.aType.RealSize);
-              end
-              else
-              begin
-                p := fVar.Dta;
-                for i := Low(StorageClasses) to High(StorageClasses) do
                 begin
-                  if StorageClasses[i] = SVINT then
-                  begin
-                    StoreReg(IPointer(p^));
-                    Inc(p, 8);
-                  end;
-                  if StorageClasses[i] = SVSSE then
-                  begin
-                    StoreReg(Double(p^));
-                    Inc(p, 8);
-                  end;
+                  StoreReg(IPointer(p^));
+                  Inc(p, 8);
+                end;
+                if StorageClasses[i] = SVSSE then
+                begin
+                  StoreReg(Double(p^));
+                  Inc(p, 8);
                 end;
               end;
             end;
@@ -784,6 +801,8 @@ _XMM0: Double;
             {$IFNDEF LINUX}
             StoreReg(double(fvar.dta^));
             {$ELSE}
+            if Length(Stack) mod 16 <> 0 then
+              SetLength(Stack, Length(Stack)+ (16-(Length(Stack) mod 16)));
             StoreStack(fvar.dta^, 16);
             {$ENDIF}
           end;
@@ -826,17 +845,19 @@ _XMM0: Double;
 
         btProcPtr:
           begin
-	    // @SoldatPatch
-	    {$IFDEF LINUX}
-	    // Code pointer
-	    ip := IPointer(@MyAllMethodsHandler);
-	    StoreReg(ip);
-	    // Data pointer
-	    ip := IPointer(GetMethodInfoRec(Self, LongInt(FVar.Dta^)));
-	    StoreReg(ip);
-	    {$ELSE}
+            // @SoldatPatch
+            {$IFDEF LINUX}
+            // Code pointer
+            ip := IPointer(@MyAllMethodsHandler);
+            StoreReg(ip);
+            // Data pointer
+            ip := IPointer(GetMethodInfoRec(Self, LongInt(FVar.Dta^)));
+            StoreReg(ip);
+            {$ELSE}
             GetMem(p, PointerSize2);
             TMethod(p^) := MKMethod(Self, Longint(FVar.Dta^));
+            if Length(Stack) mod 16 <> 0 then
+              SetLength(Stack, Length(Stack)+ (16-(Length(Stack) mod 16)));
             StoreStack(p^, Pointersize2);
             FreeMem(p);
             // @SoldatPatch
@@ -844,7 +865,7 @@ _XMM0: Double;
             if RegUsage < 4 then
               Registers.Patch_btProcPtr := True;
             {$ENDIF}
-	    {$ENDIF}
+            {$ENDIF}
           end;
 
         bts64:
@@ -882,7 +903,7 @@ begin
   if res <> nil then
     res.VarParam := true;
   try
-{$IFNDEF WINDOWS}
+    {$IFNDEF WINDOWS}
     (*_RSI := 0;
     _RDI := 0;
     _XMM4 := 0;
@@ -890,11 +911,12 @@ begin
     _XMM6 := 0;
     _XMM7 := 0;*)
     RegUsageFloat := 0;
-{$ENDIF}
-  _XMM0 := 0;
-  FillChar(Registers, Sizeof(REgisters), 0);
+    {$ENDIF}
+    _XMM0 := 0;
+    FillChar(Registers, Sizeof(REgisters), 0);
     _RAX := 0;
     RegUsage := 0;
+
     {$IF DEFINED (fpc) and (fpc_version >= 3)} // FIX FOR FPC constructor calls
     if IsConstructor then begin
       if not GetPtr(rp(Params[0])) then exit; // this goes first
@@ -902,39 +924,55 @@ begin
       Params.Delete(0);
     end;
     {$ENDIF}
+
     if assigned(_Self) then begin
       StoreReg(IPointer(_Self));
     end;
+
+    // @SoldatPatch
+    {$IFDEF PS_RESBEFOREPARAMETERS}
+    if assigned(res) then begin
+      case res^.aType.BaseType of
+        {$IFDEF x64_string_result_as_varparameter}
+        btstring, btWideString, btUnicodeString,
+        {$ENDIF}
+        btInterface, btArray, btVariant, btStaticArray:
+          GetPtr(res);
+        // @SoldatPatch
+        btRecord: begin
+          {$IFDEF LINUX}
+          res^.aType.CalcSize;
+          ClassifyStorage(StorageClasses, res^.aType, Alignment);
+          if StorageClasses[0] = SVMEM then
+            StoreReg(IPointer(res.dta));
+          {$ENDIF}
+        end;
+        btSet:
+          begin
+            // @SoldatPatch
+            res.aType.CalcSize;
+            if res.aType.RealSize > PointerSize then GetPtr(res);
+          end;
+      end;
+    end;
+    {$ENDIF}
+
     if assigned(res) and (res^.atype.basetype = btSingle) then begin
       Registers.Singlebits  := Registers.Singlebits or 256;
     end;
-{$IFDEF PS_RESBEFOREPARAMETERS}
-   if assigned(res) then begin
-    case res^.aType.BaseType of
-      {$IFDEF x64_string_result_as_varparameter}
-      btstring, btWideString, btUnicodeString,
-      {$ENDIF}
-      btInterface, btArray, btVariant, btStaticArray:
-        GetPtr(res);
-      btRecord,
-      btSet:
-        begin
-          if res.aType.RealSize > PointerSize then GetPtr(res);
-        end;
-    end;
-   end;
-{$ENDIF}
+
     for I := 0 to Params.Count - 1 do
     begin
       if not GetPtr(rp(Params[I])) then Exit;
     end;
+
     if assigned(res) then begin
       // @SoldatPatch
       {$IFDEF LINUX}
       if res^.aType.BaseType = btExtended then
         Registers.SingleBits := Registers.SingleBits or 512;
       {$ENDIF}
-{$IFNDEF PS_RESBEFOREPARAMETERS}
+      {$IFNDEF PS_RESBEFOREPARAMETERS}
       case res^.aType.BaseType of
         {$IFDEF x64_string_result_as_varparameter}
         btstring, btWideString, btUnicodeString,
@@ -944,26 +982,61 @@ begin
         btRecord,
         btSet:
           begin
+            // @SoldatPatch
+            res.aType.CalcSize;
             if res.aType.RealSize > PointerSize then GetPtr(res);
           end;
       end;
-{$ENDIF}
+      {$ENDIF}
       {$IFDEF WINDOWS}
       if (length(Stack) mod 16) <> 0 then begin
         SetLength(Stack, Length(Stack)+16 - (Length(Stack) mod 16));
       end;
       {$ENDIF} 
       if Stack = nil then pp := nil else pp := @Stack[Length(Stack) -8];
-{$IFDEF WINDOWS}
+      {$IFDEF WINDOWS}
       Registers.Stack := pp;
       Registers.Items := Length(Stack) div 8;
       x64call(Address, _RAX, _XMM0, Registers);
-{$ELSE}
+      {$ELSE}
       x64call(Address, _RAX, Registers, pp, Length(Stack) div 8, _XMM0);
-{$ENDIF}
+      {$ENDIF}
+
       case res^.aType.BaseType of
         btRecord, btSet:
           begin
+            // @SoldatPatch
+            {$IFDEF LINUX}
+            if StorageClasses[0] <> SVMEM then
+            begin
+              ResultReg := 0;
+              ResultRegFloat := 0;
+              p := res.Dta;
+              for i := Low(StorageClasses) to High(StorageClasses) do
+              begin
+                if StorageClasses[i] = SVINT then
+                begin
+                  if ResultReg = 0 then
+                    PUint64(p)^ := _RAX
+                  else if ResultReg = 1 then
+                    PUint64(p)^ := Registers._RDX;
+
+                  Inc(ResultReg);
+                end;
+                if StorageClasses[i] = SVSSE then
+                begin
+                  if ResultRegFloat = 0 then
+                    PDouble(p)^ := _XMM0
+                  else if ResultRegFloat = 1 then
+                    PDouble(p)^ := Registers._XMM1;
+
+                  Inc(ResultRegFloat);
+                end;
+
+                Inc(p, 8);
+              end;
+            end;
+            {$ELSE}
             case res.aType.RealSize of
               1: byte(res.Dta^) := _RAX;
               2: word(res.Dta^) := _RAX;
@@ -971,6 +1044,7 @@ begin
               4: Longint(res.Dta^) := _RAX;
               5,6,7,8: IPointer(res.dta^) := _RAX;
             end;
+            {$ENDIF}
           end;
         btSingle:      tbtsingle(res.Dta^) := _XMM0;
         btDouble:      tbtdouble(res.Dta^) := _XMM0;
@@ -1005,15 +1079,16 @@ begin
         SetLength(Stack, Length(Stack)+16 - (Length(Stack) mod 16));
       end;
       {$ENDIF} 
-	if Stack = nil then pp := nil else pp := @Stack[Length(Stack) -8];
-{$IFDEF WINDOWS}
+        if Stack = nil then pp := nil else pp := @Stack[Length(Stack) -8];
+        {$IFDEF WINDOWS}
         Registers.Stack := pp;
         Registers.Items := Length(Stack) div 8;
         x64call(Address, _RAX, _XMM0, Registers);
-{$ELSE}
+        {$ELSE}
        x64call(Address, _RAX, Registers, pp, Length(Stack) div 8, _XMM0);
-{$ENDIF}
+        {$ENDIF}
     end;
+
     Result := True;
   finally
     for i := CallData.Count -1 downto 0 do
