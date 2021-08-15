@@ -233,12 +233,13 @@ destructor TScriptDispatcher.Destroy;
 var
   I: Integer;
 begin
-  inherited;
   for I := 0 to Self.FScripts.Count - 1 do
     TScript(Self.FScripts[I]).Free;
   FScripts.Free;
   FScriptsToUnregister.Free;
   FCheckFunctions.Free;
+
+  inherited;
 end;
 
 function TScriptDispatcher.GetScriptNames: TStringList;
