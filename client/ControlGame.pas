@@ -525,14 +525,18 @@ begin
       // force spectator chat to teamchat in survival mode when Round hasn't ended
       if (sv_survivalmode.Value) and Sprite[MySprite].IsSpectator() and
          not SurvivalEndRound and (sv_survivalmode_antispy.Value) then
-        ChatType := MSGTYPE_TEAM
-      else
-        ChatType := MSGTYPE_PUB;
-
-      if Length(FireChatText) > 0 then
-        ChatText := FireChatText
-      else
+      begin
+        ChatType := MSGTYPE_TEAM;
         ChatText := ' ';
+      end
+      else
+      begin
+        ChatType := MSGTYPE_PUB;
+        if Length(FireChatText) > 0 then
+          ChatText := FireChatText
+        else
+          ChatText := ' ';
+      end;
 
       ChatChanged := True;
       CursorPosition := Length(ChatText);
