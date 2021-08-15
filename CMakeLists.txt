@@ -186,5 +186,5 @@ install(
   PATTERN "*.smod"
   # Ignore subdirectories, just in case... it's not necessary on clean build,
   # only if you ran client/server executables before installing.
-  REGEX "configs|demos|logs|maps|mods|screens" EXCLUDE
+  REGEX "configs|demos|logs|maps|mods|screens|scripts" EXCLUDE
 )
