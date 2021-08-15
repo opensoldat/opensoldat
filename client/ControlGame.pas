@@ -26,6 +26,20 @@ begin
   SDL_StopTextInput;
 end;
 
+procedure StartChat;
+begin
+  if (Length(FireChatText) > 0) and (FireChatType = ChatType) then
+    ChatText := FireChatText
+  else if ChatType = MSGTYPE_CMD then
+    ChatText := '/'
+  else
+    ChatText := ' ';
+
+  ChatChanged := True;
+  CursorPosition := Length(ChatText);
+  SDL_StartTextInput;
+end;
+
 function FilterChatText(Str: WideString): WideString;
 var
   i: Integer;
@@ -48,7 +62,8 @@ begin
 
   if Length(ChatText) > 0 then
   begin
-    if (KeyMods = KM_CTRL) and (KeyCode = SDLK_v) then
+    if ((KeyMods = KM_CTRL) and (KeyCode = SDLK_v))
+      or ((KeyMods = KM_SHIFT) and (KeyCode = SDLK_INSERT)) then
     begin
       Str := FilterChatText(WideString(UTF8String(SDL_GetClipboardText)));
       Len := Length(ChatText);
@@ -66,6 +81,51 @@ begin
       CurrentTabCompletePlayer := 0;
       ChatChanged := True;
       Result := True;
+    end
+    else if (KeyMods = KM_CTRL) then
+    begin
+      Result := True;
+
+      case KeyCode of
+        SDLK_HOME: begin
+          ChatChanged := True;
+          CursorPosition := 1;
+        end;
+
+        SDLK_END: begin
+          ChatChanged := True;
+          CursorPosition := Length(ChatText);
+        end;
+
+        SDLK_RIGHT: begin
+          ChatChanged := True;
+          Len := Length(ChatText);
+          while (CursorPosition < Len) do
+          begin
+            Inc(CursorPosition);
+            if (CursorPosition = Len) then
+              break;
+            if (ChatText[CursorPosition] = ' ')
+              and (ChatText[CursorPosition + 1] <> ' ') then
+              break;
+          end;
+        end;
+
+        SDLK_LEFT: begin
+          ChatChanged := True;
+          while (CursorPosition > 1) do
+          begin
+            Dec(CursorPosition);
+            if (CursorPosition = 0) then
+              break;
+            if (ChatText[CursorPosition] = ' ')
+              and (ChatText[CursorPosition + 1] <> ' ') then
+              break;
+          end;
+        end;
+      else
+        Result := False;
+      end;
     end
     else if KeyMods = KM_NONE then
     begin
@@ -467,32 +527,23 @@ begin
   begin
     if ChatText = '' then
     begin
-      ChatText := '/';
       ChatType := MSGTYPE_CMD;
-      ChatChanged := True;
-      CursorPosition := 1;
       VoteKickReasonType := False;
-      SDL_StartTextInput;
+      StartChat;
     end;
   end
   else if Action = TAction.Chat then
   begin
     if ChatText = '' then
     begin
-      SDL_StartTextInput;
-      ChatChanged := True;
-      ChatText := ' ';
-      ChatType := MSGTYPE_PUB;
-
-      if Length(FireChatText) > 0 then
-        ChatText := FireChatText;
-
       // force spectator chat to teamchat in survival mode when Round hasn't ended
       if (sv_survivalmode.Value) and Sprite[MySprite].IsSpectator() and
          not SurvivalEndRound and (sv_survivalmode_antispy.Value) then
-        ChatType := MSGTYPE_TEAM;
+        ChatType := MSGTYPE_TEAM
+      else
+        ChatType := MSGTYPE_PUB;
 
-      CursorPosition := Length(ChatText);
+      StartChat;
     end;
   end
   else if Action = TAction.TeamChat then
@@ -500,11 +551,8 @@ begin
     if (ChatText = '') and (MySprite > 0) and
       (Sprite[MySprite].IsSpectator() or IsTeamGame()) then
     begin
-      SDL_StartTextInput;
-      ChatText := ' ';
       ChatType := MSGTYPE_TEAM;
-      ChatChanged := True;
-      CursorPosition := Length(ChatText);
+      StartChat;
     end;
   end
   else if Action = TAction.Snap then
