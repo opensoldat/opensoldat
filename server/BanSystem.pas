@@ -45,7 +45,7 @@ var
 implementation
 
 uses
-  Server, fpmasks, classes, sysutils, Util, ServerHelper;
+  Server, fpmasks, classes, sysutils, ServerHelper;
 
 procedure AddBannedIP(IP: ShortString; Reason: string;
   Duration: Integer = PERMANENT);

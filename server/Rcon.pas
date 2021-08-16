@@ -86,7 +86,7 @@ implementation
 
 uses
   {$IFDEF STEAM}SteamTypes,{$ENDIF}
-  {$IFDEF SCRIPT}ScriptCore3, ScriptDispatcher,{$ENDIF}
+  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
   Sprites, Server, Util, TraceLog, Command, Game, ServerHelper;
 
 constructor TAdminServer.Create(Pass: string; ConnectMessage: string = '');
@@ -167,7 +167,8 @@ begin
   except
   end;
 end;
-
+{$PUSH}
+{$WARN 5027 OFF}
 procedure TAdminServer.ProcessCommands();
 var
   Msg: ^TAdminMessage;
@@ -317,8 +318,8 @@ begin
         end;
       Freemem(Msg);
     end;
-
 end;
+{$POP}
 
 function FindAdminFloodID(SrcIP: string): Cardinal;
 var

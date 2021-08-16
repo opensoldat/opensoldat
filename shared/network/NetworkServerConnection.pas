@@ -7,18 +7,18 @@ uses
   SysUtils, Classes,
 
   // helper units
-  Vector, Version, Util, Cvar, BitStream,
+  Vector, Util, Cvar, BitStream,
 
   {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
 
   // soldat units
-  PolyMap, LogFile, GameNetworkingSockets, Net, Sprites, Weapons, Constants, TraceLog;
+  PolyMap, {$IFDEF SERVER}GameNetworkingSockets,{$ENDIF} Net, Sprites, Weapons, Constants;
 
   {$IFDEF SERVER}
   procedure ServerHandleRequestGame(NetMessage: PSteamNetworkingMessage_t);
   procedure ServerHandlePlayerInfo(NetMessage: PSteamNetworkingMessage_t);
   {$ENDIF}
-  procedure ServerSendPlayList(Peer: HSteamNetConnection);
+  procedure ServerSendPlayList({$IFDEF SERVER}Peer: HSteamNetConnection{$ENDIF});
   procedure ServerSendNewPlayerInfo(Num: Byte; JoinType: Byte);
   {$IFDEF SERVER}
   function GetBanStrForIndex(BanIndex: Integer; BanHW: Boolean = False): string; // TODO move?
@@ -27,8 +27,8 @@ uses
   procedure ServerPlayerDisconnect(Num, Why: Byte);
   procedure ServerPing(ToNum: Byte);
   {$ENDIF}
-  procedure ServerSyncCvars(ToNum: Byte; peer: HSteamNetConnection; FullSync: Boolean = False);
-  procedure ServerVars(ToNum: Byte);
+  procedure ServerSyncCvars({$IFDEF SERVER}ToNum: Byte; peer: HSteamNetConnection;{$ENDIF} FullSync: Boolean = False);
+  procedure ServerVars({$IFDEF SERVER}ToNum: Byte{$ENDIF});
   {$IFDEF SERVER}
   procedure ServerHandlePong(NetMessage: PSteamNetworkingMessage_t);
   {$ENDIF}
@@ -37,9 +37,9 @@ implementation
 
 uses
     {$IFDEF STEAM} SteamTypes,{$ENDIF}
-    {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Game, Things, Sha1, NetworkUtils, Demo
-    {$IFDEF SERVER}, ServerHelper, NetworkServerGame, NetworkServerMessages,
-    NetworkServerThing, BanSystem{$ENDIF}
+    Game, NetworkUtils, Demo
+    {$IFDEF SERVER}, Server, ServerHelper, Sha1, NetworkServerGame, NetworkServerMessages,
+    NetworkServerThing, BanSystem, Things, Version, LogFile, TraceLog{$ELSE}, Client {$ENDIF}
     {$IFDEF ENABLE_FAE}, NetworkServerFae{$ENDIF}
     ;
 
@@ -453,7 +453,7 @@ begin
 end;
 {$ENDIF}
 
-procedure ServerSendPlayList(Peer: HSteamNetConnection);
+procedure ServerSendPlayList({$IFDEF SERVER}Peer: HSteamNetConnection{$ENDIF});
 var
   PlayersList: TMsg_PlayersList;
   i: Integer;
@@ -596,8 +596,9 @@ procedure ServerSendUnAccepted(Peer: HSteamNetConnection; State: Byte; Message: 
 var
   UnAccepted: PMsg_UnAccepted;
   Size: Integer;
-  SendBuffer: array of Byte;
+  SendBuffer: TCharArray;
 begin
+  SendBuffer := Default(TCharArray);
   // request memory
   Size := SizeOf(TMsg_UnAccepted) + Length(Message) + 1;
   SetLength(SendBuffer, Size);  // can throw out of memory exception
@@ -739,7 +740,7 @@ begin
 end;
 {$ENDIF}
 
-procedure ServerSyncCvars(ToNum: Byte; peer: HSteamNetConnection; FullSync: Boolean = False);
+procedure ServerSyncCvars({$IFDEF SERVER}ToNum: Byte; peer: HSteamNetConnection;{$ENDIF} FullSync: Boolean = False);
 var
   VarsMsg: PMsg_ServerSyncCvars;
   i: Integer;
@@ -811,7 +812,7 @@ begin
   PacketStream.Free;
 end;
 
-procedure ServerVars(ToNum: Byte);
+procedure ServerVars({$IFDEF SERVER}ToNum: Byte{$ENDIF});
 var
   VarsMsg: TMsg_ServerVars;
   i: Integer;

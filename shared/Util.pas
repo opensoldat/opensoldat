@@ -16,8 +16,6 @@ uses
 type
   TColor = 0..$FFFFFFFF;
 
-  TStringArray = array of string;
-
   TMapInfo = record
     Name: String;
     MapName: String;
@@ -71,7 +69,10 @@ end;
 // ie: gamemode := string(choose(gametype, ['CTF', 'DM']));
 function Choose(const Index: Integer; const Choices: array of Variant): Variant;
 begin
-  Result := Choices[index];
+  if Index <= High(Choices) then
+    Result := Choices[index]
+  else
+    Result := '';
 end;
 
 function GetPiece(const Source: string; const Delimiter: string;
@@ -347,8 +348,10 @@ begin
         otUWord: Result := IntToStr(Word(AValue));
         otSLong: Result := IntToStr(LongInt(AValue));
         otULong: Result := IntToStr(LongWord(AValue));
-        //otSQWord: Result := IntToStr(Int64(AValue));
-        //otUQWord: Result := IntToStr(QWord(AValue));
+        {$IF FPC_FULLVERSION >= 30200}
+        otSQWord: Result := IntToStr(Int64(AValue));
+        otUQWord: Result := IntToStr(QWord(AValue));
+        {$ENDIF}
       end;
     end;
     tkFloat:

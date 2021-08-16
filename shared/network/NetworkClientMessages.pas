@@ -20,7 +20,7 @@ procedure ClientHandleSpecialMessage(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Client, NetworkUtils, Game, InterfaceGraphics;
+  Client, Game, InterfaceGraphics;
 
 procedure ClientSendStringMessage(Text: WideString; MsgType: Byte);
 var

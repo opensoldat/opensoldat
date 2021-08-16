@@ -373,7 +373,7 @@ begin
   Result := (X shr 8) and $FF;
 end;
 
-function SDL_IsPixelFormat_FOURCC(format: Variant): Boolean;
+function SDL_IsPixelFormat_FOURCC(format: Integer): Boolean;
 begin
   {* The flag is set to 1 because 0x1? is not in the printable ASCII range *}
   Result := format and SDL_PIXELFLAG(format) <> 1;
@@ -401,29 +401,29 @@ end;
 
 //from "sdl_sysvideo.h"
 
-function FULLSCREEN_VISIBLE(W: PSDL_Window): Variant;
+function FULLSCREEN_VISIBLE(W: PSDL_Window): Integer;
 begin
   Result := ((W^.flags and SDL_WINDOW_FULLSCREEN) and (W^.flags and SDL_WINDOW_SHOWN) and not (W^.flags and SDL_WINDOW_MINIMIZED));
 end;
 
 //from "sdl_video.h"
 
-function SDL_WINDOWPOS_UNDEFINED_DISPLAY(X: Variant): Variant;
+function SDL_WINDOWPOS_UNDEFINED_DISPLAY(X: Integer): Integer;
 begin
   Result := (SDL_WINDOWPOS_UNDEFINED_MASK or X);
 end;
 
-function SDL_WINDOWPOS_ISUNDEFINED(X: Variant): Variant;
+function SDL_WINDOWPOS_ISUNDEFINED(X: Integer): Boolean;
 begin
   Result := (X and $FFFF0000) = SDL_WINDOWPOS_UNDEFINED_MASK;
 end;
 
-function SDL_WINDOWPOS_CENTERED_DISPLAY(X: Variant): Variant;
+function SDL_WINDOWPOS_CENTERED_DISPLAY(X: Integer): Integer;
 begin
   Result := (SDL_WINDOWPOS_CENTERED_MASK or X);
 end;
 
-function SDL_WINDOWPOS_ISCENTERED(X: Variant): Variant;
+function SDL_WINDOWPOS_ISCENTERED(X: Integer): Boolean;
 begin
   Result := (X and $FFFF0000) = SDL_WINDOWPOS_CENTERED_MASK;
 end;

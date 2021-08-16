@@ -522,6 +522,7 @@ procedure ActivateServer;
 var
   i, j: Integer;
 begin
+  WriteLn(Choose(3, ['a', 'b', 'c']));
   MainThreadID := GetThreadID;
 
   WriteLn('');
@@ -1332,7 +1333,7 @@ function KickPlayer(num: Byte; Ban: Boolean; why: Integer; time: Integer;
   Reason: string = ''): Boolean;
 var
   i: Integer;
-  timestr: string;
+  TimeStr: AnsiString = '';
 begin
   Result := False;
   Debug('KickPlayer');

@@ -39,8 +39,9 @@ procedure ClientRequestGame;
 var
   RequestMsg: PMsg_RequestGame;
   Size: Integer;
-  SendBuffer: array of Byte;
+  SendBuffer: TCharArray;
 begin
+  SendBuffer := Default(TCharArray);
   Size := SizeOf(TMsg_RequestGame) + Length(JoinPassword) + 1;
 
   SetLength(SendBuffer, Size);

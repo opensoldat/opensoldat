@@ -444,13 +444,13 @@ type
   TGLUTessVertexProc = procedure(VertexData: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TGLUTessEndProc = procedure; {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TGLUTessErrorProc = procedure(ErrNo: GLenum); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
-  TGLUTessCombineProc = procedure(Coords: TGLArrayd3; VertexData: TGLArrayp4; Weight: TGLArrayf4; OutData: PPointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
+  TGLUTessCombineProc = procedure(var Coords: TGLArrayd3; var VertexData: TGLArrayp4; var Weight: TGLArrayf4; var OutData: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TGLUTessBeginDataProc = procedure(AType: GLenum; UserData: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TGLUTessEdgeFlagDataProc = procedure(Flag: GLboolean; UserData: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TGLUTessVertexDataProc = procedure(VertexData: Pointer; UserData: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TGLUTessEndDataProc = procedure(UserData: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TGLUTessErrorDataProc = procedure(ErrNo: GLenum; UserData: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
-  TGLUTessCombineDataProc = procedure(Coords: TGLArrayd3; VertexData: TGLArrayp4; Weight: TGLArrayf4; OutData: PPointer; UserData: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
+  TGLUTessCombineDataProc = procedure(var Coords: TGLArrayd3; var VertexData: TGLArrayp4; var Weight: TGLArrayf4; var OutData: Pointer; UserData: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   // GLUNurbsCallback
   TGLUNurbsErrorProc = procedure(ErrorCode: GLEnum); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
 
@@ -11322,10 +11322,10 @@ type
   TgluGetString = function(name: GLEnum): PAnsiChar; {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluOrtho2D = procedure(left, right, bottom, top: GLdouble); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluPerspective = procedure(fovy, aspect, zNear, zFar: GLdouble); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
-  TgluPickMatrix = procedure(x, y, width, height: GLdouble; const viewport: TVector4i); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
+  TgluPickMatrix = procedure(x, y, width, height: GLdouble; var viewport: TVector4i); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluLookAt = procedure(eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz: GLdouble); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
-  TgluProject = function(objx, objy, objz: GLdouble; const modelMatrix: TGLMatrixd4; const projMatrix: TGLMatrixd4; const viewport: TVector4i; winx, winy, winz: PGLdouble): GLint; {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
-  TgluUnProject = function(winx, winy, winz: GLdouble; const modelMatrix: TGLMatrixd4; const projMatrix: TGLMatrixd4; const viewport: TVector4i; objx, objy, objz: PGLdouble): GLint; {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
+  TgluProject = function(objx, objy, objz: GLdouble; var modelMatrix: TGLMatrixd4; var projMatrix: TGLMatrixd4; var viewport: TVector4i; winx, winy, winz: PGLdouble): GLint; {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
+  TgluUnProject = function(winx, winy, winz: GLdouble; var modelMatrix: TGLMatrixd4; var projMatrix: TGLMatrixd4; var viewport: TVector4i; objx, objy, objz: PGLdouble): GLint; {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluScaleImage = function(format: GLEnum; widthin, heightin: GLint; typein: GLEnum; datain: Pointer; widthout, heightout: GLint; typeout: GLEnum; const dataout: Pointer): GLint; {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluBuild1DMipmaps = function(target: GLEnum; components, width: GLint; format, atype: GLEnum; const data: Pointer): GLint; {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluBuild2DMipmaps = function(target: GLEnum; components, width, height: GLint; format, atype: GLEnum; const Data: Pointer): GLint; {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
@@ -11344,7 +11344,7 @@ type
   TgluDeleteTess = procedure(tess: PGLUtesselator); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluTessBeginPolygon = procedure(tess: PGLUtesselator; polygon_data: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluTessBeginContour = procedure(tess: PGLUtesselator); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
-  TgluTessVertex = procedure(tess: PGLUtesselator; const coords: TGLArrayd3; data: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
+  TgluTessVertex = procedure(tess: PGLUtesselator; var coords: TGLArrayd3; data: Pointer); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluTessEndContour = procedure(tess: PGLUtesselator); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluTessEndPolygon = procedure(tess: PGLUtesselator); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluTessProperty = procedure(tess: PGLUtesselator; which: GLEnum; value: GLdouble); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
@@ -11362,7 +11362,7 @@ type
   TgluPwlCurve = procedure(nobj: PGLUnurbs; count: GLint; points: PGLfloat; stride: GLint; atype: GLEnum); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluNurbsCurve = procedure(nobj: PGLUnurbs; nknots: GLint; knot: PGLfloat; stride: GLint; ctlarray: PGLfloat; order: GLint; atype: GLEnum); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluNurbsSurface = procedure(nobj: PGLUnurbs; sknot_count: GLint; sknot: PGLfloat; tknot_count: GLint; tknot: PGLfloat; s_stride, t_stride: GLint; ctlarray: PGLfloat; sorder, torder: GLint; atype: GLEnum); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
-  TgluLoadSamplingMatrices = procedure(nobj: PGLUnurbs; const modelMatrix, projMatrix: TGLMatrixf4; const viewport: TVector4i); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
+  TgluLoadSamplingMatrices = procedure(nobj: PGLUnurbs; var modelMatrix, projMatrix: TGLMatrixf4; var viewport: TVector4i); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluNurbsProperty = procedure(nobj: PGLUnurbs; aproperty: GLEnum; value: GLfloat); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluGetNurbsProperty = procedure(nobj: PGLUnurbs; aproperty: GLEnum; value: PGLfloat); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
   TgluNurbsCallback = procedure(nobj: PGLUnurbs; which: GLEnum; fn: TGLUNurbsErrorProc); {$IFDEF DGL_WIN}stdcall; {$ELSE}cdecl; {$ENDIF}
@@ -14835,7 +14835,7 @@ const
   {$ENDIF}
 {$ENDIF}
 
-function InitOpenGL(LibName: String = OPENGL_LIBNAME; GLULibName: String = GLU_LIBNAME): Boolean;
+function InitOpenGL({LibName: String = OPENGL_LIBNAME;} GLULibName: String = GLU_LIBNAME): Boolean;
 
 function dglGetProcAddress(ProcName: PAnsiChar; LibHandle: Pointer = nil {$IFDEF DGL_LINUX}; ForceDLSym: Boolean = False{$ENDIF}): Pointer;
 function dglCheckExtension(Extension: AnsiString): Boolean;
@@ -15127,8 +15127,6 @@ implementation
 {$IFDEF DGL_LINUX}
 const
   RTLD_LAZY = $001;
-  RTLD_NOW = $002;
-  RTLD_BINDING_MASK = $003;
 
   // Seems to work on Debian / Fedora
   LibraryLib = {$IFDEF Linux} 'libdl.so.2'{$ELSE} 'c'{$ENDIF};
@@ -15143,7 +15141,8 @@ function dlsym(Lib: Pointer; Name: PAnsiChar): Pointer; cdecl; external LibraryL
 const
   RTLD_DEFAULT = Pointer(-2);
 {$ENDIF}{$ENDIF}
-
+{$push}
+{$warn 4055 off}
 function dglLoadLibrary(Name: PChar): Pointer;
 begin
   {$IFDEF DGL_WIN}
@@ -15237,6 +15236,7 @@ begin
     Result := GetProcAddress(HMODULE(LibHandle), ProcName);
   {$ENDIF}
 end;
+{$pop}
 
 
 function Int_GetExtensionString: AnsiString;
@@ -15308,7 +15308,7 @@ end;
 
 
 
-function InitOpenGL(LibName: String; GLULibName: String): Boolean;
+function InitOpenGL({LibName: String;} GLULibName: String): Boolean;
 begin
   Result := False;
 
@@ -19705,6 +19705,9 @@ begin
   AnsiBuffer := glGetString(GL_VERSION);
   Buffer := String(AnsiBuffer);
 
+  MajorVersion := Default(Integer);
+  MinorVersion := Default(Integer);
+
   TrimAndSplitVersionString(Buffer, MajorVersion, MinorVersion);
 
   GL_VERSION_1_0 := True;
@@ -20481,7 +20484,7 @@ const
   PFD_TYPE_RGBA = 0;
   PFD_MAIN_PLANE = 0;
   PFD_OVERLAY_PLANE = 1;
-  PFD_UNDERLAY_PLANE = LongWord(-1);
+  PFD_UNDERLAY_PLANE = Byte(-1);
   MemoryDCs = [OBJ_MEMDC, OBJ_METADC, OBJ_ENHMETADC];
 var
   PFDescriptor: TPixelFormatDescriptor;
@@ -20490,6 +20493,8 @@ var
 begin
   if GL_LibHandle = nil then
     InitOpenGL;
+
+  PFDescriptor := Default(TPixelFormatDescriptor);
 
   FillChar(PFDescriptor, SizeOf(PFDescriptor), 0);
 
@@ -20574,7 +20579,7 @@ const
   PFD_TYPE_RGBA      = 0;
   PFD_MAIN_PLANE     = 0;
   PFD_OVERLAY_PLANE  = 1;
-  PFD_UNDERLAY_PLANE = LongWord(-1);
+  PFD_UNDERLAY_PLANE = Byte(-1);
   MemoryDCs          = [OBJ_MEMDC, OBJ_METADC, OBJ_ENHMETADC];
 var
   PFDescriptor : TPixelFormatDescriptor;
@@ -20589,6 +20594,7 @@ begin
   if not Assigned(GL_LibHandle) then
   	raise Exception.Create('GL_LibHandle is NIL. Could not load OpenGL library!');
 
+  PFDescriptor := Default(TPixelFormatDescriptor);
   FillChar(PFDescriptor, SizeOf(PFDescriptor), 0);
 
   with PFDescriptor do

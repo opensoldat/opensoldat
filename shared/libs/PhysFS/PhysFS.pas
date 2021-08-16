@@ -35,6 +35,7 @@ var
   FileHandle: PHYSFS_File;
   Data: PHYSFS_Buffer;
 begin
+  Data := Default(PHYSFS_Buffer);
   Result := nil;
   Debug('[PhysFS] Loading file ' + Name);
   if not PHYSFS_exists(Name) then

@@ -233,7 +233,7 @@ type
     destructor Destroy; override;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
-    function SendData(const Data; Size: Integer; peer: HSteamNetConnection; Flags: Integer): Boolean;
+    function SendData(var Data; Size: Integer; peer: HSteamNetConnection; Flags: Integer): Boolean;
     procedure UpdateNetworkStats(Player: Byte);
   end;
   {$ELSE}
@@ -245,7 +245,7 @@ type
     function Connect(Host: String; Port: Word): Boolean;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
-    function SendData(const Data; Size: Integer; Flags: Integer): Boolean;
+    function SendData(var Data; Size: Integer; Flags: Integer): Boolean;
   end;
   {$ENDIF}
 
@@ -928,15 +928,12 @@ begin
     for DstPlayer in Players do
     begin
       if FPeer <> 0 then
-      begin
-        if Now then
-          NetworkingSockets.CloseConnection(DstPlayer.Peer, 0, '', False)
-        else
-          NetworkingSockets.CloseConnection(DstPlayer.Peer, 0, '', True);
-      end;
+        NetworkingSockets.CloseConnection(DstPlayer.Peer, 0, '', not Now)
     end;
   Result := True;
   end;
+  {$ELSE}
+  NetworkingSockets.CloseConnection(FPeer, 0, '', not Now)
   {$ENDIF}
 end;
 
@@ -1265,7 +1262,7 @@ begin
     IncomingMsg.m_pfnRelease(IncomingMsg);
 end;
 
-function TClientNetwork.SendData(const Data; Size: Integer; Flags: Integer): Boolean;
+function TClientNetwork.SendData(var Data; Size: Integer; Flags: Integer): Boolean;
 begin
   Result := False;
 
@@ -1429,7 +1426,9 @@ begin
         {$IFDEF STEAM}
         Player.SteamID := TSteamID(pInfo.m_info.m_identityRemote.GetSteamID64);
         {$ENDIF}
+        {$HINTS OFF} // Conversion between ordinals and pointers is not portable
         NetworkingSockets.SetConnectionUserData(pInfo.m_hConn, PtrUint(Pointer(Player)));
+        {$HINTS ON}
         WriteLn('[NET] Connection accepted: ' + PChar(pInfo.m_info.m_szConnectionDescription));
         Players.Add(Player);
       end;
@@ -1534,7 +1533,7 @@ begin
   Inherited;
 end;
 
-function TServerNetwork.SendData(const Data; Size: Integer; Peer: HSteamNetConnection; Flags: Integer): Boolean;
+function TServerNetwork.SendData(var Data; Size: Integer; Peer: HSteamNetConnection; Flags: Integer): Boolean;
 begin
   Result := False;
 

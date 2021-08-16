@@ -16,12 +16,9 @@ interface
 uses
   // system and delphi units
   {$IFDEF MSWINDOWS}
-  Windows, MMSystem, Messages,
+  MMSystem,
   {$ENDIF}
   SysUtils, Classes, Math, GameStrings, Variants, FileClient,
-
-  // network units
-  {$IFDEF MSWINDOWS}Winsock, {$ENDIF}
 
   // graphics units
   Gfx,
@@ -47,7 +44,7 @@ uses
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
   // soldat units
-  Parts, Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
+  Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
   NetworkClientConnection, GameMenus, Demo, Console,
   Weapons, Constants, Game, GameRendering;
 
@@ -309,7 +306,7 @@ var
   VoiceSpeakingNow: Boolean;
   ForceReconnect: Boolean;
   {$ENDIF}
-
+ 
 implementation
 
 uses
