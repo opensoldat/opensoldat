@@ -865,12 +865,12 @@ begin
 
   sv_ctf_limit := TIntegerCvar.Add('sv_ctf_limit', 'Capture the Flag point limit', 10, 10, [CVAR_SERVER], @killlimitChange, 0, 9999);
 
-  sv_bonus_frequency := TIntegerCvar.Add('sv_bonus_frequency', 'The interval of bonuses occurring ingame.', 0, 0, [CVAR_CLIENT], nil, 0, 1);
-  sv_bonus_flamer := TBooleanCvar.Add('sv_bonus_flamer', 'Flamer bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_predator := TBooleanCvar.Add('sv_bonus_predator', 'Predator bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_berserker := TBooleanCvar.Add('sv_bonus_berserker', 'Berserker bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_vest := TBooleanCvar.Add('sv_bonus_vest', 'Bulletproof Vest bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_cluster := TBooleanCvar.Add('sv_bonus_cluster', 'Cluster Grenades bonus availability', False, False, [CVAR_CLIENT], nil);
+  sv_bonus_frequency := TIntegerCvar.Add('sv_bonus_frequency', 'The interval of bonuses occurring ingame.', 0, 0, [CVAR_SERVER], nil, 0, 5);
+  sv_bonus_flamer := TBooleanCvar.Add('sv_bonus_flamer', 'Flamer bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_predator := TBooleanCvar.Add('sv_bonus_predator', 'Predator bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_berserker := TBooleanCvar.Add('sv_bonus_berserker', 'Berserker bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_vest := TBooleanCvar.Add('sv_bonus_vest', 'Bulletproof Vest bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_cluster := TBooleanCvar.Add('sv_bonus_cluster', 'Cluster Grenades bonus availability', False, False, [CVAR_SERVER], nil);
 
   sv_stationaryguns := TBooleanCvar.Add('sv_stationaryguns', 'Enables/disables Stationary Guns ingame.', False, True, [CVAR_SERVER], nil);
 
