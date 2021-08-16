@@ -67,7 +67,7 @@ Example: `cmake .. -DCMAKE_BUILD_TYPE=Release -DADD_ASSETS=1 -DBUILD_CLIENT=0` t
 ### Compilation using other methods
 
 If you decide to follow the approaches below, you will have to download Soldat's assets and pre-built libraries for the game to work.
-1. Download pre-built libraries. The best way would probably be to download libraries from the latest build of Soldat (from Github Actions, or Releases). You can download latest for now after login to Github [here](https://github.com/Soldat/soldat/actions/runs/1133061327) (includes libraries for 3 platforms - pick the ones you need)
+1. Download pre-built libraries. The best way would probably be to download libraries from the latest build of Soldat (from Github Actions, or Releases). You can download latest from [here](https://nightly.link/Soldat/soldat/workflows/soldat/develop) (includes libraries for 3 platforms - pick the ones you need)
 2. Unzip libraries to `client/build` and `server/build`
 3. Clone soldat base into soldat folder from [base repository](https://github.com/Soldat/base.git). You can either download the file from the latest release (recommended), or generate the `.smod` file yourself by running:
   - enter soldat\base\shared folder and run: zip -r ../soldat.smod *
