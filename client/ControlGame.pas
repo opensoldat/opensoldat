@@ -16,13 +16,12 @@ uses
 
 procedure ClearChatText;
 begin
-  LastChatText := ChatText;
+  ChatText := '';
   FireChatText := '';
   CompletionBase := '';
   CurrentTabCompletePlayer := 0;
   CursorPosition := 1;
   VoteKickReasonType := False;
-  ChatText := '';
   SDL_StopTextInput;
 end;
 
@@ -133,7 +132,6 @@ begin
 
       case KeyCode of
         SDLK_ESCAPE: begin
-          ChatText := LastChatText;
           ClearChatText;
         end;
 
@@ -147,7 +145,6 @@ begin
             Dec(CursorPosition);
             if Length(ChatText) = 0 then
             begin
-              ChatText := LastChatText;
               ClearChatText;
             end;
           end;
@@ -196,6 +193,8 @@ begin
               ConsoleStr := Copy(String(ChatText), 2, Length(ChatText));
               if ParseInput(ConsoleStr) then
               begin
+                LastChatType := ChatType;
+                LastChatText := ChatText;
                 ClearChatText;
                 Exit;
               end;
@@ -216,6 +215,8 @@ begin
             end;
           end;
 
+          LastChatType := ChatType;
+          LastChatText := ChatText;
           ClearChatText;
         end;
       else
@@ -725,6 +726,7 @@ begin
           begin
             ChatChanged := True;
             CurrentTabCompletePlayer := 0;
+            ChatType := LastChatType;
             ChatText := LastChatText;
             CursorPosition := Length(ChatText);
           end

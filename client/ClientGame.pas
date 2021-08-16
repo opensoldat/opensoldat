@@ -42,7 +42,7 @@ var
 
   // chat stuff
   ChatText, LastChatText, FireChatText: WideString;
-  ChatType, FireChatType: Byte;
+  ChatType, LastChatType, FireChatType: Byte;
   CompletionBase: String = '';
   CompletionBaseSeparator: Integer;
   CurrentTabCompletePlayer: Byte = 0;
