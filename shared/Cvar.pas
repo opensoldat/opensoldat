@@ -802,7 +802,7 @@ begin
   cl_player_skin := TColorCvar.Add('cl_player_skin', 'Player skin color', $00E6B478, $00E6B478, [CVAR_CLIENT], nil);
 
   cl_player_hairstyle := TIntegerCvar.Add('cl_player_hairstyle', 'Player hair style', 0, 0, [CVAR_CLIENT], nil, 0, 4);
-  cl_player_headstyle := TIntegerCvar.Add('cl_player_headstyle', 'Player head style', 0, 0, [CVAR_CLIENT], nil, 0, 4);
+  cl_player_headstyle := TIntegerCvar.Add('cl_player_headstyle', 'Player head style', 0, 0, [CVAR_CLIENT], nil, 0, 2);
   cl_player_chainstyle := TIntegerCvar.Add('cl_player_chainstyle', 'Player chain style', 0, 0, [CVAR_CLIENT], nil, 0, 2);
   cl_player_secwep := TIntegerCvar.Add('cl_player_secwep', 'Player secondary weapon', 1, 0, [CVAR_CLIENT], nil, 0, 3);
   cl_player_wep := TIntegerCvar.Add('cl_player_wep', 'Player primary weapon', 1, 0, [CVAR_CLIENT], @cl_player_wepChange, 1, 10);
