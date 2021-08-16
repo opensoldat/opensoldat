@@ -68,7 +68,7 @@ endif()
 # Note that we also inherit fpc flags from CMakePascalInformation module.
 add_flag_append(CMAKE_Pascal_FLAGS "-l -B -MDelphi -Scgi")
 add_flag_append(CMAKE_Pascal_FLAGS_DEBUG
-                "-O1 -g -gl -l -vewnhiq -dDEBUG -dDEVELOPMENT")
+                "-O1 -g -gl -l -vewnhiq -dDEVELOPMENT")
 add_flag_append(CMAKE_Pascal_FLAGS_RELEASE
                 "-O3 -CX -OoREGVAR -Xs -XX -vewnhiq -dTESTING")
 
