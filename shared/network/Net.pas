@@ -909,6 +909,7 @@ begin
   Disconnect(True);
   {$IFNDEF STEAM}
   NetworkingSockets.Destroy;
+  NetworkingUtils.Destroy;
   {$ENDIF}
   inherited Destroy();
 end;

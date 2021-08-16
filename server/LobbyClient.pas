@@ -16,7 +16,6 @@ type
       procedure Execute; override;
     public
       constructor Create();
-      destructor Destroy; override;
   end;
 
 implementation
@@ -85,6 +84,8 @@ begin
 
   FData := TStringStream.Create(Json.AsJson);
 
+  Json.Free;
+
   FreeOnTerminate := True;
 end;
 
@@ -108,14 +109,9 @@ begin
       end;
     end;
     finally
-      Client.Terminate;
+      Client.Free;
+      FData.Free;
     end;
-end;
-
-destructor TLobbyThread.Destroy;
-begin
-  Client.Free;
-  inherited Destroy;
 end;
 
 end.

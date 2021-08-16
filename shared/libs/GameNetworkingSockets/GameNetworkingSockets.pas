@@ -11,7 +11,7 @@ unit GameNetworkingSockets;
 
 interface
 uses
-  cmem, sysutils, ctypes {$IFDEF STEAM}, steamtypes{$ENDIF};
+  sysutils, ctypes {$IFDEF STEAM}, steamtypes{$ENDIF};
 
 const
   {$IFDEF WINDOWS}

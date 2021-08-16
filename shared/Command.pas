@@ -6,8 +6,7 @@ uses
   classes, contnrs, sysutils, variants, Constants;
 
 procedure CommandInit();
-function ParseInput(Input: String): Boolean; overload;
-function ParseInput(Input: String; Sender: Byte): Boolean; overload;
+function ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
 function LoadConfig(ConfigName: AnsiString): Boolean;
 
 const
@@ -113,6 +112,7 @@ begin
   InputParse.DelimitedText := CommandPtr.Description;
   for i:=0 To InputParse.Count-1 Do
     ParseInput(InputParse[i]);
+  InputParse.Free;
 end;
 
 procedure CommandEcho(Args: array of AnsiString; Sender: Byte);
@@ -352,12 +352,7 @@ begin
 end;
 {$POP}
 
-function ParseInput(Input: String): Boolean; overload;
-begin
-    Result := ParseInput(Input, 0);
-end;
-
-function ParseInput(Input: String; Sender: Byte): Boolean; overload;
+function ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
 var
   InputParse: TStringList;
   InputArray: array of string;
@@ -378,6 +373,8 @@ begin
 
   for i := 0 To InputParse.Count-1 Do
     InputArray[i] := InputParse[i];
+
+  InputParse.Free;
 
   CommandPtr := CommandFind(InputArray[0]);
 

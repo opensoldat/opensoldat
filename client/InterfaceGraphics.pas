@@ -524,7 +524,7 @@ end;
 function GetWeaponAttribDesc(var Attr: TAttr): WideString;
 begin
   Result := '    |-' + Attr.Des + ' : ' +
-    iif(Attr.Def <> 0, IntToStr(Round(Attr.Cur / Attr.Def * 100)) + '%', 'NEW') + ' (' +
+    iif(Attr.Def <> 0, Format('%d%%', [Round(Attr.Cur / Attr.Def * 100)]), 'NEW') + ' (' +
     FormatFloat('0.####', Attr.Cur) + '/' +
     FormatFloat('0.####', Attr.Def) + ')';
 end;

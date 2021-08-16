@@ -835,6 +835,10 @@ begin
 
   StopFileServer;
 
+  MapsList.Free;
+  RemoteIPs.Free;
+  AdminIPs.Free;
+
   {$IFDEF SCRIPT}
   ScrptDispatcher.Free;
   {$ENDIF}

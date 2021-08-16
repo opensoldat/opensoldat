@@ -97,8 +97,8 @@ begin
   begin
     WriteLn('[FileServer] Stopping fileserver');
     try
-      FServerThread.Terminate;
       FServerThread.DoTerminate;
+      FServerThread.Destroy;
     except
       on e: Exception do
       begin
