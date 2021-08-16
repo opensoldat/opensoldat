@@ -215,8 +215,8 @@ begin
   {$ENDIF}
 
   if sv_pure.Value and
-     (not Sha1Match(TSHA1Digest(PlayerInfoMsg.GameModChecksum), GameModChecksum)) or
-     (not Sha1Match(TSHA1Digest(PlayerInfoMsg.CustomModChecksum), CustomModChecksum)) then
+     ((not Sha1Match(TSHA1Digest(PlayerInfoMsg.GameModChecksum), GameModChecksum)) or
+     (not Sha1Match(TSHA1Digest(PlayerInfoMsg.CustomModChecksum), CustomModChecksum))) then
   begin
     ServerSendUnAccepted(Player.peer, WRONG_CHECKSUM);
     Exit;
