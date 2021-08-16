@@ -761,7 +761,7 @@ begin
     if Sprite[KickMenuIndex].Active then
     begin
       Btn := @KickMenu.Button[0];
-      GfxTextColor(ARGB(Sprite[KickMenuIndex].Player.ShirtColor));
+      GfxTextColor(RGBA(Sprite[KickMenuIndex].Player.ShirtColor));
       GfxDrawText(Sprite[KickMenuIndex].Player.Name, Btn.x1, Btn.y1 - 15);
     end;
   end;
