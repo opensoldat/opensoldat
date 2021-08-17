@@ -68,14 +68,10 @@ Example: `cmake .. -DCMAKE_BUILD_TYPE=Release -DADD_ASSETS=1 -DBUILD_CLIENT=0` t
 
 If you decide to follow the approaches below, you will have to download Soldat's assets and pre-built libraries for the game to work.
 1. Download pre-built libraries. The best way would probably be to download libraries from the latest build of Soldat (from Github Actions, or Releases). You can download latest from [here](https://nightly.link/Soldat/soldat/workflows/soldat/develop) (includes libraries for 3 platforms - pick the ones you need)
-2. Unzip libraries to `client/build` and `server/build`
-3. Clone soldat base into soldat folder from [base repository](https://github.com/Soldat/base.git). You can either download the file from the latest release (recommended), or generate the `.smod` file yourself by running:
-  - enter soldat\base\shared folder and run: zip -r ../soldat.smod *
-  - enter soldat\base\client folder and run: zip -ur ../soldat.smod configs
-  - enter soldat\base\server and run:        zip -ur ../soldat.smod configs
-You can download zip from [here](https://www.willus.com/archive/zip64/) and need to set it in your system path
+2. Copy libraries to `client/build` and `server/build`
+3. Get soldat.smod file from [base repository](https://github.com/Soldat/base.git). You can either download the file from the [latest release](https://github.com/Soldat/base/releases/latest) (recommended), or generate the .smod file yourself following the provided instructions
 4. Copy `soldat.smod` file to `client/build` and `server/build`
-5. Download `play-regular.ttf` file from [base repository](https://github.com/soldat/base), either from the latest release or from `base/client` folder
+5. Download `play-regular.ttf` file from [base repository](https://github.com/soldat/base), either from the [latest release](https://github.com/Soldat/base/releases/latest) or from `base/client` folder
 6. Copy `play-regular.ttf` file to `client/build`
 
 #### Compilation using Lazarus IDE
