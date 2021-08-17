@@ -1259,7 +1259,7 @@ begin
   end;
 
   if not DemoPlayer.Active then
-    IncomingMsg.m_pfnRelease(IncomingMsg);
+    SteamAPI_SteamNetworkingMessage_t_Release(IncomingMsg);
 end;
 
 function TClientNetwork.SendData(var Data; Size: Integer; Flags: Integer): Boolean;
@@ -1517,7 +1517,7 @@ begin
     {$ENDIF}
   end;
 
-  IncomingMsg.m_pfnRelease(IncomingMsg);
+  SteamAPI_SteamNetworkingMessage_t_Release(IncomingMsg);
 end;
 
 destructor TServerNetwork.Destroy;
