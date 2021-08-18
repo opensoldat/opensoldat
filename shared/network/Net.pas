@@ -1411,6 +1411,7 @@ begin
           end;
           NetworkingSockets.AcceptConnection(pInfo.m_hConn);
           pInfo.m_info.m_identityRemote.ToString(@info, 1024);
+          NetworkingSockets.SetConnectionUserData(pInfo.m_hConn, 0);
         end;
       end;
     end;
