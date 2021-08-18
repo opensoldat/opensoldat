@@ -247,7 +247,7 @@ begin
     if OutDataType = k_ESteamNetworkingConfig_Int32 then
     begin
       cbResult := SizeOf(Integer);
-      IntegerValue := StrToIntDef(Args[2], 0); 
+      IntegerValue := StrToIntDef(Args[2], 0);
       SetResult := UDP.NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @IntegerValue);
       MainConsole.Console(Format('[NET] NetConfig: Set %S to %D, result: %S', [AnsiString(ConfigName), IntegerValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end

@@ -522,7 +522,6 @@ procedure ActivateServer;
 var
   i, j: Integer;
 begin
-  WriteLn(Choose(3, ['a', 'b', 'c']));
   MainThreadID := GetThreadID;
 
   WriteLn('');

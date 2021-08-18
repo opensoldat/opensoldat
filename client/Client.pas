@@ -306,7 +306,7 @@ var
   VoiceSpeakingNow: Boolean;
   ForceReconnect: Boolean;
   {$ENDIF}
- 
+
 implementation
 
 uses
