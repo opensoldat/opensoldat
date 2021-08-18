@@ -1554,6 +1554,10 @@ type ESteamNetworkingSocketsDebugOutputType = (
 );
 
 
+{$IFDEF WINDOWS}
+{$PUSH}
+{$PACKRECORDS 4}
+{$ENDIF}
 /// This callback is posted whenever a connection is created, destroyed, or changes state.
 /// The m_info field will contain a complete description of the connection at the time the
 /// change occurred and the callback was posted.  In particular, m_eState will have the
@@ -1625,6 +1629,9 @@ type SteamNetAuthenticationStatus_t = record
 end;
 
 type PSteamNetAuthenticationStatus_t = ^SteamNetAuthenticationStatus_t;
+{$IFDEF WINDOWS}
+{$POP}
+{$ENDIF}
 
 type FSteamNetworkingSocketsDebugOutput = procedure (nType: ESteamNetworkingSocketsDebugOutputType; pszMsg: PChar); cdecl;
 
