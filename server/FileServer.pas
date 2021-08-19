@@ -49,7 +49,7 @@ begin
   FServer.OnRequest := OnRequest;
   FServer.AcceptIdleTimeout := 1000;
   FServer.FreeOnRelease;
-  Self.FreeOnTerminate := True;
+  Self.FreeOnTerminate := False;
 end;
 
 procedure THTTPServerThread.Execute;
@@ -70,9 +70,9 @@ end;
 
 procedure THTTPServerThread.DoTerminate;
 begin
-  inherited DoTerminate;
   if Assigned(FServer) then
     FServer.Active := False;
+  inherited DoTerminate;
 end;
 
 procedure StartFileServer;
@@ -98,7 +98,7 @@ begin
     WriteLn('[FileServer] Stopping fileserver');
     try
       FServerThread.DoTerminate;
-      FServerThread.Destroy;
+      FreeAndNil(FServerThread);
     except
       on e: Exception do
       begin
