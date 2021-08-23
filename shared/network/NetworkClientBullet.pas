@@ -37,7 +37,7 @@ begin
   UDP.SendData(BulletMsg, sizeof(BulletMsg), k_nSteamNetworkingSend_Unreliable);
 
   if DemoRecorder.Active then
-    ServerBulletSnapshot(i, 0, False);
+    ServerBulletSnapshot(i, False);
 end;
 
 procedure ClientHandleBulletSnapshot(NetMessage: PSteamNetworkingMessage_t);

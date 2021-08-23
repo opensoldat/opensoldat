@@ -248,7 +248,7 @@ procedure GfxDrawText(const Text: WideString; x, y: Single); overload;
 // batching
 procedure GfxBegin;
 procedure GfxEnd;
-procedure GfxDrawQuad(Texture: TGfxTexture; const Vertices: array of TGfxVertex); overload;
+procedure GfxDrawQuad(Texture: TGfxTexture; var Vertices: array of TGfxVertex); overload;
 procedure GfxDrawQuad(Texture: TGfxTexture; const a, b, c, d: TGfxVertex); overload;
 
 procedure GfxDrawSprite(s: PGfxSprite; x, y: Single); overload;
@@ -1263,7 +1263,7 @@ begin
   GfxDraw(Batch.VertexBuffer, @Batch.Commands[0], Batch.CommandsSize);
 end;
 
-procedure GfxDrawQuad(Texture: TGfxTexture; const Vertices: array of TGfxVertex);
+procedure GfxDrawQuad(Texture: TGfxTexture; var Vertices: array of TGfxVertex);
 var
   b: ^TBatch;
   Buf: ^TBatchBuffer;
@@ -2983,6 +2983,9 @@ var
   Rects1: TBPRectArray;
   Rects2: TBPRectArray;
 begin
+  Rects1 := Default(TBPRectArray);
+  Rects2 := Default(TBPRectArray);
+
   if Length(Rects) = 1 then
   begin
     n := Length(Textures);

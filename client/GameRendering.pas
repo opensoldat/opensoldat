@@ -474,6 +474,7 @@ function InitGameGraphics: Boolean;
 var
   WindowFlags: LongWord;
   IconFile: PSDL_RWops;
+  IconFileSurface: PSDL_Surface;
   FileBuffer: PHYSFS_Buffer;
 begin
   Result := True;
@@ -518,8 +519,9 @@ begin
   FileBuffer := PHYSFS_readBuffer('icon.bmp');
 
   IconFile := SDL_RWFromMem(FileBuffer, Length(FileBuffer));
-
-  SDL_SetWindowIcon(GameWindow, SDL_LoadBMP_RW(IconFile, 1));
+  IconFileSurface := SDL_LoadBMP_RW(IconFile, 1);
+  SDL_SetWindowIcon(GameWindow, IconFileSurface);
+  SDL_FreeSurface(IconFileSurface);
 
   if GameWindow = nil then
     begin

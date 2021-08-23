@@ -1,5 +1,3 @@
-{$PUSH}
-{$HINTS OFF}
 {$IFDEF IDS}GOSTEK_SECONDARY_DEAGLES         =   0;{$ELSE}Def('Secondary_Deagles',        0,                            5, 10,    0.3,   0.5, 0, 1, 0, 0, COLOR_NONE,      ALPHA_BASE );{$ENDIF}
 {$IFDEF IDS}GOSTEK_SECONDARY_MP5             =   1;{$ELSE}Def('Secondary_Mp5',            GFX_WEAPONS_MP5,              5, 10,    0.3,   0.3, 0, 1, 0, 0, COLOR_NONE,      ALPHA_BASE );{$ENDIF}
 {$IFDEF IDS}GOSTEK_SECONDARY_AK74            =   2;{$ELSE}Def('Secondary_Ak74',           GFX_WEAPONS_AK74,             5, 10,    0.3,  0.25, 0, 1, 0, 0, COLOR_NONE,      ALPHA_BASE );{$ENDIF}
@@ -138,4 +136,3 @@ GOSTEK_LAST            = GOSTEK_RIGHT_HAND;
 GOSTEK_PRIMARY_FIRST   = GOSTEK_PRIMARY_DEAGLES;
 GOSTEK_SECONDARY_FIRST = GOSTEK_SECONDARY_DEAGLES;
 {$ENDIF}
-{$POP}

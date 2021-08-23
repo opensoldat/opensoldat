@@ -835,6 +835,10 @@ begin
 
   StopFileServer;
 
+  MapsList.Free;
+  RemoteIPs.Free;
+  AdminIPs.Free;
+
   {$IFDEF SCRIPT}
   ScrptDispatcher.Free;
   {$ENDIF}
@@ -1328,7 +1332,7 @@ function KickPlayer(num: Byte; Ban: Boolean; why: Integer; time: Integer;
   Reason: string = ''): Boolean;
 var
   i: Integer;
-  timestr: string;
+  TimeStr: AnsiString = '';
 begin
   Result := False;
   Debug('KickPlayer');

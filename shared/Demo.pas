@@ -55,7 +55,7 @@ type
   public
     function StartRecord(Filename: string): Boolean;
     procedure StopRecord;
-    procedure SaveRecord(const R; Size: Integer);
+    procedure SaveRecord(var R; Size: Integer);
     procedure SaveNextFrame;
     {$IFNDEF SERVER}
     procedure SavePosition;
@@ -207,12 +207,12 @@ begin
     ServerSyncCvars(P, Player.peer, True);
     ServerSendPlayList(Player.peer);
     {$ELSE}
-    ServerSyncCvars(P, 0, True);
-    ServerSendPlayList(0);
+    ServerSyncCvars({$IFDEF SERVER}P, 0,{$ENDIF} True);
+    ServerSendPlayList({$IFDEF SERVER}0{$ENDIF});
     {$ENDIF}
-    ServerVars(P);
+    ServerVars({$IFDEF SERVER}P{$ENDIF});
     ServerSendNewPlayerInfo(P, JOIN_NORMAL);
-    ServerThingMustSnapshotOnConnect(P);
+    ServerThingMustSnapshotOnConnect({$IFDEF SERVER}P{$ENDIF});
     Sprite[P].Player.DemoPlayer := True;
     Spriteparts.Pos[P] := Vector2(0, 0);
     Result := P;
@@ -220,7 +220,7 @@ begin
 
 end;
 
-procedure TDemoRecorder.SaveRecord(const R; Size: Integer);
+procedure TDemoRecorder.SaveRecord(var R; Size: Integer);
 begin
   if Size = 0 then
     Exit;
@@ -333,9 +333,10 @@ end;
 
 procedure TDemoPlayer.ProcessDemo;
 var
-  ReadBuf: array[0..16383] of Char;
+  ReadBuf: TCharArray;
   packet: PSteamNetworkingMessage_t;
 begin
+  ReadBuf := Default(TCharArray);
   repeat
     if not FActive then
       Exit;
@@ -370,16 +371,20 @@ begin
       Exit;
 
     try
-      FDemoFile.Read(ReadBuf, RSize);
+    begin
+      SetLength(ReadBuf, RSize);
+      FDemoFile.Read(ReadBuf[0], RSize);
+    end;
     except
       Exit;
     end;
 
-    packet := UDP.NetworkingUtil.AllocateMessage(RSize);
-    packet.m_pData := @ReadBuf;
+    packet := UDP.NetworkingUtil.AllocateMessage(0);
+    packet.m_pData := ReadBuf;
+    packet.m_cbSize := RSize;
     UDP.HandleMessages(packet);
-    packet^.m_pData := nil;
-    packet.m_pfnRelease(packet);
+    SteamAPI_SteamNetworkingMessage_t_Release(packet);
+    SetLength(ReadBuf, 0);
 
   until RSize = 1;
 end;

@@ -6,8 +6,7 @@ uses
   classes, contnrs, sysutils, variants, Constants;
 
 procedure CommandInit();
-function ParseInput(Input: String): Boolean; overload;
-function ParseInput(Input: String; Sender: Byte): Boolean; overload;
+function ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
 function LoadConfig(ConfigName: AnsiString): Boolean;
 
 const
@@ -45,6 +44,7 @@ implementation
 
 {$PUSH}
 {$WARN 5024 OFF : Parameter "$1" not used}
+{$WARN 5026 OFF : Value parameter "$1" is assigned but never used}
 procedure CommandExec(Args: array of AnsiString; Sender: Byte = 255);
 begin
   if Length(Args) = 1 then
@@ -113,6 +113,7 @@ begin
   InputParse.DelimitedText := CommandPtr.Description;
   for i:=0 To InputParse.Count-1 Do
     ParseInput(InputParse[i]);
+  InputParse.Free;
 end;
 
 procedure CommandEcho(Args: array of AnsiString; Sender: Byte);
@@ -225,7 +226,7 @@ end;
 {$WARN 5027 OFF}
 procedure CommandNetconfig(Args: array of AnsiString; Sender: Byte);
 var
-  Name: array [0..256] of PAnsiChar;
+  ConfigName: PChar = '';
   OutDataType: ESteamNetworkingConfigDataType;
   OutScope: ESteamNetworkingConfigScope;
   OutNextValue: ESteamNetworkingConfigValue;
@@ -234,7 +235,6 @@ var
   cbResult: csize_t = 0;
   SetResult: Boolean = False;
 begin
-  cbResult := 0;
 
   if Length(Args) <= 3 then
   begin
@@ -242,29 +242,29 @@ begin
     Exit;
   end;
 
-  if UDP.NetworkingUtil.GetConfigValueInfo(ESteamNetworkingConfigValue(StrToInt(Args[1])), @Name, @OutDataType, @OutScope, @OutNextValue) then
+  if UDP.NetworkingUtil.GetConfigValueInfo(ESteamNetworkingConfigValue(StrToInt(Args[1])), ConfigName, @OutDataType, @OutScope, @OutNextValue) then
   begin
     if OutDataType = k_ESteamNetworkingConfig_Int32 then
     begin
       cbResult := SizeOf(Integer);
       IntegerValue := StrToIntDef(Args[2], 0);
       SetResult := UDP.NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @IntegerValue);
-      MainConsole.Console(Format('[NET] NetConfig: Set %S to %D, result: %S', [AnsiString(Name[0]), IntegerValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
+      MainConsole.Console(Format('[NET] NetConfig: Set %S to %D, result: %S', [AnsiString(ConfigName), IntegerValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end
     else if OutDataType = k_ESteamNetworkingConfig_Float then
     begin
       cbResult := SizeOf(Single);
       FloatValue := StrToFloatDef(Args[2], 0.0);
       SetResult := UDP.NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @FloatValue);
-      MainConsole.Console(Format('[NET] NetConfig: Set %S to %F, result: %S', [AnsiString(Name[0]), FloatValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
+      MainConsole.Console(Format('[NET] NetConfig: Set %S to %F, result: %S', [AnsiString(ConfigName), FloatValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end;
   end;
 end;
 
-procedure CommandNetConfgList(Args: array of AnsiString; Sender: Byte);
+procedure CommandNetConfigList(Args: array of AnsiString; Sender: Byte);
 var
-  Name: array [0..256] of PAnsiChar;
-  OutDataType: ESteamNetworkingConfigDataType;
+  ConfigName: PChar = '';
+  OutDataType: ESteamNetworkingConfigDataType = k_ESteamNetworkingConfig_Int32;
   OutScope: ESteamNetworkingConfigScope;
   OutNextValue: ESteamNetworkingConfigValue;
   FloatValue: Single = 0.0;
@@ -283,20 +283,20 @@ begin
   IntegerValue := 1;
   UDP.NetworkingUtil.SetConfigValue(k_ESteamNetworkingConfig_EnumerateDevVars, k_ESteamNetworkingConfig_Global, 0, k_ESteamNetworkingConfig_Int32, @IntegerValue);
   {$ENDIF}
-  while UDP.NetworkingUtil.GetConfigValueInfo(OutNextValue, @Name, @OutDataType, @OutScope, @OutNextValue) do
+  while UDP.NetworkingUtil.GetConfigValueInfo(OutNextValue, ConfigName, @OutDataType, @OutScope, @OutNextValue) do
   begin
     if OutDataType = k_ESteamNetworkingConfig_Int32 then
     begin
       cbResult := SizeOf(Integer);
 
       if UDP.NetworkingUtil.GetConfigValue(OutNextValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, IntegerValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
-        MainConsole.Console(Format('[NET] NetConfig: %S is %D', [AnsiString(Name[0]), IntegerValue]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
+        MainConsole.Console(Format('[NET] NetConfig: %S is %D', [AnsiString(ConfigName), IntegerValue]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end
     else if OutDataType = k_ESteamNetworkingConfig_Float then
     begin
       cbResult := SizeOf(Single);
       if UDP.NetworkingUtil.GetConfigValue(OutNextValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, FloatValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
-        MainConsole.Console(Format('[NET] NetConfig: %S is %F', [AnsiString(Name[0]), FloatValue]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
+        MainConsole.Console(Format('[NET] NetConfig: %S is %F', [AnsiString(ConfigName), FloatValue]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end;
   end;
 end;
@@ -352,20 +352,16 @@ begin
 end;
 {$POP}
 
-function ParseInput(Input: String): Boolean; overload;
-begin
-    Result := ParseInput(Input, 0);
-end;
-
-function ParseInput(Input: String; Sender: Byte): Boolean; overload;
+function ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
 var
   InputParse: TStringList;
-  InputArray: array of string;
+  InputArray: TStringArray;
   CommandPtr: PCommand;
   ACvar: TCvarBase;
   CommandFunction: TCommandFunction;
   i: Integer;
 begin
+  InputArray := Default(TStringArray);
   Result := False;
 
   if Length(Input) = 0 then
@@ -378,6 +374,8 @@ begin
 
   for i := 0 To InputParse.Count-1 Do
     InputArray[i] := InputParse[i];
+
+  InputParse.Free;
 
   CommandPtr := CommandFind(InputArray[0]);
 
@@ -629,7 +627,7 @@ begin
   {$IFDEF DEVELOPMENT}
   CommandAdd('netconfig', CommandNetConfig, 'Set GNS config', []);
   CommandAdd('netconfig_conn', CommandNetConfig, 'Set GNS config for specific connection handle', []);
-  CommandAdd('netconfig_list', CommandNetConfgList, 'List GNS cvars', []);
+  CommandAdd('netconfig_list', CommandNetConfigList, 'List GNS cvars', []);
 
   CommandAdd('netconfig_loglevel', CommandNetLogLevel, 'Set GNS log level', []);
 

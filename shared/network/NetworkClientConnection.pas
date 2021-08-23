@@ -39,8 +39,9 @@ procedure ClientRequestGame;
 var
   RequestMsg: PMsg_RequestGame;
   Size: Integer;
-  SendBuffer: array of Byte;
+  SendBuffer: TCharArray;
 begin
+  SendBuffer := Default(TCharArray);
   Size := SizeOf(TMsg_RequestGame) + Length(JoinPassword) + 1;
 
   SetLength(SendBuffer, Size);
@@ -215,7 +216,11 @@ begin
   if cl_servermods.Value then
     if ModName <> '' then
     begin
-      Checksum := Sha1File(UserDirectory + 'mods/' + ModName + '.smod', 4096);
+      if FileExists(UserDirectory + 'mods/' + ModName + '.smod') then
+        Checksum := Sha1File(UserDirectory + 'mods/' + ModName + '.smod', 4096)
+      else
+        Checksum := Default(TSHA1Digest);
+
       if Sha1Match(TSHA1Digest(PlayersListMsg.ModChecksum), Checksum) then
       begin
         if not PhysFS_mount(PChar(UserDirectory + 'mods/' + ModName + '.smod'),

@@ -436,11 +436,10 @@ begin
     Map.Waypoints[i].Right          := (ReadUint8(bf) <> 0);
     Map.Waypoints[i].Up             := (ReadUint8(bf) <> 0);
     Map.Waypoints[i].Down           := (ReadUint8(bf) <> 0);
-    Map.Waypoints[i].M2             := (ReadUint8(bf) <> 0);
+    Map.Waypoints[i].Jetpack        := (ReadUint8(bf) <> 0);
     Map.Waypoints[i].PathNum        := ReadUint8(bf);
-    Map.Waypoints[i].C1             := ReadUint8(bf);
-    Map.Waypoints[i].C2             := ReadUint8(bf);
-    Map.Waypoints[i].C3             := ReadUint8(bf); Inc(bf.Pos, 3);
+    Map.Waypoints[i].Action         := TWaypointAction(ReadUint8(bf));
+    Inc(bf.Pos, 5);
     Map.Waypoints[i].ConnectionsNum := ReadInt32(bf);
 
     for j := 1 to MAX_CONNECTIONS do

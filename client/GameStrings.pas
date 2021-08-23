@@ -29,13 +29,14 @@ var
 begin
   Result := False;
   TranslationStream := PHYSFS_readAsStream(PChar(Filename));
-  if TranslationStream = nil then
-    Exit;
-  try
-    TranslationFile := TMOFile.Create(TranslationStream);
-    Result := True;
-  except
-    Result := False;
+  if TranslationStream.Size <> 0 then
+  begin
+    try
+      TranslationFile := TMOFile.Create(TranslationStream);
+      Result := True;
+    except
+      Result := False;
+    end;
   end;
   TranslationStream.Free;
 end;

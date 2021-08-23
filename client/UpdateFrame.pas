@@ -13,7 +13,7 @@ interface
 uses
   {$IFDEF STEAM}Steam, SteamTypes, NetworkClientGame,{$ENDIF}
   Sound, Demo, Classes, GameStrings, GameRendering, Sprites, Vector, Weapons, Net,
-  NetworkClientConnection, Constants, Control,
+  NetworkClientConnection, Constants,
   Polymap, Game, Client, Util, SysUtils, Calc, LogFile, WeatherEffects, Sparks
   {$IFDEF ENABLE_FAE}, FaeClient{$ENDIF}
   ;
@@ -23,7 +23,7 @@ procedure Update_Frame;
 implementation
 
 uses
-  ClientGame, InterfaceGraphics, GameMenus, Input;
+  ClientGame, InterfaceGraphics, GameMenus;
 
 var
   IdleCounter, OldMouseX: Integer;

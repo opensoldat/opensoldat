@@ -22,7 +22,6 @@ program soldat;
 uses
   {$IFDEF UNIX}
   cthreads,
-  cmem,
   cwstring,
   {$ENDIF}
   {$IFDEF MSWINDOWS}Windows,{$ENDIF}

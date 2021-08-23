@@ -802,7 +802,7 @@ begin
   cl_player_skin := TColorCvar.Add('cl_player_skin', 'Player skin color', $00E6B478, $00E6B478, [CVAR_CLIENT], nil);
 
   cl_player_hairstyle := TIntegerCvar.Add('cl_player_hairstyle', 'Player hair style', 0, 0, [CVAR_CLIENT], nil, 0, 4);
-  cl_player_headstyle := TIntegerCvar.Add('cl_player_headstyle', 'Player head style', 0, 0, [CVAR_CLIENT], nil, 0, 4);
+  cl_player_headstyle := TIntegerCvar.Add('cl_player_headstyle', 'Player head style', 0, 0, [CVAR_CLIENT], nil, 0, 2);
   cl_player_chainstyle := TIntegerCvar.Add('cl_player_chainstyle', 'Player chain style', 0, 0, [CVAR_CLIENT], nil, 0, 2);
   cl_player_secwep := TIntegerCvar.Add('cl_player_secwep', 'Player secondary weapon', 1, 0, [CVAR_CLIENT], nil, 0, 3);
   cl_player_wep := TIntegerCvar.Add('cl_player_wep', 'Player primary weapon', 1, 0, [CVAR_CLIENT], @cl_player_wepChange, 1, 10);
@@ -865,12 +865,12 @@ begin
 
   sv_ctf_limit := TIntegerCvar.Add('sv_ctf_limit', 'Capture the Flag point limit', 10, 10, [CVAR_SERVER], @killlimitChange, 0, 9999);
 
-  sv_bonus_frequency := TIntegerCvar.Add('sv_bonus_frequency', 'The interval of bonuses occurring ingame.', 0, 0, [CVAR_CLIENT], nil, 0, 1);
-  sv_bonus_flamer := TBooleanCvar.Add('sv_bonus_flamer', 'Flamer bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_predator := TBooleanCvar.Add('sv_bonus_predator', 'Predator bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_berserker := TBooleanCvar.Add('sv_bonus_berserker', 'Berserker bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_vest := TBooleanCvar.Add('sv_bonus_vest', 'Bulletproof Vest bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_cluster := TBooleanCvar.Add('sv_bonus_cluster', 'Cluster Grenades bonus availability', False, False, [CVAR_CLIENT], nil);
+  sv_bonus_frequency := TIntegerCvar.Add('sv_bonus_frequency', 'The interval of bonuses occurring ingame.', 0, 0, [CVAR_SERVER], nil, 0, 5);
+  sv_bonus_flamer := TBooleanCvar.Add('sv_bonus_flamer', 'Flamer bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_predator := TBooleanCvar.Add('sv_bonus_predator', 'Predator bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_berserker := TBooleanCvar.Add('sv_bonus_berserker', 'Berserker bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_vest := TBooleanCvar.Add('sv_bonus_vest', 'Bulletproof Vest bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_cluster := TBooleanCvar.Add('sv_bonus_cluster', 'Cluster Grenades bonus availability', False, False, [CVAR_SERVER], nil);
 
   sv_stationaryguns := TBooleanCvar.Add('sv_stationaryguns', 'Enables/disables Stationary Guns ingame.', False, True, [CVAR_SERVER], nil);
 

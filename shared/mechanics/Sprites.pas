@@ -2195,7 +2195,7 @@ begin
           MainConsole.Console(WideFormat(_('%s dropped the %s Flag'),
             [Player.Name,
               iif(Player.Team = TEAM_ALPHA, _('Blue'), _('Red'))]),
-            iif(Player.Team = TEAM_ALPHA, BRAVO_MESSAGE_COLOR, ALPHA_MESSAGE_COLOR));
+            iif(Player.Team = TEAM_ALPHA, Longint(BRAVO_MESSAGE_COLOR), Longint(ALPHA_MESSAGE_COLOR)));
 
           if IsInSameTeam(Sprite[MySprite]) then
           begin

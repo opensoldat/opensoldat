@@ -524,14 +524,15 @@ end;
 function GetWeaponAttribDesc(var Attr: TAttr): WideString;
 begin
   Result := '    |-' + Attr.Des + ' : ' +
-    iif(Attr.Def <> 0, IntToStr(Round(Attr.Cur / Attr.Def * 100)) + '%', 'NEW') + ' (' +
+    iif(Attr.Def <> 0, Format('%d%%', [Round(Attr.Cur / Attr.Def * 100)]), 'NEW') + ' (' +
     FormatFloat('0.####', Attr.Cur) + '/' +
     FormatFloat('0.####', Attr.Def) + ')';
 end;
 
 procedure RenderWeaponMenuText;
 var
-  i, CursorOnIndex: Integer;
+  i: Integer = 0;
+  CursorOnIndex: Integer = 0;
   x, y, TipY: Single;
   Btn: ^TGameButton;
   Attrs: array[0..12] of TAttr;
@@ -539,7 +540,6 @@ var
 begin
   for i := Low(Attrs) to High(Attrs) do
     Attrs[i] := Default(TAttr);
-  CursorOnIndex := 0;
 
   SetFontStyle(FONT_SMALL);
   GfxTextShadow(1, 1, RGBA(0));
@@ -761,7 +761,7 @@ begin
     if Sprite[KickMenuIndex].Active then
     begin
       Btn := @KickMenu.Button[0];
-      GfxTextColor(ARGB(Sprite[KickMenuIndex].Player.ShirtColor));
+      GfxTextColor(RGBA(Sprite[KickMenuIndex].Player.ShirtColor));
       GfxDrawText(Sprite[KickMenuIndex].Player.Name, Btn.x1, Btn.y1 - 15);
     end;
   end;
@@ -846,7 +846,7 @@ var
   Me: ^TSprite;
   i, Pos: Integer;
   x, y, t: Single;
-  Str: WideString;
+  Str: WideString = '';
 begin
   Me := @Sprite[PlayerIndex];
 
@@ -1679,7 +1679,7 @@ procedure RenderRadioMenuTexts;
 const
   RADIO_GAMESTYLES = [GAMESTYLE_CTF, GAMESTYLE_INF, GAMESTYLE_HTF];
 var
-  s: string;
+  s: string = '';
   Alpha: Byte;
   sx, sy: Single;
   Color: array[0..1] of TGfxColor;

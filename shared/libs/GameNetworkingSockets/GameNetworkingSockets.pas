@@ -1,9 +1,5 @@
-{$IFDEF STEAM}
 {$IFDEF UNIX}
 {$PACKRECORDS 4}
-{$ELSE}
-{$PACKRECORDS 8}
-{$ENDIF}
 {$ELSE}
 {$PACKRECORDS 8}
 {$ENDIF}
@@ -11,7 +7,7 @@ unit GameNetworkingSockets;
 
 interface
 uses
-  cmem, sysutils, ctypes {$IFDEF STEAM}, steamtypes{$ENDIF};
+  sysutils, ctypes {$IFDEF STEAM}, steamtypes{$ENDIF};
 
 const
   {$IFDEF WINDOWS}
@@ -292,11 +288,10 @@ type ESteamNetworkingIdentityType = (
   k_ESteamNetworkingIdentityType__Force32bit = $7fffffff
 );
 {$pop}
-
+{$PACKRECORDS 1}
 type
-{$PACKRECORDS 1}
   SteamNetworkingIPAddr = record
-{$PACKRECORDS 1}
+  {$PACKRECORDS 1}
   m_ip: record
     case integer of
       0: (m_ipv4: record
@@ -310,11 +305,11 @@ type
     m_port: uint16;
   end;
 
-
 type
   PSteamNetworkingIPAddr = ^SteamNetworkingIPAddr;
-{$PACKRECORDS 1}
+
 type
+ {$PACKRECORDS 1}
  SteamNetworkingIdentity = record
   /// Type of identity.
   m_eType: ESteamNetworkingIdentityType;
@@ -337,15 +332,13 @@ end;
 
 type
   PSteamNetworkingIdentity = ^SteamNetworkingIdentity;
-{$IFDEF STEAM}
+
 {$IFDEF UNIX}
 {$PACKRECORDS 4}
 {$ELSE}
 {$PACKRECORDS 8}
 {$ENDIF}
-{$ELSE}
-{$PACKRECORDS 4}
-{$ENDIF}
+
 {$push}
 {$notes off}
 type ESteamNetworkingConnectionState = (
@@ -571,13 +564,9 @@ type ESteamNetConnectionEnd =
     // - etc
     k_ESteamNetConnectionEnd_Remote_BadCert = 4003,
 
-    // We couldn't rendezvous with the remote host because
-    // they aren't logged into Steam
-    k_ESteamNetConnectionEnd_Remote_NotLoggedIn = 4004,
-
-    // We couldn't rendezvous with the remote host because
-    // they aren't running the right application.
-    k_ESteamNetConnectionEnd_Remote_NotRunningApp = 4005,
+    // These will never be returned
+    //k_ESteamNetConnectionEnd_Remote_NotLoggedIn_DEPRECATED = 4004,
+    //k_ESteamNetConnectionEnd_Remote_NotRunningApp_DEPRECATED = 4005,
 
     // Something wrong with the protocol version you are using.
     // (Probably the code you are running is too old.)
@@ -611,10 +600,7 @@ type ESteamNetConnectionEnd =
     // or on their end.
     k_ESteamNetConnectionEnd_Misc_Timeout = 5003,
 
-    // We're having trouble talking to the relevant relay.
-    // We don't have enough information to say whether the
-    // problem is on our end or not.
-    k_ESteamNetConnectionEnd_Misc_RelayConnectivity = 5004,
+    //k_ESteamNetConnectionEnd_Misc_RelayConnectivity_DEPRECATED = 5004,
 
     // There's some trouble talking to Steam.
     k_ESteamNetConnectionEnd_Misc_SteamConnectivity = 5005,
@@ -659,20 +645,6 @@ type ESteamNetConnectionEnd =
   k_ESteamNetConnectionEnd__Force32Bit = $7fffffff
 );
 
-type ESteamNetTransportKind =
-(
-  k_ESteamNetTransport_Unknown = 0,
-  k_ESteamNetTransport_LoopbackBuffers = 1, // Internal buffers, not using OS network stack
-  k_ESteamNetTransport_LocalHost = 2, // Using OS network stack to talk to localhost address
-  k_ESteamNetTransport_UDP = 3, // Ordinary UDP connection, remote address is not a LAN address
-  k_ESteamNetTransport_UDPLan = 4, // Ordinary UDP connection, remote address is a LAN address
-  k_ESteamNetTransport_TURN = 5, // Relayed over TURN server
-  k_ESteamNetTransport_SDRP2P = 6, // P2P connection relayed over Steam Datagram Relay
-  k_ESteamNetTransport_SDRHostedServer = 7, // Connection to a server hosted in a known data center via Steam Datagram Relay
-
-  k_ESteamNetTransport_Force32Bit = $7fffffff
-);
-
 {$pop}
 
 /// Max length, in bytes (including null terminator) of the reason string
@@ -682,6 +654,13 @@ const k_cchSteamNetworkingMaxConnectionCloseReason: integer = 128;
 /// Max length, in bytes (include null terminator) of debug description
 /// of a connection.
 const k_cchSteamNetworkingMaxConnectionDescription: integer = 128;
+
+const k_nSteamNetworkConnectionInfoFlags_Unauthenticated: integer = 1; // We don't have a certificate for the remote host.
+const k_nSteamNetworkConnectionInfoFlags_Unencrypted: integer = 2; // Information is being sent out over a wire unencrypted (by this library)
+const k_nSteamNetworkConnectionInfoFlags_LoopbackBuffers: integer = 4; // Internal loopback buffers.  Won't be true for localhost.  (You can check the address to determine that.)  This implies k_nSteamNetworkConnectionInfoFlags_FastLAN
+const k_nSteamNetworkConnectionInfoFlags_Fast: integer = 8; // The connection is "fast" and "reliable".  Either internal/localhost (check the address to find out), or the peer is on the same LAN.  (Probably.  It's based on the address and the ping time, this is actually hard to determine unambiguously).
+const k_nSteamNetworkConnectionInfoFlags_Relayed: integer = 16; // The connection is relayed somehow (SDR or TURN).
+const k_nSteamNetworkConnectionInfoFlags_DualWifi: integer = 32; // We're taking advantage of dual-wifi multi-path
 
 type SteamNetConnectionInfo_t = record
 
@@ -725,14 +704,10 @@ type SteamNetConnectionInfo_t = record
   /// internal logging messages.
   m_szConnectionDescription: array[0..127] of Char;
 
-  /// What kind of transport is currently being used?
-  /// Note that this is potentially a dynamic property!  Also, it may not
-  /// always be available, especially right as the connection starts, or
-  /// after the connection ends.
-  m_eTransportKind: ESteamNetTransportKind;
+  /// Misc flags.  Bitmask of k_nSteamNetworkConnectionInfoFlags_Xxxx
+  m_nFlags: Integer;
 
   /// Internal stuff, room to change API easily
-  //reserved: array[0..62] of uint32;
   reserved: array[0..62] of uint32;
 end;
 
@@ -1096,31 +1071,6 @@ type PESteamNetworkingConfigDataType = ^ESteamNetworkingConfigDataType;
 type ESteamNetworkingConfigValue = (
   k_ESteamNetworkingConfig_Invalid = 0,
 
-  /// [global float, 0--100] Randomly discard N pct of packets instead of sending/recv
-  /// This is a global option only, since it is applied at a low level
-  /// where we don't have much context
-  k_ESteamNetworkingConfig_FakePacketLoss_Send = 2,
-  k_ESteamNetworkingConfig_FakePacketLoss_Recv = 3,
-
-  /// [global int32].  Delay all outbound/inbound packets by N ms
-  k_ESteamNetworkingConfig_FakePacketLag_Send = 4,
-  k_ESteamNetworkingConfig_FakePacketLag_Recv = 5,
-
-  /// [global float] 0-100 Percentage of packets we will add additional delay
-  /// to (causing them to be reordered)
-  k_ESteamNetworkingConfig_FakePacketReorder_Send = 6,
-  k_ESteamNetworkingConfig_FakePacketReorder_Recv = 7,
-
-  /// [global int32] Extra delay, in ms, to apply to reordered packets.
-  k_ESteamNetworkingConfig_FakePacketReorder_Time = 8,
-
-  /// [global float 0--100] Globally duplicate some percentage of packets we send
-  k_ESteamNetworkingConfig_FakePacketDup_Send = 26,
-  k_ESteamNetworkingConfig_FakePacketDup_Recv = 27,
-
-  /// [global int32] Amount of delay, in ms, to delay duplicated packets.
-  /// (We chose a random delay between 0 and this value)
-  k_ESteamNetworkingConfig_FakePacketDup_TimeMax = 28,
 
   /// [connection int32] Timeout value (in ms) to use when first connecting
   k_ESteamNetworkingConfig_TimeoutInitial = 24,
@@ -1132,6 +1082,41 @@ type ESteamNetworkingConfigValue = (
   /// if this is reached SendMessage will return k_EResultLimitExceeded
   /// Default is 512k (524288 bytes)
   k_ESteamNetworkingConfig_SendBufferSize = 9,
+
+  /// [connection int64] Get/set userdata as a configuration option.
+  /// The default value is -1.   You may want to set the user data as
+  /// a config value, instead of using ISteamNetworkingSockets::SetConnectionUserData
+  /// in two specific instances:
+  ///
+  /// - You wish to set the userdata atomically when creating
+  ///   an outbound connection, so that the userdata is filled in properly
+  ///   for any callbacks that happen.  However, note that this trick
+  ///   only works for connections initiated locally!  For incoming
+  ///   connections, multiple state transitions may happen and
+  ///   callbacks be queued, before you are able to service the first
+  ///   callback!  Be careful!
+  ///
+  /// - You can set the default userdata for all newly created connections
+  ///   by setting this value at a higher level (e.g. on the listen
+  ///   socket or at the global level.)  Then this default
+  ///   value will be inherited when the connection is created.
+  ///   This is useful in case -1 is a valid userdata value, and you
+  ///   wish to use something else as the default value so you can
+  ///   tell if it has been set or not.
+  ///
+  ///   HOWEVER: once a connection is created, the effective value is
+  ///   then bound to the connection.  Unlike other connection options,
+  ///   if you change it again at a higher level, the new value will not
+  ///   be inherited by connections.
+  ///
+  /// Using the userdata field in callback structs is not advised because
+  /// of tricky race conditions.  Instead, you might try one of these methods:
+  ///
+  /// - Use a separate map with the HSteamNetConnection as the key.
+  /// - Fetch the userdata from the connection in your callback
+  ///   using ISteamNetworkingSockets::GetConnectionUserData, to
+  //    ensure you have the current value.
+  k_ESteamNetworkingConfig_ConnectionUserData = 40,
 
   /// [connection int32] Minimum/maximum send rate clamp, 0 is no limit.
   /// This value will control the min/max allowed sending rate that
@@ -1177,19 +1162,6 @@ type ESteamNetworkingConfigValue = (
   /// You should not let users modify it in production.  (But note that it requires
   /// the peer to also modify their value in order for encryption to be disabled.)
   k_ESteamNetworkingConfig_Unencrypted = 34,
-
-  /// [global int32] 0 or 1.  Some variables are "dev" variables.  They are useful
-  /// for debugging, but should not be adjusted in production.  When this flag is false (the default),
-  /// such variables will not be enumerated by the ISteamnetworkingUtils::GetFirstConfigValue
-  /// ISteamNetworkingUtils::GetConfigValueInfo functions.  The idea here is that you
-  /// can use those functions to provide a generic mechanism to set any configuration
-  /// value from a console or configuration file, looking up the variable by name.  Depending
-  /// on your game, modifying other configuration values may also have negative effects, and
-  /// you may wish to further lock down which variables are allowed to be modified by the user.
-  /// (Maybe no variables!)  Or maybe you use a whitelist or blacklist approach.
-  ///
-  /// (This flag is itself a dev variable.)
-  k_ESteamNetworkingConfig_EnumerateDevVars = 35,
 
   /// [connection int32] Set this to 1 on outbound connections and listen sockets,
   /// to enable "symmetric connect mode", which is useful in the following
@@ -1293,6 +1265,49 @@ type ESteamNetworkingConfigValue = (
   k_ESteamNetworkingConfig_LocalVirtualPort = 38,
 
   //
+  // Simulating network conditions
+  //
+  // These are global (not per-connection) because they apply at
+  // a relatively low UDP layer.
+  //
+  /// [global float, 0--100] Randomly discard N pct of packets instead of sending/recv
+  /// This is a global option only, since it is applied at a low level
+  /// where we don't have much context
+  k_ESteamNetworkingConfig_FakePacketLoss_Send = 2,
+  k_ESteamNetworkingConfig_FakePacketLoss_Recv = 3,
+  /// [global int32].  Delay all outbound/inbound packets by N ms
+  k_ESteamNetworkingConfig_FakePacketLag_Send = 4,
+  k_ESteamNetworkingConfig_FakePacketLag_Recv = 5,
+  /// [global float] 0-100 Percentage of packets we will add additional delay
+  /// to (causing them to be reordered)
+  k_ESteamNetworkingConfig_FakePacketReorder_Send = 6,
+  k_ESteamNetworkingConfig_FakePacketReorder_Recv = 7,
+  /// [global int32] Extra delay, in ms, to apply to reordered packets.
+  k_ESteamNetworkingConfig_FakePacketReorder_Time = 8,
+  /// [global float 0--100] Globally duplicate some percentage of packets we send
+  k_ESteamNetworkingConfig_FakePacketDup_Send = 26,
+  k_ESteamNetworkingConfig_FakePacketDup_Recv = 27,
+  /// [global int32] Amount of delay, in ms, to delay duplicated packets.
+  /// (We chose a random delay between 0 and this value)
+  k_ESteamNetworkingConfig_FakePacketDup_TimeMax = 28,
+  /// [global int32] Trace every UDP packet, similar to Wireshark or tcpdump.
+  /// Value is max number of bytes to dump.  -1 disables tracing.
+  // 0 only traces the info but no actual data bytes
+  k_ESteamNetworkingConfig_PacketTraceMaxBytes = 41,
+  // [global int32] Global UDP token bucket rate limits.
+  // "Rate" refers to the steady state rate. (Bytes/sec, the
+  // rate that tokens are put into the bucket.)  "Burst"
+  // refers to the max amount that could be sent in a single
+  // burst.  (In bytes, the max capacity of the bucket.)
+  // Rate=0 disables the limiter entirely, which is the default.
+  // Burst=0 disables burst.  (This is not realistic.  A
+  // burst of at least 4K is recommended; the default is higher.)
+  k_ESteamNetworkingConfig_FakeRateLimit_Send_Rate = 42,
+  k_ESteamNetworkingConfig_FakeRateLimit_Send_Burst = 43,
+  k_ESteamNetworkingConfig_FakeRateLimit_Recv_Rate = 44,
+  k_ESteamNetworkingConfig_FakeRateLimit_Recv_Burst = 45,
+
+  //
   // Callbacks
   //
 
@@ -1352,6 +1367,12 @@ type ESteamNetworkingConfigValue = (
   /// connection in some unexpected way.
   /// See: ISteamNetworkingUtils::SetGlobalCallback_MessagesSessionFailed
   k_ESteamNetworkingConfig_Callback_MessagesSessionFailed = 205,
+
+  /// [global FnSteamNetworkingSocketsCreateConnectionSignaling] Callback that will
+  /// be invoked when we need to create a signaling object for a connection
+  /// initiated locally.  See: ISteamNetworkingSockets::ConnectP2P,
+  /// ISteamNetworkingMessages.
+  k_ESteamNetworkingConfig_Callback_CreateConnectionSignaling = 206,
 
   //
   // P2P settings
@@ -1436,6 +1457,21 @@ type ESteamNetworkingConfigValue = (
   k_ESteamNetworkingConfig_SDRClient_FakeClusterPing = 36,
 
   //
+  // Misc / debugging
+  //
+  /// [global int32] 0 or 1.  Some variables are "dev" variables.  They are useful
+  /// for debugging, but should not be adjusted in production.  When this flag is false (the default),
+  /// such variables will not be enumerated by the ISteamnetworkingUtils::GetFirstConfigValue
+  /// ISteamNetworkingUtils::GetConfigValueInfo functions.  The idea here is that you
+  /// can use those functions to provide a generic mechanism to set any configuration
+  /// value from a console or configuration file, looking up the variable by name.  Depending
+  /// on your game, modifying other configuration values may also have negative effects, and
+  /// you may wish to further lock down which variables are allowed to be modified by the user.
+  /// (Maybe no variables!)  Or maybe you use a whitelist or blacklist approach.
+  ///
+  /// (This flag is itself a dev variable.)
+  k_ESteamNetworkingConfig_EnumerateDevVars = 35,
+  //
   // Log levels for debugging information of various subsystems.
   // Higher numeric values will cause more stuff to be printed.
   // See ISteamNetworkingUtils::SetDebugOutputFunction for more
@@ -1466,7 +1502,6 @@ type PESteamNetworkingConfigValue = ^ESteamNetworkingConfigValue;
 /// when the object is created, we just iterate over the list of options and call
 /// ISteamNetworkingUtils::SetConfigValueStruct, where the scope arguments are supplied by the
 /// object being created.
-{$PACKRECORDS 8}
 type SteamNetworkingConfigValue_t = record
   /// Which option is being set
   m_eValue: ESteamNetworkingConfigValue;
@@ -1482,16 +1517,6 @@ type SteamNetworkingConfigValue_t = record
       3: (m_string: PAnsiChar);
       4: (m_functionPtr: procedure);
 end;
-{$IFDEF STEAM}
-{$IFDEF UNIX}
-{$PACKRECORDS 4}
-{$ELSE}
-{$PACKRECORDS 8}
-{$ENDIF}
-{$ELSE}
-{$PACKRECORDS 8}
-{$ENDIF}
-
 
 type PSteamNetworkingConfigValue_t = ^SteamNetworkingConfigValue_t;
 
@@ -1529,6 +1554,10 @@ type ESteamNetworkingSocketsDebugOutputType = (
 );
 
 
+{$IFDEF WINDOWS}
+{$PUSH}
+{$PACKRECORDS 4}
+{$ENDIF}
 /// This callback is posted whenever a connection is created, destroyed, or changes state.
 /// The m_info field will contain a complete description of the connection at the time the
 /// change occurred and the callback was posted.  In particular, m_eState will have the
@@ -1600,6 +1629,9 @@ type SteamNetAuthenticationStatus_t = record
 end;
 
 type PSteamNetAuthenticationStatus_t = ^SteamNetAuthenticationStatus_t;
+{$IFDEF WINDOWS}
+{$POP}
+{$ENDIF}
 
 type FSteamNetworkingSocketsDebugOutput = procedure (nType: ESteamNetworkingSocketsDebugOutputType; pszMsg: PChar); cdecl;
 
@@ -1725,7 +1757,7 @@ function SteamAPI_ISteamNetworkingUtils_SetConfigValue(instancePtr: ISteamNetwor
   eDataType: ESteamNetworkingConfigDataType; const pValue: Pointer): Boolean; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingUtils_GetConfigValue(instancePtr: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr;
   pOutDataType: PESteamNetworkingConfigDataType; var pResult; cbResult: pcsize_t): ESteamNetworkingGetConfigValueResult; cdecl; external GNSLIB;
-function SteamAPI_ISteamNetworkingUtils_GetConfigValueInfo(instancePtr: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; const pOutName: PPAnsiChar; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope; pOutNextValue: PESteamNetworkingConfigValue): Boolean; cdecl; external GNSLIB;
+function SteamAPI_ISteamNetworkingUtils_GetConfigValueInfo(instancePtr: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; var pOutName: PAnsiChar; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope; pOutNextValue: PESteamNetworkingConfigValue): Boolean; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingUtils_GetFirstConfigValue(instancePtr: ISteamNetworkingUtils): ESteamNetworkingConfigValue; cdecl; external GNSLIB;
 
 procedure SteamAPI_SteamNetworkingMessage_t_Release(pIMsg: PSteamNetworkingMessage_t); cdecl; external GNSLIB;
@@ -1829,7 +1861,7 @@ type
     {$ENDIF}
     function GetConfigValue(eValue: ESteamNetworkingConfigValue; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr;
       pOutDataType: PESteamNetworkingConfigDataType; var pResult; cbResult: pcsize_t): ESteamNetworkingGetConfigValueResult;
-    function GetConfigValueInfo(eValue: ESteamNetworkingConfigValue; const pOutName: PPAnsiChar; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope; pOutNextValue: PESteamNetworkingConfigValue): Boolean;
+    function GetConfigValueInfo(eValue: ESteamNetworkingConfigValue; var pOutName: PAnsiChar; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope; pOutNextValue: PESteamNetworkingConfigValue): Boolean;
     function GetFirstConfigValue(): ESteamNetworkingConfigValue;
     {$IFDEF STEAM}
     //procedure SteamNetworkingIPAddr_ToString(pAddr: PSteamNetworkingIPAddr; buf: PChar; cbBuf: csize_t; bWithPort: Boolean); cdecl;
@@ -2083,7 +2115,7 @@ function TSteamNetworkingUtils.GetConfigValue(eValue: ESteamNetworkingConfigValu
 begin
   Result := SteamAPI_ISteamNetworkingUtils_GetConfigValue(GameNetworkingUtilsInterface, eValue, eScopeType, scopeObj, pOutDataType, pResult, cbResult);
 end;
-function TSteamNetworkingUtils.GetConfigValueInfo(eValue: ESteamNetworkingConfigValue; const pOutName: PPAnsiChar; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope; pOutNextValue: PESteamNetworkingConfigValue): Boolean;
+function TSteamNetworkingUtils.GetConfigValueInfo(eValue: ESteamNetworkingConfigValue; var pOutName: PAnsiChar; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope; pOutNextValue: PESteamNetworkingConfigValue): Boolean;
 begin
   Result := SteamAPI_ISteamNetworkingUtils_GetConfigValueInfo(GameNetworkingUtilsInterface, eValue, pOutName, pOutDataType, pOutScope, pOutNextValue);
 end;

@@ -162,8 +162,8 @@ begin
   FillChar(FSIGPIPE^.Sa_Mask, SizeOf(FSIGPIPE^.sa_mask), #0);
   FillChar(FSIGPIPEOLD^.Sa_Mask, SizeOf(FSIGPIPEOLD^.sa_mask), #0);
 
-  FSIGPIPEOLD^.sa_Handler := SigActionHandler(@HandleSig);
-  FSIGPIPEOLD^.Sa_Flags := 0;
+  FSIGPIPE^.sa_Handler := SigActionHandler(@HandleSig);
+  FSIGPIPE^.Sa_Flags := 0;
 
   {$IFDEF Linux}  // Linux specific
   FSIGPIPEOLD^.Sa_Restorer := nil;

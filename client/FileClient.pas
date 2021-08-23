@@ -3,7 +3,7 @@ unit FileClient;
 interface
 
 uses
-  SysUtils, Classes, sha1, strutils, fphttpclient, sslsockets, fpopenssl,
+  SysUtils, Classes, sha1, strutils, fphttpclient,
   GameRendering, Constants, Version;
 
 const
@@ -69,6 +69,7 @@ begin
     [ExtractFileName(FFilename), FProgress, GetSize(FDownloadPos), GetSize(FDownloadSize)])));
 end;
 
+{$push}{$warn 5024 off}
 procedure TDownloadThread.DoProgress(Sender: TObject; const ContentLength, CurrentPos: Int64);
 var
   OldProgress: Int64;
@@ -89,6 +90,7 @@ begin
       Synchronize(SetStatus);
   end;
 end;
+{$pop}
 
 procedure TDownloadThread.Execute;
 begin
@@ -126,6 +128,7 @@ begin
   inherited Destroy;
 end;
 
+{$push}{$warn 5024 off}
 procedure TDownloadThread.DoOnTerminate(Sender: TObject);
 begin
   Client.Terminate;
@@ -135,5 +138,6 @@ begin
       JoinServer;
   FreeAndNil(DownloadThread);
 end;
+{$pop}
 
 end.
