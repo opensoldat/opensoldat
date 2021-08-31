@@ -916,12 +916,14 @@ begin
   // Network cvars
   net_port := TIntegerCvar.Add('net_port', 'The port your server runs on, and player have to connect to', 23073, 23073, [CVAR_SERVER], nil, 0, 65535);
   net_ip := TStringCvar.Add('net_ip', 'Binds server ports to specific ip address', '0.0.0.0', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
-  net_adminip := TStringCvar.Add('net_adminip', 'Binds admin port to specific ip address', '', '', [CVAR_SERVER], nil, 0, 0);
+  net_adminip := TStringCvar.Add('net_adminip', 'Binds admin port to specific ip address', '0.0.0.0', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
   net_lan := TIntegerCvar.Add('net_lan', 'Set to 1 to set server to LAN mode', 0, 0, [CVAR_SERVER], nil, 0, 1);
   net_compression := TBooleanCvar.Add('net_compression', 'Enables/Disables compression of packets', True, True, [CVAR_SERVER], nil);
   net_allowdownload := TBooleanCvar.Add('net_allowdownload', 'Enables/Disables file transfers', True, True, [CVAR_SERVER], nil);
   net_maxconnections := TIntegerCvar.Add('net_maxconnections', 'Maximum number of simultaneous file transfer connections', 10, 10, [CVAR_SERVER], nil, 0, 100);
-  net_maxadminconnections := TIntegerCvar.Add('net_maxadminconnections', 'Maximum number of admin connections', 20, 20, [CVAR_SERVER], nil, 0, 100);
+  net_maxadminconnections := TIntegerCvar.Add('net_maxadminconnections', 'Maximum number of admin connections', 20, 20, [CVAR_SERVER], nil, 0, MaxInt);
+  net_rcon_limit := TIntegerCvar.Add('net_rcon_limit', 'Limits the rate of admin connection attempts per second', 5, 5, [CVAR_SERVER], nil, 0, MaxInt);
+  net_rcon_burst := TIntegerCvar.Add('net_rcon_burst', 'Limits the burst rate of admin connection attempts per second', 10, 10, [CVAR_SERVER], nil, 0, MaxInt);
 
   net_floodingpacketslan := TIntegerCvar.Add('net_floodingpacketslan', 'When running on a LAN, controls how many packets should be considered flooding', 80, 80, [CVAR_SERVER], nil, 0, 100);
   net_floodingpacketsinternet := TIntegerCvar.Add('net_floodingpacketsinternet', 'When running on the Internet, controls how many packets should be considered flooding', 42, 42, [CVAR_SERVER], nil, 0, 100);

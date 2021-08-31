@@ -3,47 +3,67 @@ unit Rcon;
 interface
 
 uses
-  contnrs, syncobjs,
-  IdSocketHandle, IdGlobal, IdTCPServer, IdIOHandlerSocket, IdTCPConnection,
-  IdContext, IdCustomTCPServer, Classes, SysUtils, Version, Constants, Net;
+  Classes, SysUtils, Sockets, Ssockets, Constants, Net;
 
 const
   REFRESHX_HEADER_CHARS = 10;
 
 type
-  TServerConnect = procedure(AThread: TIdContext) of object;
-  TServerDisconnect = procedure(AThread: TIdContext) of object;
-  TServerExecute = procedure(AThread: TIdContext) of object;
+  TAdminServerConnectionThread = class;
 
   TAdminMessage = record
-    Msg, IP: String;
-    Port: TIdPort;
+    Msg: String;
+    Socket: TSocketStream;
   end;
 
-  TAdminServer = class(TIdTCPServer)
+  TAdminServer = class(TThread)
   private
     FPassword: string;
     FAdmins: TThreadList;
-    FConnectMessage: string;
-    FBytesSent: Int64;
-    FBytesRecieved: Int64;
-    FMessageQueue: TQueue;
-    FQueueLock: TCriticalSection;
-    procedure handleConnect(AThread: TIdContext);
-    procedure handleDisconnect(AThread: TIdContext);
-    procedure handleExecute(AThread: TIdContext);
+    FMessageQueue: TThreadList;
+    FServer: TInetServer;
+    FMaxConnections: Integer;
+    FBucketRate: LongWord;
+    FBucketBurst: LongWord;
+    FBucketTokens: LongWord;
+    FBucketLastFill: QWord;
   public
     property Admins: TThreadList read FAdmins;
     property Password: string read FPassword write FPassword;
-    property ConnectMessage: string read FConnectMessage write FConnectMessage;
-    property BytesSent: Int64 read FBytesSent;
-    property BytesRecieved: Int64 read FBytesRecieved;
-    constructor Create(Pass: string; ConnectMessage: string = ''); reintroduce;
-    destructor Destroy; reintroduce;
+    constructor Create(Pass: string); reintroduce;
+    destructor Destroy; override;
     procedure SendToAll(Message: string);
     procedure SendToIP(IP: string; Message: string);
     procedure ProcessCommands();
+    procedure Execute; override;
+    procedure OnConnectQuery(Sender: TObject; ASocket: Longint; var Allow: Boolean);
+    procedure OnConnect(Sender: TObject; Data: TSocketStream);
+    procedure OnAcceptError(Sender: TObject; ASocket: Longint; E: Exception; var ErrorAction: TAcceptErrorAction);
   end;
+
+  TAdminServerConnectionThread = class(TThread)
+  private
+    FPassword: string;
+    FData: TSocketStream;
+    FAdminServer: TAdminServer;
+    FMessageQueue: TThreadList;
+    FAdminsList: TThreadList;
+    FAuthed: Boolean;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(Data: TSocketStream; AdminServer: TAdminServer; MessageQueue: TThreadList; AdminsList: TThreadList; Password: String);
+    procedure ShutdownSocket();
+    procedure WriteString(AStr: string);
+    destructor Destroy; override;
+  end;
+
+  TSockAddrHelper = record helper for TSockAddr
+    function GetIPString(): String;
+    function GetAddressString(): String;
+    function GetPort(): Word;
+  end;
+
 
   // Extra Server Information
   TMsg_RefreshX = packed record
@@ -77,68 +97,161 @@ type
   procedure BroadcastMsg(Text: string);
   procedure SendMessageToAdmin(ToIP, Text: string);
 
-var
-  FServerConnect: TIdServerThreadEvent;
-  FServerDisconnect: TIdServerThreadEvent;
-  FServerExecute: TIdServerThreadEvent;
-
 implementation
 
 uses
   {$IFDEF STEAM}SteamTypes,{$ENDIF}
   {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
-  Sprites, Server, Util, TraceLog, Command, Game, ServerHelper;
+  Server, Util, TraceLog, Command, Game, ServerHelper, Cvar, Version, Math;
 
-constructor TAdminServer.Create(Pass: string; ConnectMessage: string = '');
-var
-  Binding1: TIdSocketHandle;
+{$PUSH}
+{$WARN 5024 OFF} // Parameter "$1" not used
+function TSockAddrHelper.GetIPString(): String;
 begin
-  inherited Create(nil);
+  Result := NetAddrToStr(Self.sin_addr);
+end;
+
+function TSockAddrHelper.GetAddressString(): String;
+begin
+  Result := Format('%s:%d', [NetAddrToStr(Self.sin_addr), Self.sin_port]);
+end;
+
+function TSockAddrHelper.GetPort(): Word;
+begin
+  Result := Self.sin_port;
+end;
+
+constructor TAdminServer.Create(Pass: string);
+begin
+  inherited Create(False);
+
   FPassword := Pass;
   FAdmins := TThreadList.Create;
-  FConnectMessage := ConnectMessage;
-  FBytesSent := 0;
-  FBytesRecieved := 0;
-  FMessageQueue := TQueue.Create;
-  FQueueLock := TCriticalSection.Create;
-  onConnect := self.handleConnect;
-  onDisconnect := self.handleDisconnect;
-  onExecute := self.handleExecute;
-  DefaultPort := net_port.Value;
-  MaxConnections := net_maxadminconnections.Value;
-  Bindings.Clear;
-  Binding1 := Bindings.Add;
-  Binding1.Port := net_port.Value;
-  if net_adminip.Value <> '' then
-    Binding1.IP := net_adminip.Value
-  else
-    Binding1.IP := net_ip.Value;
-  active := True;
+  FMessageQueue := TThreadList.Create;
+  FMaxConnections := net_maxadminconnections.Value;
+  FServer := TINetServer.Create(net_adminip.Value, net_port.Value);
+
+  FServer.SetNonBlocking;
+  FServer.OnConnectQuery := OnConnectQuery;
+  FServer.OnConnect:= OnConnect;
+  FServer.OnAcceptError := OnAcceptError;
+  FServer.QueueSize := 5;
+  FServer.KeepAlive := True;
+  FServer.ReuseAddress := True;
+  FServer.AcceptIdleTimeOut := 5;
+
+  FBucketBurst := net_rcon_limit.Value;
+  FBucketRate := net_rcon_burst.Value;
+  FBucketTokens := 0;
+  FBucketLastFill := 0;
+
+  NameThreadForDebugging('AdminServer');
 end;
 
 destructor TAdminServer.Destroy;
+var
+  Connection: TAdminServerConnectionThread;
 begin
-  active := False;
-  FreeAndNil(FAdmins);
-  FMessageQueue.Destroy;
-  FQueueLock.Destroy;
+  try
+    try
+      for Connection in FAdmins.LockList do
+        begin
+          FAdmins.UnlockList;
+          Connection.ShutdownSocket;
+          Connection.Terminate;
+          Connection.WaitFor;
+          FAdmins.LockList;
+        end;
+    finally
+      FAdmins.UnlockList
+    end;
+  except
+  end;
+
+  FAdmins.Free;
+  FMessageQueue.Free;
+
+  FServer.AcceptIdleTimeOut := 0;
+  FPShutdown(FServer.Socket, SHUT_RDWR);
+  CloseSocket(FServer.Socket);
+  FServer.StopAccepting(True);
+
   inherited Destroy;
+end;
+
+procedure TAdminServer.Execute;
+begin
+  try
+    try
+      FServer.StartAccepting;
+    except
+    end;
+  finally
+    FServer.Free;
+  end;
+end;
+
+procedure TAdminServer.OnConnectQuery(Sender: TObject; ASocket: Longint; var Allow: Boolean);
+var
+  CurrentTime: Integer;
+  Tokens: Integer;
+begin
+  CurrentTime := Trunc(GetTickCount64 / 1000);
+  if CurrentTime > FBucketLastFill then
+  begin
+    Tokens := FBucketTokens + FBucketRate * (CurrentTime - FBucketLastFill);
+    FBucketTokens := Min(Tokens, FBucketBurst);
+    FBucketLastFill := CurrentTime;
+  end;
+
+  if FBucketTokens < 1 then
+  begin
+    Debug('[RCON] New connection rejected: Rate limit exceeded');
+    Allow := False;
+    Exit;
+  end;
+
+  FBucketTokens -= 1;
+
+  if FAdmins.LockList.Count < FMaxConnections then
+    Allow := True
+  else
+  begin
+    Debug('[RCON] New connection rejected: Maximum number of connections reached');
+    Allow := False;
+  end;
+
+  FAdmins.UnlockList;
+end;
+
+procedure TAdminServer.OnConnect(Sender: TObject; Data: TSocketStream);
+var
+  AConnectionThread: TAdminServerConnectionThread;
+begin
+  Debug('[RCON] New connection from: ' + Data.RemoteAddress.GetAddressString);
+
+  AConnectionThread := TAdminServerConnectionThread.Create(Data, Self, FMessageQueue, FAdmins, FPassword);
+  AConnectionThread.NameThreadForDebugging(Data.RemoteAddress.GetIPString);
+  AConnectionThread.FreeOnTerminate := True;
+
+  FAdmins.Add(AConnectionThread);
+end;
+
+procedure TAdminServer.OnAcceptError(Sender: TObject; ASocket: Longint; E: Exception; var ErrorAction: TAcceptErrorAction);
+begin
+  if Terminated then
+    ErrorAction := aeaRaise;
 end;
 
 procedure TAdminServer.SendToAll(Message: string);
 var
-  i: Integer;
+  Connection: TAdminServerConnectionThread;
 begin
   try
     try
-      with FAdmins.LockList do
-        for i := 0 to Count - 1 do
-          with TIdContext(Items[i]).Connection do
-            if Connected then
-            begin
-              IOHandler.WriteLn(Message, IndyTextEncoding_ASCII(), IndyTextEncoding_ASCII());
-              Inc(FBytesSent, Length(Message));
-            end;
+      for Connection in FAdmins.LockList do
+        if Connection.FAuthed then
+          Connection.WriteString(Message);
     finally
       FAdmins.UnlockList
     end;
@@ -148,69 +261,46 @@ end;
 
 procedure TAdminServer.SendToIP(IP: string; Message: string);
 var
-  i: Integer;
+  Connection: TAdminServerConnectionThread;
 begin
   try
     try
-      with FAdmins.LockList do
-        for i := 0 to Count - 1 do
-          with TIdContext(Items[i]).Connection do
-            if Connected and
-              (TIdIOHandlerSocket(IOHandler).Binding.PeerIP = IP) then
-            begin
-              IOHandler.WriteLn(Message, IndyTextEncoding_ASCII(), IndyTextEncoding_ASCII());
-              Inc(FBytesSent, Length(Message));
-            end;
+      for Connection in FAdmins.LockList do
+        begin
+          if Connection.FAuthed and (Connection.FData.RemoteAddress.GetIPString = IP) then
+            Connection.WriteString(Message);
+        end;
     finally
       FAdmins.UnlockList
     end;
   except
   end;
 end;
-{$PUSH}
+
 {$WARN 5027 OFF}
 procedure TAdminServer.ProcessCommands();
 var
   Msg: ^TAdminMessage;
-  IOHandlerSocket: TIdIOHandlerSocket;
   RefreshMsgX: TMsg_RefreshX;
-  i, j: Integer;
-  n, c: Integer;
-  Ip, Ips: string;
-  s: array[1..4] of string;
+  i: Integer;
+  Ip: string;
+  MessageQueue: TList;
 begin
-  FQueueLock.Acquire;
-  if FMessageQueue.Count = 0 then begin
-    FQueueLock.Release;
-    Exit;
-  end;
-  Msg := FMessageQueue.Pop;
-  FQueueLock.Release;
-  try
-    with FAdmins.LockList do
-      for i := 0 to Count - 1 do
-        with TIdContext(Items[i]).Connection do
-          if Connected and
-            (TIdIOHandlerSocket(IOHandler).Binding.PeerIP = Msg^.IP) and
-            (TIdIOHandlerSocket(IOHandler).Binding.PeerPort = Msg^.Port) then
-          begin
-            IOHandlerSocket := TIdIOHandlerSocket(IOHandler);
-          end;
-  finally
-    FAdmins.UnlockList
-  end;
-  if IOHandlerSocket = nil then
+  MessageQueue := FMessageQueue.LockList;
+  Msg := MessageQueue.First;
+
+  if Msg = nil then
   begin
-    Freemem(Msg);
+    FMessageQueue.UnlockList;
     Exit;
   end;
+
   if Msg^.Msg = 'SHUTDOWN' then
   begin
-    MainConsole.Console('SHUTDOWN (' + Msg^.IP + ').',
+    MainConsole.Console('[RCON] SHUTDOWN (' + Msg^.Socket.RemoteAddress.GetIPString + ').',
       GAME_MESSAGE_COLOR);
     ProgReady := False;
     Freemem(Msg);
-    Exit;
   end
   else
     if Msg^.Msg = 'REFRESHX' then
@@ -237,29 +327,7 @@ begin
             0, Sprite[SortedPlayers[i].PlayerNum].Skeleton.Pos[1].Y);
 
           if Sprite[SortedPlayers[i].PlayerNum].Player.ControlMethod = HUMAN then
-          begin
-            n := 1;
-            c := 0;
-            Ips := Sprite[SortedPlayers[i].PlayerNum].Player.IP;
-            for j := 1 to Length(Ips) do
-            begin
-              Inc(c);
-              if Ips[j] = '.' then
-              begin
-                c := 0;
-                Inc(n);
-              end else
-              begin
-                SetLength(s[n], c);
-                s[n][c] := Ips[j];
-              end;
-            end;
-
-            for j := 1 to 4 do
-              RefreshMsgX.IP[i][j] := StrToInt(s[j]);
-          end else
-            for j := 1 to 4 do
-              RefreshMsgX.IP[i][j] := 0;
+            in_addr(RefreshMsgX.IP[i]) := StrToNetAddr(Sprite[SortedPlayers[i].PlayerNum].Player.IP);
         end
         else
           RefreshMsgX.Team[i] := 255;
@@ -292,24 +360,23 @@ begin
       RefreshMsgX.Passworded := iif(sv_password.Value <> '', 1, 0);
       RefreshMsgX.NextMap := CheckNextMap;
 
-      IOHandlerSocket.Write(RawToBytes(RefreshMsgX, SizeOf(RefreshMsgX)));
+      Msg^.Socket.Write(RefreshMsgX, SizeOf(RefreshMsgX));
       Freemem(Msg);
-      Exit;
     end else
     begin
-      Ip := Msg^.IP;
+      Ip := Msg^.Socket.RemoteAddress.GetIPString;
       MainConsole.Console(Msg^.Msg + ' (' + Ip + ')', GAME_MESSAGE_COLOR);
       {$IFDEF SCRIPT}
       ScrptDispatcher.OnAdminMessage(
-        Msg^.IP,
-        Msg^.Port,
+        Ip,
+        Msg^.Socket.RemoteAddress.GetPort,
         Msg^.Msg);
       {$ENDIF}
-      if (Msg^.Msg[1] = '/') then
+      if Msg^.Msg.StartsWith('/') then
         {$IFDEF SCRIPT}
         if not ScrptDispatcher.OnConsoleCommand(
-          Msg^.IP,
-          Msg^.Port,
+          Ip,
+          Msg^.Socket.RemoteAddress.GetPort,
           Msg^.Msg) then
         {$ENDIF}
         begin
@@ -318,237 +385,126 @@ begin
         end;
       Freemem(Msg);
     end;
+  MessageQueue.Remove(Msg);
+  FMessageQueue.UnlockList;
 end;
 {$POP}
 
-function FindAdminFloodID(SrcIP: string): Cardinal;
-var
-  i: Integer;
-const
-  FLOOD_ID_NOT_FOUND = 0;
+constructor TAdminServerConnectionThread.Create(Data: TSocketStream; AdminServer: TAdminServer; MessageQueue: TThreadList; AdminsList: TThreadList; Password: String);
 begin
-  Result := FLOOD_ID_NOT_FOUND;
-  for i := 1 to MAX_ADMIN_FLOOD_IPS do
-    if AdminFloodIP[i] = SrcIP then
-    begin
-      Result := i;
-      Break;
-    end;
+  FData := data;
+  FAdminServer := AdminServer;
+  FMessageQueue := MessageQueue;
+  FPassword := Password;
+  FAdminsList := AdminsList;
+
+  // Timeout after 5 seconds of inactivity during login phrase
+  Data.IOTimeout := 5000;
+
+  inherited Create(False);
 end;
 
-function AddAdminFloodIP(SrcIP: string): Cardinal;
-var
-  i: Cardinal;
-const
-  FLOOD_ID_NOT_FOUND = 0;
+procedure TAdminServerConnectionThread.ShutdownSocket();
 begin
-  Result := FLOOD_ID_NOT_FOUND;
-  for i := 1 to MAX_ADMIN_FLOOD_IPS do
-    if AdminFloodIP[i] = '' then
-    begin
-      AdminFloodIP[i] := SrcIP;
-      Result := i;
-      Break;
-    end;
+  fpshutdown(FData.Handle, SHUT_RDWR);
 end;
 
-function UpdateAntiAdminFlood(IP: string): Cardinal;
+procedure TAdminServerConnectionThread.WriteString(AStr: String);
 var
-  i: Cardinal;
+  Message: String = '';
 begin
-  // update last requested admin ip array
-  LastAdminIPs[AdminIPCounter] := IP;
-  AdminIPCounter := (AdminIPCounter + 1) mod MAX_LAST_ADMIN_IPS + 1;
-
-  // check for flood
-  for i := 0 to MAX_LAST_ADMIN_IPS do
-  begin
-    if LastAdminIPs[i] <> LastAdminIPs[(i + 1) mod
-      MAX_LAST_ADMIN_IPS + 1] then
-      Break;
-  end;
-
-  // if is flood then ban
-  if i = MAX_LAST_ADMIN_IPS + 1 then
-  begin
-    i := AddAdminFloodIP(IP);
-    if i = 0 then
-      WriteLn('failed adding ip to banlst');
-    Result := 1;
-  end else
-  begin
-    Result := 0;
-  end;
+  Message := AStr + #13#10;
+  if FData.Write(Message[1], Length(Message)) < 0 then
+    Debug('[RCON] Error during sending message: ' + IntToStr(FData.LastError));
 end;
 
-procedure TAdminServer.handleConnect(AThread: TIdContext);
+procedure TAdminServerConnectionThread.Execute;
+type
+  TBuffer = array[0..1023] of Char;
 var
-  Msg: string;
-  Ip: string;
-begin
-  with AThread.Connection do
-  try
-    Ip := TIdIOHandlerSocket(IOHandler).Binding.PeerIP;
-
-    // if Admin IP is banned then drop
-    if FindAdminFloodID(Ip) <> 0 then
-    begin
-      AThread.Connection.Disconnect;
-      FAdmins.Remove(AThread);
-      Exit;
-    end;
-
-    if UpdateAntiAdminFlood(Ip) > 0 then
-      Exit;
-
-    IOHandler.WriteLn('Soldat Admin Connection Established.');
-
-    Msg := IOHandler.ReadLn(LF, 5000, -1);
-
-    Inc(FBytesRecieved, Length(Msg));
-    if Msg <> FPassword then
-    begin
-      if Msg = '' then
-        IOHandler.WriteLn('Password request timed out.')
-      else
-        IOHandler.WriteLn('Invalid password.');
-
-      MainConsole.Console('Admin failed to connect (' + Ip + ').',
-        GAME_MESSAGE_COLOR);
-      Disconnect;
-    end else
-    begin
-      MainConsole.Console('Admin connected (' + Ip + ').', GAME_MESSAGE_COLOR);
-      FAdmins.Add(AThread);
-      IOHandler.WriteLn('Welcome, you are in command of the server now.');
-      IOHandler.WriteLn('List of commands available in the Soldat game Manual.');
-      IOHandler.WriteLn('Server Version: ' + DEDVERSION);
-
-      {$IFDEF SCRIPT}
-      ScrptDispatcher.OnAdminConnect(
-        TIdIOHandlerSocket(IOHandler).Binding.PeerIP,
-        TIdIOHandlerSocket(IOHandler).Binding.PeerPort);
-      {$ENDIF}
-    end;
-  except
-    on e: Exception do
-    begin
-      try
-        IOHandler.WriteLn(e.Message);
-      except
-      end;
-      Disconnect;
-    end;
-  end;
-end;
-
-procedure TAdminServer.handleDisconnect(AThread: TIdContext);
-var
-  Ip: string;
-begin
-  // TODO: test if still cause access violations
-  if (AThread = nil) then
-  begin
-    FAdmins.Remove(AThread);
-    Exit;
-  end
-  else if(AThread.Connection = nil) or (AThread.Connection.IOHandler = nil) then
-  begin
-    AThread.Connection.Disconnect;
-    FAdmins.Remove(AThread);
-    Exit;
-  end;
-
-  try
-    Ip := TIdIOHandlerSocket(AThread.Connection.IOHandler).Binding.PeerIP;
-
-    // if Admin IP is banned then drop
-    if FindAdminFloodID(Ip) <> 0 then
-    begin
-      AThread.Connection.Disconnect;
-      FAdmins.Remove(AThread);
-      Exit;
-    end;
-
-    if UpdateAntiAdminFlood(Ip) > 0 then
-      Exit;
-  except
-  end;
-  try
-    AThread.Connection.Disconnect;
-  except
-  end;
-  try
-    FAdmins.Remove(AThread);
-  except
-  end;
-  try
-    MainConsole.Console('Admin disconnected (' + Ip + ').', GAME_MESSAGE_COLOR);
-  except
-  end;
-  {$IFDEF SCRIPT}
-  ScrptDispatcher.OnAdminDisconnect(
-    TIdIOHandlerSocket(AThread.Connection.IOHandler).Binding.PeerIP,
-    TIdIOHandlerSocket(AThread.Connection.IOHandler).Binding.PeerPort);
-  {$ENDIF}
-end;
-
-procedure TAdminServer.handleExecute(AThread: TIdContext);
-var
-  Msg, IP: string;
-  Port: TIdPort;
   MsgRecord: ^TAdminMessage;
+  Message: String = '';
+  i: Integer;
+  InputBuffer: TBuffer;
+  InputStr: String = '';
 begin
-  with AThread.Connection do
-  try
-    IP := TIdIOHandlerSocket(IOHandler).Binding.PeerIP;
-    Port := TIdIOHandlerSocket(IOHandler).Binding.PeerPort;
-    // if Admin IP is banned then drop
-    if FindAdminFloodID(IP) <> 0 then
-    begin
-      AThread.Connection.Disconnect;
-      FAdmins.Remove(AThread);
-      Exit;
-    end;
+  InputBuffer := Default(TBuffer);
 
-    try
-      if FAdmins.LockList.IndexOf(AThread) = -1 then
-        Exit;
-    finally
-      FAdmins.UnlockList;
-    end;
+  if not Terminated then
+    WriteString('Soldat Admin Connection Established.');
 
-    Msg := IOHandler.ReadLn(LF, 1000, -1, IndyTextEncoding_ASCII(), IndyTextEncoding_ASCII());
-    if Msg <> '' then
+  while not Terminated do
+  begin
+    i := FData.Read(InputBuffer[0], 1024);
+    if i > 0 then
     begin
-      Inc(FBytesRecieved, Length(msg));
-      New(MsgRecord);
-      MsgRecord^.Msg := Msg;
-      MsgRecord^.IP := IP;
-      MsgRecord^.Port := Port;
+      SetLength(Message, i);
+      Move(InputBuffer[0], Message[1], i);
+      InputStr := InputStr + Message.Replace(#13#10, #10, [rfReplaceAll]);
+      i := Pos(#10, InputStr);
+      while i > 0 do
+      begin
+        Message := Copy(InputStr, 1, i - 1);
+        Delete(InputStr, 1, i);
+        if FAuthed then
+        begin
+          if not Message.IsEmpty then
+          begin
+            New(MsgRecord);
+            MsgRecord^.Msg := Message;
+            MsgRecord^.Socket := FData;
+            FMessageQueue.Add(MsgRecord);
+          end;
+        end else
+        begin
+          if Message = FPassword then
+          begin
+            FAuthed := True;
+            FData.IOTimeout := 0;
 
-      FQueueLock.Acquire;
-      FMessageQueue.Push(MsgRecord);
-      FQueueLock.Release;
-    end;
-  except
-    on e: Exception do
-    begin
-      try
-        IOHandler.WriteLn(e.Message);
-      except
+            MainConsole.Console('[RCON] Admin connected (' + FData.RemoteAddress.GetIPString + ').', GAME_MESSAGE_COLOR);
+            WriteString('Welcome, you are in command of the server now.');
+            WriteString('List of commands available in the Soldat game Manual.');
+            WriteString('Server Version: ' + DEDVERSION);
+
+            {$IFDEF SCRIPT}
+            ScrptDispatcher.OnAdminConnect(
+              FData.RemoteAddress.GetIPString,
+              FData.RemoteAddress.GetPort);
+            {$ENDIF}
+          end else
+          begin
+            WriteString('Invalid password.');
+            WriteLn('[RCON] Invalid password from: ' + FData.RemoteAddress.GetIPString);
+            Terminate;
+          end;
+        end;
+        i := Pos(#10, InputStr);
+        end;
+      end
+    else if i <= 0 then
+      if FData.LastError <> 35 then
+      begin
+        Debug('[RCON] Socket read failed, errno: ' + IntToStr(FData.LastError) + ' for ' + FData.RemoteAddress.GetIPString);
+        Terminate;
       end;
-    end;
   end;
+  if FAuthed then
+    MainConsole.Console('[RCON] Admin disconnected (' + FData.RemoteAddress.GetIPString + ').', GAME_MESSAGE_COLOR);
+end;
+
+destructor TAdminServerConnectionThread.Destroy;
+begin
+  Debug('[RCON] Closing connection thread');
+  FAdminsList.Remove(Self);
+  FData.Free;
+  inherited Destroy;
 end;
 
 procedure BroadcastMsg(Text: string);
 begin
   Trace('BroadcastMsg');
-  if Assigned(sv_adminpassword) then
-    if sv_adminpassword.Value = '' then
-      Exit;
-  if (AdminServer = nil) then
+  if AdminServer = nil then
     Exit;
 
   AdminServer.SendToAll(Text);
@@ -556,9 +512,7 @@ end;
 
 procedure SendMessageToAdmin(ToIP, Text: string);
 begin
-  if sv_adminpassword.Value = '' then
-    Exit;
-  if (AdminServer = nil) then
+  if AdminServer = nil then
     Exit;
 
   AdminServer.SendToIP(ToIP, Text);
