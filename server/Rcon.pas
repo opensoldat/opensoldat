@@ -490,7 +490,14 @@ begin
       end;
   end;
   if FAuthed then
+  begin
     MainConsole.Console('[RCON] Admin disconnected (' + FData.RemoteAddress.GetIPString + ').', GAME_MESSAGE_COLOR);
+    {$IFDEF SCRIPT}
+    ScrptDispatcher.OnAdminDisconnect(
+      FData.RemoteAddress.GetIPString,
+      FData.RemoteAddress.GetPort);
+    {$ENDIF}
+  end;
 end;
 
 destructor TAdminServerConnectionThread.Destroy;
