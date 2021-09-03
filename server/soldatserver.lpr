@@ -10,6 +10,7 @@ program soldatserver;
 
 {$IFDEF DARWIN}
 {$linklib physfs}
+{$linklib GameNetworkingSockets}
 {$ENDIF}
 
 uses

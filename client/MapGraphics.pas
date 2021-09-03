@@ -181,6 +181,13 @@ type
     Level: Integer;
     TextureIndex: Integer;
   end;
+  TEdgeSprites = array of TGfxSprite;
+  TEdges = array of TEdge;
+  Tvb = array of TGfxVertex;
+  Tib = array of Word;
+  TSceneryCounters = array of Integer;
+  TSceneryMaxSize = array of TVector2;
+  TScenerySheetIndex = array of Integer;
 var
   mg: ^TMapGraphics;
   i, j, k, n, d, Level: Integer;
@@ -190,19 +197,19 @@ var
   Sheet: TGfxSpritesheet;
   Sprite: PGfxSprite;
   Image, EdgeImage: TGfxImage;
-  EdgeSprites: array of TGfxSprite;
+  EdgeSprites: TEdgeSprites;
   Color: TGfxColor;
   Prop: PMapProp;
   Poly: PMapPolygon;
   EdgeCount: Integer;
   Edge: TEdge;
-  Edges: array of TEdge;
+  Edges: TEdges;
   Cmd: PGfxDrawCommand;
   AnimCount: array[0..2] of Integer = (0,0,0);
   PropCount: array[0..2] of Integer = (0,0,0);
   PropList: array[0..2] of array of PMapProp;
-  vb: array of TGfxVertex;
-  ib: array of Word;
+  vb: Tvb;
+  ib: Tib;
   u, v, r, sx, w, h, Scale: Single;
   a, b: TVector2;
   Bounds: TGfxRect;
@@ -211,9 +218,9 @@ var
   Str: string;
   PrevIsAnim: Boolean;
   SceneryCount: Integer;
-  SceneryCounters: array of Integer;
-  SceneryMaxSize: array of TVector2;
-  ScenerySheetIndex: array of Integer;
+  SceneryCounters: TSceneryCounters;
+  SceneryMaxSize: TSceneryMaxSize;
+  ScenerySheetIndex: TScenerySheetIndex;
 begin
   mg := @MapGfx;
   DestroyMapGraphics();
@@ -229,15 +236,15 @@ begin
   Sheet := Default(TGfxSpritesheet);
   Sprite := Default(PGfxSprite);
   Cmd := Default(PGfxDrawCommand);
-  SetLength(Edges, 0);
-  SetLength(ScenerySheetIndex, 0);
-  SetLength(SceneryMaxSize, 0);
-  SetLength(SceneryCounters, 0);
-
+  Edges := Default(TEdges);
+  ScenerySheetIndex := Default(TSceneryCounters);
+  SceneryMaxSize := Default(TSceneryMaxSize);
+  SceneryCounters := Default(TScenerySheetIndex);
   // load map textures
 
   SetLength(mg.Textures, Length(MapFile.Textures));
   SetLength(mg.EdgeTextures, Length(MapFile.Textures));
+  EdgeSprites := Default(TEdgeSprites);
   SetLength(EdgeSprites, Length(MapFile.Textures));
 
   for i := 0 to High(MapFile.Textures) do
@@ -479,7 +486,8 @@ begin
   -----------------------------------------------------------------------------}
 
   // initialize vertex/index buffers + animations list
-
+  vb := Default(Tvb);
+  ib := Default(Tib);
   SetLength(vb, 4 * PropTotal + 4 * EdgeCount + 6 + 3 * Length(MapFile.Polygons));
   SetLength(ib, 6 * PropTotal + 6 * EdgeCount);
   SetLength(mg.Animations, AnimTotal);

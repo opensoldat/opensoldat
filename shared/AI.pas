@@ -240,8 +240,8 @@ begin
     // move when other player camps
     if not Sprite[SNum].Brain.GoThing then
       if (Sprite[Brain.TargetNum].Brain.CurrentWaypoint > 0) and
-        (BotPath.Waypoint[Sprite[Brain.TargetNum].Brain.CurrentWaypoint].C1 >
-        0) then
+        (BotPath.Waypoint[Sprite[Brain.TargetNum].Brain.CurrentWaypoint].Action <>
+        TWaypointAction.None) then
       begin
         Control.Right := False;
         Control.Left  := False;
@@ -374,7 +374,7 @@ begin
       if (Weapon.AmmoCount = 0) or (Weapon.FireIntervalCount > 125) then
         GR := GR div 2;
       if  (Brain.CurrentWaypoint > 0) and
-          (BotPath.Waypoint[Brain.CurrentWaypoint].C1 > 0) then
+          (BotPath.Waypoint[Brain.CurrentWaypoint].Action <> TWaypointAction.None) then
         GR := GR div 2;
       if bots_difficulty.Value < 100 then
         GR := GR div 2;
@@ -760,7 +760,7 @@ begin
             SpriteC.Control.Right := BotPath.Waypoint[SpriteC.Brain.NextWaypoint].Right;
             SpriteC.Control.Up := BotPath.Waypoint[SpriteC.Brain.NextWaypoint].Up;
             SpriteC.Control.Down := BotPath.Waypoint[SpriteC.Brain.NextWaypoint].Down;
-            SpriteC.Control.Jetpack := BotPath.Waypoint[SpriteC.Brain.NextWaypoint].m2;
+            SpriteC.Control.Jetpack := BotPath.Waypoint[SpriteC.Brain.NextWaypoint].Jetpack;
 
             // Special waypoint
             if ((sv_gamemode.Value = GAMESTYLE_INF) and
@@ -773,16 +773,16 @@ begin
                 (sv_gamemode.Value <> GAMESTYLE_CTF) and
                 (sv_gamemode.Value <> GAMESTYLE_HTF)) then
               // not infiltration escape path
-              if (BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 1) or
-                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 2) and
+              if (BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.StopAndCamp) or
+                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.Wait1Second) and
                   (SpriteC.Brain.OnePlaceCount < 60)) or
-                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 3) and
+                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.Wait5Seconds) and
                   (SpriteC.Brain.OnePlaceCount < 300)) or
-                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 4) and
+                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.Wait10Seconds) and
                   (SpriteC.Brain.OnePlaceCount < 600)) or
-                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 5) and
+                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.Wait15Seconds) and
                   (SpriteC.Brain.OnePlaceCount < 900)) or
-                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 6) and
+                  ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.Wait20Seconds) and
                   (SpriteC.Brain.OnePlaceCount < 1200)) then
               begin
                 SpriteC.Control.Left := False;
@@ -816,7 +816,7 @@ begin
 
             // check if standing in place because stuck or sth
             if SpriteC.Brain.CurrentWaypoint > 0 then
-              if BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 0 then
+              if BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.None then
               begin
                 if (SpriteC.Control.Left or SpriteC.Control.Right) and
                     not SpriteC.Control.Down then
@@ -831,7 +831,7 @@ begin
               end else
                 Inc(SpriteC.Brain.OnePlaceCount);
 
-            if BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 0 then
+            if BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.None then
               if SpriteC.Brain.OnePlaceCount > 90 then
               begin
                 if SpriteC.Control.Left and SpriteC.Control.Right then
@@ -865,7 +865,7 @@ begin
     else
     begin
       if (SpriteC.Brain.CurrentWaypoint <> 0) and
-          (BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 0) then
+          (BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.None) then
         SpriteC.Brain.CurrentWaypoint := 0;
 
       SimpleDecision(SpriteC.Num);
@@ -877,7 +877,7 @@ begin
           ((sv_gamemode.Value <> GAMESTYLE_INF) and (sv_gamemode.Value <> GAMESTYLE_CTF)))
            then
         // not infiltration escape path
-        if BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].C1 = 1 then
+        if BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.StopAndCamp then
         begin
           SpriteC.Control.Left := False;
           SpriteC.Control.Right := False;

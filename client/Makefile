@@ -39,6 +39,9 @@ else
     endif
   endif
     UNAME_P := $(shell uname -p)
+    ifeq ($(UNAME_P),unknown)
+      ARCH = $(shell uname -m)
+    endif
     ifeq ($(UNAME_P),x86_64)
       ARCH = x86_64
     endif

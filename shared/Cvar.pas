@@ -776,6 +776,7 @@ begin
   ui_killconsole := TBooleanCvar.Add('ui_killconsole', 'Enables kill console', True, True, [CVAR_CLIENT], nil);
   ui_killconsole_length := TIntegerCvar.Add('ui_killconsole_length', 'Sets length of kill console', 15, 15, [CVAR_CLIENT], nil, 0, 50);
   ui_hidespectators := TBooleanCvar.Add('ui_hidespectators', 'Hides spectators from the fragsmenu', False, False, [CVAR_CLIENT], nil);
+  ui_sniperline := TBooleanCvar.Add('ui_sniperline', 'Draws a line between the player and the cursor', False, False, [CVAR_CLIENT], nil);
 
   // Client cvars
   cl_sensitivity := TSingleCvar.Add('cl_sensitivity', 'Mouse sensitivity', 1.0, 1.0, [CVAR_CLIENT], nil, 0.0, 1.0);
@@ -801,7 +802,7 @@ begin
   cl_player_skin := TColorCvar.Add('cl_player_skin', 'Player skin color', $00E6B478, $00E6B478, [CVAR_CLIENT], nil);
 
   cl_player_hairstyle := TIntegerCvar.Add('cl_player_hairstyle', 'Player hair style', 0, 0, [CVAR_CLIENT], nil, 0, 4);
-  cl_player_headstyle := TIntegerCvar.Add('cl_player_headstyle', 'Player head style', 0, 0, [CVAR_CLIENT], nil, 0, 4);
+  cl_player_headstyle := TIntegerCvar.Add('cl_player_headstyle', 'Player head style', 0, 0, [CVAR_CLIENT], nil, 0, 2);
   cl_player_chainstyle := TIntegerCvar.Add('cl_player_chainstyle', 'Player chain style', 0, 0, [CVAR_CLIENT], nil, 0, 2);
   cl_player_secwep := TIntegerCvar.Add('cl_player_secwep', 'Player secondary weapon', 1, 0, [CVAR_CLIENT], nil, 0, 3);
   cl_player_wep := TIntegerCvar.Add('cl_player_wep', 'Player primary weapon', 1, 0, [CVAR_CLIENT], @cl_player_wepChange, 1, 10);
@@ -864,12 +865,12 @@ begin
 
   sv_ctf_limit := TIntegerCvar.Add('sv_ctf_limit', 'Capture the Flag point limit', 10, 10, [CVAR_SERVER], @killlimitChange, 0, 9999);
 
-  sv_bonus_frequency := TIntegerCvar.Add('sv_bonus_frequency', 'The interval of bonuses occurring ingame.', 0, 0, [CVAR_CLIENT], nil, 0, 1);
-  sv_bonus_flamer := TBooleanCvar.Add('sv_bonus_flamer', 'Flamer bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_predator := TBooleanCvar.Add('sv_bonus_predator', 'Predator bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_berserker := TBooleanCvar.Add('sv_bonus_berserker', 'Berserker bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_vest := TBooleanCvar.Add('sv_bonus_vest', 'Bulletproof Vest bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_cluster := TBooleanCvar.Add('sv_bonus_cluster', 'Cluster Grenades bonus availability', False, False, [CVAR_CLIENT], nil);
+  sv_bonus_frequency := TIntegerCvar.Add('sv_bonus_frequency', 'The interval of bonuses occurring ingame.', 0, 0, [CVAR_SERVER], nil, 0, 5);
+  sv_bonus_flamer := TBooleanCvar.Add('sv_bonus_flamer', 'Flamer bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_predator := TBooleanCvar.Add('sv_bonus_predator', 'Predator bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_berserker := TBooleanCvar.Add('sv_bonus_berserker', 'Berserker bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_vest := TBooleanCvar.Add('sv_bonus_vest', 'Bulletproof Vest bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_cluster := TBooleanCvar.Add('sv_bonus_cluster', 'Cluster Grenades bonus availability', False, False, [CVAR_SERVER], nil);
 
   sv_stationaryguns := TBooleanCvar.Add('sv_stationaryguns', 'Enables/disables Stationary Guns ingame.', False, True, [CVAR_SERVER], nil);
 
@@ -943,10 +944,14 @@ begin
   bots_chat := TBooleanCvar.Add('bots_chat', 'Enables/disables bots chatting', True, True, [CVAR_SERVER], nil);
 
   // ScriptCore cvars
-  sc_enable := TBooleanCvar.Add('sc_enable', 'Enables/Disables scripting', True, True, [CVAR_SERVER], nil);
-  sc_onscriptcrash := TStringCvar.Add('sc_onscriptcrash', 'What action to take when a script crashes. Available parameters are recompile, shutdown, ignore and disable', 'ignore', 'ignore', [CVAR_SERVER], nil, 0, 10);
-  sc_maxscripts := TIntegerCvar.Add('sc_maxscripts', 'Set the maximum number of scripts which can be loaded by this server.', 0, 255, [CVAR_SERVER], nil, 0, 255);
-  sc_safemode := TBooleanCvar.Add('sc_safemode', 'Enables/Disables Safe Mode for Scripts', False, False, [CVAR_SERVER], nil);
+  sc_enable := TBooleanCvar.Add('sc_enable', 'Enables/Disables scripting', True, True, [CVAR_SERVER, CVAR_INITONLY], nil);
+  sc_onscriptcrash := TStringCvar.Add('sc_onscriptcrash', 'What action to take when a script crashes. Available parameters are recompile, shutdown, ignore and disable', 'ignore', 'ignore', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 10);
+  sc_maxscripts := TIntegerCvar.Add('sc_maxscripts', 'Set the maximum number of scripts which can be loaded by this server.', 0, 255, [CVAR_SERVER, CVAR_INITONLY], nil, 0, 255);
+  sc_safemode := TBooleanCvar.Add('sc_safemode', 'Enables/Disables Safe Mode for Scripts', False, False, [CVAR_SERVER, CVAR_INITONLY], nil);
+  sc_allowdlls := TBooleanCvar.Add('sc_allowdlls', 'Enables/Disables loading external dlls', False, False, [CVAR_SERVER, CVAR_INITONLY], nil);
+  sc_sandboxed := TIntegerCvar.Add('sc_sandboxed', 'ScriptCore global sandbox level ', 2, 2, [CVAR_SERVER, CVAR_INITONLY], nil, 0, 2);
+  sc_defines := TStringCvar.Add('sc_defines', 'ScriptCore global defines (comma separated)', '', '', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 255);
+  sc_searchpaths := TStringCvar.Add('sc_searchpaths', 'ScriptCore global search paths (comma separated)', '', '', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 255);
 
   // Fileserver cvars
   fileserver_enable := TBooleanCvar.Add('fileserver_enable', 'Enables/Disables built-in fileserver', True, True, [CVAR_SERVER, CVAR_INITONLY], nil);
