@@ -533,7 +533,7 @@ begin
   WriteLn('----------------------------------------------------------------');
   WriteLn('');
   WriteLn('   Need help running your server?');
-  WriteLn('   Discord: https://discord.gg/soldat');
+  WriteLn('   Discord: https://discord.soldat.pl');
   WriteLn('');
   WriteLn('   ---> https://forums.soldat.pl/');
   WriteLn('');
