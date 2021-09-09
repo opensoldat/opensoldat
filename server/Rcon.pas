@@ -7,6 +7,7 @@ uses
 
 const
   REFRESHX_HEADER_CHARS = 10;
+  RCON_AUTH_TIMEOUT = 5000; // Authentication timeout (ms)
 
 type
   TAdminServerConnectionThread = class;
@@ -49,6 +50,7 @@ type
     FMessageQueue: TThreadList;
     FAdminsList: TThreadList;
     FAuthed: Boolean;
+    FConnectTime: QWord;
   protected
     procedure Execute; override;
   public
@@ -397,9 +399,10 @@ begin
   FMessageQueue := MessageQueue;
   FPassword := Password;
   FAdminsList := AdminsList;
+  FConnectTime := GetTickCount64;
 
-  // Timeout after 5 seconds of inactivity during login phrase
-  Data.IOTimeout := 5000;
+  // Sets inactivity timeout during authentication phrase
+  Data.IOTimeout := RCON_AUTH_TIMEOUT;
 
   inherited Create(False);
 end;
@@ -435,6 +438,15 @@ begin
 
   while not Terminated do
   begin
+    if not FAuthed then
+      if (GetTickCount64 - FConnectTime) >= RCON_AUTH_TIMEOUT then
+      begin
+        Debug('[RCON] Password request timed out (' + FData.RemoteAddress.GetIPString + ').');
+        WriteString('Password request timed out.');
+        Terminate;
+        Break;
+      end;
+
     i := FData.Read(InputBuffer[0], 1024);
     if i > 0 then
     begin
