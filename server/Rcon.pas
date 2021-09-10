@@ -218,7 +218,7 @@ begin
     Exit;
   end;
 
-  FBucketTokens -= 1;
+  Dec(FBucketTokens, 1);
 
   if FAdmins.LockList.Count < FMaxConnections then
     Allow := True
