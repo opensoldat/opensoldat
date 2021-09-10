@@ -154,29 +154,34 @@ destructor TAdminServer.Destroy;
 var
   Connection: TAdminServerConnectionThread;
 begin
-  try
-    try
-      for Connection in FAdmins.LockList do
-        begin
-          FAdmins.UnlockList;
-          Connection.ShutdownSocket;
-          Connection.Terminate;
-          Connection.WaitFor;
-          FAdmins.LockList;
-        end;
-    finally
-      FAdmins.UnlockList
-    end;
-  except
-  end;
-
-  FAdmins.Free;
-  FMessageQueue.Free;
-
   FServer.AcceptIdleTimeOut := 0;
   FPShutdown(FServer.Socket, SHUT_RDWR);
   CloseSocket(FServer.Socket);
   FServer.StopAccepting(True);
+
+  try
+    try
+      for Connection in FAdmins.LockList do
+        begin
+          Connection.ShutdownSocket;
+          Connection.Terminate;
+        end;
+    finally
+      FAdmins.UnlockList;
+    end;
+  except
+  end;
+
+  while True do
+  begin
+    Sleep(25);
+    if FAdmins.LockList.Count = 0 then
+      Break;
+    FAdmins.UnlockList;
+  end;
+
+  FAdmins.Free;
+  FMessageQueue.Free;
 
   inherited Destroy;
 end;
