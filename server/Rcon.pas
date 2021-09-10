@@ -479,7 +479,9 @@ begin
             FAuthed := True;
             FData.IOTimeout := 0;
 
-            MainConsole.Console('[RCON] Admin connected (' + FData.RemoteAddress.GetIPString + ').', GAME_MESSAGE_COLOR);
+            // TODO: Restore `TConsole.Console` call after it's made thread safe.
+            //MainConsole.Console('[RCON] Admin connected (' + FData.RemoteAddress.GetIPString + ').', GAME_MESSAGE_COLOR);
+            Debug('[RCON] Admin connected (' + FData.RemoteAddress.GetIPString + ').');
             WriteString('Welcome, you are in command of the server now.');
             WriteString('List of commands available in the Soldat game Manual.');
             WriteString('Server Version: ' + DEDVERSION);
@@ -508,7 +510,9 @@ begin
   end;
   if FAuthed then
   begin
-    MainConsole.Console('[RCON] Admin disconnected (' + FData.RemoteAddress.GetIPString + ').', GAME_MESSAGE_COLOR);
+    // TODO: Restore `TConsole.Console` call after it's made thread safe.
+    //MainConsole.Console('[RCON] Admin disconnected (' + FData.RemoteAddress.GetIPString + ').', GAME_MESSAGE_COLOR);
+    Debug('[RCON] Admin disconnected (' + FData.RemoteAddress.GetIPString + ').');
     {$IFDEF SCRIPT}
     ScrptDispatcher.OnAdminDisconnect(
       FData.RemoteAddress.GetIPString,
