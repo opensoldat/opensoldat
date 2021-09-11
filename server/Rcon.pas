@@ -406,7 +406,7 @@ begin
   FAdminsList := AdminsList;
   FConnectTime := GetTickCount64;
 
-  // Sets inactivity timeout during authentication phrase
+  // Sets inactivity timeout during authentication phase
   Data.IOTimeout := RCON_AUTH_TIMEOUT;
 
   inherited Create(False);
