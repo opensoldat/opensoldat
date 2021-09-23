@@ -426,6 +426,15 @@ begin
     Debug('[RCON] Error during sending message: ' + IntToStr(FData.LastError));
 end;
 
+function IsRealSocketError(ErrCode: Integer): Boolean;
+begin
+  {$IFDEF UNIX}
+  Result := (ErrCode <> ESockEINTR) and (ErrCode <> ESysEAGAIN);
+  {$ELSE}
+  Result := ErrCode <> ESockEINTR;
+  {$ENDIF}
+end;
+
 procedure TAdminServerConnectionThread.Execute;
 type
   TBuffer = array[0..1023] of Char;
@@ -502,7 +511,7 @@ begin
         end;
       end
     else if i <= 0 then
-      if FData.LastError <> 35 then
+      if IsRealSocketError(FData.LastError) then
       begin
         Debug('[RCON] Socket read failed, errno: ' + IntToStr(FData.LastError) + ' for ' + FData.RemoteAddress.GetIPString);
         Terminate;
