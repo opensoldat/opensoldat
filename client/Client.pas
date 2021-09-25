@@ -8,9 +8,6 @@
 
 unit Client;
 
-{$I IdCompilerDefines.inc}
-{$DEFINE DEVELOPMENT}
-
 interface
 
 uses

@@ -60,10 +60,6 @@ begin
       for j := 1 to MAX_FLOODIPS do
         FloodNum[j] := 0;
 
-    // clear last admin connect flood list every 3 seconds
-    if MainTickCounter mod (SECOND * 3) = 0 then
-      for j := 0 to MAX_LAST_ADMIN_IPS do
-          LastAdminIPs[j] := '';
 
     // Warnings Cancel
     if MainTickCounter mod (MINUTE * 5) = 0 then
