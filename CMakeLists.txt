@@ -79,16 +79,10 @@ endif()
 add_flag_append(CMAKE_Pascal_FLAGS "-vm3123 -vm3124")
 
 # Define shared unit search paths
-add_flag_prepend(CMAKE_Pascal_FLAGS
-                 "-Fi${CMAKE_SOURCE_DIR}/3rdparty/Indy10/Lib/Core")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fi${CMAKE_SOURCE_DIR}/shared")
 
 add_flag_prepend(CMAKE_Pascal_FLAGS
                  "-Fu${CMAKE_SOURCE_DIR}/3rdparty/Pascal-SDL-2-Headers")
-add_flag_prepend(CMAKE_Pascal_FLAGS
-                 "-Fu${CMAKE_SOURCE_DIR}/3rdparty/Indy10/Lib/System")
-add_flag_prepend(CMAKE_Pascal_FLAGS
-                 "-Fu${CMAKE_SOURCE_DIR}/3rdparty/Indy10/Lib/Core")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared/libs")
 add_flag_prepend(CMAKE_Pascal_FLAGS
