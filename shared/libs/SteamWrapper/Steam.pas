@@ -13,7 +13,7 @@ unit Steam;
 interface
 
 uses
-  cmem, sysutils, ctypes, SteamTypes, GameNetworkingSockets;
+  sysutils, ctypes, SteamTypes, GameNetworkingSockets;
 
 const
   {$IFDEF WINDOWS}

@@ -10,8 +10,6 @@ unit Server;
 
 interface
 
-{$i IdCompilerDefines.inc}
-
 uses
   // system and delphi units
   SysUtils, Classes, Variants,
@@ -163,6 +161,8 @@ var
   net_allowdownload: TBooleanCvar;
   net_maxconnections: TIntegerCvar;
   net_maxadminconnections: TIntegerCvar;
+  net_rcon_limit: TIntegerCvar;
+  net_rcon_burst: TIntegerCvar;
 
   net_floodingpacketslan: TIntegerCvar;
   net_floodingpacketsinternet: TIntegerCvar;
@@ -187,6 +187,10 @@ var
   sc_onscriptcrash: TStringCvar;
   sc_maxscripts: TIntegerCvar;
   sc_safemode: TBooleanCvar;
+  sc_allowdlls: TBooleanCvar;
+  sc_sandboxed: TIntegerCvar;
+  sc_defines: TStringCvar;
+  sc_searchpaths: TStringCvar;
 
   fileserver_enable: TBooleanCvar;
   fileserver_port: TIntegerCvar;
@@ -257,10 +261,6 @@ var
   LastReqID: Byte = 0;
   DropIP: ShortString = '';
 
-  AdminFloodIP: array [1..MAX_ADMIN_FLOOD_IPS] of string;
-  LastAdminIPs: array [0..MAX_LAST_ADMIN_IPS] of string;
-  AdminIPCounter: Integer = 0;
-
   WaveRespawnTime, WaveRespawnCounter: Integer;
 
   WeaponsInGame: Integer;
@@ -270,7 +270,7 @@ var
   CheatTag: array[1..MAX_SPRITES] of Byte;
 
   {$IFDEF RCON}
-  AdminServer: TAdminServer;  // TIdTCPServer;
+  AdminServer: TAdminServer;
   {$ENDIF}
   // bullet shot stats
   ShotDistance: Single;
@@ -774,7 +774,7 @@ begin
 
   {$IFDEF RCON}
   if sv_adminpassword.Value <> '' then
-    AdminServer := TAdminServer.Create(sv_adminpassword.Value, 'Welcome')
+    AdminServer := TAdminServer.Create(sv_adminpassword.Value)
   else
   begin
     WriteLn('');
@@ -817,9 +817,6 @@ begin
       MainConsole.Console('Shutting down admin server...', GAME_MESSAGE_COLOR);
       if AdminServer <> nil then
       begin
-        AdminServer.Active := False;
-        AdminServer.Bindings.Clear;
-        sv_adminpassword.SetValue('');
         FreeAndNil(AdminServer);
       end;
     except
@@ -830,6 +827,10 @@ begin
   {$ENDIF}
 
   StopFileServer;
+
+  MapsList.Free;
+  RemoteIPs.Free;
+  AdminIPs.Free;
 
   {$IFDEF SCRIPT}
   ScrptDispatcher.Free;
@@ -1324,7 +1325,7 @@ function KickPlayer(num: Byte; Ban: Boolean; why: Integer; time: Integer;
   Reason: string = ''): Boolean;
 var
   i: Integer;
-  timestr: string;
+  TimeStr: AnsiString = '';
 begin
   Result := False;
   Debug('KickPlayer');

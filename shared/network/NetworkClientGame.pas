@@ -32,7 +32,7 @@ implementation
 uses
   {$IFDEF STEAM} Steam, SteamTypes,{$ENDIF}
   Client, NetworkUtils, Game, Demo, ClientGame, Sparks, GameMenus,
-  InterfaceGraphics, Sha1;
+  InterfaceGraphics;
 
 procedure ClientHandleNewPlayer(NetMessage: PSteamNetworkingMessage_t);
 var

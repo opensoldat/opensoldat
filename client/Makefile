@@ -39,6 +39,9 @@ else
     endif
   endif
     UNAME_P := $(shell uname -p)
+    ifeq ($(UNAME_P),unknown)
+      ARCH = $(shell uname -m)
+    endif
     ifeq ($(UNAME_P),x86_64)
       ARCH = x86_64
     endif
@@ -68,13 +71,10 @@ ifeq ($(steam),on)
 endif
 
 COMPILER = fpc -l -B -MDelphi -Scgi ${CFLAGS} \
--Fi../3rdparty/Indy10/Lib/Core \
 -Fi../shared \
 -Fl./libs \
 -Fu./libs \
 -Fu../3rdparty/Pascal-SDL-2-Headers \
--Fu../3rdparty/Indy10/Lib/System \
--Fu../3rdparty/Indy10/Lib/Core \
 -Fu../shared \
 -Fu../shared/libs \
 -Fu../shared/libs/GameNetworkingSockets \

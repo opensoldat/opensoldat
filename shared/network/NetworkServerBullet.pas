@@ -2,17 +2,12 @@ unit NetworkServerBullet;
 
 interface
 
+{$IFDEF SERVER}
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  GameNetworkingSockets;
+{$ENDIF}
 
-  // helper units
-  Vector, Math,
-
-  // soldat units
-  PolyMap, Calc, GameNetworkingSockets, Net, Sprites, Weapons, Constants, Demo;
-
-procedure ServerBulletSnapshot(i: Byte; ToNum: Byte; Forced: Boolean);
+procedure ServerBulletSnapshot(i: Byte; {$IFDEF SERVER}ToNum: Byte;{$ENDIF} Forced: Boolean);
 {$IFDEF SERVER}
 procedure ServerHandleBulletSnapshot(NetMessage: PSteamNetworkingMessage_t);
 {$ENDIF}
@@ -20,10 +15,13 @@ procedure ServerHandleBulletSnapshot(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} NetworkUtils, Game, Bullets;
+  {$IFDEF SERVER}
+  Server, Vector, Math, PolyMap, Calc, Sprites, Weapons, Constants, NetworkUtils, 
+  {$ELSE}Client,{$ENDIF} 
+  Demo, Net, Game, Bullets;
 
 
-procedure ServerBulletSnapshot(i: Byte; ToNum: Byte; Forced: Boolean);
+procedure ServerBulletSnapshot(i: Byte; {$IFDEF SERVER}ToNum: Byte;{$ENDIF} Forced: Boolean);
 var
   BulletMsg: TMsg_BulletSnapshot;
   {$IFDEF SERVER}

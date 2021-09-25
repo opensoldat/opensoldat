@@ -93,7 +93,6 @@ procedure GetFlagsXY(var BlueFlagX, BlueFlagY, RedFlagX, RedFlagY: Single);
 procedure GetFlagsSpawnXY(var BlueFlagX, BlueFlagY, RedFlagX, RedFlagY: Single);
 procedure SSLeep(Milliseconds: Cardinal);
 procedure SSendStringToPlayer(Id: Byte; Text: String);
-function MyGetPiece(const Input, Splitter: String; Index: Integer): String;
 function MyReadFile(FileName: String): String;
 function WriteFile(FileName: String; SData: String): Boolean;
 function AppendFile(FileName: String; Data: String): Boolean;
@@ -1036,14 +1035,6 @@ begin
     Result := Round(AValue / X) * X;
 end;  // R2
 
-function MyGetPiece(const Input, Splitter: String; Index: Integer): String;
-var
-  Buff: TStringArray;
-begin
-  Buff := MySplitStr(Input, Splitter);
-  Result := Buff[Index];
-end;
-
 function WriteFile(FileName: String; SData: String): Boolean;
 var
   VarFile: TextFile;
@@ -1337,7 +1328,7 @@ begin
     'function MaskCheck(const A: string; const B: string):Boolean');
   Script.AddFunction(@util.Iif,
     'function Iif(const A: Boolean; const B: Variant; const C: Variant): Variant');
-  Script.AddFunction(@MyGetPiece,
+  Script.AddFunction(@GetPiece,
     'function GetPiece(const A, B: string; const C: Integer): string');
 
   Script.AddFunction(@MyReadFile, 'function ReadFile(A: string): string');

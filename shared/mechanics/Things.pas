@@ -3,11 +3,7 @@ unit Things;
 interface
 
 uses
-  Parts, Anims, MapFile, PolyMap, Net, Weapons, Constants,
-  {$IFNDEF SERVER}
-    {$IFDEF MSWINDOWS}Windows,{$ENDIF}
-  {$ENDIF}
-  Vector, Sprites;
+  Parts, Anims, MapFile, PolyMap, Net, Weapons, Constants, Vector, Sprites;
 
   type TThingCollision = object
       ThingNum: Byte;
