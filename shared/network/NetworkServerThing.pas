@@ -3,20 +3,18 @@ unit NetworkServerThing;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
-
   // helper units
   Vector,
 
   // soldat units
-  Calc, GameNetworkingSockets, Net, Sprites, Constants;
+  {$IFDEF SERVER}GameNetworkingSockets,{$ENDIF}
+  Net, Sprites, Constants;
 
 {$IFDEF SERVER}
 procedure ServerThingSnapshot(ToNum: Byte);
 procedure ServerThingMustSnapshot(i: Byte);
 {$ENDIF}
-procedure ServerThingMustSnapshotOnConnect(ToNum: Byte);
+procedure ServerThingMustSnapshotOnConnect({$IFDEF SERVER}ToNum: Byte{$ENDIF});
 {$IFDEF SERVER}
 procedure ServerThingMustSnapshotOnConnectTo(i, ToNum: Byte);
 procedure ServerThingTaken(i, w: Byte);
@@ -26,7 +24,7 @@ procedure ServerHandleRequestThing(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} NetworkUtils, Game, Demo;
+  {$IFDEF SERVER}Server, NetworkUtils, Calc, {$ELSE}Client,{$ENDIF} Game, Demo;
 
 {$IFDEF SERVER}
 procedure ServerThingSnapshot(ToNum: Byte);
@@ -86,6 +84,7 @@ var
   ThingMsg: TMsg_ServerThingMustSnapshot;
   j: Integer;
 begin
+  ThingMsg := Default(TMsg_ServerThingMustSnapshot);
   if (Thing[i].Style = OBJECT_PARACHUTE) then
     Exit;
 
@@ -112,7 +111,7 @@ begin
 end;
 {$ENDIF}
 
-procedure ServerThingMustSnapshotOnConnect(ToNum: Byte);
+procedure ServerThingMustSnapshotOnConnect({$IFDEF SERVER}ToNum: Byte{$ENDIF});
 var
   ThingMsg: TMsg_ServerThingMustSnapshot;
   i, j: Integer;

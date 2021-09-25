@@ -16,13 +16,12 @@ uses
 
 procedure ClearChatText;
 begin
-  LastChatText := ChatText;
+  ChatText := '';
   FireChatText := '';
   CompletionBase := '';
   CurrentTabCompletePlayer := 0;
   CursorPosition := 1;
   VoteKickReasonType := False;
-  ChatText := '';
   SDL_StopTextInput;
 end;
 
@@ -133,7 +132,6 @@ begin
 
       case KeyCode of
         SDLK_ESCAPE: begin
-          ChatText := LastChatText;
           ClearChatText;
         end;
 
@@ -147,7 +145,6 @@ begin
             Dec(CursorPosition);
             if Length(ChatText) = 0 then
             begin
-              ChatText := LastChatText;
               ClearChatText;
             end;
           end;
@@ -196,6 +193,8 @@ begin
               ConsoleStr := Copy(String(ChatText), 2, Length(ChatText));
               if ParseInput(ConsoleStr) then
               begin
+                LastChatType := ChatType;
+                LastChatText := ChatText;
                 ClearChatText;
                 Exit;
               end;
@@ -216,6 +215,8 @@ begin
             end;
           end;
 
+          LastChatType := ChatType;
+          LastChatText := ChatText;
           ClearChatText;
         end;
       else
@@ -281,8 +282,7 @@ begin
     (Ord(0 <> (KeyEvent.keysym._mod and KMOD_ALT)) shl 0) or
     (Ord(0 <> (KeyEvent.keysym._mod and KMOD_CTRL)) shl 1) or
     (Ord(0 <> (KeyEvent.keysym._mod and KMOD_SHIFT)) shl 2);
-
-  if ChatKeyDown(KeyMods, KeyEvent.keysym.sym) then
+  if ShouldRenderFrames and ChatKeyDown(KeyMods, KeyEvent.keysym.sym) then
     Exit;
 
   if KeyEvent._repeat <> 0 then
@@ -291,12 +291,16 @@ begin
     Exit;
   end;
 
-  if MenuKeyDown(KeyMods, KeyCode) then
+  if ShouldRenderFrames and MenuKeyDown(KeyMods, KeyCode) then
     Exit;
 
   // other hard coded key bindings
 
   if KeyMods = KM_NONE then case KeyCode of
+    SDL_SCANCODE_ESCAPE: begin
+      if not ShouldRenderFrames then
+        ShutDown;
+    end;
     SDL_SCANCODE_PAGEDOWN: begin
       if FragsMenuShow then
         Inc(FragsScrollLev, Ord(FragsScrollLev < FragsScrollMax));
@@ -725,6 +729,7 @@ begin
           begin
             ChatChanged := True;
             CurrentTabCompletePlayer := 0;
+            ChatType := LastChatType;
             ChatText := LastChatText;
             CursorPosition := Length(ChatText);
           end

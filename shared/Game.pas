@@ -526,9 +526,9 @@ begin
     Debug('ChangeMap');
     MapsList.Clear;
 
-    if FileExists(UserDirectory + sv_maplist.Value) then
+    if FileExists(UserDirectory + 'configs/' + sv_maplist.Value) then
     begin
-      MapsList.LoadFromFile(UserDirectory + sv_maplist.Value);
+      MapsList.LoadFromFile(UserDirectory + 'configs/' + sv_maplist.Value);
       i := 1;
       while i < MapsList.Count do
       begin

@@ -70,7 +70,7 @@ endif()
 # Note that we also inherit fpc flags from CMakePascalInformation module.
 add_flag_append(CMAKE_Pascal_FLAGS "-l -B -MDelphi -Scgi")
 add_flag_append(CMAKE_Pascal_FLAGS_DEBUG
-                "-O1 -g -gl -l -vewnhiq -dDEBUG -dDEVELOPMENT")
+                "-O1 -g -gl -l -vewnhiq -dDEVELOPMENT")
 add_flag_append(CMAKE_Pascal_FLAGS_RELEASE
                 "-O3 -CX -OoREGVAR -Xs -XX -vewnhiq -dTESTING")
 
@@ -81,16 +81,10 @@ endif()
 add_flag_append(CMAKE_Pascal_FLAGS "-vm3123 -vm3124")
 
 # Define shared unit search paths
-add_flag_prepend(CMAKE_Pascal_FLAGS
-                 "-Fi${CMAKE_SOURCE_DIR}/3rdparty/Indy10/Lib/Core")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fi${CMAKE_SOURCE_DIR}/shared")
 
 add_flag_prepend(CMAKE_Pascal_FLAGS
                  "-Fu${CMAKE_SOURCE_DIR}/3rdparty/Pascal-SDL-2-Headers")
-add_flag_prepend(CMAKE_Pascal_FLAGS
-                 "-Fu${CMAKE_SOURCE_DIR}/3rdparty/Indy10/Lib/System")
-add_flag_prepend(CMAKE_Pascal_FLAGS
-                 "-Fu${CMAKE_SOURCE_DIR}/3rdparty/Indy10/Lib/Core")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared/libs")
 add_flag_prepend(CMAKE_Pascal_FLAGS

@@ -8,20 +8,14 @@
 
 unit Client;
 
-{$I IdCompilerDefines.inc}
-{$DEFINE DEVELOPMENT}
-
 interface
 
 uses
   // system and delphi units
   {$IFDEF MSWINDOWS}
-  Windows, MMSystem, Messages,
+  MMSystem,
   {$ENDIF}
   SysUtils, Classes, Math, GameStrings, Variants, FileClient,
-
-  // network units
-  {$IFDEF MSWINDOWS}Winsock, {$ENDIF}
 
   // graphics units
   Gfx,
@@ -47,7 +41,7 @@ uses
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
   // soldat units
-  Parts, Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
+  Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
   NetworkClientConnection, GameMenus, Demo, Console,
   Weapons, Constants, Game, GameRendering;
 
@@ -341,17 +335,20 @@ procedure LoadWeaponNames();
 var
   TF: PHYSFS_File;
   i: Integer;
+  Prefix: AnsiString;
 begin
-  MainConsole.Console('Loading Weapon Names from ' + ModDir + 'txt/weaponnames.txt', DEBUG_MESSAGE_COLOR);
   if PHYSFS_Exists(PChar(ModDir + 'txt/weaponnames.txt')) then
-  begin
-    TF := PHYSFS_openRead(PChar(ModDir + 'txt/weaponnames.txt'));
+    Prefix := ModDir
+  else 
+    Prefix := '';
+
+  MainConsole.Console('Loading Weapon Names from ' + Prefix + 'txt/weaponnames.txt', DEBUG_MESSAGE_COLOR);
+  TF := PHYSFS_openRead(PChar(Prefix + 'txt/weaponnames.txt'));
+  if TF <> nil then
     for i := 0 to EXTENDED_WEAPONS - 1 do
       PhysFS_ReadLN(TF, GunDisplayName[WeaponNumExternalToInternal(i)]);
-    PHYSFS_close(TF);
-  end;
+  PHYSFS_close(TF);
 end;
-
 
 procedure RedirectDialog;
 var

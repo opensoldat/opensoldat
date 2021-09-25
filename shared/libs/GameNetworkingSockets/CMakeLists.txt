@@ -41,7 +41,7 @@ project(GameNetworkingSockets)
 #ENDIF()
 # git settings
 SET(GNS_SOURCE_DIR "${PROJECT_ROOT}/gns_git" )
-SET(GNS_TAG "v1.2.0" )
+SET(GNS_TAG "v1.3.0" )
 
 #############################################################
 ## Fetch and build GNS

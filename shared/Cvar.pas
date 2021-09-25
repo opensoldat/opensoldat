@@ -802,7 +802,7 @@ begin
   cl_player_skin := TColorCvar.Add('cl_player_skin', 'Player skin color', $00E6B478, $00E6B478, [CVAR_CLIENT], nil);
 
   cl_player_hairstyle := TIntegerCvar.Add('cl_player_hairstyle', 'Player hair style', 0, 0, [CVAR_CLIENT], nil, 0, 4);
-  cl_player_headstyle := TIntegerCvar.Add('cl_player_headstyle', 'Player head style', 0, 0, [CVAR_CLIENT], nil, 0, 4);
+  cl_player_headstyle := TIntegerCvar.Add('cl_player_headstyle', 'Player head style', 0, 0, [CVAR_CLIENT], nil, 0, 2);
   cl_player_chainstyle := TIntegerCvar.Add('cl_player_chainstyle', 'Player chain style', 0, 0, [CVAR_CLIENT], nil, 0, 2);
   cl_player_secwep := TIntegerCvar.Add('cl_player_secwep', 'Player secondary weapon', 1, 0, [CVAR_CLIENT], nil, 0, 3);
   cl_player_wep := TIntegerCvar.Add('cl_player_wep', 'Player primary weapon', 1, 0, [CVAR_CLIENT], @cl_player_wepChange, 1, 10);
@@ -865,12 +865,12 @@ begin
 
   sv_ctf_limit := TIntegerCvar.Add('sv_ctf_limit', 'Capture the Flag point limit', 10, 10, [CVAR_SERVER], @killlimitChange, 0, 9999);
 
-  sv_bonus_frequency := TIntegerCvar.Add('sv_bonus_frequency', 'The interval of bonuses occurring ingame.', 0, 0, [CVAR_CLIENT], nil, 0, 1);
-  sv_bonus_flamer := TBooleanCvar.Add('sv_bonus_flamer', 'Flamer bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_predator := TBooleanCvar.Add('sv_bonus_predator', 'Predator bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_berserker := TBooleanCvar.Add('sv_bonus_berserker', 'Berserker bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_vest := TBooleanCvar.Add('sv_bonus_vest', 'Bulletproof Vest bonus availability', False, False, [CVAR_CLIENT], nil);
-  sv_bonus_cluster := TBooleanCvar.Add('sv_bonus_cluster', 'Cluster Grenades bonus availability', False, False, [CVAR_CLIENT], nil);
+  sv_bonus_frequency := TIntegerCvar.Add('sv_bonus_frequency', 'The interval of bonuses occurring ingame.', 0, 0, [CVAR_SERVER], nil, 0, 5);
+  sv_bonus_flamer := TBooleanCvar.Add('sv_bonus_flamer', 'Flamer bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_predator := TBooleanCvar.Add('sv_bonus_predator', 'Predator bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_berserker := TBooleanCvar.Add('sv_bonus_berserker', 'Berserker bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_vest := TBooleanCvar.Add('sv_bonus_vest', 'Bulletproof Vest bonus availability', False, False, [CVAR_SERVER], nil);
+  sv_bonus_cluster := TBooleanCvar.Add('sv_bonus_cluster', 'Cluster Grenades bonus availability', False, False, [CVAR_SERVER], nil);
 
   sv_stationaryguns := TBooleanCvar.Add('sv_stationaryguns', 'Enables/disables Stationary Guns ingame.', False, True, [CVAR_SERVER], nil);
 
@@ -916,12 +916,14 @@ begin
   // Network cvars
   net_port := TIntegerCvar.Add('net_port', 'The port your server runs on, and player have to connect to', 23073, 23073, [CVAR_SERVER], nil, 0, 65535);
   net_ip := TStringCvar.Add('net_ip', 'Binds server ports to specific ip address', '0.0.0.0', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
-  net_adminip := TStringCvar.Add('net_adminip', 'Binds admin port to specific ip address', '', '', [CVAR_SERVER], nil, 0, 0);
+  net_adminip := TStringCvar.Add('net_adminip', 'Binds admin port to specific ip address', '0.0.0.0', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
   net_lan := TIntegerCvar.Add('net_lan', 'Set to 1 to set server to LAN mode', 0, 0, [CVAR_SERVER], nil, 0, 1);
   net_compression := TBooleanCvar.Add('net_compression', 'Enables/Disables compression of packets', True, True, [CVAR_SERVER], nil);
   net_allowdownload := TBooleanCvar.Add('net_allowdownload', 'Enables/Disables file transfers', True, True, [CVAR_SERVER], nil);
   net_maxconnections := TIntegerCvar.Add('net_maxconnections', 'Maximum number of simultaneous file transfer connections', 10, 10, [CVAR_SERVER], nil, 0, 100);
-  net_maxadminconnections := TIntegerCvar.Add('net_maxadminconnections', 'Maximum number of admin connections', 20, 20, [CVAR_SERVER], nil, 0, 100);
+  net_maxadminconnections := TIntegerCvar.Add('net_maxadminconnections', 'Maximum number of admin connections', 20, 20, [CVAR_SERVER], nil, 0, MaxInt);
+  net_rcon_limit := TIntegerCvar.Add('net_rcon_limit', 'Limits the rate of admin connection attempts per second', 5, 5, [CVAR_SERVER], nil, 0, MaxInt);
+  net_rcon_burst := TIntegerCvar.Add('net_rcon_burst', 'Limits the burst rate of admin connection attempts per second', 10, 10, [CVAR_SERVER], nil, 0, MaxInt);
 
   net_floodingpacketslan := TIntegerCvar.Add('net_floodingpacketslan', 'When running on a LAN, controls how many packets should be considered flooding', 80, 80, [CVAR_SERVER], nil, 0, 100);
   net_floodingpacketsinternet := TIntegerCvar.Add('net_floodingpacketsinternet', 'When running on the Internet, controls how many packets should be considered flooding', 42, 42, [CVAR_SERVER], nil, 0, 100);

@@ -28,14 +28,16 @@ uses
 
 procedure Debug(const Msg: string);
 begin
-  if log_level.Value >= LEVEL_DEBUG then
-    WriteLn(Msg);
+  if Assigned(log_level) then
+    if log_level.Value >= LEVEL_DEBUG then
+      WriteLn(Msg);
 end;
 
 procedure Trace(const Msg: string);
 begin
-  if log_level.Value >= LEVEL_TRACE then
-    WriteLn(Msg);
+  if Assigned(log_level) then
+    if log_level.Value >= LEVEL_TRACE then
+      WriteLn(Msg);
 end;
 
 {$IFDEF STEAM}

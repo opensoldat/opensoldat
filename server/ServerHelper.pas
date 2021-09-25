@@ -269,6 +269,7 @@ begin
   if (SelectedBot = 'Boogie Man') or (SelectedBot = 'Dummy') then
     SelectedBot := 'Sniper';
 
+  BotList.Free;
   result := SelectedBot;
 end;
 

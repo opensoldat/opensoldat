@@ -12,7 +12,7 @@ unit Sound;
 interface
 
 uses
-  SDL2, Vector, openal, PhysFS, contnrs, fgl;
+  SDL2, Vector, openal, PhysFS;
 
 type
   TSoundSample = record

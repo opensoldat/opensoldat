@@ -48,9 +48,6 @@ type
 
 implementation
 
-uses
-  ScriptCore3;
-
 function TScriptGlobal.GetDateSeparator: Char;
 begin
   Result := DefaultFormatSettings.DateSeparator;

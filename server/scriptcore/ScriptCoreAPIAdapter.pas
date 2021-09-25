@@ -329,7 +329,7 @@ begin
 
   Exec.AddFunction(@MatchesMask, 'MaskCheck');
   Exec.AddFunction(@util.Iif, 'Iif');
-  Exec.AddFunction(@MyGetPiece, 'GetPiece');
+  Exec.AddFunction(@GetPiece, 'GetPiece');
 
   Exec.AddFunction(@MyReadFile, 'ReadFile');
   Exec.AddFunction(@WriteFile, 'WriteFile');

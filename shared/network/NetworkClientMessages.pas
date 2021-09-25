@@ -20,7 +20,7 @@ procedure ClientHandleSpecialMessage(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Client, NetworkUtils, Game, InterfaceGraphics;
+  Client, Game, InterfaceGraphics;
 
 procedure ClientSendStringMessage(Text: WideString; MsgType: Byte);
 var
@@ -78,7 +78,7 @@ begin
 
   ChatMessage[i] := cs;
   ChatTeam[i] := (MsgType = MSGTYPE_TEAM);
-  d := CharCount(' ', String(cs));
+  d := String(cs).CountChar(' ');
 
   if d = 0 then
     ChatDelay[i] := Length(cs) * CHARDELAY
