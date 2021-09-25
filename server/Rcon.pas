@@ -104,6 +104,7 @@ implementation
 uses
   {$IFDEF STEAM}SteamTypes,{$ENDIF}
   {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
+  {$IFDEF UNIX}BaseUnix,{$ENDIF}
   Server, Util, TraceLog, Command, Game, ServerHelper, Cvar, Version, Math;
 
 {$PUSH}
