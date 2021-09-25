@@ -1,5 +1,5 @@
 unit GostekGraphics;
-
+{$hints off}
 interface
 
 uses

@@ -524,14 +524,15 @@ end;
 function GetWeaponAttribDesc(var Attr: TAttr): WideString;
 begin
   Result := '    |-' + Attr.Des + ' : ' +
-    iif(Attr.Def <> 0, IntToStr(Round(Attr.Cur / Attr.Def * 100)) + '%', 'NEW') + ' (' +
+    iif(Attr.Def <> 0, Format('%d%%', [Round(Attr.Cur / Attr.Def * 100)]), 'NEW') + ' (' +
     FormatFloat('0.####', Attr.Cur) + '/' +
     FormatFloat('0.####', Attr.Def) + ')';
 end;
 
 procedure RenderWeaponMenuText;
 var
-  i, CursorOnIndex: Integer;
+  i: Integer = 0;
+  CursorOnIndex: Integer = 0;
   x, y, TipY: Single;
   Btn: ^TGameButton;
   Attrs: array[0..12] of TAttr;
@@ -539,7 +540,6 @@ var
 begin
   for i := Low(Attrs) to High(Attrs) do
     Attrs[i] := Default(TAttr);
-  CursorOnIndex := 0;
 
   SetFontStyle(FONT_SMALL);
   GfxTextShadow(1, 1, RGBA(0));
@@ -761,7 +761,7 @@ begin
     if Sprite[KickMenuIndex].Active then
     begin
       Btn := @KickMenu.Button[0];
-      GfxTextColor(ARGB(Sprite[KickMenuIndex].Player.ShirtColor));
+      GfxTextColor(RGBA(Sprite[KickMenuIndex].Player.ShirtColor));
       GfxDrawText(Sprite[KickMenuIndex].Player.Name, Btn.x1, Btn.y1 - 15);
     end;
   end;
@@ -846,7 +846,7 @@ var
   Me: ^TSprite;
   i, Pos: Integer;
   x, y, t: Single;
-  Str: WideString;
+  Str: WideString = '';
 begin
   Me := @Sprite[PlayerIndex];
 
@@ -1513,19 +1513,19 @@ end;
 
 procedure RenderChatInput(w, h: Single; t: Extended);
 var
-  Str: WideString = '';
+  StrPrefix: WideString = '';
+  Str, StrBeforeCursor: WideString;
   rc: TGfxRect;
-  StrHalf: WideString;
   x, y: Single;
 begin
   if ChatType = MSGTYPE_PUB then
-    Str := 'Say:'
+    StrPrefix := 'Say:'
   else if ChatType = MSGTYPE_TEAM then
-    Str := 'Team Say:'
+    StrPrefix := 'Team Say:'
   else if ChatType = MSGTYPE_CMD then
-    Str := 'Cmd:';
+    StrPrefix := 'Cmd: '; // adding trailing space for unified formatting
 
-  if Str <> '' then
+  if StrPrefix <> '' then
   begin
     SetFontStyle(FONT_SMALL);
 
@@ -1544,7 +1544,7 @@ begin
 
     t := t - ChatInputTime;
 
-    Str := Str + iif(ChatText[Length(ChatText)] = ' ', ChatText + ' ', ChatText);
+    Str := StrPrefix + ChatText;
     rc := GfxTextMetrics(Str);
 
     if RectWidth(rc) >= (w - 80) then
@@ -1552,20 +1552,23 @@ begin
 
     GfxTextVerticalAlign(GFX_BASELINE);
     GfxDrawText(Str, 5, 420 * _iscala.y);
-    StrHalf := Str;
 
-    if CursorPosition < Length(ChatText) then
-      SetLength(StrHalf, CursorPosition + 4 + Ord(ChatText[1] = '/'));
-
-    x := RectWidth(GfxTextMetrics(StrHalf));
-
+    // cursor blinking
     if (t - Floor(t)) <= 0.5 then
     begin
-      x := PixelAlignX(5 + x) + 2 * PixelSize.x;
-      y := PixelAlignY(420 * _iscala.y - 1.2 * RectHeight(rc));
-      w := PixelSize.x;
-      h := PixelAlignY(1.2 * 1.2 * RectHeight(rc));
+      StrBeforeCursor := Str;
+      if CursorPosition < Length(ChatText) then
+        SetLength(StrBeforeCursor, CursorPosition + Length(StrPrefix));
 
+      // for some reason GfxTextMetrics ignores the last trailing space while calculating rectangle width...
+      x := RectWidth(GfxTextMetrics(StrBeforeCursor + iif(StrBeforeCursor[Length(StrBeforeCursor)] = ' ', ' ', '') ));
+
+      x := PixelAlignX(5 + x) + 2 * PixelSize.x;
+      y := PixelAlignY(420 * _iscala.y - RectHeight(rc));
+      w := PixelSize.x;
+      h := PixelAlignY(1.4 * RectHeight(rc));
+
+      // drawing cursor
       GfxDrawQuad(nil,
         GfxVertex(x + 0, y + 0, 0, 0, RGBA(255, 230, 170)),
         GfxVertex(x + w, y + 0, 0, 0, RGBA(255, 230, 170)),
@@ -1676,7 +1679,7 @@ procedure RenderRadioMenuTexts;
 const
   RADIO_GAMESTYLES = [GAMESTYLE_CTF, GAMESTYLE_INF, GAMESTYLE_HTF];
 var
-  s: string;
+  s: string = '';
   Alpha: Byte;
   sx, sy: Single;
   Color: array[0..1] of TGfxColor;
@@ -1890,6 +1893,7 @@ var
   WideScreenCut: Boolean;
   Str: WideString;
   NetworkStats: SteamNetworkingQuickConnectionStatus;
+  SniperLine: Boolean;
 begin
   SpriteMe := NIL;
   T := @Textures;
@@ -2164,8 +2168,10 @@ begin
       and not (DemoPlayer.Active and (not demo_showcrosshair.Value))
       and not ((SpectNumber > 0) and (SpectNumber <= 32) and (Sprite[SpectNumber].Player.DemoPlayer = False)) then
     begin
+      SniperLine := ui_sniperline.Value and sv_sniperline.Value;
+
       // Set base scale for the crosshair
-      if SniperLine = 1 then
+      if SniperLine then
         CursorScale := 0.5
       else
         CursorScale := 1;
@@ -2202,7 +2208,7 @@ begin
       end
       else
       begin
-        if SniperLine = 1 then
+        if SniperLine then
           Alfa := ui_status_transparency.Value div 2
         else
           Alfa := ui_status_transparency.Value;
@@ -2210,7 +2216,7 @@ begin
         CursorColor := $FFFFFF;
       end;
 
-      if SniperLine = 1 then
+      if SniperLine then
       begin
         CharacterOffset.x := GameWidthHalf - CameraX + SpriteMe.Skeleton.Pos[15].x;
         CharacterOffset.y := GameHeightHalf - CameraY + SpriteMe.Skeleton.Pos[15].y;

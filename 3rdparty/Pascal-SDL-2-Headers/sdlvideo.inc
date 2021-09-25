@@ -22,8 +22,8 @@
   PSDL_ShapeDriver = ^TSDL_ShapeDriver;
   TSDL_ShapeDriver = record
     CreateShaper: function(window: PSDL_Window): PSDL_WindowShaper; cdecl;
-    SetWindowShaper: function(shaper: PSDL_WindowShaper; shape: PSDL_Surface; shape_mode: PSDL_WindowShapeMode): Variant; cdecl;
-    ResizeWindowShape: function(window: PSDL_Window): Variant; cdecl;
+    SetWindowShaper: function(shaper: PSDL_WindowShaper; shape: PSDL_Surface; shape_mode: PSDL_WindowShapeMode): Integer; cdecl;
+    ResizeWindowShape: function(window: PSDL_Window): Integer; cdecl;
   end;
 
   PSDL_WindowUserData = ^TSDL_WindowUserData;
@@ -151,7 +151,7 @@
     next: PSDL_Window;
   end;
 
-  function FULLSCREEN_VISIBLE(W: PSDL_Window): Variant;
+  function FULLSCREEN_VISIBLE(W: PSDL_Window): Integer;
 
   { Functions from "sdl_shape.h" }
 
@@ -251,10 +251,10 @@ const
 type
   TSDL_WindowFlags = DWord;
 
-function SDL_WINDOWPOS_UNDEFINED_DISPLAY(X: Variant): Variant;
-function SDL_WINDOWPOS_ISUNDEFINED(X: Variant): Variant;
-function SDL_WINDOWPOS_CENTERED_DISPLAY(X: Variant): Variant;
-function SDL_WINDOWPOS_ISCENTERED(X: Variant): Variant;
+function SDL_WINDOWPOS_UNDEFINED_DISPLAY(X: Integer): Integer;
+function SDL_WINDOWPOS_ISUNDEFINED(X: Integer): Boolean;
+function SDL_WINDOWPOS_CENTERED_DISPLAY(X: Integer): Integer;
+function SDL_WINDOWPOS_ISCENTERED(X: Integer): Boolean;
 
 const
    {**
