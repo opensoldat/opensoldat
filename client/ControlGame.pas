@@ -81,6 +81,10 @@ begin
       ChatChanged := True;
       Result := True;
     end
+    else if ((KeyMods = KM_CTRL) and (KeyCode = SDLK_c)) then
+    begin
+      SDL_SetClipboardText(PChar(ChatText));
+    end
     else if (KeyMods = KM_CTRL) then
     begin
       Result := True;
