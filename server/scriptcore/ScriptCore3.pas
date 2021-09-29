@@ -465,7 +465,7 @@ begin
   Self.WriteInfo('Compilation started');
 
   Compiler := TPascalCompiler.Create(Self.FDir, Self.FMainFileName);
-  Compiler.Defines := Self.FConfig.FDefines;
+  Compiler.Defines.AddStrings(Self.FConfig.FDefines);
   Compiler.Api := Self.FApi;
   if Self.FConfig.FAllowDlls then
     Compiler.SupportDLLs := True;
@@ -495,6 +495,8 @@ begin
   if Self.Debug then
     Self.FDebugSymbols := Compiler.Debugcode;
   Self.FBytecode := Compiler.Bytecode;
+
+  Compiler.Free;
 end;
 
 function TScriptCore3.Prepare: Boolean;
