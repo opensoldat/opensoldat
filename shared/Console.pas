@@ -147,7 +147,7 @@ function TConsole.GetContentsAsPlainText():AnsiString;
 var
   I: Byte;
 begin
-  Result:= '';
+  Result := '';
   for I := 1 to Count do
     Result := Result + TextMessage[I] + '\n';
 end;
