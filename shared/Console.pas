@@ -83,15 +83,6 @@ begin
     ScrollConsole;
 end;
 
-function TConsole.GetContentsAsPlainText():AnsiString;
-var
-  I: Byte;
-begin
-  Result:= '';
-  for I := 1 to Count do
-    Result := Result + TextMessage[I] + '\n';
-end;
-
 procedure TConsole.Console(What: WideString; Col: Cardinal); overload;
 begin
   if Length(What) = 0 then
@@ -151,5 +142,14 @@ begin
     ServerSendStringMessage(What, Sender, 255, MSGTYPE_PUB);
 end;
 {$ENDIF}
+
+function TConsole.GetContentsAsPlainText():AnsiString;
+var
+  I: Byte;
+begin
+  Result:= '';
+  for I := 1 to Count do
+    Result := Result + TextMessage[I] + '\n';
+end;
 
 end.
