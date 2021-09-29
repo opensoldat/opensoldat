@@ -89,7 +89,7 @@ var
 begin
   Result:= '';
   for I := 1 to Count do
-    Result := Result + TextMessage[I];
+    Result := Result + TextMessage[I] + '\n';
 end;
 
 procedure TConsole.Console(What: WideString; Col: Cardinal); overload;
