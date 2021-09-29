@@ -31,6 +31,7 @@ type
     procedure Console(What: Variant; Col: Cardinal); overload;
     procedure ConsoleAdd(What: WideString; Col: Cardinal);
     procedure ConsoleNum(What: WideString; Col: Cardinal; Num: Integer);
+    function GetContentsAsPlainText():AnsiString;
   end;
 
 implementation
@@ -80,6 +81,15 @@ begin
   NumMessage[Count] := Num;
   if Count = CountMax then
     ScrollConsole;
+end;
+
+function TConsole.GetContentsAsPlainText():AnsiString;
+var
+  I: Byte;
+begin
+  Result:= '';
+  for I := 1 to Count do
+    Result := Result + TextMessage[I];
 end;
 
 procedure TConsole.Console(What: WideString; Col: Cardinal); overload;
