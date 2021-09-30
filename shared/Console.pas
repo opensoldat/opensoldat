@@ -149,7 +149,7 @@ var
 begin
   Result := '';
   for I := 1 to Count do
-    Result := Result + TextMessage[I] + '\n';
+    Result := Result + TextMessage[I] + LineEnding;
 end;
 
 end.
