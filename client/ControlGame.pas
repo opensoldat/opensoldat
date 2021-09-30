@@ -83,7 +83,7 @@ begin
     end
     else if ((KeyMods = KM_CTRL) and (KeyCode = SDLK_c)) then
     begin
-      SDL_SetClipboardText(PChar(MainConsole.GetContentsAsPlainText));
+      SDL_SetClipboardText(PChar(BigConsole.GetContentsAsPlainText));
     end
     else if (KeyMods = KM_CTRL) then
     begin
