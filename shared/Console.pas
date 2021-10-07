@@ -31,7 +31,7 @@ type
     procedure Console(What: Variant; Col: Cardinal); overload;
     procedure ConsoleAdd(What: WideString; Col: Cardinal);
     procedure ConsoleNum(What: WideString; Col: Cardinal; Num: Integer);
-    function GetContentsAsPlainText():AnsiString;
+    function GetContentsAsPlainText(): WideString;
   end;
 
 implementation
@@ -143,7 +143,7 @@ begin
 end;
 {$ENDIF}
 
-function TConsole.GetContentsAsPlainText():AnsiString;
+function TConsole.GetContentsAsPlainText(): WideString;
 var
   I: Byte;
 begin
