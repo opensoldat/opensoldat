@@ -83,7 +83,10 @@ begin
     end
     else if ((KeyMods = KM_CTRL) and (KeyCode = SDLK_c)) then
     begin
-      SDL_SetClipboardText(PChar(UTF8String(BigConsole.GetContentsAsPlainText)));
+      if SDL_SetClipboardText(PChar(UTF8String(BigConsole.GetContentsAsPlainText))) = 0 then
+        MainConsole.Console(_('Copied chat contents to clipboard'), GAME_MESSAGE_COLOR)
+      else
+        MainConsole.Console(WideFormat(_('Failed copying chat to clipboard: %s'), [SDL_GetError()]), DEBUG_MESSAGE_COLOR);
     end
     else if (KeyMods = KM_CTRL) then
     begin
