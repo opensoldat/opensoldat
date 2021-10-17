@@ -58,8 +58,10 @@ install(
   PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldat>
   DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
 )
-install(
-  FILES ${EXECUTABLE_OUTPUT_PATH}/play-regular.ttf
-  # FIXME: this should be CMAKE_INSTALL_FULL_DATADIR, but soldat can't discover it there
-  DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
-)
+if(ADD_ASSETS)
+  install(
+    FILES ${EXECUTABLE_OUTPUT_PATH}/play-regular.ttf
+    # FIXME: this should be CMAKE_INSTALL_FULL_DATADIR, but soldat can't discover it there
+    DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+  )
+endif()
