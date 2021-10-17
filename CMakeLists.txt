@@ -1,5 +1,7 @@
 project(soldat)
 
+include(GNUInstallDirs)
+
 option(ADD_ASSETS "Include soldat.smod and font file" True)
 option(BUILD_CLIENT "Build client" True)
 option(BUILD_SERVER "Build server" True)
@@ -42,7 +44,7 @@ if(UNIX)
     set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
   else()
     set(CMAKE_INSTALL_RPATH
-      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/:${CMAKE_INSTALL_PREFIX}/${target_library_install_dir}/"
+      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/:${CMAKE_INSTALL_FULL_LIBDIR}"
     )
     set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
   endif()
@@ -167,16 +169,26 @@ endif()
 # to provide all .so files on linux - users can get those easily from package managers.
 install(
   DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
   FILES_MATCHING
   PATTERN "*.sh" EXCLUDE
   PATTERN "*.bat" EXCLUDE
   PATTERN "*.res" EXCLUDE
+  PATTERN "*.smod" EXCLUDE
   PATTERN "*.dll"
   PATTERN "*.so"
   PATTERN "*.dylib"
-  PATTERN "*.smod"
   # Ignore subdirectories, just in case... it's not necessary on clean build,
   # only if you ran client/server executables before installing.
   REGEX "configs|demos|logs|maps|mods|screens" EXCLUDE
 )
+
+if(ADD_ASSETS)
+  install(
+    DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/
+    # FIXME: should be CMAKE_INSTALL_FULL_DATADIR, but unsupported by soldat
+    DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+    FILES_MATCHING
+    PATTERN "*.smod"
+  )
+endif()
