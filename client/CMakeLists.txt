@@ -56,12 +56,13 @@ endif()
 
 install(
   PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldat>
-  DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+  DESTINATION ${target_full_binary_install_dir}
 )
 if(ADD_ASSETS)
   install(
     FILES ${EXECUTABLE_OUTPUT_PATH}/play-regular.ttf
-    # FIXME: this should be CMAKE_INSTALL_FULL_DATADIR, but soldat can't discover it there
-    DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+    # FIXME: this should be target_full_data_install_dir, but soldat can't discover it there
+    # (needs wrapper script or some equivalent global config)
+    DESTINATION ${target_full_binary_install_dir}
   )
 endif()
