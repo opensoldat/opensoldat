@@ -43,5 +43,5 @@ endif()
 
 install(
   PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldatserver>
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  DESTINATION ${target_full_binary_install_dir}
 )
