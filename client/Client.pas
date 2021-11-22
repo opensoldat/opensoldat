@@ -31,6 +31,9 @@ uses
   GameNetworkingSockets, Steam, SteamTypes,
   {$ENDIF}
 
+  {$IFDEF ENABLE_EAC}
+  EOS,
+  {$ENDIF}
   // PhysFS
   PhysFS,
 
@@ -52,6 +55,9 @@ procedure ExitToMenu;
 procedure RestartGraph;
 procedure ShowMessage(MessageText: AnsiString); overload;
 procedure ShowMessage(MessageText: WideString); overload;
+{$IFDEF STEAM}
+procedure RunManualCallbacks;
+{$ENDIF}
 
 type
   TWeaponStat = record
@@ -78,6 +84,11 @@ var
 
   ModDir: string = '';
   UsesServerMod: Boolean;
+
+  {$IFDEF ENABLE_EAC}
+  ac_enable: TBooleanCvar;
+  ac_loglevel: TIntegerCvar;
+  {$ENDIF}
 
   // Cvars
   log_enable: TBooleanCvar;
@@ -299,9 +310,12 @@ var
   DownloadThread: TDownloadThread;
   {$IFDEF STEAM}
   SteamAPI: TSteam;
-  //SteamCallbacks: TSteamCallbacks;
   VoiceSpeakingNow: Boolean;
   ForceReconnect: Boolean;
+  {$ENDIF}
+
+  {$IFDEF ENABLE_EAC}
+  EACClient: TEpicOnlineServicesClient;
   {$ENDIF}
 
 implementation
@@ -398,6 +412,11 @@ var
 begin
   GOALTICKS := DEFAULT_GOALTICKS;
 
+  {$IFDEF ENABLE_EAC}
+  if Assigned(EACClient) then
+    EACClient.EndSession();
+  {$ENDIF}
+
   // Reset network state and show the status string (if any)
   //ShouldRenderFrames := False;
   //NetEncActive := False;
@@ -475,6 +494,45 @@ end;
 
 
 {$IFDEF STEAM}
+{$IFDEF ENABLE_EAC}
+procedure OnEncryptedAppTicketResponse(Event: pEncryptedAppTicketResponse_t); cdecl;
+begin
+  if Event.m_eResult = k_EResultOK then
+  begin
+    if Assigned(EACClient) then
+      EACClient.OnSteamAuth();
+  end;
+end;
+{$ENDIF}
+
+procedure RunManualCallbacks;
+var
+  Callback: CallbackMsg_t;
+  CallCompleted: SteamAPICallCompleted_t;
+  Failed: Boolean;
+  Data: Pointer;
+begin
+  SteamAPI_ManualDispatch_RunFrame(SteamAPI.SteamPipeHandle);
+  while SteamAPI_ManualDispatch_GetNextCallback(SteamAPI.SteamPipeHandle, @Callback) do
+  begin
+    if Callback.m_iCallback = 703 then
+    begin
+      {$IFDEF ENABLE_EAC}
+      CallCompleted := PSteamAPICallCompleted_t(callback.m_pubParam)^;
+      GetMem(Data, CallCompleted.m_cubParam);
+      if SteamAPI_ManualDispatch_GetAPICallResult(SteamAPI.SteamPipeHandle, CallCompleted.m_hAsyncCall, Data, CallCompleted.m_cubParam, CallCompleted.m_iCallback, @Failed) then
+      begin
+        if CallCompleted.m_iCallback = 154 then
+          OnEncryptedAppTicketResponse(Data);
+      end;
+      FreeMem(Data);
+      {$ENDIF}
+    end;
+
+    SteamAPI_ManualDispatch_FreeLastCallback(SteamAPI.SteamPipeHandle);
+  end;
+end;
+
 procedure OnScreenshotReady(Event: PScreenshotReady_t); cdecl;
 var
   i: Byte;
@@ -650,10 +708,27 @@ begin
     end;
   end;
 
+  SteamAPI_ManualDispatch_Init();
+
   //SteamAPI.Utils.SetWarningMessageHook(SteamWarning);
   //SteamCallbackDispatcher.Create(1221, @SteamNetConnectionStatusChangedCallback, SizeOf(SteamNetConnectionStatusChangedCallback_t));
   //SteamCallbackDispatcher.Create(2301, @OnScreenshotReady, SizeOf(ScreenshotReady_t));
   //SteamCallbackDispatcher.Create(3406, @DownloadItemResult, SizeOf(DownloadItemResult_t));
+  {$ENDIF}
+
+  {$IFDEF ENABLE_EAC}
+  if ac_enable.Value then
+  begin
+    try
+      EACClient := TEpicOnlineServicesClient.Create(ac_loglevel.Value);
+    except
+      on E: Exception do
+      begin
+        ShowMessage(_('Easy Anti-Cheat error: ' + E.Message));
+        Exit;
+      end;
+    end;
+  end;
   {$ENDIF}
 
   Debug('[PhysFS] Initializing system');
@@ -965,6 +1040,11 @@ begin
   SteamAPI_Shutdown();
   {$ENDIF}
 
+  {$IFDEF ENABLE_EAC}
+  AddLineToLogFile(GameLog, 'EOS closing.', ConsoleLogFileName);  
+  FreeAndNil(EACClient);
+  {$ENDIF}
+
   AddLineToLogFile(GameLog, '   End of Log.', ConsoleLogFileName);
 
   WriteLogFile(GameLog, ConsoleLogFileName);
@@ -1004,6 +1084,11 @@ begin
   // NOTE That in case of an internal error Fae displays a message box here and quits.
   RenderGameInfo(_('Initializing'));
   FaePreflight; // no-op if Fae if called before or if Fae is disabled
+  {$ENDIF}
+
+  {$IFDEF ENABLE_EAC}
+  if Assigned(EACClient) then
+    EACClient.BeginSession();
   {$ENDIF}
 
   UDP := TClientNetwork.Create();

@@ -102,6 +102,7 @@ const
   MsgID_PlaySound = MsgID_Custom + 70;
   MsgID_SyncCvars = MsgID_Custom + 71;
   MsgID_VoiceData = MsgID_Custom + 72;
+  MsgID_EACMessage = MsgID_Custom + 73;
 
   MAX_PLAYERS = 32;
 
@@ -168,6 +169,7 @@ const
 
   ACTYPE_NONE = 0;
   ACTYPE_FAE = 1;
+  ACTYPE_EAC = 2;
 
   MSGTYPE_CMD = 0;
   MSGTYPE_PUB = 1;
@@ -820,6 +822,14 @@ type
     Data: array[0..0] of Char;
   end;
 
+  {$IFDEF ENABLE_EAC}
+  PMsg_EACMessage = ^TMsg_EACMessage;
+  TMsg_EACMessage = packed record
+    Header: TMsgHeader;
+    Data: array[0..0] of Byte;
+  end;
+  {$ENDIF}
+
 var
   MainTickCounter: Integer;
   // Stores all network-generated TPlayer objects
@@ -867,6 +877,7 @@ implementation
 uses
   {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Game, TraceLog, Demo,
   {$IFDEF STEAM}Steam,{$ENDIF}
+  {$IFDEF ENABLE_EAC}EOS,{$ENDIF}
   {$IFNDEF SERVER}
   NetworkClientSprite, NetworkClientConnection, NetworkClientThing,
   NetworkClientGame, NetworkClientFunctions, NetworkClientHeartbeat,
@@ -1257,6 +1268,11 @@ begin
     MsgID_VoiceData:
       ClientHandleVoiceData(IncomingMsg);
     {$ENDIF}
+
+    {$IFDEF ENABLE_EAC}
+    MsgID_EACMessage:
+      ClientHandleEACMessage(IncomingMsg);
+    {$ENDIF}
   end;
 
   if not DemoPlayer.Active then
@@ -1391,6 +1407,11 @@ begin
       // as anti-cheat handles etc.
       Players.Remove(Player);
 
+      {$IFDEF ENABLE_EAC}
+      if Assigned(EACServer) then
+        EACServer.UnregisterClient(Player);
+      {$ENDIF}
+
       NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, '', false);
     end;
     k_ESteamNetworkingConnectionState_Connecting:
@@ -1433,6 +1454,10 @@ begin
         {$HINTS ON}
         WriteLn('[NET] Connection accepted: ' + PChar(pInfo.m_info.m_szConnectionDescription));
         Players.Add(Player);
+        {$IFDEF ENABLE_EAC}
+        if Assigned(EACServer) then
+          EACServer.RegisterClient(Player);
+        {$ENDIF}
       end;
     end;
   else
@@ -1516,6 +1541,10 @@ begin
     {$IFDEF STEAM}
     MsgID_VoiceData:
       ServerHandleVoiceData(IncomingMsg);
+    {$ENDIF}
+    {$IFDEF ENABLE_EAC}
+    MsgID_EACMessage:
+      ServerHandleEACMessage(IncomingMsg);
     {$ENDIF}
   end;
 

@@ -108,6 +108,11 @@ begin
   Sprite[i].Player := DummyPlayer;
   Players.Remove(Player);
 
+  {$IFDEF ENABLE_EAC}
+  if Assigned(EACServer) then
+    EACServer.UnregisterClient(Player);
+  {$ENDIF}
+
   UDP.NetworkingSocket.CloseConnection(NetMessage.m_conn, 0, '', False);
 
   DoBalanceBots(1, Sprite[i].Player.Team);

@@ -1,0 +1,9 @@
+{
+	"title"											: "Soldat",
+	"executable"									: "@EOS_EXE_NAME@",
+	"productid"										: "@EOS_PRODUCT_ID@",
+	"sandboxid"										: "@EOS_SANDBOX_ID@",
+	"deploymentid"									: "@EOS_DEPLOYMENT_ID@",
+	"requested_splash"								: "<relative_path_to_splash.png>",
+	"wait_for_game_process_exit"					: "false"
+}

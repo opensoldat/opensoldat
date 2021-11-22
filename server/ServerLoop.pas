@@ -11,6 +11,9 @@ uses
   {$IFDEF SCRIPT}
   ScriptDispatcher,
   {$ENDIF}
+  {$IFDEF ENABLE_EAC}
+  EOS,
+  {$ENDIF}
   {$IFDEF ENABLE_FAE}
   NetworkServerFae,
   {$ENDIF}
@@ -50,6 +53,11 @@ begin
 
     {$IFDEF SCRIPT}
     ScrptDispatcher.OnClockTick();
+    {$ENDIF}
+
+    {$IFDEF ENABLE_EAC}
+    if Assigned(EACServer) then
+      EACServer.OnClockTick();
     {$ENDIF}
 
     {$IFDEF STEAM}

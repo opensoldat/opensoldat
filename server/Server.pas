@@ -36,6 +36,10 @@ uses
   Rcon,
   {$ENDIF}
 
+  {$IFDEF ENABLE_EAC}
+  EOS,
+  {$ENDIF}
+
   FileServer, LobbyClient,
 
   // soldat units
@@ -226,6 +230,12 @@ var
   ac_enable: TBooleanCvar;
   {$ENDIF}
 
+  {$IFDEF ENABLE_EAC}
+  ac_enable: TBooleanCvar;
+  ac_timeout: TIntegerCvar;
+  ac_loglevel: TIntegerCvar;
+  {$ENDIF}
+
   // config stuff
   ServerIP: string = '127.0.0.1';
   ServerPort: Integer = 23073;
@@ -295,6 +305,10 @@ var
   {$IFDEF STEAM}
   //SteamCallbacks: TSteamCallbacks;
   SteamAPI: TSteamGS;
+  {$ENDIF}
+
+  {$IFDEF ENABLE_EAC}
+  EACServer: TEpicOnlineServicesServer;
   {$ENDIF}
 
 implementation
@@ -685,6 +699,22 @@ begin
   end;
   {$ENDIF}
 
+  {$IFDEF ENABLE_EAC}
+  if ac_enable.Value then
+    begin
+    try
+      EACServer := TEpicOnlineServicesServer.Create(ac_loglevel.Value, sv_hostname.Value, ac_timeout.Value);
+    except
+      on E: Exception do
+      begin
+        WriteLn('Easy Anti-Cheat initialization has failed: ' + E.Message);
+        ProgReady := False;
+        Exit;
+      end;
+    end;
+  end;
+  {$ENDIF}
+
   ProgReady := True;
 
   {$IFNDEF SCRIPT}
@@ -844,6 +874,10 @@ begin
 
   {$IFNDEF STEAM}
   GameNetworkingSockets_Kill();
+  {$ENDIF}
+
+  {$IFDEF ENABLE_EAC}
+  FreeAndNil(EACServer);
   {$ENDIF}
 
   try

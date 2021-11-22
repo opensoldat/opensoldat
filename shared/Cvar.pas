@@ -721,6 +721,15 @@ begin
     {$IFDEF ENABLE_FAE}
   ac_enable := TBooleanCvar.Add('ac_enable', 'Enables/Disables anti-cheat checks via Fae', True, True, [CVAR_SERVER], nil);
     {$ENDIF}
+
+  {$ENDIF}
+
+  {$IFDEF ENABLE_EAC}
+  {$IFDEF SERVER}
+  ac_timeout := TIntegerCvar.Add('ac_timeout', 'Time in seconds to allow newly registered clients to complete anti-cheat authentication', 30, 30, [CVAR_SERVER, CVAR_INITONLY], nil, 10, 120);
+  {$ENDIF}
+  ac_enable := TBooleanCvar.Add('ac_enable', 'Enables/Disables easy anti-cheat', True, True, [CVAR_INITONLY], nil);
+  ac_loglevel := TIntegerCvar.Add('ac_loglevel', 'Verbosity level of EOS (Off = 0, Fatal = 100, Error = 200, Warning = 300, Info = 400, Verbose = 500, VeryVerbose = 600', 300, 300, [CVAR_INITONLY], nil, 0, 600);
   {$ENDIF}
 
   fs_localmount := TBooleanCvar.Add('fs_localmount', 'Mount game directory as game mod', False, False, [CVAR_CLIENT, CVAR_INITONLY], nil);

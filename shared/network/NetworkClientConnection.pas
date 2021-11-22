@@ -58,6 +58,11 @@ begin
     RequestMsg.HaveAntiCheat := ACTYPE_FAE;
   {$ENDIF}
 
+  {$IFDEF ENABLE_EAC}
+  if Assigned(EACClient) then
+    RequestMsg.HaveAntiCheat := ACTYPE_EAC;
+  {$ENDIF}
+
   if RedirectIP <> '' then
   begin
     RequestMsg.Forwarded := 1;
@@ -500,6 +505,9 @@ begin
 
     ANTICHEAT_REJECTED:
       RenderGameInfo(_('Rejected by Anti-Cheat:') + ' ' + Text);
+
+    ANTICHEAT_REQUIRED:
+      RenderGameInfo(_('This server requires Anti-Cheat.'));
   end;
 
   ClientDisconnect;

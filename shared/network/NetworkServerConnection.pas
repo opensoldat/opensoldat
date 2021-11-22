@@ -94,6 +94,16 @@ begin
   end;
   {$ENDIF}
 
+  {$IFDEF ENABLE_EAC}
+  // Reject clients without anti-cheat if this server requires it
+  if (ac_enable.Value) and (RequestMsg.HaveAntiCheat <> ACTYPE_EAC) then
+  begin
+    State := ANTICHEAT_REQUIRED;
+    ServerSendUnAccepted(NetMessage^.m_conn, State);
+    Exit;
+  end;
+  {$ENDIF}
+
   if IsServerTotallyFull then
     State := SERVER_FULL
   else if IsRemoteAdminIP(Player.IP) then

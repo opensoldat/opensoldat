@@ -270,7 +270,7 @@ begin
       Dec(MenuTimer);
 
     {$IFDEF STEAM}
-    SteamAPI_RunCallbacks();
+    RunManualCallbacks();
     {$ENDIF}
 
     // General game updating

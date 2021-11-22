@@ -70,6 +70,10 @@ ifeq ($(steam),on)
   CFLAGS += -dSTEAM
 endif
 
+ifeq ($(anticheat),on)
+  CFLAGS += -dENABLE_EAC
+endif
+
 COMPILER = fpc -l -B -MDelphi -Scgi ${CFLAGS} \
 -Fi../shared \
 -Fl./libs \
@@ -80,6 +84,7 @@ COMPILER = fpc -l -B -MDelphi -Scgi ${CFLAGS} \
 -Fu../shared/libs/GameNetworkingSockets \
 -Fu../shared/libs/PhysFS \
 -Fu../shared/libs/SteamWrapper \
+-Fu../shared/libs/EOS \
 -Fu../shared/mechanics \
 -Fu../shared/network \
 -Fu../server \

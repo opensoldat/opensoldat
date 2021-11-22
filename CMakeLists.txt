@@ -4,6 +4,7 @@ option(ADD_ASSETS "Include soldat.smod and font file" True)
 option(BUILD_CLIENT "Build client" True)
 option(BUILD_SERVER "Build server" True)
 option(BUILD_STEAM "Build steam version" False)
+option(BUILD_ANTICHEAT "Build easy anti-cheat" False)
 option(CROSS_LINUX_64 "Cross compile to Linux 64bit" False)
 option(CROSS_LINUX_32 "Cross compile to Linux 32bit" False)
 option(CROSS_WINDOWS_64 "Cross compile to Windows x86_64" False)
@@ -109,6 +110,8 @@ add_flag_prepend(CMAKE_Pascal_FLAGS
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared/libs/PhysFS")
 add_flag_prepend(CMAKE_Pascal_FLAGS
                  "-Fu${CMAKE_SOURCE_DIR}/shared/libs/SteamWrapper")
+add_flag_prepend(CMAKE_Pascal_FLAGS
+                 "-Fu${CMAKE_SOURCE_DIR}/shared/libs/EOS")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared/mechanics")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared/network")
 
@@ -143,6 +146,10 @@ if(BUILD_STEAM)
   add_flag_prepend(CMAKE_Pascal_FLAGS "-dSTEAM")
 endif()
 
+if(BUILD_ANTICHEAT)
+  add_flag_prepend(CMAKE_Pascal_FLAGS "-dENABLE_EAC")
+endif()
+
 # Other dependencies shared between client and server.
 # Find PhysFS
 if(NOT PHYSFS_LIBRARY OR NOT PHYSFS_INCLUDE_DIR)
@@ -170,6 +177,10 @@ endif()
 
 if(BUILD_SERVER)
   add_subdirectory(server)
+endif()
+
+if(BUILD_ANTICHEAT)
+  add_subdirectory(shared/libs/EOS)
 endif()
 
 # Install step that does 3 things:

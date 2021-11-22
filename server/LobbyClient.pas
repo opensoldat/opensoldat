@@ -53,7 +53,7 @@ begin
 
   Json := TJSONObject.Create;
 
-  Json.Add('AC', {$IFDEF ENABLE_FAE}ac_enable.Value{$ELSE}False{$ENDIF});
+  Json.Add('AC', {$IFDEF ENABLE_FAE OR $IFDEF ENABLE_EAC}ac_enable.Value{$ELSE}False{$ENDIF});
   Json.Add('AuthMode', 0);
   Json.Add('Advanced', sv_advancemode.Value);
   Json.Add('BonusFreq', sv_bonus_frequency.Value);

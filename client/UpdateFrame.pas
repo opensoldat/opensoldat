@@ -16,6 +16,7 @@ uses
   NetworkClientConnection, Constants,
   Polymap, Game, Client, Util, SysUtils, Calc, LogFile, WeatherEffects, Sparks
   {$IFDEF ENABLE_FAE}, FaeClient{$ENDIF}
+  {$IFDEF ENABLE_EAC}, EOS{$ENDIF}
   ;
 
 procedure Update_Frame;
@@ -39,6 +40,11 @@ begin
 
   {$IFDEF ENABLE_FAE}
   FaeOnTick;
+  {$ENDIF}
+
+  {$IFDEF ENABLE_EAC}
+  if Assigned(EACClient) then
+    EACClient.OnClockTick();
   {$ENDIF}
 
   CameraPrev.x := CameraX;
