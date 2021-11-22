@@ -839,6 +839,7 @@ begin
   {$IFDEF STEAM}
   Debug('[Steam] Shutdown');
   SteamAPI.GameServer.Shutdown;
+  SteamAPI_Shutdown();
   {$ENDIF}
 
   {$IFNDEF STEAM}

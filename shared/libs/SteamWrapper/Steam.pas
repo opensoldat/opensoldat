@@ -4,7 +4,7 @@
 {                                                       }
 {       Copyright (c) 2020 Soldat Team                  }
 {                                                       }
-{       For use with SteamWorks SDK 1.50                }
+{       For use with SteamWorks SDK 1.52                }
 {                                                       }
 {*******************************************************}
 
@@ -376,7 +376,7 @@ function SteamAPI_ISteamParties_DestroyBeacon(SteamInterface: ISteamParties; ulB
 function SteamAPI_ISteamParties_GetBeaconLocationData(SteamInterface: ISteamParties; BeaconLocation: SteamPartyBeaconLocation_t; eData: ESteamPartyBeaconLocationData; pchDataStringOut: PChar; cchDataStringOut: Longint): Boolean; cdecl; external STEAMLIB;
 
 
-function SteamAPI_SteamRemoteStorage_v014(): ISteamRemoteStorage; cdecl; external STEAMLIB;
+function SteamAPI_SteamRemoteStorage_v015(): ISteamRemoteStorage; cdecl; external STEAMLIB;
 
 function SteamAPI_ISteamRemoteStorage_FileWrite(SteamInterface: ISteamRemoteStorage; pchFile: PChar; pvData: Pointer; cubData: int32): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamRemoteStorage_FileRead(SteamInterface: ISteamRemoteStorage; pchFile: PChar; pvData: Pointer; cubDataToRead: int32): int32; cdecl; external STEAMLIB;
@@ -708,8 +708,8 @@ function SteamAPI_ISteamController_TranslateActionOrigin(SteamInterface: ISteamC
 function SteamAPI_ISteamController_GetControllerBindingRevision(SteamInterface: ISteamController; controllerHandle: ControllerHandle_t; pMajor: PInteger; pMinor: PInteger): Boolean; cdecl; external STEAMLIB;
 
 
-function SteamAPI_SteamUGC_v014(): ISteamUGC; cdecl; external STEAMLIB;
-function SteamAPI_SteamGameServerUGC_v014(): ISteamUGC; cdecl; external STEAMLIB;
+function SteamAPI_SteamUGC_v015(): ISteamUGC; cdecl; external STEAMLIB;
+function SteamAPI_SteamGameServerUGC_v015(): ISteamUGC; cdecl; external STEAMLIB;
 
 function SteamAPI_ISteamUGC_CreateQueryUserUGCRequest(SteamInterface: ISteamUGC; unAccountID: AccountID_t; eListType: EUserUGCList; eMatchingUGCType: EUGCMatchingUGCType; eSortOrder: EUserUGCListSortOrder; nCreatorAppID: AppId_t; nConsumerAppID: AppId_t; unPage: uint32): UGCQueryHandle_t; cdecl; external STEAMLIB;
 function SteamAPI_ISteamUGC_CreateQueryAllUGCRequestPage(SteamInterface: ISteamUGC; eQueryType: EUGCQuery; eMatchingeMatchingUGCTypeFileType: EUGCMatchingUGCType; nCreatorAppID: AppId_t; nConsumerAppID: AppId_t; unPage: uint32): UGCQueryHandle_t; cdecl; external STEAMLIB;
@@ -982,8 +982,8 @@ function SteamAPI_ISteamRemotePlay_BGetSessionClientResolution(SteamInterface: I
 function SteamAPI_ISteamRemotePlay_BSendRemotePlayTogetherInvite(SteamInterface: ISteamRemotePlay; steamIDFriend: TSteamID): Boolean; cdecl; external STEAMLIB;
 
 
-function SteamAPI_SteamNetworkingSockets_v009(): ISteamNetworkingSockets; cdecl; external STEAMLIB;
-function SteamAPI_SteamGameServerNetworkingSockets_v009(): ISteamNetworkingSockets; cdecl; external STEAMLIB;
+function SteamAPI_SteamNetworkingSockets_SteamAPI_v011(): ISteamNetworkingSockets; cdecl; external STEAMLIB;
+function SteamAPI_SteamGameServerNetworkingSockets_SteamAPI_v011(): ISteamNetworkingSockets; cdecl; external STEAMLIB;
 
 function SteamAPI_ISteamNetworkingSockets_CreateListenSocketIP(SteamInterface: ISteamNetworkingSockets; localAddress: PSteamNetworkingIPAddr; nOptions: Longint; pOptions: pSteamNetworkingConfigValue_t): HSteamListenSocket; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingSockets_ConnectByIPAddress(SteamInterface: ISteamNetworkingSockets; address: PSteamNetworkingIPAddr; nOptions: Longint; pOptions: pSteamNetworkingConfigValue_t): HSteamNetConnection; cdecl; external STEAMLIB;
@@ -1034,7 +1034,7 @@ function SteamAPI_ISteamNetworkingCustomSignalingRecvContext_OnConnectRequest(St
 procedure SteamAPI_ISteamNetworkingCustomSignalingRecvContext_SendRejectionSignal(SteamInterface: ISteamNetworkingCustomSignalingRecvContext; identityPeer: PSteamNetworkingIdentity; pMsg: Pointer; cbMsg: Longint); cdecl; external STEAMLIB;
 
 
-function SteamAPI_SteamNetworkingUtils_v003(): ISteamNetworkingUtils; cdecl; external STEAMLIB;
+function SteamAPI_SteamNetworkingUtils_SteamAPI_v004(): ISteamNetworkingUtils; cdecl; external STEAMLIB;
 
 function SteamAPI_ISteamNetworkingUtils_AllocateMessage(SteamInterface: ISteamNetworkingUtils; cbAllocateBuffer: Longint): pSteamNetworkingMessage_t; cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamNetworkingUtils_InitRelayNetworkAccess(SteamInterface: ISteamNetworkingUtils); cdecl; external STEAMLIB;
@@ -1066,15 +1066,16 @@ function SteamAPI_ISteamNetworkingUtils_SetGlobalCallback_SteamRelayNetworkStatu
 function SteamAPI_ISteamNetworkingUtils_SetConfigValue(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr; eDataType: ESteamNetworkingConfigDataType; pArg: Pointer): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SetConfigValueStruct(SteamInterface: ISteamNetworkingUtils; opt: PSteamNetworkingConfigValue_t; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_GetConfigValue(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr; pOutDataType: pESteamNetworkingConfigDataType; var pResult; cbResult: pcsize_t): ESteamNetworkingGetConfigValueResult; cdecl; external STEAMLIB;
-function SteamAPI_ISteamNetworkingUtils_GetConfigValueInfo(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; pOutName: PPAnsiChar; pOutDataType: pESteamNetworkingConfigDataType; pOutScope: pESteamNetworkingConfigScope; pOutNextValue: pESteamNetworkingConfigValue): Boolean; cdecl; external STEAMLIB;
+function SteamAPI_ISteamNetworkingUtils_GetConfigValueInfo(SteamInterface: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; var pOutName: PAnsiChar; pOutDataType: pESteamNetworkingConfigDataType; pOutScope: pESteamNetworkingConfigScope; pOutNextValue: pESteamNetworkingConfigValue): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_GetFirstConfigValue(SteamInterface: ISteamNetworkingUtils): ESteamNetworkingConfigValue; cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamNetworkingUtils_SteamNetworkingIPAddr_ToString(SteamInterface: ISteamNetworkingUtils; addr: PSteamNetworkingIPAddr; buf: PChar; cbBuf: uint32; bWithPort: Boolean); cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SteamNetworkingIPAddr_ParseString(SteamInterface: ISteamNetworkingUtils; pAddr: pSteamNetworkingIPAddr; pszStr: PChar): Boolean; cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamNetworkingUtils_SteamNetworkingIdentity_ToString(SteamInterface: ISteamNetworkingUtils; identity: PSteamNetworkingIdentity; buf: PChar; cbBuf: uint32); cdecl; external STEAMLIB;
 function SteamAPI_ISteamNetworkingUtils_SteamNetworkingIdentity_ParseString(SteamInterface: ISteamNetworkingUtils; pIdentity: pSteamNetworkingIdentity; pszStr: PChar): Boolean; cdecl; external STEAMLIB;
 
+procedure SteamAPI_SteamNetworkingMessage_t_Release(pIMsg: PSteamNetworkingMessage_t); cdecl; external STEAMLIB;
 
-function SteamAPI_SteamGameServer_v013(): ISteamGameServer; cdecl; external STEAMLIB;
+function SteamAPI_SteamGameServer_v014(): ISteamGameServer; cdecl; external STEAMLIB;
 
 procedure SteamAPI_ISteamGameServer_SetProduct(SteamInterface: ISteamGameServer; pszProduct: PChar); cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamGameServer_SetGameDescription(SteamInterface: ISteamGameServer; pszGameDescription: PChar); cdecl; external STEAMLIB;
@@ -1099,9 +1100,7 @@ procedure SteamAPI_ISteamGameServer_SetKeyValue(SteamInterface: ISteamGameServer
 procedure SteamAPI_ISteamGameServer_SetGameTags(SteamInterface: ISteamGameServer; pchGameTags: PChar); cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamGameServer_SetGameData(SteamInterface: ISteamGameServer; pchGameData: PChar); cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamGameServer_SetRegion(SteamInterface: ISteamGameServer; pszRegion: PChar); cdecl; external STEAMLIB;
-function SteamAPI_ISteamGameServer_SendUserConnectAndAuthenticate(SteamInterface: ISteamGameServer; unIPClient: uint32; pvAuthBlob: Pointer; cubAuthBlobSize: uint32; pSteamIDUser: PSteamID): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamGameServer_CreateUnauthenticatedUserConnection(SteamInterface: ISteamGameServer): TSteamID; cdecl; external STEAMLIB;
-procedure SteamAPI_ISteamGameServer_SendUserDisconnect(SteamInterface: ISteamGameServer; steamIDUser: TSteamID); cdecl; external STEAMLIB;
 function SteamAPI_ISteamGameServer_BUpdateUserData(SteamInterface: ISteamGameServer; steamIDUser: TSteamID; pchPlayerName: PChar; uScore: uint32): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamGameServer_GetAuthSessionTicket(SteamInterface: ISteamGameServer; pTicket: Pointer; cbMaxTicket: Longint; pcbTicket: puint32): HAuthTicket; cdecl; external STEAMLIB;
 function SteamAPI_ISteamGameServer_BeginAuthSession(SteamInterface: ISteamGameServer; pAuthTicket: Pointer; cbAuthTicket: Longint; steamID: TSteamID): EBeginAuthSessionResult; cdecl; external STEAMLIB;
@@ -1114,9 +1113,7 @@ function SteamAPI_ISteamGameServer_GetServerReputation(SteamInterface: ISteamGam
 function SteamAPI_ISteamGameServer_GetPublicIP(SteamInterface: ISteamGameServer): SteamIPAddress_t; cdecl; external STEAMLIB;
 function SteamAPI_ISteamGameServer_HandleIncomingPacket(SteamInterface: ISteamGameServer; pData: Pointer; cbData: Longint; srcIP: uint32; srcPort: uint16): Boolean; cdecl; external STEAMLIB;
 function SteamAPI_ISteamGameServer_GetNextOutgoingPacket(SteamInterface: ISteamGameServer; pOut: Pointer; cbMaxOut: Longint; pNetAdr: puint32; pPort: puint16): Longint; cdecl; external STEAMLIB;
-procedure SteamAPI_ISteamGameServer_EnableHeartbeats(SteamInterface: ISteamGameServer; bActive: Boolean); cdecl; external STEAMLIB;
-procedure SteamAPI_ISteamGameServer_SetHeartbeatInterval(SteamInterface: ISteamGameServer; iHeartbeatInterval: Longint); cdecl; external STEAMLIB;
-procedure SteamAPI_ISteamGameServer_ForceHeartbeat(SteamInterface: ISteamGameServer); cdecl; external STEAMLIB;
+procedure SteamAPI_ISteamGameServer_SetAdvertiseServerActive(SteamInterface: ISteamGameServer; bActive: Boolean); cdecl; external STEAMLIB;
 function SteamAPI_ISteamGameServer_AssociateWithClan(SteamInterface: ISteamGameServer; steamIDClan: TSteamID): SteamAPICall_t; cdecl; external STEAMLIB;
 function SteamAPI_ISteamGameServer_ComputeNewPlayerCompatibility(SteamInterface: ISteamGameServer; steamIDNewPlayer: TSteamID): SteamAPICall_t; cdecl; external STEAMLIB;
 
@@ -1322,9 +1319,7 @@ type
     procedure SetGameTags(GameTags: pAnsiChar);
     procedure SetGameData(GameData: pAnsiChar);
     procedure SetRegion(Region: pAnsiChar);
-    function SendUserConnectAndAuthenticate(ClientIP: uint32; AuthBlob: Pointer; AuthBlobSize: uint32; UserSteamID: pSteamID): Boolean;
     function CreateUnauthenticatedUserConnection(): TSteamID;
-    procedure SendUserDisconnect(steamIDUser: TSteamID);
     function BUpdateUserData(UserID: TSteamID; PlayerName: pAnsiChar; Score: uint32): Boolean;
     function GetAuthSessionTicket(Ticket: Pointer; MaxTicket: Integer; ActualTicketLength: pUint32): uint32;
     function BeginAuthSession(AuthTicket: Pointer; AuthTicketSize: Integer; steamID: TSteamID): EBeginAuthSessionResult;
@@ -1335,9 +1330,7 @@ type
     function GetPublicIP(): SteamIPAddress_t;
     function HandleIncomingPacket(Data: Pointer; DataSize: Integer; SourceIP: uint32; SourcePort: uint16): Boolean;
     function GetNextOutgoingPacket(pOut: Pointer; MaxOutCount: Integer; NetAddress: pUint32; Port: pUint16): Integer;
-    procedure EnableHeartbeats(IsActive: Boolean);
-    procedure SetHeartbeatInterval(HeartbeatInterval: Integer);
-    procedure ForceHeartbeat();
+    procedure SetAdvertiseServerActive(IsActive: Boolean);
     function AssociateWithClan(ClanID: TSteamID): uint64;
     function ComputeNewPlayerCompatibility(NewPlayerID: TSteamID): uint64;
   end;
@@ -1437,7 +1430,7 @@ begin
   if SteamPipeHandle = 0 then
     raise Exception.Create('SteamPipeHandle is null');
 
-  UGC := TSteamUGC.Init(SteamAPI_SteamUGC_v014());
+  UGC := TSteamUGC.Init(SteamAPI_SteamUGC_v015());
   Utils := TSteamUtils.Init(SteamAPI_SteamUtils_v010());
   User := TSteamUser.Init(SteamAPI_SteamUser_v021());
   Screenshots := TSteamScreenshots.Init(SteamAPI_SteamScreenshots_v003());
@@ -1451,9 +1444,9 @@ begin
 
   SteamPipeHandle := SteamGameServer_GetHSteamPipe();
 
-  UGC := TSteamUGC.Init(SteamAPI_SteamGameServerUGC_v014());
+  UGC := TSteamUGC.Init(SteamAPI_SteamGameServerUGC_v015());
   Utils := TSteamUtils.Init(SteamAPI_SteamGameServerUtils_v010());
-  GameServer := TSteamGameServer.Init(SteamAPI_SteamGameServer_v013());
+  GameServer := TSteamGameServer.Init(SteamAPI_SteamGameServer_v014());
   GameServerStats := TSteamGameServerStats.Init(SteamAPI_SteamGameServerStats_v001());
 end;
 
@@ -2020,17 +2013,9 @@ procedure TSteamGameServer.SetRegion(Region: pAnsiChar);
 begin
   SteamAPI_ISteamGameServer_SetRegion(SteamGameServerInterface, Region);
 end;
-function TSteamGameServer.SendUserConnectAndAuthenticate(ClientIP: uint32; AuthBlob: Pointer; AuthBlobSize: uint32; UserSteamID: pSteamID): Boolean;
-begin
-  Result := SteamAPI_ISteamGameServer_SendUserConnectAndAuthenticate(SteamGameServerInterface, ClientIP, AuthBlob, AuthBlobSize, UserSteamID);
-end;
 function TSteamGameServer.CreateUnauthenticatedUserConnection(): TSteamID;
 begin
   Result := SteamAPI_ISteamGameServer_CreateUnauthenticatedUserConnection(SteamGameServerInterface);
-end;
-procedure TSteamGameServer.SendUserDisconnect(steamIDUser: TSteamID);
-begin
-  SteamAPI_ISteamGameServer_SendUserDisconnect(SteamGameServerInterface, steamIDUser);
 end;
 function TSteamGameServer.BUpdateUserData(UserID: TSteamID; PlayerName: pAnsiChar; Score: uint32): Boolean;
 begin
@@ -2072,17 +2057,9 @@ function TSteamGameServer.GetNextOutgoingPacket(pOut: Pointer; MaxOutCount: Inte
 begin
   Result := SteamAPI_ISteamGameServer_GetNextOutgoingPacket(SteamGameServerInterface, pOut, MaxOutCount, NetAddress, Port);
 end;
-procedure TSteamGameServer.EnableHeartbeats(IsActive: Boolean);
+procedure TSteamGameServer.SetAdvertiseServerActive(IsActive: Boolean);
 begin
-  SteamAPI_ISteamGameServer_EnableHeartbeats(SteamGameServerInterface, IsActive);
-end;
-procedure TSteamGameServer.SetHeartbeatInterval(HeartbeatInterval: Integer);
-begin
-  SteamAPI_ISteamGameServer_SetHeartbeatInterval(SteamGameServerInterface, HeartbeatInterval);
-end;
-procedure TSteamGameServer.ForceHeartbeat();
-begin
-  SteamAPI_ISteamGameServer_ForceHeartbeat(SteamGameServerInterface);
+  SteamAPI_ISteamGameServer_SetAdvertiseServerActive(SteamGameServerInterface, IsActive);
 end;
 function TSteamGameServer.AssociateWithClan(ClanID: TSteamID): uint64;
 begin

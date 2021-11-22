@@ -14,6 +14,7 @@ uses
   {$IFNDEF SERVER}
   GameStrings, ClientGame,
   {$ENDIF}
+  {$IFDEF STEAM}Steam,{$ENDIF}
   SysUtils, Classes, Vector, Sprites,
   {$IFNDEF SERVER}GameNetworkingSockets,{$ENDIF}
   Net;

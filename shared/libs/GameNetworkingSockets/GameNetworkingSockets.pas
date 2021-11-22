@@ -1920,8 +1920,15 @@ begin
     raise Exception.Create('GameNetworkingSockets_Init has failed: ' + PChar(ErrorMsg));
   {$ENDIF}
 
+  {$IFDEF STEAM}
+  {$IFDEF SERVER}
+  GameNetworkingSocketsInterface := SteamAPI_SteamGameServerNetworkingSockets_SteamAPI_v011();
+  {$ELSE}
+  GameNetworkingSocketsInterface := SteamAPI_SteamNetworkingSockets_SteamAPI_v011();
+  {$ENDIF}
+  {$ELSE}
   GameNetworkingSocketsInterface := SteamAPI_SteamNetworkingSockets_v009();
-
+  {$ENDIF}
   if GameNetworkingSocketsInterface = nil then
     raise Exception.Create('GameNetworkingSocketsInterface is null');
 end;
@@ -2044,7 +2051,11 @@ end;
 // Utils
 constructor TSteamNetworkingUtils.Init();
 begin
+  {$IFDEF STEAM}
+  GameNetworkingUtilsInterface := SteamAPI_SteamNetworkingUtils_SteamAPI_v004();
+  {$ELSE}
   GameNetworkingUtilsInterface := SteamAPI_SteamNetworkingUtils_v003();
+  {$ENDIF}
   if GameNetworkingUtilsInterface = nil then
     raise Exception.Create('GameNetworkingSocketsInterface is null');
 end;

@@ -12,7 +12,7 @@ unit Sound;
 interface
 
 uses
-  SDL2, Vector, openal, PhysFS;
+  SDL2, Vector, openal, PhysFS {$IFDEF STEAM}, fgl{$ENDIF};
 
 type
   TSoundSample = record

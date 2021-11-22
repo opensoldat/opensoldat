@@ -866,6 +866,7 @@ implementation
 
 uses
   {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Game, TraceLog, Demo,
+  {$IFDEF STEAM}Steam,{$ENDIF}
   {$IFNDEF SERVER}
   NetworkClientSprite, NetworkClientConnection, NetworkClientThing,
   NetworkClientGame, NetworkClientFunctions, NetworkClientHeartbeat,
