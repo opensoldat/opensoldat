@@ -197,7 +197,8 @@
             <Verbosity>
               <ShowHints Value="False"/>
             </Verbosity>
-            <CustomOptions Value="-dSERVER
+            <CustomOptions Value="-k-rpath=$ORIGIN
+-dSERVER
 -dSCRIPT
 -dPS_USESSUPPORT
 -dDEVELOPMENT"/>
@@ -246,7 +247,8 @@
               <ShowNotes Value="False"/>
               <ShowHints Value="False"/>
             </Verbosity>
-            <CustomOptions Value="-dSERVER
+            <CustomOptions Value="-k-rpath=$ORIGIN
+-dSERVER
 -dSCRIPT
 -dPS_USESSUPPORT"/>
           </Other>
@@ -281,7 +283,8 @@
             </Debugging>
           </Linking>
           <Other>
-            <CustomOptions Value="-dSERVER
+            <CustomOptions Value="-k-rpath=$ORIGIN
+-dSERVER
 -dSCRIPT
 -dPS_USESSUPPORT
 -dDEVELOPMENT"/>
@@ -330,7 +333,8 @@
               <ShowNotes Value="False"/>
               <ShowHints Value="False"/>
             </Verbosity>
-            <CustomOptions Value="-dSERVER
+            <CustomOptions Value="-k-rpath=$ORIGIN
+-dSERVER
 -dSCRIPT
 -dPS_USESSUPPORT"/>
           </Other>

@@ -145,7 +145,8 @@
             <Verbosity>
               <ShowHints Value="False"/>
             </Verbosity>
-            <CustomOptions Value="-dDEBUG
+            <CustomOptions Value="-k-rpath=$ORIGIN
+-dDEBUG
 -dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
@@ -192,6 +193,7 @@
               <ShowNotes Value="False"/>
               <ShowHints Value="False"/>
             </Verbosity>
+            <CustomOptions Value="-k-rpath=$ORIGIN"/>
           </Other>
         </CompilerOptions>
       </Item5>
@@ -224,7 +226,8 @@
             </Debugging>
           </Linking>
           <Other>
-            <CustomOptions Value="-dDEBUG
+            <CustomOptions Value="-k-rpath=$ORIGIN
+-dDEBUG
 -dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
@@ -271,6 +274,7 @@
               <ShowNotes Value="False"/>
               <ShowHints Value="False"/>
             </Verbosity>
+            <CustomOptions Value="-k-rpath=$ORIGIN"/>
           </Other>
         </CompilerOptions>
       </Item7>
