@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
       <Flags>
         <MainUnitHasUsesSectionForAllUnits Value="False"/>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
+        <MainUnitHasScaledStatement Value="False"/>
+        <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="soldat"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
@@ -126,7 +127,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -158,7 +159,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -203,7 +204,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -237,7 +238,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -539,7 +540,7 @@
     <RunParams>
       <local>
         <CommandLineParams Value="-join 127.0.0.1 23073"/>
-        <LaunchingApplication PathPlusParams="\usr\X11R6\bin\xterm -T 'Lazarus Run Output' -e $(LazarusDir)\tools\runwait.sh $(TargetCmdLine)"/>
+        <LaunchingApplication PathPlusParams="\usr\X11R6\bin\xterm -T &apos;Lazarus Run Output&apos; -e $(LazarusDir)\tools\runwait.sh $(TargetCmdLine)"/>
       </local>
       <environment>
         <UserOverrides Count="1">
@@ -551,7 +552,7 @@
         <Mode0 Name="default">
           <local>
             <CommandLineParams Value="-join 127.0.0.1 23073"/>
-            <LaunchingApplication PathPlusParams="\usr\X11R6\bin\xterm -T 'Lazarus Run Output' -e $(LazarusDir)\tools\runwait.sh $(TargetCmdLine)"/>
+            <LaunchingApplication PathPlusParams="\usr\X11R6\bin\xterm -T &apos;Lazarus Run Output&apos; -e $(LazarusDir)\tools\runwait.sh $(TargetCmdLine)"/>
           </local>
           <environment>
             <UserOverrides Count="1">
