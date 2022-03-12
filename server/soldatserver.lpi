@@ -27,7 +27,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -76,7 +76,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -125,7 +125,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -349,7 +349,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -389,7 +389,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -437,7 +437,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -471,7 +471,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -895,7 +895,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-      <Libraries Value="libs"/>
+      <Libraries Value="build"/>
       <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
       <UnitOutputDirectory Value="build\$(TargetOS)"/>
     </SearchPaths>

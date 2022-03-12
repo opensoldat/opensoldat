@@ -35,7 +35,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -81,7 +81,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="..\3rdparty\Indy10\Lib\Core;..\shared;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\PhysFS;..\shared\mechanics;..\shared\network;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -287,7 +287,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -327,7 +327,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -376,7 +376,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -417,7 +417,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -467,7 +467,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -501,7 +501,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
-            <Libraries Value="libs"/>
+            <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
           </SearchPaths>
@@ -825,7 +825,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
-      <Libraries Value="libs"/>
+      <Libraries Value="build"/>
       <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
       <UnitOutputDirectory Value="build\$(TargetOS)"/>
     </SearchPaths>
