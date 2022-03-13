@@ -11,6 +11,8 @@ option(CROSS_WINDOWS_32 "Cross compile to Windows i386" False)
 option(CROSS_DARWIN_64 "Cross compile to macOS x86_64" False)
 option(CROSS_DARWIN_32 "Cross compile to macOS i386" False)
 
+option(BUILD_GNS "Build GameNetworkingSockets" True)
+
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
 include(${CMAKE_MODULE_PATH}/utils.cmake)
@@ -160,7 +162,9 @@ if(BUILD_CLIENT OR BUILD_SERVER)
     file(WRITE ${PROJECT_BINARY_DIR}/bin/steam_appid.txt "638490")
   else()
     # GameNetworkingSockets
-    add_subdirectory(shared/libs/GameNetworkingSockets)
+    if(BUILD_GNS)
+      add_subdirectory(shared/libs/GameNetworkingSockets)
+    endif()
   endif()
 endif()
 
