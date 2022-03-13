@@ -1,5 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#ifdef _WIN32
+#define STBIDEF __declspec(dllexport)
+#define STBIWDEF __declspec(dllexport)
+#define STBIRDEF __declspec(dllexport)
+#endif
+
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
