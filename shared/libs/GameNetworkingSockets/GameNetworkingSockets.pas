@@ -11,7 +11,7 @@ uses
 
 const
   {$IFDEF WINDOWS}
-  GNSLIB = 'libGameNetworkingSockets.dll';
+  GNSLIB = 'GameNetworkingSockets.dll';
   {$ENDIF}
   {$IFDEF DARWIN}
   GNSLIB = 'libGameNetworkingSockets.dylib';

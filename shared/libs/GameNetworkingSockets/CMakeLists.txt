@@ -59,11 +59,6 @@ FetchContent_Populate(gamenetworkingsockets)
 option(GAMENETWORKINGSOCKETS_BUILD_EXAMPLES OFF)
 option(GAMENETWORKINGSOCKETS_BUILD_TESTS OFF)
 
-# Soldat expects libGameNetworkingSockets.dll on Windows.
-if(MSVC)
-  set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
-endif(MSVC)
-
 ADD_SUBDIRECTORY( ${GNS_SOURCE_DIR} EXCLUDE_FROM_ALL)
 ADD_DEPENDENCIES(GameNetworkingSockets GameNetworkingSockets)
 ##############################################################
