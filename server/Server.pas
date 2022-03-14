@@ -1196,7 +1196,7 @@ begin
   else
   begin
     WriteLn('[NET] Failed to bind to ' + net_ip.Value + ':' + IntToStr(net_port.Value));
-    ShutDown;
+    ProgReady := False;
     Exit;
   end;
 
