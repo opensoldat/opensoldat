@@ -815,10 +815,7 @@ begin
   begin
     try
       MainConsole.Console('Shutting down admin server...', GAME_MESSAGE_COLOR);
-      if AdminServer <> nil then
-      begin
-        FreeAndNil(AdminServer);
-      end;
+      FreeAndNil(AdminServer);
     except
       on e: Exception do
         WriteLn('Error on SHUTDOWN: ' + e.Message);
