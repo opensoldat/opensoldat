@@ -828,12 +828,12 @@ begin
 
   StopFileServer;
 
-  MapsList.Free;
-  RemoteIPs.Free;
-  AdminIPs.Free;
+  FreeAndNil(MapsList);
+  FreeAndNil(RemoteIPs);
+  FreeAndNil(AdminIPs);
 
   {$IFDEF SCRIPT}
-  ScrptDispatcher.Free;
+  FreeAndNil(ScrptDispatcher);
   {$ENDIF}
 
   {$IFDEF STEAM}
