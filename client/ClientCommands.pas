@@ -282,6 +282,11 @@ begin
     MainConsole.Console('Usage: ' + Args[0] + ' "tick"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+  if not DemoPlayer.Active then
+  begin
+    MainConsole.Console('You are not playing a demo', WARNING_MESSAGE_COLOR);
+    Exit;
+  end;
   if Args[0] = 'demo_tick' then
     DemoPlayer.Position(StrToIntDef(Args[1], 0))
   else
