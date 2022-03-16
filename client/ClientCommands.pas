@@ -239,14 +239,14 @@ begin
   end;
   if not Sprite[MySprite].IsSpectator then
   begin
-    MainConsole.Console('You are not a spectator', WARNING_MESSAGE_COLOR);
+    MainConsole.Console('You are not a spectator', DEBUG_MESSAGE_COLOR);
     Exit;
   end;
   InputId := StrToIntDef(Args[1], -1);
   if (InputId < 0) or (InputId > MAX_SPRITES) then
   begin
     MainConsole.Console('Invalid id value. Must be in range [0, ' + IntToStr(MAX_SPRITES) + ']',
-    WARNING_MESSAGE_COLOR);
+    DEBUG_MESSAGE_COLOR);
     Exit;
   end;
   CameraFollowSprite := InputId;
@@ -284,7 +284,7 @@ begin
   end;
   if not DemoPlayer.Active then
   begin
-    MainConsole.Console('You are not playing a demo', WARNING_MESSAGE_COLOR);
+    MainConsole.Console('You are not playing a demo', DEBUG_MESSAGE_COLOR);
     Exit;
   end;
   if Args[0] = 'demo_tick' then
