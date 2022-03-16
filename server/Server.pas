@@ -815,10 +815,7 @@ begin
   begin
     try
       MainConsole.Console('Shutting down admin server...', GAME_MESSAGE_COLOR);
-      if AdminServer <> nil then
-      begin
-        FreeAndNil(AdminServer);
-      end;
+      FreeAndNil(AdminServer);
     except
       on e: Exception do
         WriteLn('Error on SHUTDOWN: ' + e.Message);
@@ -828,12 +825,12 @@ begin
 
   StopFileServer;
 
-  MapsList.Free;
-  RemoteIPs.Free;
-  AdminIPs.Free;
+  FreeAndNil(MapsList);
+  FreeAndNil(RemoteIPs);
+  FreeAndNil(AdminIPs);
 
   {$IFDEF SCRIPT}
-  ScrptDispatcher.Free;
+  FreeAndNil(ScrptDispatcher);
   {$ENDIF}
 
   {$IFDEF STEAM}
@@ -1196,7 +1193,7 @@ begin
   else
   begin
     WriteLn('[NET] Failed to bind to ' + net_ip.Value + ':' + IntToStr(net_port.Value));
-    ShutDown;
+    ProgReady := False;
     Exit;
   end;
 
