@@ -229,14 +229,27 @@ begin
 end;
 
 procedure CommandSwitchCam(Args: array of AnsiString; Sender: Byte);
+var
+  InputId: LongInt;
 begin
   if Length(Args) <= 1 then
   begin
     MainConsole.Console('Usage: switchcam "id"', GAME_MESSAGE_COLOR);
     Exit;
   end;
-  if Sprite[MySprite].IsSpectator then
-    CameraFollowSprite := StrToIntDef(Args[1], 0);
+  if not Sprite[MySprite].IsSpectator then
+  begin
+    MainConsole.Console('You are not a spectator', WARNING_MESSAGE_COLOR);
+    Exit;
+  end;
+  InputId := StrToIntDef(Args[1], -1);
+  if (InputId < 0) or (InputId > MAX_SPRITES) then
+  begin
+    MainConsole.Console('Invalid id value. Must be in range [0, ' + IntToStr(MAX_SPRITES) + ']',
+    WARNING_MESSAGE_COLOR);
+    Exit;
+  end;
+  CameraFollowSprite := InputId;
 end;
 
 procedure CommandSwitchCamFlag(Args: array of AnsiString; Sender: Byte);
