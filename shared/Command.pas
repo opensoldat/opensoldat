@@ -59,7 +59,7 @@ procedure CommandToggle(Args: array of AnsiString; Sender: Byte);
 var
   ACvar: TCvarBase;
 begin
-  if Length(Args) = 1 then
+  if Length(Args) < 4 then
   begin
     MainConsole.Console('Usage: toggle "cvarname" "value" "value2"', GAME_MESSAGE_COLOR);
     Exit;
