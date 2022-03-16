@@ -80,7 +80,7 @@ procedure CommandAlias(Args: array of AnsiString; Sender: Byte);
 var
   AliasName: AnsiString;
 begin
-  if Length(Args) = 1 then
+  if Length(Args) < 3 then
   begin
     MainConsole.Console('Usage: alias "name" "command"', GAME_MESSAGE_COLOR);
     Exit;
