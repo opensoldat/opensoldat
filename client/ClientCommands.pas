@@ -277,6 +277,11 @@ end;
 
 procedure CommandDemoTick(Args: array of AnsiString; Sender: Byte);
 begin
+  if Length(Args) <= 1 then
+  begin
+    MainConsole.Console('Usage: ' + Args[0] + ' "tick"', GAME_MESSAGE_COLOR);
+    Exit;
+  end;
   if Args[0] = 'demo_tick' then
     DemoPlayer.Position(StrToIntDef(Args[1], 0))
   else
