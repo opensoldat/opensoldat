@@ -59,7 +59,7 @@ procedure CommandToggle(Args: array of AnsiString; Sender: Byte);
 var
   ACvar: TCvarBase;
 begin
-  if Length(Args) = 1 then
+  if Length(Args) < 4 then
   begin
     MainConsole.Console('Usage: toggle "cvarname" "value" "value2"', GAME_MESSAGE_COLOR);
     Exit;
@@ -80,19 +80,19 @@ procedure CommandAlias(Args: array of AnsiString; Sender: Byte);
 var
   AliasName: AnsiString;
 begin
-  if Length(Args) = 1 then
+  if Length(Args) < 3 then
   begin
     MainConsole.Console('Usage: alias "name" "command"', GAME_MESSAGE_COLOR);
     Exit;
   end;
   AliasName := Args[1];
-  if (TCvarBase.Find(AliasName) <> nil) and (CommandFind(AliasName) <> nil) then
+  if (TCvarBase.Find(AliasName) <> nil) or (CommandFind(AliasName) <> nil) then
   begin
     MainConsole.Console('Cannot use this alias name because it''s already used', DEBUG_MESSAGE_COLOR);
     Exit;
   end;
   CommandAdd(AliasName, CommandExecuteAlias, Args[2], [CMD_ALIAS]);
-  MainConsole.Console('New alias: Args[1] with command: ' + Args[2], GAME_MESSAGE_COLOR);
+  MainConsole.Console('New alias: ' + Args[1] + ' with command ' + Args[2], GAME_MESSAGE_COLOR);
 end;
 
 procedure CommandExecuteAlias(Args: array of AnsiString; Sender: Byte);

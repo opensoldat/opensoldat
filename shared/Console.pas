@@ -31,6 +31,7 @@ type
     procedure Console(What: Variant; Col: Cardinal); overload;
     procedure ConsoleAdd(What: WideString; Col: Cardinal);
     procedure ConsoleNum(What: WideString; Col: Cardinal; Num: Integer);
+    function GetContentsAsPlainText(): WideString;
   end;
 
 implementation
@@ -141,5 +142,14 @@ begin
     ServerSendStringMessage(What, Sender, 255, MSGTYPE_PUB);
 end;
 {$ENDIF}
+
+function TConsole.GetContentsAsPlainText(): WideString;
+var
+  I: Byte;
+begin
+  Result := '';
+  for I := 1 to Count do
+    Result := Result + TextMessage[I] + LineEnding;
+end;
 
 end.
