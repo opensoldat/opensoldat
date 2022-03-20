@@ -48,7 +48,7 @@ uses
 procedure ActivateServer;
 function AddBotPlayer(Name: string; team: Integer): Byte;
 procedure StartServer;
-procedure ReloadMapsList(var AMapsList: TStrings);
+function LoadMapsList(filename: string = ''): Boolean;
 procedure LoadWeapons(filename: string);
 procedure ShutDown;
 procedure NextMap;
@@ -710,7 +710,7 @@ begin
 
   AddLineToLogFile(GameLog, 'Loading Maps List', ConsoleLogFileName);
   MapsList := TStringList.Create;
-  ReloadMapsList(MapsList);
+  LoadMapsList();
 
   for i := 1 to MAX_SPRITES do
     for j := 1 to MAX_SPRITES do
@@ -834,39 +834,47 @@ begin
   end;
 end;
 
-procedure ReloadMapsList(var AMapsList: TStrings);
+function LoadMapsList(Filename: string = ''): Boolean;
 var
   i: Integer;
   MapsListPath: String;
 begin
-  AMapsList.Clear;
-  MapsListPath := UserDirectory + 'configs/' + sv_maplist.Value;
+  if Filename.IsEmpty then
+    Filename := sv_maplist.Value;
+  if not Filename.EndsWith('.txt') then
+    Filename := Filename + '.txt';
+  MapsListPath := UserDirectory + 'configs/' + Filename;
 
   if FileExists(MapsListPath) then
   begin
-    AMapsList.LoadFromFile(MapsListPath);
+    Result := True;
+    MapsList.LoadFromFile(MapsListPath);
     i := 1;
-    while i < AMapsList.Count do
+    while i < MapsList.Count do
     begin
-      if AMapsList[i] = '' then
+      if MapsList[i] = '' then
       begin
-        AMapsList.Delete(i);
+        MapsList.Delete(i);
         Dec(i);
       end;
       Inc(i);
     end;
+    sv_maplist.SetValue(Filename);
+  end else
+  begin
+    Result := False;
+    MainConsole.Console('Maps list file not found: configs/' + Filename, WARNING_MESSAGE_COLOR);
   end;
 
-  if AMapsList.Count = 0 then
+  // MapsList can't be empty on server's startup. This includes cases where
+  // mapslist.txt is missing, or mapslist.txt exists, but it's an empty file.
+  if MapsList.Count = 0 then
   begin
-    WriteLn('');
-    WriteLn('  No maps list found (adding default). ' +
-      'Please add maps in configs/mapslist.txt');
-    WriteLn('');
+    MainConsole.Console('Current maps list is empty, adding default map', WARNING_MESSAGE_COLOR);
     if not IsTeamGame then
-      AMapsList.Add('Arena')
+      MapsList.Add('Arena')
     else
-      AMapsList.Add('ctf_Ash');
+      MapsList.Add('ctf_Ash');
   end;
 end;
 
