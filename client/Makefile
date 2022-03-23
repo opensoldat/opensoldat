@@ -72,7 +72,7 @@ endif
 
 COMPILER = fpc -l -B -MDelphi -Scgi ${CFLAGS} \
 -Fi../shared \
--Fl./libs \
+-Fl./build \
 -Fu./libs \
 -Fu../3rdparty/Pascal-SDL-2-Headers \
 -Fu../shared \

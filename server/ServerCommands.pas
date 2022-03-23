@@ -425,29 +425,15 @@ end;
 procedure CommandLoadlist(Args: array of AnsiString; Sender: Byte);
 var
   Name: String;
-  i: Integer;
 begin
-  if Length(Args) = 0 then
-    Name := StringReplace(sv_maplist.Value, '.txt', '', [rfReplaceAll])
+  if Length(Args) > 1 then
+    Name := Args[1]
   else
-    Name := Args[1];
-
-  if FileExists(UserDirectory + Name + '.txt') then
-  begin
-    MapsList.LoadFromFile(UserDirectory + Name + '.txt');
-    i := 1;
-    while i < MapsList.Count do
-    begin
-      if MapsList[i] = '' then
-      begin
-        MapsList.Delete(i);
-        Dec(i);
-      end;
-      Inc(i);
-    end;
-    sv_maplist.SetValue(Name + '.txt');
-    MainConsole.Console('Mapslist loaded ' + Name, CLIENT_MESSAGE_COLOR, Sender);
-  end;
+    Name := sv_maplist.Value; // We only set it for better feedback in console.
+  if LoadMapsList(Name) then
+    MainConsole.Console('Loaded maps list: ' + Name, CLIENT_MESSAGE_COLOR, Sender)
+  else
+    MainConsole.Console('Could not find maps list: ' + Name, DEBUG_MESSAGE_COLOR, Sender);
 end;
 
 procedure CommandPm(Args: array of AnsiString; Sender: Byte);

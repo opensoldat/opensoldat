@@ -28,6 +28,24 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# On Unices other than Mac, use GNUInstallDirs for an easier packaging process.
+if (UNIX AND NOT APPLE)
+  include(GNUInstallDirs)
+  set(target_full_library_install_dir "${CMAKE_INSTALL_FULL_LIBDIR}")
+  set(target_library_install_dir "${CMAKE_INSTALL_LIBDIR}")
+  set(target_full_binary_install_dir "${CMAKE_INSTALL_FULL_BINDIR}")
+  set(target_binary_install_dir "${CMAKE_INSTALL_BINDIR}")
+  set(target_full_data_install_dir "${CMAKE_INSTALL_FULL_DATADIR}")
+  set(target_data_install_dir "${CMAKE_INSTALL_DATADIR}")
+else()
+  set(target_full_library_install_dir "${CMAKE_INSTALL_PREFIX}")
+  set(target_library_install_dir ".")
+  set(target_full_binary_install_dir "${CMAKE_INSTALL_PREFIX}")
+  set(target_binary_install_dir ".")
+  set(target_full_data_install_dir "${CMAKE_INSTALL_PREFIX}")
+  set(target_data_install_dir ".")
+endif()
+
 #set(CMAKE_VERBOSE_MAKEFILE on)
 
 # RPATH settings. This needs to be set before executing
@@ -36,6 +54,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # on UNIX, will be ignored elsewhere.
 if(UNIX)
   if(APPLE)
+    set(target_full_library_install_dir "${CMAKE_INSTALL_PREFIX}/../Frameworks/")
     set(target_library_install_dir "../Frameworks/")
     #set(CMAKE_INSTALL_PREFIX "Soldat.app/Contents/MacOS/")
     set(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks")
@@ -44,7 +63,7 @@ if(UNIX)
     set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
   else()
     set(CMAKE_INSTALL_RPATH
-      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/:${CMAKE_INSTALL_PREFIX}/${target_library_install_dir}/"
+      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/:${target_full_library_install_dir}"
     )
     set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
   endif()
@@ -169,16 +188,27 @@ endif()
 # to provide all .so files on linux - users can get those easily from package managers.
 install(
   DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  DESTINATION ${target_full_library_install_dir}
   FILES_MATCHING
   PATTERN "*.sh" EXCLUDE
   PATTERN "*.bat" EXCLUDE
   PATTERN "*.res" EXCLUDE
+  PATTERN "*.smod" EXCLUDE
   PATTERN "*.dll"
   PATTERN "*.so"
   PATTERN "*.dylib"
-  PATTERN "*.smod"
   # Ignore subdirectories, just in case... it's not necessary on clean build,
   # only if you ran client/server executables before installing.
   REGEX "configs|demos|logs|maps|mods|screens|scripts" EXCLUDE
 )
+
+if(ADD_ASSETS)
+  install(
+    DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/
+    # FIXME: should be target_full_data_install_dir, but unsupported by soldat
+    # (needs wrapper script or some equivalent global config)
+    DESTINATION ${target_full_binary_install_dir}
+    FILES_MATCHING
+    PATTERN "*.smod"
+  )
+endif()

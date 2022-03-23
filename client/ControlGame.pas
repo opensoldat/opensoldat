@@ -81,6 +81,13 @@ begin
       ChatChanged := True;
       Result := True;
     end
+    else if ((KeyMods = KM_CTRL) and (KeyCode = SDLK_c)) then
+    begin
+      if SDL_SetClipboardText(PChar(UTF8String(BigConsole.GetContentsAsPlainText))) = 0 then
+        MainConsole.Console(_('Copied chat contents to clipboard'), GAME_MESSAGE_COLOR)
+      else
+        MainConsole.Console(WideFormat(_('Failed copying chat to clipboard: %s'), [SDL_GetError()]), DEBUG_MESSAGE_COLOR);
+    end
     else if (KeyMods = KM_CTRL) then
     begin
       Result := True;

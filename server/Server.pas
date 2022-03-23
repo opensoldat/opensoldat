@@ -48,6 +48,7 @@ uses
 procedure ActivateServer;
 function AddBotPlayer(Name: string; team: Integer): Byte;
 procedure StartServer;
+function LoadMapsList(filename: string = ''): Boolean;
 procedure LoadWeapons(filename: string);
 procedure ShutDown;
 procedure NextMap;
@@ -528,7 +529,7 @@ begin
   WriteLn('----------------------------------------------------------------');
   WriteLn('');
   WriteLn('   Need help running your server?');
-  WriteLn('   Discord: https://discord.gg/soldat');
+  WriteLn('   Discord: https://discord.soldat.pl');
   WriteLn('');
   WriteLn('   ---> https://forums.soldat.pl/');
   WriteLn('');
@@ -707,34 +708,7 @@ begin
 
   AddLineToLogFile(GameLog, 'Loading Maps List', ConsoleLogFileName);
   MapsList := TStringList.Create;
-  MapsList.Clear;
-
-  if FileExists(UserDirectory + 'configs/' + sv_maplist.Value) then
-  begin
-    MapsList.LoadFromFile(UserDirectory + 'configs/' + sv_maplist.Value);
-    i := 1;
-    while i < MapsList.Count do
-    begin
-      if MapsList[i] = '' then
-      begin
-        MapsList.Delete(i);
-        Dec(i);
-      end;
-      Inc(i);
-    end;
-  end;
-
-  if MapsList.Count = 0 then
-  begin
-    WriteLn('');
-    WriteLn('  No maps list found (adding default). ' +
-      'Please add maps in configs/mapslist.txt');
-    WriteLn('');
-    if not IsTeamGame then
-      MapsList.Add('Arena')
-    else
-      MapsList.Add('ctf_Ash');
-  end;
+  LoadMapsList();
 
   for i := 1 to MAX_SPRITES do
     for j := 1 to MAX_SPRITES do
@@ -813,10 +787,7 @@ begin
   begin
     try
       MainConsole.Console('Shutting down admin server...', GAME_MESSAGE_COLOR);
-      if AdminServer <> nil then
-      begin
-        FreeAndNil(AdminServer);
-      end;
+      FreeAndNil(AdminServer);
     except
       on e: Exception do
         WriteLn('Error on SHUTDOWN: ' + e.Message);
@@ -826,12 +797,12 @@ begin
 
   StopFileServer;
 
-  MapsList.Free;
-  RemoteIPs.Free;
-  AdminIPs.Free;
+  FreeAndNil(MapsList);
+  FreeAndNil(RemoteIPs);
+  FreeAndNil(AdminIPs);
 
   {$IFDEF SCRIPT}
-  ScrptDispatcher.Free;
+  FreeAndNil(ScrptDispatcher);
   {$ENDIF}
 
   {$IFDEF STEAM}
@@ -858,6 +829,50 @@ begin
   except
     on e: Exception do
       WriteLn('Error on SHUTDOWN during log writing: ' + e.Message);
+  end;
+end;
+
+function LoadMapsList(Filename: string = ''): Boolean;
+var
+  i: Integer;
+  MapsListPath: String;
+begin
+  if Filename.IsEmpty then
+    Filename := sv_maplist.Value;
+  if not Filename.EndsWith('.txt') then
+    Filename := Filename + '.txt';
+  MapsListPath := UserDirectory + 'configs/' + Filename;
+
+  if FileExists(MapsListPath) then
+  begin
+    Result := True;
+    MapsList.LoadFromFile(MapsListPath);
+    i := 1;
+    while i < MapsList.Count do
+    begin
+      if MapsList[i] = '' then
+      begin
+        MapsList.Delete(i);
+        Dec(i);
+      end;
+      Inc(i);
+    end;
+    sv_maplist.SetValue(Filename);
+  end else
+  begin
+    Result := False;
+    MainConsole.Console('Maps list file not found: configs/' + Filename, WARNING_MESSAGE_COLOR);
+  end;
+
+  // MapsList can't be empty on server's startup. This includes cases where
+  // mapslist.txt is missing, or mapslist.txt exists, but it's an empty file.
+  if MapsList.Count = 0 then
+  begin
+    MainConsole.Console('Current maps list is empty, adding default map', WARNING_MESSAGE_COLOR);
+    if not IsTeamGame then
+      MapsList.Add('Arena')
+    else
+      MapsList.Add('ctf_Ash');
   end;
 end;
 
@@ -1194,7 +1209,7 @@ begin
   else
   begin
     WriteLn('[NET] Failed to bind to ' + net_ip.Value + ':' + IntToStr(net_port.Value));
-    ShutDown;
+    ProgReady := False;
     Exit;
   end;
 
