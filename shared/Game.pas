@@ -524,22 +524,7 @@ begin
   a := Default(TVector2);
   try
     Debug('ChangeMap');
-    MapsList.Clear;
-
-    if FileExists(UserDirectory + 'configs/' + sv_maplist.Value) then
-    begin
-      MapsList.LoadFromFile(UserDirectory + 'configs/' + sv_maplist.Value);
-      i := 1;
-      while i < MapsList.Count do
-      begin
-        if MapsList[i] = '' then
-        begin
-          MapsList.Delete(i);
-          Dec(i);
-        end;
-        Inc(i);
-      end;
-    end;
+    LoadMapsList();
 
     for i := 1 to MAX_WAYPOINTS do
     begin
