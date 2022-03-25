@@ -30,6 +30,7 @@
 //
 
 const
+  COMMANDS_COLOR = $FF9966;
   INFO_CONSOLE_COLOR    = $EEEEEE;
   TEST_CONSOLE_COLOR    = $AAAAFF;
   PASS_CONSOLE_COLOR    = $88FF88;
@@ -41,12 +42,6 @@ type
 procedure SLog(S: String; LogType: TLogType);
 begin
   WriteLn(S);
-  case LogType of
-    INFO: Players.WriteConsole(S, INFO_CONSOLE_COLOR);
-    TEST_INFO: Players.WriteConsole(S, TEST_CONSOLE_COLOR);
-    PASS_CONSOLE_COLOR: Players.WriteConsole(S, PASS_CONSOLE_COLOR);
-    FAILURE: Players.WriteConsole(S, FAILURE_CONSOLE_COLOR);
-  end;
 end;
 
 //
@@ -317,6 +312,9 @@ begin
   SLog('Team:', INFO);
   PrintTeam(Team);
   SLog('==========================================================', INFO);
+
+  Player.WriteConsole('Welcome to ScriptCore playground. Type !help for info',
+    COMMANDS_COLOR);
 end;
 
 procedure MyOnFlagGrab(Player: TActivePlayer; Flag: TActiveFlag;
@@ -528,23 +526,58 @@ begin
   SLog('Message: ' + Message, INFO);
   SLog('==========================================================', INFO);
 
-  if Message = 'test' then
+  if Message = '!help' then
   begin
-    if (TestCount mod 2) = 0 then
-    begin
-      Players.BigText(0, 'Players BT Fail', 100, FAILURE_CONSOLE_COLOR, 0.2,
-        100, 100);
-      Players.BigText(0, 'Players BT Pass', 100, PASS_CONSOLE_COLOR, 0.2, 100,
-        100);
-    end
-    else
-    begin
-      Players.BigText(0, '1 Player BT Fail', 100, FAILURE_CONSOLE_COLOR, 0.2,
-        100, 100);
-      Players.BigText(0, '1 Player BT Pass', 100, PASS_CONSOLE_COLOR, 0.2, 100,
-        100);
-    end;
+    Player.WriteConsole('Available tests, and expected results:', COMMANDS_COLOR);
+    Player.WriteConsole('!big - calls Player.BigText and Players.BigText on ' +
+      'different layers. Expect 2 texts on screen', COMMANDS_COLOR);
+    Player.WriteConsole('!say - calls Player.Say with 3 message types ' +
+      '(chat, team chat, radio)', COMMANDS_COLOR);
+    Player.WriteConsole('!tell - calls Player.Tell and Players.Tell. Expect 2 messages',
+      COMMANDS_COLOR);
+    Player.WriteConsole('!world - calls Player.WorldText and Players.WorldText on ' +
+      'different layers. Don''t call from spectators. Expect 2 texts',
+      COMMANDS_COLOR);
+    Player.WriteConsole('!test - big test for other functions', COMMANDS_COLOR);
+  end;
 
+  if Message = '!big' then
+  begin
+    Player.BigText(0, 'Player.BigText Fail', 200, FAILURE_CONSOLE_COLOR,
+      0.2, 100, 100);
+    Player.BigText(0, 'Player.BigText Pass', 200, PASS_CONSOLE_COLOR,
+      0.2, 100, 100);
+    Players.BigText(1, 'Players.BigText Fail', 200, FAILURE_CONSOLE_COLOR,
+      0.2, 100, 200);
+    Players.BigText(1, 'Players.BigText Pass', 200, PASS_CONSOLE_COLOR,
+      0.2, 100, 200);
+  end;
+
+  if Message = '!say' then
+  begin
+    Player.Say('Player.Say chat Pass', 1);
+    Player.Say('Player.Say team chat Pass', 2);
+    Player.Say('Player.Say radio Pass', 3);
+  end;
+
+  if Message = '!tell' then
+  begin
+    Player.Tell('Player.Tell message Pass');
+    // NOTE: Currently broken due to special case in ServerSendStringMessage for
+    // some reason.
+    Players.Tell('Players.Tell message Pass');
+  end;
+
+  if Message = '!world' then
+  begin
+    Player.WorldText(0, 'Player.WorldText pass', 200, PASS_CONSOLE_COLOR, 0.2,
+      Player.X, Player.Y + 20.0);
+    Players.WorldText(1, 'Players.WorldText pass', 200, PASS_CONSOLE_COLOR, 0.2,
+      Player.X, Player.Y + 50.0);
+  end;
+
+  if Message = '!test' then
+  begin
     VPos.X := Player.X + 100.0;
     VPos.Y := Player.Y;
     VVel.X := 25.0;
@@ -567,16 +600,6 @@ begin
     if TestCount = 0 then
       Player.SetVelocity(10.0, -20.0);
     Player.GiveBonus(1);
-
-    // NOTE: Currently broken due to special case in ServerSendStringMessage for
-    // some reason.
-    Players.Tell('Players tell message pass');
-    Player.Tell('1 Player tell message pass');
-
-    Players.WorldText(0, 'World text pass', 100, PASS_CONSOLE_COLOR, 0.2,
-      Player.X, Player.Y + 20.0);
-
-    Player.Say('Player say pass', 1);
 
     CheckPlayer := Players.GetByName(Player.Name);
     if CheckPlayer.ID = Player.ID then

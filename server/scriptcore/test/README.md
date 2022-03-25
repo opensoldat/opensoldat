@@ -8,6 +8,16 @@ will be copied to the scripts directory of soldatserver automatically. If you
 are using another build system, just manually copy the bft directory to the
 scripts directory (e.g. `server/build/x86_64-linux/scripts`).
 
-The functionality which can be run without needing anything to happen in the
-game is tested on startup. To run tests for functionality relying on in-game
-events, join the game and say 'test' a few times (see `MyOnSpeak` for details).
+What do we test?
+- Calls to ScriptCore functions with checks if they returned expected result.
+These are run on server's startup and don't require user interaction. To check
+result of tests, look at server's console (or logs)
+- [ScriptCore events](https://wiki.soldat.pl/index.php/Category:Events).
+We print messages to server's console whenever an event occurs. This requires
+some interaction, as you have to join the server and make those events happen.
+Verify that server prints info about each event that occurs in game
+- Calls to ScriptCore functions that require user interaction. This is for methods
+like [Player.Say](https://wiki.soldat.pl/index.php/TActivePlayer.Say), or
+[Players.WorldText](https://wiki.soldat.pl/index.php/TPlayers.WorldText), etc...
+You have to send chat messages with commands to run these tests. Say `!help` in
+game for more information, or see implementation of `MyOnSpeak` in bft.pas
