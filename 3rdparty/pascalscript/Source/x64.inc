@@ -365,7 +365,7 @@ end;
 // general). Also static arrays and sets probably don't work.
 type
   PSVStorageClass = ^TSVStorageClass;
-  TSVStorageClass = (SVNO_CLASS, SVSSE, SVINT, SVMEM);
+  TSVStorageClass = (SVNO_CLASS, SVSSE, SVINT, SVX87, SVMEM);
 
 const
   MAX_CLASSES = 2;
@@ -416,7 +416,7 @@ begin
       btNotificationVariant, btUnicodeString, btEnum, btExtClass:
         FieldClass := SVINT;
       btExtended:
-        FieldClass := SVMEM;
+        FieldClass := SVX87;
     end;
 
     if Offset mod Alignment <> 0 then
@@ -427,8 +427,13 @@ begin
     EndEightByte := (Offset + Alignment - 1) div 8;
 
     for i := StartEightByte to EndEightByte do
+    begin
+      if i > High(Classes) then
+        Break;
+
       if Ord(FieldClass) > Ord(Classes[i]) then
         Classes[i] := FieldClass;
+    end;
 
     Exit;
   end;
@@ -495,6 +500,19 @@ _XMM0: Double;
   I: Integer;
   pp: ^Byte;
 
+  procedure StoreStack(const aData; Len: Integer);
+  var
+    p: Pointer;
+  begin
+    SetLength(Stack, Length(Stack)+Len);
+    p := @Stack[Length(Stack)-Len];
+    Move(aData, p^, Len);
+
+    // @SoldatPatch
+    if Length(Stack) mod 8 <> 0 then
+      SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
+  end;
+
   function rp(p: PPSVariantIFC): PPSVariantIFC;
   begin
     if p = nil then
@@ -520,11 +538,7 @@ _XMM0: Double;
       3: begin inc(RegUsage); Registers._R9:=Data; end;
     else begin
       // @SoldatPatch
-      if Length(Stack) mod 8 <> 0 then
-        SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      IPointer(p^) := data;
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
@@ -541,24 +555,11 @@ _XMM0: Double;
       5: begin inc(RegUsage); Registers._R9:=Data; end;
     else begin
       // @SoldatPatch
-      if Length(Stack) mod 8 <> 0 then
-        SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      IPointer(p^) := data;
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
 {$ENDIF}
-
-  procedure StoreStack(const aData; Len: Integer);
-  var
-    p: Pointer;
-  begin
-    SetLength(Stack, Length(Stack)+Len);
-    p := @Stack[Length(Stack)-Len];
-    Move(aData, p^, Len);
-  end;
 
 {$IFDEF WINDOWS}
   procedure StoreReg(data: Double); overload;
@@ -571,11 +572,7 @@ _XMM0: Double;
       3: begin inc(RegUsage); Registers._XMM3:=Data; end;
     else begin
       // @SoldatPatch
-      if Length(Stack) mod 8 <> 0 then
-        SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      Double(p^) := data;
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
@@ -589,11 +586,7 @@ _XMM0: Double;
       3: begin inc(RegUsage); Registers.SingleBits := Registers.SingleBits or 8; Registers._XMM3:=Data; end;
     else begin
       // @SoldatPatch
-      if Length(Stack) mod 8 <> 0 then
-        SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      Single(p^) := data;
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
@@ -612,11 +605,7 @@ _XMM0: Double;
       7: begin inc(RegUsageFloat); Registers._XMM7:=Data; end;
     else begin
       // @SoldatPatch
-      if Length(Stack) mod 8 <> 0 then
-        SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      Double(p^) := data;
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
@@ -634,11 +623,7 @@ _XMM0: Double;
       7: begin inc(RegUsageFloat); Registers.SingleBits := Registers.SingleBits or 128; Registers._XMM7:=Data; end;
     else begin
       // @SoldatPatch
-      if Length(Stack) mod 8 <> 0 then
-        SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      Double(p^) := data;
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
@@ -761,13 +746,10 @@ _XMM0: Double;
             {$ELSE}
             fvar^.aType.CalcSize;
             DoClassifyStorage(StorageClasses, fVar.aType, Alignment, RegUsage, RegUsageFloat);
-            if StorageClasses[0] = SVMEM then
+            if (StorageClasses[0] = SVMEM) or (StorageClasses[0] = SVX87) then
             begin
-              if Length(Stack) mod Alignment <> 0 then
-                SetLength(Stack, Length(Stack)+ (Alignment-(Length(Stack) mod Alignment)));
+              // Because the records are packed, only align to 8...
               StoreStack(fvar.Dta^, fVar^.aType.RealSize);
-              if Length(Stack) mod 8 <> 0 then
-                SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
             end
             else
             begin
@@ -801,9 +783,7 @@ _XMM0: Double;
             {$IFDEF WINDOWS}
             StoreReg(double(fvar.dta^));
             {$ELSE}
-            if Length(Stack) mod 16 <> 0 then
-              SetLength(Stack, Length(Stack)+ (16-(Length(Stack) mod 16)));
-            StoreStack(fvar.dta^, 16);
+            StoreStack(fvar.dta^, SizeOf(Extended));
             {$ENDIF}
           end;
         btCurrency: {8 bytes} begin
@@ -878,6 +858,9 @@ begin
   // @SoldatPatch
   {$IFDEF WINDOWS}
   Registers.Patch_btProcPtr := False;
+  {$ELSE}
+  for i := Low(StorageClasses) to High(StorageClasses) do
+    StorageClasses[i] := SVNO_CLASS;
   {$ENDIF}
   {$IFDEF FPC}
   if (Integer(CallingConv) and 128) <> 0 then begin
@@ -967,7 +950,7 @@ begin
     if assigned(res) then begin
       // @SoldatPatch
       {$IFNDEF WINDOWS}
-      if res^.aType.BaseType = btExtended then
+      if (res^.aType.BaseType = btExtended) or (StorageClasses[0] = SVX87) then
         Registers.SingleBits := Registers.SingleBits or 512;
       {$ENDIF}
       {$IFNDEF PS_RESBEFOREPARAMETERS}
@@ -1005,7 +988,11 @@ begin
           begin
             // @SoldatPatch
             {$IFNDEF WINDOWS}
-            if StorageClasses[0] <> SVMEM then
+            if StorageClasses[0] = SVX87 then
+            begin
+              PExtended(res.Dta)^ := Registers._ST0;
+            end
+            else if StorageClasses[0] <> SVMEM then
             begin
               ResultReg := 0;
               ResultRegFloat := 0;

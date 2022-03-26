@@ -1,5 +1,7 @@
 ## Testing
 
+### BFT
+
 BFT is a ScriptCore3 integration test suite.
 
 The tests are intrusive to normal development so they aren't run by default.
@@ -21,3 +23,11 @@ like [Player.Say](https://wiki.soldat.pl/index.php/TActivePlayer.Say), or
 [Players.WorldText](https://wiki.soldat.pl/index.php/TPlayers.WorldText), etc...
 You have to send chat messages with commands to run these tests. Say `!help` in
 game for more information, or see implementation of `MyOnSpeak` in bft.pas
+
+### FFI fuzz testing
+
+In order to test the custom assembly used to implement the PascalScript FFI,
+some fuzz tests can be generated. To run the tests with CMake, make sure to
+have `BUILD_SCRIPTCORE` and `ADD_FFI_FUZZ` options set to true. Then build
+CMake target `gen-ffi-fuzz` (or run `gen_ffi_tests.py` manually), build and
+run soldatserver.
