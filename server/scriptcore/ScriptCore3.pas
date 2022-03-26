@@ -24,6 +24,9 @@ uses
   ScriptCoreFunctions,
   ScriptMath,
   ScriptDateUtils,
+  {$IFDEF SCRIPT_FFI_FUZZ}
+  ScriptFFITests,
+  {$ENDIF}
   ScriptFileAPI,
   ScriptGame,
   ScriptMap,
@@ -365,6 +368,9 @@ begin
   Self.FApi.Add(TScriptGlobalAPI.Create(Self));
   Self.FApi.Add(TScriptMathAPI.Create(Self));
   Self.FApi.Add(TCoreFunctionsAPI.Create(Self));
+  {$IFDEF SCRIPT_FFI_FUZZ}
+  Self.FApi.Add(TScriptFFITestsAPI.Create(Self));
+  {$ENDIF}
 end;
 
 procedure TScriptCore3.HandleException(E: Exception);
