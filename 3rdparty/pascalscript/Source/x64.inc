@@ -189,6 +189,9 @@ type
     _ST0: Extended;     // 108
   end;
 
+// @SoldatPatch
+{$PUSH}
+{$WARN 7104 OFF}
 procedure x64call(
   Address: Pointer;
   out _RAX: IPointer;
@@ -239,8 +242,9 @@ asm
 
   // copy registers
   // xmm0
+  // @SoldatPatch
   mov rdx,[rbp-24]
-  bt [rax+104], 0
+  bt dword ptr [rax+104], 0
   jnc @skipxmm0
   cvtsd2ss xmm0,[rdx]
   jmp @skipxmm0re
@@ -249,7 +253,8 @@ asm
   @skipxmm0re:
 
   // xmm1
-  bt [rax+104], 1
+  // @SoldatPatch
+  bt dword ptr [rax+104], 1
   jnc @skipxmm1
   cvtsd2ss xmm1,[rax+48]
   jmp @skipxmm1re
@@ -258,7 +263,8 @@ asm
   @skipxmm1re:
 
   // xmm2
-  bt [rax+104], 2
+  // @SoldatPatch
+  bt dword ptr [rax+104], 2
   jnc @skipxmm2
   cvtsd2ss xmm2,[rax+56]
   jmp @skipxmm2re
@@ -267,7 +273,8 @@ asm
   @skipxmm2re:
 
   // xmm3
-  bt [rax+104], 3
+  // @SoldatPatch
+  bt dword ptr [rax+104], 3
   jnc @skipxmm3
   cvtsd2ss xmm3,[rax+64]
   jmp @skipxmm3re
@@ -276,7 +283,8 @@ asm
   @skipxmm3re:
 
   // xmm4
-  bt [rax+104], 4
+  // @SoldatPatch
+  bt dword ptr [rax+104], 4
   jnc @skipxmm4
   cvtsd2ss xmm4,[rax+72]
   jmp @skipxmm4re
@@ -285,7 +293,8 @@ asm
   @skipxmm4re:
 
   // xmm5
-  bt [rax+104], 5
+  // @SoldatPatch
+  bt dword ptr [rax+104], 5
   jnc @skipxmm5
   cvtsd2ss xmm5,[rax+80]
   jmp @skipxmm5re
@@ -294,7 +303,8 @@ asm
   @skipxmm5re:
 
   // xmm6
-  bt [rax+104], 6
+  // @SoldatPatch
+  bt dword ptr [rax+104], 6
   jnc @skipxmm6
   cvtsd2ss xmm6,[rax+88]
   jmp @skipxmm6re
@@ -302,8 +312,9 @@ asm
   movq xmm6,[rax+88]         // move quadword to xmm6 from Registers._XMM6
   @skipxmm6re:
 
-// xmm7
-  bt [rax+104], 7
+  // xmm7
+  // @SoldatPatch
+  bt dword ptr [rax+104], 7
   jnc @skipxmm7
   cvtsd2ss xmm7,[rax+96]
   jmp @skipxmm7re
@@ -330,19 +341,20 @@ asm
   // add RSP, 32 // undo the damage done earlier
 
   // copy result back
-  mov rsi, [rbp-16]          // _RAX parameter
+  mov rsi, [rbp-16]           // _RAX parameter
   mov [rsi], RAX
-  mov rsi, [rbp-24]          // _XMM0 parameter
+  mov rsi, [rbp-24]           // _XMM0 parameter
 
   // xmm0 res
-  mov rax, [rbp-32]          // Registers parameter
-  bt [rax+104], 8            // if atype.basetype  <> btSingle
-  jnc @skipres               // then goto skipres else begin
-  cvtss2sd xmm1,xmm0         // convert single to double  into xmm1
-  movq [rsi],xmm1            // move quadword to _XMM0
-  jmp @skipresre             // end
+  // @SoldatPatch
+  mov rax, qword ptr [rbp-32] // Registers parameter
+  bt dword ptr [rax+104], 8   // if atype.basetype  <> btSingle
+  jnc @skipres                // then goto skipres else begin
+  cvtss2sd xmm1,xmm0          // convert single to double  into xmm1
+  movq [rsi],xmm1             // move quadword to _XMM0
+  jmp @skipresre              // end
   @skipres:
-  movq [rsi],xmm0            // move quadword to _XMM0
+  movq [rsi],xmm0             // move quadword to _XMM0
   @skipresre:
 
   // @SoldatPatch
@@ -363,6 +375,8 @@ asm
   leave
   ret
 end;
+// @SoldatPatch
+{$POP}
 {$ENDIF}
 
 // @SoldatPatch
