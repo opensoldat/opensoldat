@@ -31,7 +31,8 @@ if(BUILD_RCON)
 endif()
 
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/server/*"
-     "${CMAKE_SOURCE_DIR}/shared/*.pas" "${CMAKE_SOURCE_DIR}/3rdparty/*.pas")
+     "${CMAKE_SOURCE_DIR}/shared/*.pas" "${CMAKE_SOURCE_DIR}/3rdparty/*.pas"
+     "${CMAKE_SOURCE_DIR}/3rdparty/*.inc")
 
 set_source_files_properties(soldatserver.lpr PROPERTIES OBJECT_DEPENDS
                                                         "${sources}")
