@@ -739,7 +739,7 @@ _XMM0: Double;
             // @SoldatPatch
             {$IFDEF WINDOWS}
             fvar^.aType.CalcSize;
-            if fvar^.aType.RealSize <= sizeof(IPointer) then
+            if fvar^.aType.RealSize in [1, 2, 4, 8] then
               StoreReg(IPointer(fvar.dta^))
             else
               StoreReg(IPointer(fVar.Dta));
@@ -926,6 +926,13 @@ begin
           ClassifyStorage(StorageClasses, res^.aType, Alignment);
           if StorageClasses[0] = SVMEM then
             StoreReg(IPointer(res.dta));
+          {$ELSE}
+          res^.aType.CalcSize;
+          if not (res^.aType.RealSize in [1, 2, 4, 8]) then
+          begin
+            if not GetPtr(res) then
+              Exit;
+          end;
           {$ENDIF}
         end;
         btSet:
@@ -960,7 +967,7 @@ begin
         {$ENDIF}
         btInterface, btArray, btVariant, btStaticArray:
           GetPtr(res);
-        btRecord,
+        //btRecord,
         btSet:
           begin
             // @SoldatPatch
@@ -1022,12 +1029,18 @@ begin
               end;
             end;
             {$ELSE}
-            case res.aType.RealSize of
-              1: byte(res.Dta^) := _RAX;
-              2: word(res.Dta^) := _RAX;
-              3,
-              4: Longint(res.Dta^) := _RAX;
-              5,6,7,8: IPointer(res.dta^) := _RAX;
+            if (res.aType.BaseType = btRecord) and (res.aType.RealSize in [1, 2, 4, 8]) then
+            begin
+              IPointer(res.dta^) := _RAX;
+            end else if res.aType.BaseType = btSet then
+            begin
+              case res.aType.RealSize of
+                1: byte(res.Dta^) := _RAX;
+                2: word(res.Dta^) := _RAX;
+                3,
+                4: Longint(res.Dta^) := _RAX;
+                5,6,7,8: IPointer(res.dta^) := _RAX;
+              end;
             end;
             {$ENDIF}
           end;
