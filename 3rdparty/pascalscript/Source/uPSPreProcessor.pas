@@ -2,6 +2,10 @@
 unit uPSPreProcessor;
 {$I PascalScript.inc}
 
+// @SoldatPatch
+{$HINTS OFF}
+{$WARN 4056 OFF}
+
 interface
 uses
   Classes, SysUtils, uPSCompiler, uPSUtils;
@@ -798,4 +802,4 @@ begin
   else Result := TPSDefineState(FItems[FItems.Count -2]).DoWrite;
 end;
 
-end.
+end.

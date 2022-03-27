@@ -29,6 +29,9 @@ type
     Patch_btProcPtr: Boolean;  // 76
   end;
 
+// @SoldatPatch
+{$PUSH}
+{$WARN 7104 OFF}
 procedure x64call(
   Address: Pointer;
   out _RAX: IPointer;
@@ -143,16 +146,19 @@ asm
 
   mov rax, [rbp-32] //registers
 
-  bt [rax+72], 8                 // if atype.basetype  <> btSingle
+  // @SoldatPatch
+  bt dword ptr [rax+72], 8       // if atype.basetype  <> btSingle
   jnc @g5                        //
   cvtss2sd xmm1,xmm0             // convert single to double  into xmm1
   mov rdx,[rbp-24]               // @_xmm0  ;rbp -24
-  movsd qword ptr [rdx], xmm1    // save  xmm1 to param _xmm0
+  // @SoldatPatch
+  movsd [rdx], xmm1              // save  xmm1 to param _xmm0
   jmp @g5e                       // exit if atype.basetype  = btSingle
 
   @g5:                           //else "if atype.basetype  = btSingle"
     mov rdx,[rbp-24]             // @_xmm0  ;rbp -24
-    movsd qword ptr [rdx], xmm0  // save  xmm1 to param _xmm0
+    // @SoldatPatch
+    movsd [rdx], xmm0            // save  xmm1 to param _xmm0
 
   @g5e:
 
@@ -160,6 +166,8 @@ asm
   leave
   ret
 end;
+// @SoldatPatch
+{$POP}
 {$ELSE}
 type
   TRegisters = packed record
@@ -220,9 +228,9 @@ asm
 @work:
 {$IFDEF FPC}
   push qword ptr [rcx]
-{$ELSE} 
+{$ELSE}
   push [rcx]
-{$ENDIF}  
+{$ENDIF}
   dec r8
   sub rcx,8
 @compareitems:
@@ -360,7 +368,7 @@ end;
 // @SoldatPatch
 {$IFNDEF WINDOWS}
 // System V x86-64 storage class implementation.
-// This is NOT thoroughly tested and probably not 100% correct for all records.
+// This is decently tested although there may still be edge cases missing.
 // It does not support vector or complex types (neither does PascalScript in
 // general). Also static arrays and sets probably don't work.
 type
@@ -478,6 +486,9 @@ begin
 end;
 {$ENDIF}
 
+// @SoldatPatch
+{$PUSH}
+{$WARN 5027 OFF}
 function TPSExec.InnerfuseCall(_Self, Address: Pointer; CallingConv: TPSCallingConvention; Params: TPSList; res: PPSVariantIFC): Boolean;
 var
   Stack: array of Byte;
@@ -529,7 +540,6 @@ _XMM0: Double;
   end;
 {$IFDEF WINDOWS}
   procedure StoreReg(data: IPointer);   overload;
-  var p: Pointer;
   begin
     case RegUsage of
       0: begin inc(RegUsage); Registers._RCX:=Data; end;
@@ -544,7 +554,6 @@ _XMM0: Double;
   end;
   {$ELSE}
   procedure StoreReg(data: IPointer);   overload;
-  var p: Pointer;
   begin
     case RegUsage of
       0: begin inc(RegUsage); Registers._RDI:=Data; end;
@@ -563,7 +572,6 @@ _XMM0: Double;
 
 {$IFDEF WINDOWS}
   procedure StoreReg(data: Double); overload;
-  var p: Pointer;
   begin
     case RegUsage of
       0: begin inc(RegUsage); _XMM0:=Data; end;
@@ -577,7 +585,6 @@ _XMM0: Double;
     end;
   end;
   procedure StoreReg(data: Single); overload;
-  var p: Pointer;
   begin
     case RegUsage of
       0: begin inc(RegUsage); Registers.SingleBits := Registers.SingleBits or 1;_XMM0:=Data; end;
@@ -592,7 +599,6 @@ _XMM0: Double;
   end;
   {$ELSE}
   procedure StoreReg(data: Double); overload;
-  var p: Pointer;
   begin
     case RegUsageFloat of
       0: begin inc(RegUsageFloat); _XMM0:=Data; end;
@@ -610,7 +616,6 @@ _XMM0: Double;
     end;
   end;
   procedure StoreReg(data: Single); overload;
-  var p: Pointer;
   begin
     case RegUsageFloat of
       0: begin inc(RegUsageFloat); Registers.SingleBits := Registers.SingleBits or 1; _XMM0:=Data; end;
@@ -980,7 +985,7 @@ begin
       if (length(Stack) mod 16) <> 0 then begin
         SetLength(Stack, Length(Stack)+16 - (Length(Stack) mod 16));
       end;
-      {$ENDIF} 
+      {$ENDIF}
       if Stack = nil then pp := nil else pp := @Stack[Length(Stack) -8];
       {$IFDEF WINDOWS}
       Registers.Stack := pp;
@@ -1076,7 +1081,7 @@ begin
       if (length(Stack) mod 16) <> 0 then begin
         SetLength(Stack, Length(Stack)+16 - (Length(Stack) mod 16));
       end;
-      {$ENDIF} 
+      {$ENDIF}
         if Stack = nil then pp := nil else pp := @Stack[Length(Stack) -8];
         {$IFDEF WINDOWS}
         Registers.Stack := pp;
@@ -1099,5 +1104,7 @@ begin
     CallData.Free;
   end;
 end;
+// @SoldatPatch
+{$POP}
 
 

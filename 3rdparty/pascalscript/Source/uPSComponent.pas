@@ -1,5 +1,10 @@
 unit uPSComponent;
+
 {$I PascalScript.inc}
+
+// @SoldatPatch
+{$HINTS OFF}
+
 interface
 
 uses
@@ -933,6 +938,9 @@ begin
   FMainFileName := Value;
 end;
 
+// @SoldatPatch
+{$PUSH}
+{$WARN 5093 OFF}
 function TPSScript.GetExecErrorFileName: tbtstring;
 var
   D1, D2: Cardinal;
@@ -940,6 +948,7 @@ begin
   if not TranslatePositionRC(Exec.ExceptionProcNo, Exec.ExceptionPos, D1, D2, Result) then
     Result := '';
 end;
+{$POP}
 
 procedure TPSScript.SetPointerToData(const VarName: tbtstring;
   Data: Pointer; aType: TIFTypeRec);

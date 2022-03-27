@@ -1187,7 +1187,8 @@ var
 
   function _GetToken(CurrTokenPos, CurrTokenLen: Cardinal): TbtString;
   var
-    s: tbtString;
+    // @SoldatPatch
+    s: tbtString = '';
   begin
     SetLength(s, CurrTokenLen);
     Move(FText[CurrTokenPos], S[1], CurrtokenLen);

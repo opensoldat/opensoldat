@@ -445,7 +445,8 @@ var
   fi: PFunctionInfo;
   pt: TIfList;
   r: PPositionData;
-  lastfn: tbtstring;
+  // @SoldatPatch
+  lastfn: tbtstring = '';
   LastPos, LastRow, LastCol: Cardinal;
   pp: TPSProcRec;
 begin

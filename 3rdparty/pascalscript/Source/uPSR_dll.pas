@@ -1,5 +1,8 @@
 unit uPSR_dll;
 
+// @SoldatPatch
+{$WARN 5024 OFF}
+
 {$I PascalScript.inc}
 interface
 uses

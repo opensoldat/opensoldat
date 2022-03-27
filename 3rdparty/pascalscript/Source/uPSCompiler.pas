@@ -1,6 +1,15 @@
 unit uPSCompiler;
+
 {$I PascalScript.inc}
+
 interface
+
+// @SoldatPatch
+{$HINTS OFF}
+{$WARN 4056 OFF}
+{$WARN 4082 OFF}
+{$WARN 5027 OFF}
+
 uses
   {$IFNDEF DELPHI3UP}{$IFNDEF PS_NOINTERFACES}{$IFNDEF LINUX}Windows, Ole2,{$ENDIF}
   {$ENDIF}{$ENDIF}SysUtils, uPSUtils;
@@ -1216,9 +1225,11 @@ type
 
     property AttributesCloseTokenID: TPSPasToken read FAttributesCloseTokenID write FAttributesCloseTokenID;
 
+    // @SoldatPatch
+    {$PUSH}
     {$WARNINGS OFF}
     property UnitName: tbtString read FUnitName;
-    {$WARNINGS ON}
+    {$POP}
   end;
   TIFPSPascalCompiler = TPSPascalCompiler;
 
@@ -5383,7 +5394,6 @@ begin
     b := true;
   if b then Debug_SavePosition(BlockInfo.ProcNo, BlockInfo.Proc);
 end;
-
 
 function TPSPascalCompiler.ReadReal(const s: tbtString): PIfRVariant;
 var

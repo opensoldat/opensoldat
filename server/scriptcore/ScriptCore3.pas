@@ -923,6 +923,9 @@ begin
   end;
 end;
 
+{$PUSH}
+{$WARN 4055 OFF}
+{$WARN 5027 OFF}
 function TScriptCore3.OnBeforePlayerRespawn(Id: Byte): TVector2;
 var
   VariantResult: Variant;
@@ -943,6 +946,7 @@ begin
     Self.Lock.Release;
   end;
 end;
+{$POP}
 
 procedure TScriptCore3.OnAfterPlayerRespawn(Id: Byte);
 begin
@@ -1159,6 +1163,8 @@ begin
   end;
 end;
 
+{$PUSH}
+{$WARN 4055 OFF}
 function TScriptCore3.OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
 begin
   Result := False;
@@ -1183,5 +1189,6 @@ begin
     Self.Lock.Release;
   end;
 end;
+{$POP}
 
 end.
