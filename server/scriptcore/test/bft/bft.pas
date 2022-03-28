@@ -879,8 +879,6 @@ begin
   Result := '';
 end;
 
-// NOTE: Accessing Game.BanLists.HW/IP is still kinda sketch (need to move to
-// lape (contact Vizit0r on GitHub) provide bug-free pascalscript).
 function BanListsTest: String;
 var
   i: Integer;
