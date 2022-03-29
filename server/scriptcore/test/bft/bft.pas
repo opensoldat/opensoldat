@@ -885,17 +885,6 @@ var
 begin
   Result := 'Unknown failure';
 
-  if Game.BanLists.BannedHWCount <> 0 then
-  begin
-    Result := 'Game.BanLists.BannedHWCount <> 0 (Required for BanLists test).';
-    Exit;
-  end;
-  if Game.BanLists.BannedIPCount <> 0 then
-  begin
-    Result := 'Game.BanLists.BannedIPCount <> 0 (Required for BanLists test).';
-    Exit;
-  end;
-
   for i := 0 to 100 do
   begin
     if Game.BanLists.IsBannedHW('TestHW' + IntToStr(i)) then
