@@ -416,6 +416,7 @@ begin
       end
       else
       begin
+        Error := Self.FExec.Exec.ExceptionCode;
         if Assigned(Self.FUnit.ScriptUnit.OnUnhandledException) then
           if Self.CallEvent(Self.FUnit.ScriptUnit.OnUnhandledException,
             [Error, E.Message, '', FunctionName, 0, 0]) then
