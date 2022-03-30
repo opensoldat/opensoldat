@@ -38,5 +38,6 @@ To run the tests with CMake, make sure to have `BUILD_SCRIPTCORE` and
 (or run `gen_ffi_tests.py` manually), build and run soldatserver.
 
 To run the tests with another build system, run `gen_ffi_tests.py`, copy
-`ScriptFFITests.pas` to the `scriptcore` directory (temporary), and build
-soldatserver with `-dSCRIPT_FFI_FUZZ`.
+`ScriptFFITests.pas` to the `scriptcore` directory (temporary), build
+soldatserver with `-dSCRIPT_FFI_FUZZ`, and copy the `ffi` directory to the
+`scripts` directory of your soldatserver.
