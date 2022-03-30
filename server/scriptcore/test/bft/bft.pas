@@ -9,14 +9,6 @@
 // doesn't actually test every single function exposed by SC3 because I got sick
 // of typing test code. :)
 //
-// The functionality which can be run without needing anything to happen in the
-// game is tested on startup. To run tests for functionality relying on in-game
-// events, join the game and say 'test' a few times (see MyOnSpeak for
-// details). If we make it all the way to a deterministic netcode solution, then
-// comprehensive test "demos" comprising of a series of inputs and conditions
-// for the output state might be possible, making testing of scripts more
-// automated and robust.
-//
 // TODO:
 //  - Record/print time spent per test and overall.
 //  - Log test results to a file.
