@@ -286,7 +286,9 @@ begin
   Result := inherited ReadString(Count);
   {$IFDEF FPC}
   {$IF (FPC_FULLVERSION >= 30200) and (FPC_FULLVERSION < 30202)}
-  // https://github.com/graemeg/freepascal/commit/78bba42fbe9627cc7ec9b87748d0c64f86a5d10c
+  // Bug where position is not advanced when calling ReadAnsiString/ReadString
+  // in FPC 3.2.0, fixed by:
+  // https://gitlab.com/freepascal.org/fpc/source/-/commit/0baf7db5e4fdc8e82e50a32505ea5b3a11cf7dbd
   Self.Position := Self.Position + Length(Result);
   {$ENDIF}
   {$ENDIF}
