@@ -27,7 +27,16 @@ game for more information, or see implementation of `MyOnSpeak` in bft.pas
 ### FFI fuzz testing
 
 In order to test the custom assembly used to implement the PascalScript FFI,
-some fuzz tests can be generated. To run the tests with CMake, make sure to
-have `BUILD_SCRIPTCORE` and `ADD_FFI_FUZZ` options set to true. Then build
-CMake target `gen-ffi-fuzz` (or run `gen_ffi_tests.py` manually), build and
-run soldatserver.
+some fuzz tests can be generated. The script `gen_ffi_tests.py` generates 2
+files. `ScriptFFITests.pas` is an internal SC3 file used to expose the
+generated test functions to scripts. `ffi.pas` is an SC3 script designed to
+call the generated functions with certain parameters, and check their return
+values.
+
+To run the tests with CMake, make sure to have `BUILD_SCRIPTCORE` and
+`ADD_FFI_FUZZ` options set to true. Then build CMake target `gen-ffi-fuzz`
+(or run `gen_ffi_tests.py` manually), build and run soldatserver.
+
+To run the tests with another build system, run `gen_ffi_tests.py`, copy
+`ScriptFFITests.pas` to the `scriptcore` directory (temporary), and build
+soldatserver with `-dSCRIPT_FFI_FUZZ`.
