@@ -7,13 +7,13 @@ if(ADD_BFT)
   )
 endif()
 
-add_custom_target(gen-ffi-fuzz
-  COMMAND ${PYTHON3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/gen_ffi_tests.py
-  OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/ffi/ffi.pas" "${CMAKE_CURRENT_SOURCE_DIR}/ScriptFFITests.pas"
-  COMMENT "Generating new FFI fuzz tests."
-)
-
 if(ADD_FFI_FUZZ)
+  add_custom_target(gen-ffi-fuzz
+    COMMAND ${PYTHON3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/gen_ffi_tests.py
+    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/ffi/ffi.pas" "${CMAKE_CURRENT_SOURCE_DIR}/ScriptFFITests.pas"
+    COMMENT "Generating new FFI fuzz tests."
+  )
+
   add_custom_target(ffi-fuzz ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
       ${CMAKE_CURRENT_SOURCE_DIR}/ffi
