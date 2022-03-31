@@ -453,6 +453,8 @@ begin
       if i > High(Classes) then
         Break;
 
+      if (FieldClass <> SVX87) and (Classes[i] = SVX87) then
+        Classes[i] := SVMEM;
       if Ord(FieldClass) > Ord(Classes[i]) then
         Classes[i] := FieldClass;
     end;
@@ -498,6 +500,30 @@ begin
 
   ClassifyStorageInt(Classes, AType, Alignment, 0);
 end;
+
+function ContainsManaged(AType: TPSTypeRec): Boolean;
+var
+  i: Integer;
+  Rec: TPSTypeRec_Record;
+begin
+  if AType.BaseType in [btString, btWideString, btUnicodeString, btVariant] then
+  begin
+    Result := True;
+    Exit;
+  end
+  else if AType.BaseType <> btRecord then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  Rec := TPSTypeRec_Record(AType);
+  for i := 0 to Rec.FieldTypes.Count - 1 do
+    if ContainsManaged(Rec.FieldTypes[i]) then
+      Exit;
+
+  Result := False;
+end;
 {$ENDIF}
 
 // @SoldatPatch
@@ -516,6 +542,7 @@ _XMM0: Double;
   StorageClasses: TStorageClasses;
   p: Pointer;
   ResultReg, ResultRegFloat: Integer;
+  ResContainsManaged: Boolean;
 {$ENDIF}
 {$IFDEF FPC}
   IsConstructor,IsVirtualCons: Boolean;
@@ -942,8 +969,9 @@ begin
         btRecord: begin
           {$IFNDEF WINDOWS}
           res^.aType.CalcSize;
-          ClassifyStorage(StorageClasses, res^.aType, Alignment);
-          if StorageClasses[0] = SVMEM then
+          DoClassifyStorage(StorageClasses, res^.aType, Alignment, RegUsage, RegUsageFloat);
+          ResContainsManaged := ContainsManaged(res^.aType);
+          if (StorageClasses[0] = SVMEM) or ResContainsManaged then
             StoreReg(IPointer(res.dta));
           {$ELSE}
           res^.aType.CalcSize;
@@ -1018,7 +1046,7 @@ begin
             begin
               PExtended(res.Dta)^ := Registers._ST0;
             end
-            else if StorageClasses[0] <> SVMEM then
+            else if (StorageClasses[0] <> SVMEM) and (not ResContainsManaged) then
             begin
               ResultReg := 0;
               ResultRegFloat := 0;
