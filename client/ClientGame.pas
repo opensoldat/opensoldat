@@ -420,7 +420,8 @@ end;
 
 function GetCameraTarget(Backwards: Boolean = False): Byte;
 var
-  NewCam, NumLoops: Byte;
+  NewCam: ShortInt;
+  NumLoops: Byte;
   ValidCam: Boolean;
 begin
   ValidCam := False;
