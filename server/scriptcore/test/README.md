@@ -37,7 +37,11 @@ To run the tests with CMake, make sure to have `BUILD_SCRIPTCORE` and
 `ADD_FFI_FUZZ` options set to true. Then build CMake target `gen-ffi-fuzz`
 (or run `gen_ffi_tests.py` manually), build and run soldatserver.
 
-To run the tests with another build system, run `gen_ffi_tests.py`, copy
-`ScriptFFITests.pas` to the `scriptcore` directory (temporary), build
-soldatserver with `-dSCRIPT_FFI_FUZZ`, and copy the `ffi` directory to the
-`scripts` directory of your soldatserver.
+To run the tests with another build system:
+1. Run `./gen_ffi_tests.py`
+2. Now you need to tell your compiler how to find `ScriptFFITests.pas`.
+You have 2 options:
+   - Temporarily copy `ScriptFFITests.pas` to the `server/scriptcore` directory
+   - Add `server/scriptcore/test` directory to search paths of units (`-Fu` parameter)
+3. Build soldatserver with `-dSCRIPT_FFI_FUZZ` custom option
+4. Copy the `ffi` directory to the `scripts` directory of your soldatserver build
