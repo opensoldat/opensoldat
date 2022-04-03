@@ -203,7 +203,7 @@ type
       procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); virtual; abstract;
 
       function GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
-      function GetQuickConnectionStatus(hConn: HSteamNetConnection): SteamNetworkingQuickConnectionStatus;
+      function GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
       procedure SetConnectionName(hConn: HSteamNetConnection; Name: AnsiString);
       function GetStringAddress(pAddress: PSteamNetworkingIPAddr; Port: Boolean): AnsiString;
 
@@ -954,10 +954,10 @@ begin
     Result := '';
 end;
 
-function TNetwork.GetQuickConnectionStatus(hConn: HSteamNetConnection): SteamNetworkingQuickConnectionStatus;
+function TNetwork.GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
 begin
-  Result := Default(SteamNetworkingQuickConnectionStatus);
-  NetworkingSocket.GetQuickConnectionStatus(hConn, @Result);
+  Result := Default(SteamNetConnectionRealTimeStatus_t);
+  NetworkingSocket.GetConnectionRealTimeStatus(hConn, @Result);
 end;
 
 procedure TNetwork.SetConnectionName(hConn: HSteamNetConnection; Name: AnsiString);
@@ -1555,9 +1555,9 @@ end;
 
 procedure TServerNetwork.UpdateNetworkStats(Player: Byte);
 var
-  Stats: SteamNetworkingQuickConnectionStatus;
+  Stats: SteamNetConnectionRealTimeStatus_t;
 begin
-  Stats := GetQuickConnectionStatus(Sprite[Player].Player.Peer);
+  Stats := GetConnectionRealTimeStatus(Sprite[Player].Player.Peer);
   Sprite[Player].Player.RealPing := Stats.m_nPing;
   if Stats.m_flConnectionQualityLocal > 0.0 then
     Sprite[Player].Player.ConnectionQuality := Trunc(Stats.m_flConnectionQualityLocal * 100)

@@ -1892,7 +1892,7 @@ var
   Spr: PGfxSprite;
   WideScreenCut: Boolean;
   Str: WideString;
-  NetworkStats: SteamNetworkingQuickConnectionStatus;
+  NetworkStats: SteamNetConnectionRealTimeStatus_t;
   SniperLine: Boolean;
 begin
   SpriteMe := NIL;
@@ -2959,7 +2959,7 @@ begin
             DemoPlayer.Header.TicksNum]), 460 * x, 80 * y);
       end else
       begin
-        NetworkStats := UDP.GetQuickConnectionStatus(UDP.Peer);
+        NetworkStats := UDP.GetConnectionRealTimeStatus(UDP.Peer);
         SetFontStyle(FONT_SMALLEST);
         GfxDrawText('Ping: ' + NetworkStats.m_nPing.ToString, 460 * x, 40 * y);
         GfxDrawText('Quality: Local ' + Single(NetworkStats.m_flConnectionQualityLocal * 100).ToString(ffFixed, 7, 0) +

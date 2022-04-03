@@ -41,6 +41,12 @@ Type
 //enum { k_iSteamNetworkingMessagesCallbacks = 1250 };
 //enum { k_iSteamNetworkingUtilsCallbacks = 1280 };
 
+// handle to a communication pipe to the Steam client
+type HSteamPipe = Integer;
+
+// handle to single instance of a steam user
+type HSteamUser = Integer;
+
 type ISteamNetworkingSockets = Pointer;
 type ISteamNetworkingUtils = Pointer;
 
@@ -56,6 +62,8 @@ type SteamNetworkingMessagesSessionRequest_t = record;
 type PSteamNetworkingMessagesSessionRequest_t = ^SteamNetworkingMessagesSessionRequest_t;
 type SteamNetworkingMessagesSessionFailed_t = record;
 type PSteamNetworkingMessagesSessionFailed_t = ^SteamNetworkingMessagesSessionFailed_t;
+type SteamNetworkingFakeIPResult_t = record;
+type PSteamNetworkingFakeIPResult_t = ^SteamNetworkingFakeIPResult_t;
 
 /// Handle used to identify a connection to a remote host.
 type HSteamNetConnection = uint32;
@@ -64,6 +72,7 @@ type PHSteamNetConnection = ^HSteamNetConnection;
 
 {$IFNDEF STEAM}
 EResult = (
+  k_EResultNone = 0,
   k_EResultOK = 1,
   k_EResultFail = 2,
   k_EResultNoConnection = 3,
@@ -175,7 +184,17 @@ EResult = (
   k_EResultWGNetworkSendExceeded = 110,
   k_EResultAccountNotFriends = 111,
   k_EResultLimitedUserAccount = 112,
-  k_EResultCantRemoveItem = 113
+  k_EResultCantRemoveItem = 113,
+  k_EResultAccountDeleted = 114,
+  k_EResultExistingUserCancelledLicense = 115,
+  k_EResultCommunityCooldown = 116,
+  k_EResultNoLauncherSpecified = 117,
+  k_EResultMustAgreeToSSA = 118,
+  k_EResultLauncherMigrated = 119,
+  k_EResultSteamRealmMismatch = 120,
+  k_EResultInvalidSignature = 121,
+  k_EResultParseFailure = 122,
+  k_EResultNoVerifiedPhone = 123
 );
 {$ENDIF}
 
@@ -244,7 +263,7 @@ type ESteamNetworkingAvailability = (
 /// Different methods of describing the identity of a network host
 type ESteamNetworkingIdentityType = (
   // Dummy/empty/invalid.
-  // Plese note that if we parse a string that we don't recognize
+  // Please note that if we parse a string that we don't recognize
   // but that appears reasonable, we will NOT use this type.  Instead
   // we'll use k_ESteamNetworkingIdentityType_UnknownType.
   k_ESteamNetworkingIdentityType_Invalid = 0,
@@ -286,6 +305,17 @@ type ESteamNetworkingIdentityType = (
 
   // Make sure this enum is stored in an int.
   k_ESteamNetworkingIdentityType__Force32bit = $7fffffff
+);
+
+/// "Fake IPs" are assigned to hosts, to make it easier to interface with
+/// older code that assumed all hosts will have an IPv4 address
+type ESteamNetworkingFakeIPType = (
+  k_ESteamNetworkingFakeIPType_Invalid, // Error, argument was not even an IP address, etc.
+  k_ESteamNetworkingFakeIPType_NotFake, // Argument was a valid IP, but was not from the reserved "fake" range
+  k_ESteamNetworkingFakeIPType_GlobalIPv4, // Globally unique (for a given app) IPv4 address.  Address space managed by Steam
+  k_ESteamNetworkingFakeIPType_LocalIPv4, // Locally unique IPv4 address.  Address space managed by the local process.  For internal use only; should not be shared!
+
+  k_ESteamNetworkingFakeIPType__Force32Bit = $7fffffff
 );
 {$pop}
 {$PACKRECORDS 1}
@@ -655,6 +685,9 @@ const k_cchSteamNetworkingMaxConnectionCloseReason: integer = 128;
 /// of a connection.
 const k_cchSteamNetworkingMaxConnectionDescription: integer = 128;
 
+/// Max length of the app's part of the description
+const k_cchSteamNetworkingMaxConnectionAppName: integer = 32;
+
 const k_nSteamNetworkConnectionInfoFlags_Unauthenticated: integer = 1; // We don't have a certificate for the remote host.
 const k_nSteamNetworkConnectionInfoFlags_Unencrypted: integer = 2; // Information is being sent out over a wire unencrypted (by this library)
 const k_nSteamNetworkConnectionInfoFlags_LoopbackBuffers: integer = 4; // Internal loopback buffers.  Won't be true for localhost.  (You can check the address to determine that.)  This implies k_nSteamNetworkConnectionInfoFlags_FastLAN
@@ -714,7 +747,7 @@ end;
 type
   PSteamNetConnectionInfo_t = ^SteamNetConnectionInfo_t;
 
-type SteamNetworkingQuickConnectionStatus = record
+type SteamNetConnectionRealTimeStatus_t = record
 
   /// High level state of the connection
   m_eState: ESteamNetworkingConnectionState;
@@ -756,36 +789,58 @@ type SteamNetworkingQuickConnectionStatus = record
   /// have to re-transmit.
   m_cbSentUnackedReliable: Integer;
 
-  /// If you asked us to send a message right now, how long would that message
-  /// sit in the queue before we actually started putting packets on the wire?
-  /// (And assuming Nagle does not cause any packets to be delayed.)
+  /// If you queued a message right now, approximately how long would that message
+  /// wait in the queue before we actually started putting its data on the wire in
+  /// a packet?
   ///
-  /// In general, data that is sent by the application is limited by the
-  /// bandwidth of the channel.  If you send data faster than this, it must
-  /// be queued and put on the wire at a metered rate.  Even sending a small amount
-  /// of data (e.g. a few MTU, say ~3k) will require some of the data to be delayed
-  /// a bit.
+  /// In general, data that is sent by the application is limited by the bandwidth
+  /// of the channel.  If you send data faster than this, it must be queued and
+  /// put on the wire at a metered rate.  Even sending a small amount of data (e.g.
+  /// a few MTU, say ~3k) will require some of the data to be delayed a bit.
   ///
-  /// In general, the estimated delay will be approximately equal to
+  /// Ignoring multiple lanes, the estimated delay will be approximately equal to
   ///
-  ///    (m_cbPendingUnreliable+m_cbPendingReliable) / m_nSendRateBytesPerSecond
+  ///		( m_cbPendingUnreliable+m_cbPendingReliable ) / m_nSendRateBytesPerSecond
   ///
   /// plus or minus one MTU.  It depends on how much time has elapsed since the last
   /// packet was put on the wire.  For example, the queue might have *just* been emptied,
   /// and the last packet placed on the wire, and we are exactly up against the send
   /// rate limit.  In that case we might need to wait for one packet's worth of time to
   /// elapse before we can send again.  On the other extreme, the queue might have data
-  /// in it waiting for Nagle.  (This will always be less than one packet, because as soon
-  /// as we have a complete packet we would send it.)  In that case, we might be ready
-  /// to send data now, and this value will be 0.
+  /// in it waiting for Nagle.  (This will always be less than one packet, because as
+  /// soon as we have a complete packet we would send it.)  In that case, we might be
+  /// ready to send data now, and this value will be 0.
+  ///
+  /// This value is only valid if multiple lanes are not used.  If multiple lanes are
+  /// in use, then the queue time will be different for each lane, and you must use
+  /// the value in SteamNetConnectionRealTimeLaneStatus_t.
+  ///
+  /// Nagle delay is ignored for the purposes of this calculation.
   m_usecQueueTime: SteamNetworkingMicroseconds;
 
-  /// Internal stuff, room to change API easily
+  // Internal stuff, room to change API easily
   reserved: array [0..15] of uint32;
 end;
 
 type
-  PSteamNetworkingQuickConnectionStatus = ^SteamNetworkingQuickConnectionStatus;
+  PSteamNetConnectionRealTimeStatus_t = ^SteamNetConnectionRealTimeStatus_t;
+
+type SteamNetConnectionRealTimeLaneStatus_t = record
+  // Counters for this particular lane.  See the corresponding variables
+  // in SteamNetConnectionRealTimeStatus_t
+  m_cbPendingUnreliable: Integer;
+  m_cbPendingReliable: Integer;
+  m_cbSentUnackedReliable: Integer;
+  _reservePad1: Integer; // Reserved for future use
+
+  /// Lane-specific queue time.  This value takes into consideration lane priorities
+  /// and weights, and how much data is queued in each lane, and attempts to predict
+  /// how any data currently queued will be sent out.
+  m_usecQueueTime: SteamNetworkingMicroseconds;
+
+  // Internal stuff, room to change API easily
+  reserved: Array[0..9] of uint32;
+end;
 
 const k_cbMaxSteamNetworkingSocketsMessageSizeSend: Integer = 512 * 1024;
 
@@ -822,7 +877,7 @@ type SteamNetworkingMessage_t = record
   /// - You might have closed the connection, so fetching the user data
   ///   would not be possible.
   ///
-  /// Not used when sending messages,
+  /// Not used when sending messages.
   m_nConnUserData: int64;
 
   /// Local timestamp when the message was received
@@ -864,6 +919,11 @@ type SteamNetworkingMessage_t = record
   ///
   /// Not used for received messages.
   m_nUserData: int64;
+
+  /// For outbound messages, which lane to use?  See ISteamNetworkingSockets::ConfigureConnectionLanes.
+  /// For inbound messages, what lane was the message received on?
+  m_idxLane: uint16;
+  _pad1__: uint16;
 
   /// You MUST call this when you're done with the object,
   /// to free up memory, etc.
@@ -1264,6 +1324,10 @@ type ESteamNetworkingConfigValue = (
   /// This value should not be read or written in any other context.
   k_ESteamNetworkingConfig_LocalVirtualPort = 38,
 
+  /// [connection int32] True to enable diagnostics reporting through
+  /// generic platform UI.  (Only available on Steam.)
+  k_ESteamNetworkingConfig_EnableDiagnosticsUI = 46,
+
   //
   // Simulating network conditions
   //
@@ -1374,6 +1438,11 @@ type ESteamNetworkingConfigValue = (
   /// ISteamNetworkingMessages.
   k_ESteamNetworkingConfig_Callback_CreateConnectionSignaling = 206,
 
+  /// [global FnSteamNetworkingFakeIPResult] Callback that's invoked when
+  /// a FakeIP allocation finishes.  See: ISteamNetworkingSockets::BeginAsyncRequestFakeIP,
+  /// ISteamNetworkingUtils::SetGlobalCallback_FakeIPResult
+  k_ESteamNetworkingConfig_Callback_FakeIPResult = 207,
+
   //
   // P2P settings
   //
@@ -1405,6 +1474,9 @@ type ESteamNetworkingConfigValue = (
   /// route ping time and is then adjusted.)
   k_ESteamNetworkingConfig_P2P_Transport_ICE_Penalty = 105,
   k_ESteamNetworkingConfig_P2P_Transport_SDR_Penalty = 106,
+  k_ESteamNetworkingConfig_P2P_TURN_ServerList = 107,
+  k_ESteamNetworkingConfig_P2P_TURN_UserList = 108,
+  k_ESteamNetworkingConfig_P2P_TURN_PassList = 109,
   //k_ESteamNetworkingConfig_P2P_Transport_LANBeacon_Penalty = 107,
 
   //
@@ -1456,21 +1528,9 @@ type ESteamNetworkingConfigValue = (
   /// in production.
   k_ESteamNetworkingConfig_SDRClient_FakeClusterPing = 36,
 
-  //
-  // Misc / debugging
-  //
-  /// [global int32] 0 or 1.  Some variables are "dev" variables.  They are useful
-  /// for debugging, but should not be adjusted in production.  When this flag is false (the default),
-  /// such variables will not be enumerated by the ISteamnetworkingUtils::GetFirstConfigValue
-  /// ISteamNetworkingUtils::GetConfigValueInfo functions.  The idea here is that you
-  /// can use those functions to provide a generic mechanism to set any configuration
-  /// value from a console or configuration file, looking up the variable by name.  Depending
-  /// on your game, modifying other configuration values may also have negative effects, and
-  /// you may wish to further lock down which variables are allowed to be modified by the user.
-  /// (Maybe no variables!)  Or maybe you use a whitelist or blacklist approach.
-  ///
-  /// (This flag is itself a dev variable.)
-  k_ESteamNetworkingConfig_EnumerateDevVars = 35,
+  // Deleted, do not use
+  k_ESteamNetworkingConfig_DELETED_EnumerateDevVars = 35,
+
   //
   // Log levels for debugging information of various subsystems.
   // Higher numeric values will cause more stuff to be printed.
@@ -1640,6 +1700,7 @@ type FnSteamNetAuthenticationStatusChanged = procedure(pInfo: PSteamNetAuthentic
 type FnSteamRelayNetworkStatusChanged = procedure(pInfo: PSteamRelayNetworkStatus_t); cdecl;
 type FnSteamNetworkingMessagesSessionRequest = procedure(pInfo: PSteamNetworkingMessagesSessionRequest_t); cdecl;
 type FnSteamNetworkingMessagesSessionFailed = procedure(pInfo: PSteamRelayNetworkStatus_t); cdecl;
+type FnSteamNetworkingFakeIPResult = procedure(pInfo: PSteamNetworkingFakeIPResult_t); cdecl;
 
 {$IFNDEF STEAM}
 // Initialize the library.  Optionally, you can set an initial identity for the default
@@ -1680,7 +1741,7 @@ procedure SteamAPI_ISteamNetworkingSockets_SendMessages(instancePtr: ISteamNetwo
 function SteamAPI_ISteamNetworkingSockets_FlushMessagesOnConnection(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection): EResult; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_ReceiveMessagesOnConnection(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; ppOutMessages: PSteamNetworkingMessage_t; nMaxMessages: Integer): Integer; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_GetConnectionInfo(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; pInfo: PSteamNetConnectionInfo_t): Boolean; cdecl; external GNSLIB;
-function SteamAPI_ISteamNetworkingSockets_GetQuickConnectionStatus(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; pStats: PSteamNetworkingQuickConnectionStatus): Boolean; cdecl; external GNSLIB;
+function SteamAPI_ISteamNetworkingSockets_GetConnectionRealTimeStatus(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; pStats: PSteamNetConnectionRealTimeStatus_t): Boolean; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_GetDetailedConnectionStatus(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; pszBuf: PChar; cbBuf: Integer): Integer; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_GetListenSocketAddress(instancePtr: ISteamNetworkingSockets; hSocket: HSteamListenSocket; pAddress: PSteamNetworkingIPAddr): Boolean; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_CreateSocketPair(instancePtr: ISteamNetworkingSockets; pOutConnection1: PHSteamNetConnection; pOutConnection2: PHSteamNetConnection; bUseNetworkLoopback: Boolean; const pIdentity1: PSteamNetworkingIdentity; const pIdentity2: PSteamNetworkingIdentity): Boolean; cdecl; external GNSLIB;
@@ -1757,8 +1818,8 @@ function SteamAPI_ISteamNetworkingUtils_SetConfigValue(instancePtr: ISteamNetwor
   eDataType: ESteamNetworkingConfigDataType; const pValue: Pointer): Boolean; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingUtils_GetConfigValue(instancePtr: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr;
   pOutDataType: PESteamNetworkingConfigDataType; var pResult; cbResult: pcsize_t): ESteamNetworkingGetConfigValueResult; cdecl; external GNSLIB;
-function SteamAPI_ISteamNetworkingUtils_GetConfigValueInfo(instancePtr: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; var pOutName: PAnsiChar; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope; pOutNextValue: PESteamNetworkingConfigValue): Boolean; cdecl; external GNSLIB;
-function SteamAPI_ISteamNetworkingUtils_GetFirstConfigValue(instancePtr: ISteamNetworkingUtils): ESteamNetworkingConfigValue; cdecl; external GNSLIB;
+function SteamAPI_ISteamNetworkingUtils_GetConfigValueInfo(instancePtr: ISteamNetworkingUtils; eValue: ESteamNetworkingConfigValue; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope): PAnsiChar; cdecl; external GNSLIB;
+function SteamAPI_ISteamNetworkingUtils_IterateGenericEditableConfigValues(instancePtr: ISteamNetworkingUtils; eCurrent: ESteamNetworkingConfigValue; bEnumerateDevVars: Boolean): ESteamNetworkingConfigValue; cdecl; external GNSLIB;
 
 procedure SteamAPI_SteamNetworkingMessage_t_Release(pIMsg: PSteamNetworkingMessage_t); cdecl; external GNSLIB;
 {$ENDIF}
@@ -1788,7 +1849,7 @@ type
     function FlushMessagesOnConnection(hConn: HSteamNetConnection): EResult;
     function ReceiveMessagesOnConnection(hConn: HSteamNetConnection; ppOutMessages: PSteamNetworkingMessage_t; nMaxMessages: Integer): Integer;
     function GetConnectionInfo(hConn: HSteamNetConnection; pInfo: PSteamNetConnectionInfo_t): Boolean;
-    function GetQuickConnectionStatus(hConn: HSteamNetConnection; pStats: PSteamNetworkingQuickConnectionStatus): Boolean;
+    function GetConnectionRealTimeStatus(hConn: HSteamNetConnection; pStats: PSteamNetConnectionRealTimeStatus_t): Boolean;
     function GetDetailedConnectionStatus(hConn: HSteamNetConnection; pszBuf: PChar; cbBuf: Integer): Integer;
     function GetListenSocketAddress(hSocket: HSteamListenSocket; pAddress: PSteamNetworkingIPAddr): Boolean;
     function CreateSocketPair(pOutConnection1: PHSteamNetConnection; pOutConnection2: PHSteamNetConnection; bUseNetworkLoopback: Boolean; const pIdentity1: PSteamNetworkingIdentity; const pIdentity2: PSteamNetworkingIdentity): Boolean;
@@ -1861,8 +1922,8 @@ type
     {$ENDIF}
     function GetConfigValue(eValue: ESteamNetworkingConfigValue; eScopeType: ESteamNetworkingConfigScope; scopeObj: intptr;
       pOutDataType: PESteamNetworkingConfigDataType; var pResult; cbResult: pcsize_t): ESteamNetworkingGetConfigValueResult;
-    function GetConfigValueInfo(eValue: ESteamNetworkingConfigValue; var pOutName: PAnsiChar; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope; pOutNextValue: PESteamNetworkingConfigValue): Boolean;
-    function GetFirstConfigValue(): ESteamNetworkingConfigValue;
+    function GetConfigValueInfo(eValue: ESteamNetworkingConfigValue; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope): PAnsiChar;
+    function IterateGenericEditableConfigValues(eCurrent: ESteamNetworkingConfigValue; bEnumerateDevVars: Boolean): ESteamNetworkingConfigValue;
     {$IFDEF STEAM}
     //procedure SteamNetworkingIPAddr_ToString(pAddr: PSteamNetworkingIPAddr; buf: PChar; cbBuf: csize_t; bWithPort: Boolean); cdecl;
     //function SteamNetworkingIPAddr_ParseString(pAddr: PSteamNetworkingIPAddr; pszStr: PChar): Boolean;
@@ -1990,9 +2051,9 @@ function TSteamNetworkingSockets.GetConnectionInfo(hConn: HSteamNetConnection; p
 begin
   Result := SteamAPI_ISteamNetworkingSockets_GetConnectionInfo(GameNetworkingSocketsInterface, hConn, pInfo);
 end;
-function TSteamNetworkingSockets.GetQuickConnectionStatus(hConn: HSteamNetConnection; pStats: PSteamNetworkingQuickConnectionStatus): Boolean;
+function TSteamNetworkingSockets.GetConnectionRealTimeStatus(hConn: HSteamNetConnection; pStats: PSteamNetConnectionRealTimeStatus_t): Boolean;
 begin
-  Result := SteamAPI_ISteamNetworkingSockets_GetQuickConnectionStatus(GameNetworkingSocketsInterface, hConn, pStats);
+  Result := SteamAPI_ISteamNetworkingSockets_GetConnectionRealTimeStatus(GameNetworkingSocketsInterface, hConn, pStats);
 end;
 function TSteamNetworkingSockets.GetDetailedConnectionStatus(hConn: HSteamNetConnection; pszBuf: PChar; cbBuf: Integer): Integer;
 begin
@@ -2115,13 +2176,13 @@ function TSteamNetworkingUtils.GetConfigValue(eValue: ESteamNetworkingConfigValu
 begin
   Result := SteamAPI_ISteamNetworkingUtils_GetConfigValue(GameNetworkingUtilsInterface, eValue, eScopeType, scopeObj, pOutDataType, pResult, cbResult);
 end;
-function TSteamNetworkingUtils.GetConfigValueInfo(eValue: ESteamNetworkingConfigValue; var pOutName: PAnsiChar; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope; pOutNextValue: PESteamNetworkingConfigValue): Boolean;
+function TSteamNetworkingUtils.GetConfigValueInfo(eValue: ESteamNetworkingConfigValue; pOutDataType: PESteamNetworkingConfigDataType; pOutScope: PESteamNetworkingConfigScope): PAnsiChar;
 begin
-  Result := SteamAPI_ISteamNetworkingUtils_GetConfigValueInfo(GameNetworkingUtilsInterface, eValue, pOutName, pOutDataType, pOutScope, pOutNextValue);
+  Result := SteamAPI_ISteamNetworkingUtils_GetConfigValueInfo(GameNetworkingUtilsInterface, eValue, pOutDataType, pOutScope);
 end;
-function TSteamNetworkingUtils.GetFirstConfigValue(): ESteamNetworkingConfigValue;
+function TSteamNetworkingUtils.IterateGenericEditableConfigValues(eCurrent: ESteamNetworkingConfigValue; bEnumerateDevVars: Boolean): ESteamNetworkingConfigValue;
 begin
-  Result := SteamAPI_ISteamNetworkingUtils_GetFirstConfigValue(GameNetworkingUtilsInterface);
+  Result := SteamAPI_ISteamNetworkingUtils_IterateGenericEditableConfigValues(GameNetworkingUtilsInterface, eCurrent, bEnumerateDevVars);
 end;
 
 procedure TSteamNetworkingIPAddrHelper.Clear();

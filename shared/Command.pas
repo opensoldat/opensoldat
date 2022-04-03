@@ -224,25 +224,26 @@ end;
 {$IFDEF DEVELOPMENT}
 {$PUSH}
 {$WARN 5027 OFF}
-procedure CommandNetconfig(Args: array of AnsiString; Sender: Byte);
+procedure CommandNetConfig(Args: array of AnsiString; Sender: Byte);
 var
   ConfigName: PChar = '';
   OutDataType: ESteamNetworkingConfigDataType;
   OutScope: ESteamNetworkingConfigScope;
-  OutNextValue: ESteamNetworkingConfigValue;
   FloatValue: Single = 0.0;
   IntegerValue: Integer = 0;
   cbResult: csize_t = 0;
   SetResult: Boolean = False;
+  ConfigID: Integer;
 begin
-
-  if Length(Args) <= 3 then
+  if Length(Args) < 3 then
   begin
     MainConsole.Console('Usage: netconfig "id" "value"', GAME_MESSAGE_COLOR);
     Exit;
   end;
 
-  if UDP.NetworkingUtil.GetConfigValueInfo(ESteamNetworkingConfigValue(StrToInt(Args[1])), ConfigName, @OutDataType, @OutScope, @OutNextValue) then
+  ConfigID := StrToIntDef(Args[1], -1);
+  ConfigName := UDP.NetworkingUtil.GetConfigValueInfo(ESteamNetworkingConfigValue(ConfigID), @OutDataType, @OutScope);
+  if ConfigName <> Nil then
   begin
     if OutDataType = k_ESteamNetworkingConfig_Int32 then
     begin
@@ -258,6 +259,10 @@ begin
       SetResult := UDP.NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @FloatValue);
       MainConsole.Console(Format('[NET] NetConfig: Set %S to %F, result: %S', [AnsiString(ConfigName), FloatValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end;
+  end
+  else
+  begin
+    MainConsole.Console(Format('[NET] NetConfig: Couldn''t find config value: %S', [Args[1]]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
   end;
 end;
 
@@ -266,38 +271,35 @@ var
   ConfigName: PChar = '';
   OutDataType: ESteamNetworkingConfigDataType = k_ESteamNetworkingConfig_Int32;
   OutScope: ESteamNetworkingConfigScope;
-  OutNextValue: ESteamNetworkingConfigValue;
+  CurrentConfigValue: ESteamNetworkingConfigValue;
   FloatValue: Single = 0.0;
   IntegerValue: Integer = 0;
   cbResult: csize_t = 0;
+  IterDev: Boolean = {$IFDEF DEVELOPMENT}True;{$ELSE}False;{$ENDIF}
 begin
-  if Length(Args) <= 4 then
-  begin
-    //MainConsole.Console('Usage: netconfig "id" "value"', GAME_MESSAGE_COLOR);
-    //Exit;
-  end;
+  CurrentConfigValue := UDP.NetworkingUtil.IterateGenericEditableConfigValues(k_ESteamNetworkingConfig_Invalid, IterDev);
 
-  OutNextValue := UDP.NetworkingUtil.GetFirstConfigValue();
-
-  {$IFDEF DEVELOPMENT}
-  IntegerValue := 1;
-  UDP.NetworkingUtil.SetConfigValue(k_ESteamNetworkingConfig_EnumerateDevVars, k_ESteamNetworkingConfig_Global, 0, k_ESteamNetworkingConfig_Int32, @IntegerValue);
-  {$ENDIF}
-  while UDP.NetworkingUtil.GetConfigValueInfo(OutNextValue, ConfigName, @OutDataType, @OutScope, @OutNextValue) do
+  while CurrentConfigValue <> k_ESteamNetworkingConfig_Invalid do
   begin
+    ConfigName := UDP.NetworkingUtil.GetConfigValueInfo(CurrentConfigValue, @OutDataType, @OutScope);
+    if ConfigName = Nil then
+      Break;
+
     if OutDataType = k_ESteamNetworkingConfig_Int32 then
     begin
       cbResult := SizeOf(Integer);
 
-      if UDP.NetworkingUtil.GetConfigValue(OutNextValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, IntegerValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
+      if UDP.NetworkingUtil.GetConfigValue(CurrentConfigValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, IntegerValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
         MainConsole.Console(Format('[NET] NetConfig: %S is %D', [AnsiString(ConfigName), IntegerValue]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end
     else if OutDataType = k_ESteamNetworkingConfig_Float then
     begin
       cbResult := SizeOf(Single);
-      if UDP.NetworkingUtil.GetConfigValue(OutNextValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, FloatValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
+      if UDP.NetworkingUtil.GetConfigValue(CurrentConfigValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, FloatValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
         MainConsole.Console(Format('[NET] NetConfig: %S is %F', [AnsiString(ConfigName), FloatValue]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end;
+
+    CurrentConfigValue := UDP.NetworkingUtil.IterateGenericEditableConfigValues(CurrentConfigValue, IterDev);
   end;
 end;
 
