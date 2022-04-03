@@ -15,7 +15,7 @@ This repository contains the source code of the so-called 1.8 version. Compared 
 - OpenAL
 - FreeType 2.6.1
 - PhysFS 3.0.2
-- [GameNetworkingSockets v1.3.0](https://github.com/ValveSoftware/GameNetworkingSockets/releases/tag/v1.3.0)
+- [GameNetworkingSockets v1.4.0](https://github.com/ValveSoftware/GameNetworkingSockets/releases/tag/v1.4.0)
 
 ## Building Soldat
 
