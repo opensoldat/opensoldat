@@ -957,7 +957,7 @@ end;
 function TNetwork.GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
 begin
   Result := Default(SteamNetConnectionRealTimeStatus_t);
-  NetworkingSocket.GetConnectionRealTimeStatus(hConn, @Result);
+  NetworkingSocket.GetConnectionRealTimeStatus(hConn, @Result, 0, Nil);
 end;
 
 procedure TNetwork.SetConnectionName(hConn: HSteamNetConnection; Name: AnsiString);

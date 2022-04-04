@@ -842,6 +842,8 @@ type SteamNetConnectionRealTimeLaneStatus_t = record
   reserved: Array[0..9] of uint32;
 end;
 
+type PSteamNetConnectionRealTimeLaneStatus_t = ^SteamNetConnectionRealTimeLaneStatus_t;
+
 const k_cbMaxSteamNetworkingSocketsMessageSizeSend: Integer = 512 * 1024;
 
 type SteamNetworkingMessage_t = record
@@ -1741,7 +1743,7 @@ procedure SteamAPI_ISteamNetworkingSockets_SendMessages(instancePtr: ISteamNetwo
 function SteamAPI_ISteamNetworkingSockets_FlushMessagesOnConnection(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection): EResult; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_ReceiveMessagesOnConnection(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; ppOutMessages: PSteamNetworkingMessage_t; nMaxMessages: Integer): Integer; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_GetConnectionInfo(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; pInfo: PSteamNetConnectionInfo_t): Boolean; cdecl; external GNSLIB;
-function SteamAPI_ISteamNetworkingSockets_GetConnectionRealTimeStatus(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; pStats: PSteamNetConnectionRealTimeStatus_t): Boolean; cdecl; external GNSLIB;
+function SteamAPI_ISteamNetworkingSockets_GetConnectionRealTimeStatus(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; pStats: PSteamNetConnectionRealTimeStatus_t; nLanes: Integer; pLanes: PSteamNetConnectionRealTimeLaneStatus_t): Boolean; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_GetDetailedConnectionStatus(instancePtr: ISteamNetworkingSockets; hConn: HSteamNetConnection; pszBuf: PChar; cbBuf: Integer): Integer; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_GetListenSocketAddress(instancePtr: ISteamNetworkingSockets; hSocket: HSteamListenSocket; pAddress: PSteamNetworkingIPAddr): Boolean; cdecl; external GNSLIB;
 function SteamAPI_ISteamNetworkingSockets_CreateSocketPair(instancePtr: ISteamNetworkingSockets; pOutConnection1: PHSteamNetConnection; pOutConnection2: PHSteamNetConnection; bUseNetworkLoopback: Boolean; const pIdentity1: PSteamNetworkingIdentity; const pIdentity2: PSteamNetworkingIdentity): Boolean; cdecl; external GNSLIB;
@@ -1849,7 +1851,7 @@ type
     function FlushMessagesOnConnection(hConn: HSteamNetConnection): EResult;
     function ReceiveMessagesOnConnection(hConn: HSteamNetConnection; ppOutMessages: PSteamNetworkingMessage_t; nMaxMessages: Integer): Integer;
     function GetConnectionInfo(hConn: HSteamNetConnection; pInfo: PSteamNetConnectionInfo_t): Boolean;
-    function GetConnectionRealTimeStatus(hConn: HSteamNetConnection; pStats: PSteamNetConnectionRealTimeStatus_t): Boolean;
+    function GetConnectionRealTimeStatus(hConn: HSteamNetConnection; pStats: PSteamNetConnectionRealTimeStatus_t; nLanes: Integer; pLanes: PSteamNetConnectionRealTimeLaneStatus_t): Boolean;
     function GetDetailedConnectionStatus(hConn: HSteamNetConnection; pszBuf: PChar; cbBuf: Integer): Integer;
     function GetListenSocketAddress(hSocket: HSteamListenSocket; pAddress: PSteamNetworkingIPAddr): Boolean;
     function CreateSocketPair(pOutConnection1: PHSteamNetConnection; pOutConnection2: PHSteamNetConnection; bUseNetworkLoopback: Boolean; const pIdentity1: PSteamNetworkingIdentity; const pIdentity2: PSteamNetworkingIdentity): Boolean;
@@ -2051,9 +2053,9 @@ function TSteamNetworkingSockets.GetConnectionInfo(hConn: HSteamNetConnection; p
 begin
   Result := SteamAPI_ISteamNetworkingSockets_GetConnectionInfo(GameNetworkingSocketsInterface, hConn, pInfo);
 end;
-function TSteamNetworkingSockets.GetConnectionRealTimeStatus(hConn: HSteamNetConnection; pStats: PSteamNetConnectionRealTimeStatus_t): Boolean;
+function TSteamNetworkingSockets.GetConnectionRealTimeStatus(hConn: HSteamNetConnection; pStats: PSteamNetConnectionRealTimeStatus_t; nLanes: Integer; pLanes: PSteamNetConnectionRealTimeLaneStatus_t): Boolean;
 begin
-  Result := SteamAPI_ISteamNetworkingSockets_GetConnectionRealTimeStatus(GameNetworkingSocketsInterface, hConn, pStats);
+  Result := SteamAPI_ISteamNetworkingSockets_GetConnectionRealTimeStatus(GameNetworkingSocketsInterface, hConn, pStats, nLanes, pLanes);
 end;
 function TSteamNetworkingSockets.GetDetailedConnectionStatus(hConn: HSteamNetConnection; pszBuf: PChar; cbBuf: Integer): Integer;
 begin
