@@ -49,7 +49,7 @@ begin
   FFilename := AnsiReplaceStr(Name, '..', '');
   FChecksum := Checksum;
   OnTerminate := DoOnTerminate;
-  FreeOnTerminate := False;
+  FreeOnTerminate := True;
 end;
 
 procedure TDownloadThread.CancelDownload;
@@ -136,7 +136,6 @@ begin
   if DownloadRetry = 1 then
     if FStatus = 1 then
       JoinServer;
-  FreeAndNil(DownloadThread);
 end;
 {$pop}
 
