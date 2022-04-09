@@ -21,16 +21,16 @@ type
       FDownloadPos: Int64;
       FDownloadSize: Int64;
       Client: TFPHTTPClient;
-    protected
-      procedure Execute; override;
+
       procedure SetStatus;
       procedure SetError;
-
-    public
-      constructor Create(DownloadURL: String; Name: String; CheckSum: TSHA1Digest);
       procedure DoProgress(Sender: TObject; Const ContentLength, CurrentPos : Int64);
       procedure OnFinished;
       procedure DummySync;
+    protected
+      procedure Execute; override;
+    public
+      constructor Create(DownloadURL: String; Name: String; CheckSum: TSHA1Digest);
       procedure CancelDownload;
       destructor Destroy; override;
   end;
