@@ -1050,8 +1050,9 @@ begin
     WriteLn('[NET] Invalid connection handle');
     Exit;
   end;
-  Debug('[NET] Received SteamNetConnectionStatusChangedCallback_t ' +
-    ToStr(pInfo^, TypeInfo(SteamNetConnectionStatusChangedCallback_t)));
+  {$IFDEF DEVELOPMENT}
+  Debug('[NET] Received SteamNetConnectionStatusChangedCallback_t ' + ToStr(pInfo^, TypeInfo(SteamNetConnectionStatusChangedCallback_t)));
+  {$ENDIF}
   // Make sure it's for us
   if pInfo.m_hConn = FPeer then
   begin
@@ -1345,8 +1346,9 @@ var
   TempIP: TIPString;
 begin
   TempIP := Default(TIPString);
-  Debug('[NET] Received SteamNetConnectionStatusChangedCallback_t ' +
-    ToStr(pInfo^, TypeInfo(SteamNetConnectionStatusChangedCallback_t)));
+  {$IFDEF DEVELOPMENT}
+  Debug('[NET] Received SteamNetConnectionStatusChangedCallback_t ' + ToStr(pInfo^, TypeInfo(SteamNetConnectionStatusChangedCallback_t)));
+  {$ENDIF}
   case pInfo.m_info.m_eState of
     k_ESteamNetworkingConnectionState_None:
     begin
