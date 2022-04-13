@@ -887,7 +887,7 @@ end;
 {$WARN 5024 OFF : Parameter "$1" not used}
 procedure DebugNet(nType: ESteamNetworkingSocketsDebugOutputType; pszMsg: PChar); cdecl;
 begin
-  WriteLn('[NET DEBUG] ' + pszMsg);
+  Debug('[NET DEBUG] ' + pszMsg);
 end;
 {$POP}
 
@@ -1051,7 +1051,7 @@ begin
     Exit;
   end;
   {$IFDEF DEVELOPMENT}
-  WriteLn('[NET] Received SteamNetConnectionStatusChangedCallback_t ', ToStr(pInfo^, TypeInfo(SteamNetConnectionStatusChangedCallback_t)));
+  Debug('[NET] Received SteamNetConnectionStatusChangedCallback_t ' + ToStr(pInfo^, TypeInfo(SteamNetConnectionStatusChangedCallback_t)));
   {$ENDIF}
   // Make sure it's for us
   if pInfo.m_hConn = FPeer then
@@ -1075,7 +1075,7 @@ begin
       end;
       k_ESteamNetworkingConnectionState_Connecting:
       begin
-        WriteLn('[NET] Connection request from: ' + PChar(pInfo.m_info.m_szConnectionDescription));
+        WriteLn('[NET] Connecting to: ' + PChar(pInfo.m_info.m_szConnectionDescription));
       end;
       k_ESteamNetworkingConnectionState_Connected:
       begin
@@ -1347,7 +1347,7 @@ var
 begin
   TempIP := Default(TIPString);
   {$IFDEF DEVELOPMENT}
-  WriteLn('[NET] Received SteamNetConnectionStatusChangedCallback_t ', ToStr(pInfo^, TypeInfo(SteamNetConnectionStatusChangedCallback_t)));
+  Debug('[NET] Received SteamNetConnectionStatusChangedCallback_t ' + ToStr(pInfo^, TypeInfo(SteamNetConnectionStatusChangedCallback_t)));
   {$ENDIF}
   case pInfo.m_info.m_eState of
     k_ESteamNetworkingConnectionState_None:
