@@ -10,7 +10,7 @@ uses
   Vector, Util,
 
   // soldat units
-  Calc, LogFile, GameNetworkingSockets, Net, Sprites, Weapons, Sound,
+  Calc, LogFile, Steam, Net, Sprites, Weapons, Sound,
   Constants, GameStrings;
 
 procedure ClientHandleServerThingSnapshot(NetMessage: PSteamNetworkingMessage_t);

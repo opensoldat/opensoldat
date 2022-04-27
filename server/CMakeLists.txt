@@ -37,7 +37,9 @@ if(ADD_ASSETS)
   add_dependencies(soldatserver soldat_smod)
 endif()
 
-if(NOT BUILD_STEAM)
+if(BUILD_STEAM)
+  target_link_libraries(soldatserver steam_api)
+else()
   target_link_libraries(soldatserver GameNetworkingSockets)
 endif()
 

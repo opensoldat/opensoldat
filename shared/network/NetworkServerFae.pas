@@ -2,7 +2,7 @@ unit NetworkServerFae;
 
 interface
 
-uses GameNetworkingSockets;
+uses Steam;
 
 procedure ServerSendFaeChallenge(Peer: HSteamNetConnection; InOrder: Boolean);
 procedure ServerHandleFaeResponse(NetMessage: PSteamNetworkingMessage_t);

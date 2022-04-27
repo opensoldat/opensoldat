@@ -25,9 +25,7 @@ uses
     GameRendering,
   {$ENDIF}
 
-  GameNetworkingSockets,
-
-  {$IFDEF STEAM} SteamTypes, {$ENDIF}
+  Steam,
 
   // soldat units
   Weapons, Constants;
@@ -186,13 +184,8 @@ type
       {$IFDEF SERVER}
       FPollGroup: HSteamNetPollGroup;
       {$ENDIF}
-      {$IFNDEF STEAM}
-      NetworkingSockets: TSteamNetworkingSockets;
-      NetworkingUtils: TSteamNetworkingUtils;
-      {$ELSE}
-      NetworkingSockets: TSteamNetworkingSockets;
-      NetworkingUtils: TSteamNetworkingUtils;
-      {$ENDIF}
+      NetworkingSockets: PISteamNetworkingSockets;
+      NetworkingUtils: PISteamNetworkingUtils;
     public
       property Active: Boolean read FActive write FActive;
       constructor Create();
@@ -218,8 +211,8 @@ type
 
       property Host: HSteamListenSocket read FHost;
       property Peer: HSteamNetConnection read FPeer;
-      property NetworkingSocket: TSteamNetworkingSockets read NetworkingSockets;
-      property NetworkingUtil: TSteamNetworkingUtils read NetworkingUtils;
+      property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
+      property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
 
       property Port: Word read FAddress.m_port write FAddress.m_port;
       property Address: SteamNetworkingIPAddr read FAddress;
@@ -281,7 +274,7 @@ type
     SpriteNum: Byte; // 0 if no sprite exists yet
     DemoPlayer: Boolean;
     {$IFDEF STEAM}
-    SteamID: TSteamID;
+    SteamID: CSteamID;
     SteamStats: Boolean;
     LastReceiveVoiceTime: Integer;
     SteamFriend: Boolean;
@@ -892,11 +885,37 @@ end;
 {$POP}
 
 constructor TNetwork.Create();
+{$IFNDEF STEAM}
+var
+  ErrorMsg: SteamNetworkingErrMsg;
+{$ENDIF}
 begin
   FInit := True;
 
-  NetworkingSockets := TSteamNetworkingSockets.Init();
-  NetworkingUtils := TSteamNetworkingUtils.Init();
+  {$IFNDEF STEAM}
+  if not GameNetworkingSockets_Init(Nil, @ErrorMsg) then
+    raise Exception.Create('GameNetworkingSockets_Init has failed: ' + PChar(ErrorMsg));
+  {$ENDIF}
+
+  {$IFDEF STEAM}
+  {$IFNDEF SERVER}
+  NetworkingSockets := SteamAPI_SteamNetworkingSockets_SteamAPI_v012();
+  {$ELSE}
+  NetworkingSockets := SteamAPI_SteamGameServerNetworkingSockets_SteamAPI_v012();
+  {$ENDIF}
+  {$ELSE}
+  NetworkingSockets := SteamAPI_SteamNetworkingSockets_v009();
+  {$ENDIF}
+  if NetworkingSockets = Nil then
+    raise Exception.Create('NetworkingSockets is null');
+
+  {$IFDEF STEAM}
+  NetworkingUtils := SteamAPI_SteamNetworkingUtils_SteamAPI_v004();
+  {$ELSE}
+  NetworkingUtils := SteamAPI_SteamNetworkingUtils_v003();
+  {$ENDIF}
+  if NetworkingUtils = Nil then
+    raise Exception.Create('NetworkingUtils is null');
 
   NetworkingUtils.SetGlobalCallback_SteamNetConnectionStatusChanged(@ProcessEventsCallback);
 
@@ -907,10 +926,6 @@ end;
 destructor TNetwork.Destroy();
 begin
   Disconnect(True);
-  {$IFNDEF STEAM}
-  NetworkingSockets.Destroy;
-  NetworkingUtils.Destroy;
-  {$ENDIF}
   inherited Destroy();
 end;
 
@@ -1106,7 +1121,7 @@ begin
   InitSettings.m_eDataType := k_ESteamNetworkingConfig_Int32;
   InitSettings.m_int32 := 1;
 
-  FPeer := NetworkingSockets.ConnectByIPAddress(@ServerAddress, 1, @InitSettings);
+  FPeer := NetworkingSockets.ConnectByIPAddress(ServerAddress, 1, @InitSettings);
 
   if FPeer = k_HSteamNetConnection_Invalid then
   begin
@@ -1259,7 +1274,7 @@ begin
   end;
 
   if not DemoPlayer.Active then
-    SteamAPI_SteamNetworkingMessage_t_Release(IncomingMsg);
+    IncomingMsg.Release();
 end;
 
 function TClientNetwork.SendData(var Data; Size: Integer; Flags: Integer): Boolean;
@@ -1297,7 +1312,7 @@ begin
     //  InitSettings.m_int32 := 0
     //else
     //{$ENDIF}
-    FHost := NetworkingSockets.CreateListenSocketIP(@ServerAddress, 1, @InitSettings);
+    FHost := NetworkingSockets.CreateListenSocketIP(ServerAddress, 1, @InitSettings);
 
     if FHost = k_HSteamListenSocket_Invalid then
       Exit;
@@ -1425,7 +1440,7 @@ begin
         Player.IP := TempIP;
         Player.Port := pInfo.m_info.m_addrRemote.m_port;
         {$IFDEF STEAM}
-        Player.SteamID := TSteamID(pInfo.m_info.m_identityRemote.GetSteamID64);
+        Player.SteamID := CSteamID(pInfo.m_info.m_identityRemote.GetSteamID64);
         {$ENDIF}
         {$HINTS OFF} // Conversion between ordinals and pointers is not portable
         NetworkingSockets.SetConnectionUserData(pInfo.m_hConn, PtrUint(Pointer(Player)));
@@ -1518,7 +1533,7 @@ begin
     {$ENDIF}
   end;
 
-  SteamAPI_SteamNetworkingMessage_t_Release(IncomingMsg);
+  IncomingMsg.Release();
 end;
 
 destructor TServerNetwork.Destroy;

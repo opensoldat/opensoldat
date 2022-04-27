@@ -50,7 +50,9 @@ if(UNIX)
   target_link_libraries(soldat stb)
 endif()
 
-if(NOT BUILD_STEAM)
+if(BUILD_STEAM)
+  target_link_libraries(soldat steam_api)
+else()
   target_link_libraries(soldat GameNetworkingSockets)
 endif()
 

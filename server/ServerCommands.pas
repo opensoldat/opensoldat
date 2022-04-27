@@ -20,7 +20,7 @@ uses
 
   Server, Command, Weapons, Net, NetworkUtils, NetworkServerMessages,
   NetworkServerFunctions, NetworkServerConnection, NetworkServerGame,
-  Sprites, PolyMap, Game, Things, Constants, ServerHelper, BanSystem, Demo{$IFDEF STEAM}, Steam{$ENDIF};
+  Sprites, PolyMap, Game, Things, Constants, ServerHelper, BanSystem, Demo, Steam;
 
 {$PUSH}
 {$WARN 5024 OFF : Parameter "$1" not used}

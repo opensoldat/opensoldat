@@ -11,7 +11,7 @@ uses
   Vector, Util,
 
   // soldat units
-  GameNetworkingSockets, Net, Sprites, Constants, GameStrings;
+  Steam, Net, Sprites, Constants, GameStrings;
 
 procedure ClientSendStringMessage(Text: WideString; MsgType: Byte);
 procedure ClientHandleChatMessage(NetMessage: PSteamNetworkingMessage_t);

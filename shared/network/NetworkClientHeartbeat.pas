@@ -7,7 +7,7 @@ uses
   SysUtils, Classes,
 
   // soldat units
-  LogFile, GameNetworkingSockets, Net, Sprites, Sound, Constants, GameStrings;
+  LogFile, Steam, Net, Sprites, Sound, Constants, GameStrings;
 
 procedure ClientHandleHeartBeat(NetMessage: PSteamNetworkingMessage_t);
 

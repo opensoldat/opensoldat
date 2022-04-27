@@ -3,7 +3,7 @@ unit NetworkClientFae;
 interface
 
 uses
-  GameNetworkingSockets,
+  Steam,
   FaeBase,
   FaeClient;
 

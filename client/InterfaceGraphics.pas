@@ -51,7 +51,7 @@ uses
   Client, SysUtils, Types, TraceLog,
   Game, Math, Calc, Version, Util, PolyMap,
   Demo, Weapons, GameStrings, Net, GameMenus, Gfx, GameRendering, PhysFS,
-  ClientGame, Console, MapGraphics, GameNetworkingSockets;
+  ClientGame, Console, MapGraphics, Steam;
 
 type
   TInterfaceRelInfo = record

@@ -28,7 +28,7 @@ uses
 
   {$IFDEF STEAM}
   // Steam
-  GameNetworkingSockets, Steam, SteamTypes,
+  Steam,
   {$ENDIF}
 
   // PhysFS

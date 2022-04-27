@@ -38,8 +38,8 @@ var
   DeferredInitialized: Boolean = False;
 
 implementation
-  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Cvar, strutils, Game, Net
-    {$IFDEF DEVELOPMENT} ,GameNetworkingSockets ,ctypes ,TraceLog {$ENDIF}
+  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF}Cvar, strutils, Game, Net
+    {$IFDEF DEVELOPMENT}, Steam, ctypes, TraceLog{$ENDIF}
     {$IFDEF SERVER}, NetworkUtils{$ENDIF};
 
 {$PUSH}
@@ -289,13 +289,13 @@ begin
     begin
       cbResult := SizeOf(Integer);
 
-      if UDP.NetworkingUtil.GetConfigValue(CurrentConfigValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, IntegerValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
+      if UDP.NetworkingUtil.GetConfigValue(CurrentConfigValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, @IntegerValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
         MainConsole.Console(Format('[NET] NetConfig: %S is %D', [AnsiString(ConfigName), IntegerValue]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end
     else if OutDataType = k_ESteamNetworkingConfig_Float then
     begin
       cbResult := SizeOf(Single);
-      if UDP.NetworkingUtil.GetConfigValue(CurrentConfigValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, FloatValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
+      if UDP.NetworkingUtil.GetConfigValue(CurrentConfigValue, k_ESteamNetworkingConfig_Global, 0, @OutDataType, @FloatValue, @cbResult) = k_ESteamNetworkingGetConfigValue_OK then
         MainConsole.Console(Format('[NET] NetConfig: %S is %F', [AnsiString(ConfigName), FloatValue]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end;
 

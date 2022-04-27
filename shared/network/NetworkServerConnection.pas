@@ -12,7 +12,7 @@ uses
   {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
 
   // soldat units
-  PolyMap, {$IFDEF SERVER}GameNetworkingSockets,{$ENDIF} Net, Sprites, Weapons, Constants;
+  PolyMap, {$IFDEF SERVER}Steam,{$ENDIF} Net, Sprites, Weapons, Constants;
 
   {$IFDEF SERVER}
   procedure ServerHandleRequestGame(NetMessage: PSteamNetworkingMessage_t);
@@ -36,7 +36,6 @@ uses
 implementation
 
 uses
-    {$IFDEF STEAM} SteamTypes,{$ENDIF}
     Game, NetworkUtils, Demo
     {$IFDEF SERVER}, Server, ServerHelper, Sha1, NetworkServerGame, NetworkServerMessages,
     NetworkServerThing, BanSystem, Things, Version, LogFile, TraceLog{$ELSE}, Client {$ENDIF}
@@ -117,7 +116,7 @@ begin
     else
     begin
       {$IFDEF STEAM}
-      BanIndex := FindBanHW(IntToStr(TSteamID(Player.SteamID).GetAccountID));
+      BanIndex := FindBanHW(IntToStr(CSteamID(Player.SteamID).m_unAccountID));
       {$ELSE}
       BanIndex := FindBanHW(RequestMsg.HardwareID);
       {$ENDIF}
@@ -144,7 +143,7 @@ begin
   {$ENDIF}
 
   MainConsole.Console(Player.IP + ':' + IntToStr(Player.Port) +
-    '|' + {$IFDEF STEAM}TSteamID(Player.SteamID).GetAsString{$ELSE}RequestMsg.HardwareID{$ENDIF} +
+    '|' + {$IFDEF STEAM}SteamID3(CSteamID(Player.SteamID)){$ELSE}RequestMsg.HardwareID{$ENDIF} +
     ' requesting game' + BanReason + '...', SERVER_MESSAGE_COLOR);
 
   {$IFDEF SCRIPT}
@@ -152,7 +151,7 @@ begin
   begin
     State := ScrptDispatcher.OnRequestGame(Player.IP,
       {$IFDEF STEAM}
-      TSteamID(Player.SteamID).GetAsString
+      SteamID3(CSteamID(Player.SteamID))
       {$ELSE}
       RequestMsg.HardwareID
       {$ENDIF},
@@ -257,7 +256,7 @@ begin
 
   MainConsole.Console(FinalPlayerName + ' joining game (' + Player.IP +
     ':' + IntToStr(Player.Port) + ') HWID:' +
-    {$IFDEF STEAM}Player.SteamID.GetAsString{$ELSE}Player.HWID{$ENDIF},
+    {$IFDEF STEAM}SteamID3(Player.SteamID){$ELSE}Player.HWID{$ENDIF},
     SERVER_MESSAGE_COLOR);
 
   // Set a network name for debugging purposes

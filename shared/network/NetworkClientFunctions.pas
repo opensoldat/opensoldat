@@ -13,7 +13,7 @@ uses
   Sound,
 
   // soldat units
-  LogFile, GameNetworkingSockets, Net, Sprites, Weapons, Constants;
+  LogFile, Steam, Net, Sprites, Weapons, Constants;
 
 procedure ClientHandleVoteOn(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleVoteOff;

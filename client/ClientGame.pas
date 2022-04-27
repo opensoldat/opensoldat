@@ -63,7 +63,7 @@ uses
   Client, Game, Sprites, GameStrings, Demo,
   Net, NetworkClientSprite, NetworkClientConnection,
   {$IFDEF ENABLE_FAE}FaeBase, FaeClient, NetworkClientFae,{$ENDIF}
-  {$IFDEF STEAM}Steam, SteamTypes, NetworkClientGame,{$ENDIF}
+  {$IFDEF STEAM}Steam, NetworkClientGame,{$ENDIF}
   GameRendering, Gfx, UpdateFrame, GameMenus, Util, InterfaceGraphics;
 
 type

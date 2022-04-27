@@ -29,7 +29,7 @@ uses
   {$ENDIF}
 
   {$IFDEF STEAM}
-  Steam, SteamTypes, typinfo,
+  typinfo,
   {$ENDIF}
 
   {$IFDEF RCON}
@@ -39,7 +39,7 @@ uses
   FileServer, LobbyClient,
 
   // soldat units
-  GameNetworkingSockets, Net, NetworkUtils,
+  Steam, Net, NetworkUtils,
   NetworkServerSprite, NetworkServerConnection, NetworkServerGame,
   ServerCommands, PhysFS, Console, ServerHelper,
   Sprites, Anims, PolyMap, SharedConfig, Game, Things,
@@ -57,9 +57,9 @@ function KickPlayer(num: Byte; Ban: Boolean; why: Integer; time: Integer;
 function PrepareMapChange(Name: String): Boolean;
 {$IFDEF STEAM}
 {$IFDEF STEAMSTATS}
-procedure RequestUserStats(Player: TSteamID);
+procedure RequestUserStats(Player: CSteamID);
 procedure GSStatsStored(Callback: PGSStatsStored_t);
-procedure StoreStats(Player: TSteamID);
+procedure StoreStats(Player: CSteamID);
 {$ENDIF}
 procedure RunManualCallbacks;
 {$ENDIF}
@@ -343,7 +343,7 @@ end;
 
 {$IFDEF STEAM}
 {$IFDEF STEAMSTATS}
-procedure StoreStats(Player: TSteamID);
+procedure StoreStats(Player: CSteamID);
 begin
   //SteamCallResultDispatcher.Create(1801, @GSStatsStored, SizeOf(GSStatsStored_t), SteamAPI.GameServerStats.StoreUserStats(Player), k_ECallbackFlagsGameServer);
 end;
@@ -351,7 +351,7 @@ end;
 procedure GSStatsStored(Callback: PGSStatsStored_t);
 begin
   Debug(Format('[Steam] GSStatsReceived result %d result steamid %s',
-    [Ord(Callback.m_eResult), Callback.m_steamIDUser.GetAsString]));
+    [Ord(Callback.m_eResult), SteamID3(Callback.m_steamIDUser)]));
 end;
 
 procedure GSStatsReceived(Callback: PGSStatsReceived_t);
@@ -359,7 +359,7 @@ var
  j: Byte;
 begin
   Debug(Format('[Steam] GSStatsReceived result %d result steamid %s',
-    [Ord(Callback.m_eResult), Callback.m_steamIDUser.GetAsString]));
+    [Ord(Callback.m_eResult), SteamID3(Callback.m_steamIDUser)]));
   for j := 1 to MAX_SPRITES do
     if (Sprite[j].Active) and (Uint64(Sprite[j].Player.SteamID) = Uint64(Callback.m_steamIDUser)) then
     begin
@@ -370,7 +370,7 @@ begin
     end;
 end;
 
-procedure RequestUserStats(Player: TSteamID);
+procedure RequestUserStats(Player: CSteamID);
 begin
   SteamAPI.GameServerStats.RequestUserStats(Player);
 end;
@@ -491,7 +491,7 @@ begin
   SteamAPI_ManualDispatch_RunFrame(SteamAPI.SteamPipeHandle);
   while SteamAPI_ManualDispatch_GetNextCallback(SteamAPI.SteamPipeHandle, @callback) do
   begin
-    if callback.m_iCallback = 703 then
+    if callback.m_iCallback = CBID_SteamAPICallCompleted_t then
     begin
       pCallCompleted := PSteamAPICallCompleted_t(callback.m_pubParam)^;
       GetMem(Data, pCallCompleted.m_cubParam);
@@ -500,14 +500,14 @@ begin
       end;
       FreeMem(Data);
     end
-    else if callback.m_iCallback = 101 then
+    else if callback.m_iCallback = CBID_SteamServersConnected_t then
       OnSteamServersConnected()
-    else if callback.m_iCallback = 102 then
-      OnSteamServerConnectFailure(callback.m_pubParam)
-    else if callback.m_iCallback = 103 then
-      OnSteamServersDisconnected(callback.m_pubParam)
-    else if callback.m_iCallback = 1221 then
-      SteamNetConnectionStatusChangedCallback(callback.m_pubParam);
+    else if callback.m_iCallback = CBID_SteamServerConnectFailure_t then
+      OnSteamServerConnectFailure(PSteamServerConnectFailure_t(callback.m_pubParam))
+    else if callback.m_iCallback = CBID_SteamServersDisconnected_t then
+      OnSteamServersDisconnected(PSteamServersDisconnected_t(callback.m_pubParam))
+    else if callback.m_iCallback = CBID_SteamNetConnectionStatusChangedCallback_t then
+      SteamNetConnectionStatusChangedCallback(PSteamNetConnectionStatusChangedCallback_t(callback.m_pubParam));
 
     SteamAPI_ManualDispatch_FreeLastCallback(SteamAPI.SteamPipeHandle);
   end;
@@ -835,7 +835,7 @@ begin
 
   {$IFDEF STEAM}
   Debug('[Steam] Shutdown');
-  SteamAPI.GameServer.Shutdown;
+  SteamGameServer_Shutdown();
   {$ENDIF}
 
   {$IFNDEF STEAM}
@@ -1371,7 +1371,7 @@ begin
   begin
     AddBannedIP(Sprite[i].Player.IP, Reason, time);
     {$IFDEF STEAM}
-    AddBannedHW(IntToStr(Sprite[i].Player.SteamID.GetAccountID), Reason, time);
+    AddBannedHW(IntToStr(Sprite[i].Player.SteamID.m_unAccountID), Reason, time);
     {$ELSE}
     AddBannedHW(Sprite[i].Player.HWid, Reason, time);
     {$ENDIF}

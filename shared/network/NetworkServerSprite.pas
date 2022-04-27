@@ -14,7 +14,7 @@ uses
   {$ENDIF}
 
   // soldat units
-  GameNetworkingSockets, Net, Sprites, Weapons, Constants, PolyMap;
+  Steam, Net, Sprites, Weapons, Constants, PolyMap;
 
 procedure ServerSpriteSnapshot(r: Byte);
 procedure ServerSpriteSnapshotMajor(r: Byte);
