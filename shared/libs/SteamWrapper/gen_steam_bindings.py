@@ -11,6 +11,7 @@ import shutil
 import sys
 
 os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
+os.mkdir('check')
 api_path = sys.argv[1] + os.sep
 
 # Utils.
