@@ -19,12 +19,10 @@ api_path = sys.argv[1] + os.sep
 def interpose(coll, s):
     if len(coll) < 2:
         return coll
-
     i = 1
     while i < len(coll):
         coll = coll[:i] + s + coll[i:]
         i += 2
-
     return coll
 
 
@@ -58,6 +56,13 @@ def get_all_under_tag(out, tag, var):
 
 def fix_path(path):
     return path.replace('/', os.sep)
+
+
+def get_or(d, keys, default):
+    for key in keys:
+        if key in d:
+            return d[key]
+    return default
 
 # Fix types from `steam_api.json`.
 ################################################################################
@@ -95,22 +100,20 @@ def fix_function_pointer_type(type_text):
 
     return_type = type_text[:type_text.index('(')].strip()
     if return_type == 'void':
-        ret = ret + 'procedure('
+        ret = 'procedure('
     else:
-        ret = ret + 'function('
+        ret = 'function('
 
     # void (*)(int, const char *)
     #          \_______________/
     #                |
     # Split contents inside parentheses by comma, parse as individual types.
-    args = ['a' + str(i) + ': ' + fix_type(sub) for (i, sub) in enumerate(type_text[find_nth(type_text, '(', 2) + 1:-1].split(','))]
-    args_text = functools.reduce(lambda a, b: a + b, interpose(args, ['; ']), '')
-    ret += args_text
-    ret = ret + ')'
+    parameters = ['a' + str(i) + ': ' + fix_type(sub) for (i, sub) in enumerate(type_text[find_nth(type_text, '(', 2) + 1:-1].split(','))]
+    ret += interpose_s(parameters, '; ') + ')'
 
     if return_type != 'void':
-        ret = ret + ': ' + fix_type(return_type);
-    ret = ret + '; cdecl'
+        ret += ': ' + fix_type(return_type);
+    ret += '; cdecl'
     return ret
 
 
@@ -151,85 +154,71 @@ def fix_type(type_text):
 
 
 # Allow for const, constref, var.
-def interface_param(type_text, param_name):
-    ret = ''
+def build_param(param_name, type_text, is_interface=False):
+    modifier = ''
+    if is_interface:
+        if type_text.startswith('const '):
+            if '&' in type_text:
+                modifier = 'constref '
+            else:
+                modifier = 'const '
+            type_text = type_text[len('const '):]
+        elif '&' in type_text:
+            modifier = 'var '
+        type_text = type_text.replace('&', '').strip()
 
-    if type_text.startswith('const '):
-        if '&' in type_text:
-            ret = ret + 'constref '
-        else:
-            ret = ret + 'const '
-        type_text = type_text[len('const '):]
-    elif '&' in type_text:
-        ret = ret + 'var '
-
-    ret = ret + param_name + ': '
-
-    type_text = type_text.replace('&', '').strip()
-    ret = ret + fix_type(type_text)
-    return ret
+    return modifier + param_name + ': ' + fix_type(type_text)
 
 
 def fix_constant_val(constant_val):
-    constant_val = constant_val.replace('STEAMGAMESERVER_QUERY_PORT_SHARED', '$ffff').replace('k_nSteamNetworkingSend_Reliable | k_nSteamNetworkingSend_NoNagle', '8 or 1').replace('k_nSteamNetworkingSend_Unreliable | k_nSteamNetworkingSend_NoDelay | k_nSteamNetworkingSend_NoNagle', '0 or 4 or 1').replace('k_nSteamNetworkingSend_Unreliable | k_nSteamNetworkingSend_NoNagle', '0 or 1').replace('( SteamItemInstanceID_t ) ~ 0', 'not 0').replace('( ( uint32 ) \'d\' << 16U ) | ( ( uint32 ) \'e\' << 8U ) | ( uint32 ) \'v\'', '6579574').replace('0x', '$').replace('~', 'not').replace('|', 'or').replace('ull', '').replace('<<', 'shl').replace('>>', 'shr')
-    return constant_val
+    return constant_val.replace('STEAMGAMESERVER_QUERY_PORT_SHARED', '$ffff').replace('k_nSteamNetworkingSend_Reliable | k_nSteamNetworkingSend_NoNagle', '8 or 1').replace('k_nSteamNetworkingSend_Unreliable | k_nSteamNetworkingSend_NoDelay | k_nSteamNetworkingSend_NoNagle', '0 or 4 or 1').replace('k_nSteamNetworkingSend_Unreliable | k_nSteamNetworkingSend_NoNagle', '0 or 1').replace('( SteamItemInstanceID_t ) ~ 0', 'not 0').replace('( ( uint32 ) \'d\' << 16U ) | ( ( uint32 ) \'e\' << 8U ) | ( uint32 ) \'v\'', '6579574').replace('0x', '$').replace('~', 'not').replace('|', 'or').replace('ull', '').replace('<<', 'shl').replace('>>', 'shr')
 
 
-def method_prototype(method, interface_type=''):
+def enum_cpp_name(enum):
+    if 'fqname' in enum:
+        return enum['fqname']
+    else:
+        return enum['enumname']
+
+
+def enum_pas_name(enum):
+    return enum_cpp_name(enum).replace(':', '_')
+
+
+def method_prototype(method_name, return_type, params, is_interface=False):
     proto = ''
-
-    if method['returntype'] != 'void':
-        proto = proto + 'function '
+    if return_type != 'void':
+        proto = 'function '
     else:
-        proto = proto + 'procedure '
+        proto = 'procedure '
 
-    if interface_type != '':
-        proto = proto + method['methodname_flat'] + '('
-    else:
-        proto = proto + method['methodname'] + '('
+    proto += method_name + '('
+    proto += interpose_s([build_param(param_name, param_type, is_interface) for (param_name, param_type) in params], '; ')
+    proto += ')'
 
-    if interface_type != '':
-        proto = proto + 'A' + interface_type + ': ' + interface_type
-        if len(method['params']) > 0:
-            proto = proto + '; '
-
-    params = [param['paramname'] + ': ' + fix_type(param['paramtype']) for param in method['params']]
-    params = interpose_s(params, '; ')
-    proto += params + ')'
-
-    if method['returntype'] != 'void':
-        proto += ': ' + fix_type(method['returntype'])
-    proto += ';'
-
+    if return_type != 'void':
+        proto += ': ' + fix_type(return_type)
     return proto
 
 
-def interface_method_prototype(method, interface_type=''):
-    proto = ''
-
-    if method['returntype'] != 'void':
-        proto += 'function '
-    else:
-        proto += 'procedure '
-
+def steam_api_object_method_prototype(method, interface_type='', method_name_qualifier='', exposed=False):
+    method_name = method_name_qualifier
     if interface_type != '':
-        proto += method['methodname_flat'] + '('
+        method_name += method['methodname_flat']
     else:
-        proto += method['methodname'] + '('
+        method_name += method['methodname']
 
+    params = []
     if interface_type != '':
-        proto += interface_type[1:] + ': ' + interface_type
-        if len(method['params']) > 0:
-            proto += '; '
+        params.append(('A' + interface_type, 'P' + interface_type))
+    params += [(param['paramname'], param['paramtype']) for param in method['params']]
 
-    params = [interface_param(param['paramtype'], param['paramname']) for param in method['params']]
-    params = interpose_s(params, '; ')
-    proto += params + ')'
+    proto = method_prototype(method_name, method['returntype'], params, exposed == False) + ';'
 
-    if method['returntype'] != 'void':
-        proto = proto + ': ' + fix_type(method['returntype'])
-    proto = proto + ';'
-
+    if method_name_qualifier == '' and 'overload' in method and exposed == False:
+        proto += ' overload;'
+    if exposed:
+        proto += ' cdecl; external STEAMLIB;'
     return proto
 
 # Read GNS functions.
@@ -237,7 +226,8 @@ def interface_method_prototype(method, interface_type=''):
 
 gns_funcs = set()
 with open('gns_functions.txt', 'r') as gns_funcs_file:
-    [gns_funcs.add(func.strip('\r\n')) for func in gns_funcs_file.readlines()]
+    for func in gns_funcs_file.readlines():
+        gns_funcs.add(func.strip('\r\n'))
 
 # Read and clean up API data from `steam_api.json`.
 ################################################################################
@@ -245,44 +235,32 @@ with open('gns_functions.txt', 'r') as gns_funcs_file:
 with open(fix_path(api_path + 'public/steam/steam_api.json'), 'r') as api_file:
     api = json.load(api_file)
 
-# Cleanup invalid argument names.
+# Cleanup invalid parameter names.
 param_name_replacements = {
         'type': 'aType',
         'val': 'value',
         'result': 'aResult',
         }
 
-for interface in api['interfaces']:
+for interface in api['callback_structs'] + api['structs'] + api['interfaces']:
+    if 'methods' not in interface:
+        continue
+
     for method in interface['methods']:
         for param in method['params']:
             if param['paramname'] in param_name_replacements:
                 param['paramname'] = param_name_replacements[param['paramname']]
 
-# k_ERemoteStoragePlatformAll is wrong...
-for enum in api['enums']:
-    if enum['enumname'] == 'ERemoteStoragePlatform':
-        for value in enum['values']:
-            if value['name'] == 'k_ERemoteStoragePlatformAll':
-                value['value'] = '4294967295'
-
 # Check for overloads.
-for struct in api['callback_structs'] + api['structs']:
-    if 'methods' not in struct:
+for interface in api['callback_structs'] + api['structs'] + api['interfaces']:
+    if 'methods' not in interface:
         continue
-    for method in struct['methods']:
-        for other_method in struct['methods']:
-            if other_method['methodname'] == method['methodname'] and other_method['methodname_flat'] != method['methodname_flat']:
-                method['overload'] = 'true'
-                break;
-for interface in api['interfaces']:
+
     for method in interface['methods']:
         for other_method in interface['methods']:
             if other_method['methodname'] == method['methodname'] and other_method['methodname_flat'] != method['methodname_flat']:
                 method['overload'] = 'true'
                 break;
-
-# TODO
-# Input
 
 # Write out bindings to `Steam.pas`.
 ################################################################################
@@ -311,7 +289,6 @@ uses
 {$ELSE}
 {$PACKRECORDS 8}
 {$ENDIF}
-
 
 const
   {$IFDEF STEAM}
@@ -356,27 +333,22 @@ enums = []
 get_all_under_tag(enums, 'enums', api)
 
 for enum in enums:
-    if 'fqname' in enum:
-        enum_name = enum['fqname'].replace(':', '_')
-    else:
-        enum_name = enum['enumname']
-
+    enum_name = enum_pas_name(enum)
     f.write('  P' + enum_name + ' = ^' + enum_name + ';\n')
     f.write('  ' + enum_name + ' = (\n')
-
-    for val in enum['values'][:-1]:
-        f.write('    ' + val['name'] + ' = ' + val['value'] + ',\n');
-    f.write('    ' + enum['values'][-1]['name'] + ' = ' + enum['values'][-1]['value'] + '\n')
-    f.write('  );\n\n');
+    enum_vals = ['    ' + val['name'] + ' = ' + val['value'] for val in enum['values']]
+    f.write(interpose_s(enum_vals, ',\n') + '\n  );\n\n')
 
 # Typedefs.
 ignore_typedefs = {'uint8', 'int8', 'int16', 'uint16', 'int32', 'uint32',
         'int64', 'uint64', 'lint64', 'ulint64', 'intp', 'uintp'}
 
 for typedef in api['typedefs']:
-    if typedef['typedef'] not in ignore_typedefs:
-        f.write('  P' + typedef['typedef'] + ' = ^' + typedef['typedef'] + ';\n')
-        f.write('  ' + typedef['typedef'] + ' = ' + fix_type(typedef['type']) + ';\n')
+    if typedef['typedef'] in ignore_typedefs:
+        continue
+
+    f.write('  P' + typedef['typedef'] + ' = ^' + typedef['typedef'] + ';\n')
+    f.write('  ' + typedef['typedef'] + ' = ' + fix_type(typedef['type']) + ';\n')
 
 # Missing typedef, SteamAPIWarningMessageHook_t
 f.write('  SteamAPIWarningMessageHook_t = ' + fix_type('void (*)(int, const char *)') + ';\n')
@@ -462,9 +434,8 @@ for struct in api['structs'] + api['callback_structs']:
         f.write('  {$POP}\n')
     f.write('\n')
 
-    # SteamInputActionEvent_t
-    if struct['struct'] == 'InputDigitalActionData_t':
-        f.write('''  {$PUSH}
+# SteamInputActionEvent_t
+f.write('''  {$PUSH}
   {$PACKRECORDS 1}
   SteamInputActionEvent_t__DigitalAction_t = record
     actionHandle: InputDigitalActionHandle_t;
@@ -508,16 +479,15 @@ f.write('\n');
 
 # Interface types.
 f.write('type\n')
-for interface in api['interfaces']:
-    f.write('  P' + interface['classname'] + ' = ^' + interface['classname'] + ';\n')
-    f.write('  ' + interface['classname'] + ' = record end;\n')
 
 # Some interfaces with no exposed methods are not listed.
 other_interfaces = [
         'ISteamNetworkingConnectionSignaling',
         'ISteamNetworkingSignalingRecvContext',
         ]
-for interface_name in other_interfaces:
+interface_names = [interface['classname'] for interface in api['interfaces']]
+interface_names += other_interfaces
+for interface_name in interface_names:
     f.write('  P' + interface_name + ' = ^' + interface_name + ';\n')
     f.write('  ' + interface_name + ' = record end;\n')
 
@@ -532,6 +502,7 @@ f.write('''  PCallbackMsg_t = ^CallbackMsg_t;
     m_cubParam: Integer;
   end;\n\n''')
 
+# Done writing GNS structs, don't need the PACKRECORDS.
 f.write('{$POP}\n\n')
 
 # GNS functions.
@@ -551,59 +522,33 @@ for interface in api['interfaces']:
         f.write('function ' + accessor['name_flat'] + '(): P' + interface['classname'] + '; cdecl; external STEAMLIB;\n')
 f.write('\n')
 
-# Struct flat methods.
-for struct in api['callback_structs'] + api['structs']:
-    if 'methods' not in struct:
+# Flat methods.
+for interface in api['callback_structs'] + api['structs'] + api['interfaces']:
+    if 'methods' not in interface:
         continue;
 
-    for method in struct['methods']:
-        f.write(method_prototype(method, 'P' + struct['struct']) + ' cdecl; external STEAMLIB;\n')
-    f.write('\n')
-
-# Interface flat methods.
-for interface in api['interfaces']:
+    type_name = get_or(interface, ['classname', 'struct'], '')
     for method in interface['methods']:
-        f.write(method_prototype(method, 'P' + interface['classname']) + ' cdecl; external STEAMLIB;\n')
+        f.write(steam_api_object_method_prototype(method, type_name, '', True) + '\n')
     f.write('\n')
 
-# Struct method helpers.
+# Method helpers.
 f.write('type\n')
-for struct in api['callback_structs'] + api['structs']:
-    if 'methods' not in struct:
+for interface in api['callback_structs'] + api['structs'] + api['interfaces']:
+    if 'methods' not in interface:
         continue
 
-    f.write('  ' + struct['struct'] + 'Helper = record helper for ' + struct['struct'] + '\n')
-    for method in struct['methods']:
+    type_name = get_or(interface, ['classname', 'struct'], '')
+    f.write('  ' + type_name + 'Helper = record helper for ' + type_name + '\n')
+    for method in interface['methods']:
         if 'operator' in method['methodname']:
             continue
 
         if method['methodname_flat'] not in gns_funcs:
             f.write('    {$IFDEF STEAM}\n')
-        f.write('    ' + interface_method_prototype(method))
-        if 'overload' in method:
-            f.write(' overload;\n')
-        else:
-            f.write('\n')
+        f.write('    ' + steam_api_object_method_prototype(method, '', '') + '\n')
         if method['methodname_flat'] not in gns_funcs:
             f.write('    {$ENDIF}\n')
-
-    f.write('  end;\n\n')
-
-# Interface helpers.
-for interface in api['interfaces']:
-    f.write('  ' + interface['classname'] + 'Helper = record helper for ' + interface['classname'] + '\n')
-
-    for method in interface['methods']:
-        if method['methodname_flat'] not in gns_funcs:
-            f.write('    {$IFDEF STEAM}\n')
-        f.write('    ' + interface_method_prototype(method))
-        if 'overload' in method:
-            f.write(' overload;\n')
-        else:
-            f.write('\n')
-        if method['methodname_flat'] not in gns_funcs:
-            f.write('    {$ENDIF}\n')
-
     f.write('  end;\n\n')
 
 # CSteamID to string.
@@ -703,53 +648,20 @@ begin
 end;
 {$ENDIF}\n\n''')
 
-# Implement struct method helpers.
-
-for struct in api['structs']:
-    if 'methods' not in struct:
+# Implement method helpers.
+for interface in api['callback_structs'] + api['structs'] + api['interfaces']:
+    if 'methods' not in interface:
         continue
 
-    for method in struct['methods']:
+    type_name = get_or(interface, ['classname', 'struct'], '')
+    for method in interface['methods']:
         # TODO
         if 'operator' in method['methodname']:
             continue
 
-        proto = interface_method_prototype(method)
-        idx = proto.index(method['methodname'])
-        proto = proto[:idx] + struct['struct'] + 'Helper.' + proto[idx:]
-
         if method['methodname_flat'] not in gns_funcs:
             f.write('{$IFDEF STEAM}\n')
-        f.write(proto + '\n')
-        f.write('begin\n')
-
-        f.write('  ')
-        if method['returntype'] != 'void':
-            f.write('Result := ')
-        f.write(method['methodname_flat'] + '(@Self')
-        for param in method['params']:
-            if '&' in param['paramtype']:
-                f.write(', @' + param['paramname'])
-            else:
-                f.write(', ' + param['paramname'])
-        f.write(');\n')
-
-        f.write('end;\n')
-        if method['methodname_flat'] not in gns_funcs:
-            f.write('{$ENDIF}\n')
-        f.write('\n')
-
-# Implement interface method helpers.
-
-for interface in api['interfaces']:
-    for method in interface['methods']:
-        proto = interface_method_prototype(method)
-        idx = proto.index(method['methodname'])
-        proto = proto[:idx] + interface['classname'] + 'Helper.' + proto[idx:]
-
-        if method['methodname_flat'] not in gns_funcs:
-            f.write('{$IFDEF STEAM}\n')
-        f.write(proto + '\n')
+        f.write(steam_api_object_method_prototype(method, '', type_name + 'Helper.') + '\n')
         f.write('begin\n')
 
         f.write('  ')
@@ -781,7 +693,7 @@ skip_structs = {
         'servernetadr_t',
         'gameserveritem_t',
         'SteamDatagramGameCoordinatorServerLogin',
-        'SteamNetworkingConfigValue_t', # TODO: Remove
+        'SteamNetworkingConfigValue_t',
         }
 
 skip_enums = {
@@ -789,16 +701,6 @@ skip_enums = {
         'k_ESteamNetworkingIdentityType_SonyPSN',
         'k_ESteamNetworkingIdentityType_GoogleStadia',
         }
-
-def enum_cpp_name(enum):
-    if 'fqname' in enum:
-        return enum['fqname']
-    else:
-        return enum['enumname']
-
-
-def enum_pas_name(enum):
-    return enum_cpp_name(enum).replace(':', '_')
 
 # Write out Pascal check file.
 f = open('check/PasCheck.pas', 'w')
@@ -868,11 +770,15 @@ f.close()
 
 # Write out C++ check file.
 f = open('check/CPPCheck.cpp', 'w')
+f.write('// Warning: This file is generated. Edit gen_steam_bindings.py instead.\n\n')
 
+# Include steam header files.
 f.write('#include "' + fix_path(api_path + 'public/steam/steam_api.h') + '"\n')
 f.write('#include "' + fix_path(api_path + 'public/steam/steam_gameserver.h') + '"\n')
 f.write('#include "' + fix_path(api_path + 'public/steam/steamnetworkingfakeip.h') + '"\n')
 f.write('#include <iostream>\n\n')
+
+# Main function.
 f.write('int main() {\n')
 
 for enum in enums:
@@ -915,10 +821,12 @@ f = open('check/test.sh', 'w')
 
 f.write('''#!/bin/sh
 
+# Warning: This file is generated. Edit gen_steam_bindings.py instead.
+
 set -eu
 
 c++ CPPCheck.cpp -o CPPCheck
-fpc PasCheck.pas -dSTEAM -k-rpath=''' + fix_path($ORIGIN' # TODO: pass path to right lib...
+fpc PasCheck.pas -dSTEAM -k-rpath='$ORIGIN' # TODO: pass path to right lib...
 
 ./CPPCheck >CPPOut
 ./PasCheck >PasOut
