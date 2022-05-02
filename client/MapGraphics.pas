@@ -57,7 +57,7 @@ begin
   s[1] := ModDir + 'textures/' + TexName;
   s[2] := 'current_map/textures/' + TexName;
 
-  if not PHYSFS_exists(PChar(PngOverride(s[2]))) then
+  if not PHYSFS_exists(PChar(FindImagePath(s[2]))) then
     s[2] := 'textures/' + TexName;
 
   if Copy(TexName, 1, 6) = 'edges/' then
@@ -67,7 +67,7 @@ begin
 
   for i := Low(s) to High(s) do
   begin
-    Filename := PngOverride(s[i]);
+    Filename := FindImagePath(s[i]);
 
     if PHYSFS_exists(PChar(Filename)) then
     begin
@@ -368,10 +368,10 @@ begin
     begin
       if SceneryCounters[i] > 0 then
       begin
-        Str := PngOverride('current_map/scenery-gfx/' + MapFile.Scenery[i].Filename);
+        Str := FindImagePath('current_map/scenery-gfx/' + MapFile.Scenery[i].Filename);
 
         if not PHYSFS_exists(PChar(Str)) then
-          Str := PngOverride('scenery-gfx/' + MapFile.Scenery[i].Filename);
+          Str := FindImagePath('scenery-gfx/' + MapFile.Scenery[i].Filename);
 
         if r_optimizetextures.Value then
         begin
