@@ -23,10 +23,14 @@ function PHYSFS_close(pfile: PHYSFS_File): Int64; cdecl; external PHYSFSLIB;
 function PHYSFS_getLastError(): PChar; cdecl; external PHYSFSLIB;
 function PHYSFS_fileLength(pfile: PHYSFS_File): Int64; cdecl; external PHYSFSLIB;
 function PHYSFS_removeFromSearchPath(oldDir: PChar): LongBool; cdecl; external PHYSFSLIB;
+procedure PHYSFS_freeList(listVar: Pointer); cdecl; external PHYSFSLIB;
+function PHYSFS_enumerateFiles(const dir: PChar): PPChar; cdecl; external PHYSFSLIB;
+
 function PHYSFS_readBuffer(Name: PChar): PHYSFS_Buffer;
 function PHYSFS_readAsStream(Name: PChar): TStream;
 procedure PHYSFS_ReadLn(FileHandle: PHYSFS_File; var Line: AnsiString);
 function PHYSFS_CopyFileFromArchive(SourceFile: AnsiString; Destination: AnsiString): Boolean;
+function PHYSFS_GetEnumeratedFiles(Dir: String): TStringArray;
 
 implementation
 
@@ -114,6 +118,29 @@ begin
   end;
 
   ArchiveFile.Free;
+end;
+
+function PHYSFS_GetEnumeratedFiles(Dir: String): TStringArray;
+var
+  FileList: PPChar;
+  FileIter: PPchar;
+begin
+  Result := Default(TStringArray);
+  SetLength(Result, 0);
+
+  FileList := PHYSFS_enumerateFiles(PChar(Dir));
+  if FileList = Nil then
+    Exit;
+
+  FileIter := FileList;
+  while FileIter^ <> Nil do
+  begin
+    SetLength(Result, Length(Result) + 1);
+    Result[Length(Result) - 1] := String(FileIter^);
+    Inc(FileIter);
+  end;
+
+  PHYSFS_freeList(FileList);
 end;
 
 end.
