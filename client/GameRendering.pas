@@ -173,24 +173,12 @@ begin
   end;
 
   // cleanup
-
-  if Assigned(RootIni) then
-    FreeAndNil(RootIni);
-
-  if Assigned(ModIni) then
-    FreeAndNil(ModIni);
-
-  if Assigned(InterfaceIni) then
-    FreeAndNil(InterfaceIni);
-
-  if Assigned(RootIniStream) then
-    FreeAndNil(RootIniStream);
-
-  if Assigned(RootIniStream) then
-    FreeAndNil(ModIniStream);
-
-  if Assigned(RootIniStream) then
-    FreeAndNil(InterfaceIniStream);
+  RootIni.Free;
+  ModIni.Free;
+  InterfaceIni.Free;
+  RootIniStream.Free;
+  ModIniStream.Free;
+  InterfaceIniStream.Free;
 end;
 
 function GetImageScale(ImagePath: String): Single;
