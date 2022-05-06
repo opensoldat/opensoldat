@@ -1,4 +1,4 @@
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 name: soldat
 jobs:
   linux:
@@ -40,6 +40,48 @@ jobs:
         with:
           name: soldatserver-linux-x64
           path: soldatserver.tar
+
+  appimage:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Otherwise `git describe --tags` doesn't work
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install cmake git fpc libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6
+
+      - name: Compile soldat
+        run: |
+          export BUILD_ID=${GITHUB_SHA::8}
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_INSTALL_PREFIX=./soldat/AppDir -DCMAKE_BUILD_TYPE=Release
+          make
+          make install
+          make clean
+          cmake .. -DBUILD_CLIENT=0 -DCMAKE_INSTALL_PREFIX=./soldatserver/AppDir -DCMAKE_BUILD_TYPE=Release
+          make install
+
+      - name: Build AppImages
+        run: |
+          ./.github/workflows/make-appimage build/soldat client
+          ./.github/workflows/make-appimage build/soldatserver server
+
+      - name: Upload client AppImage
+        uses: actions/upload-artifact@v2
+        with:
+          name: appimages
+          path: build/soldat/*.AppImage
+
+      - name: Upload server AppImage
+        uses: actions/upload-artifact@v2
+        with:
+          name: appimages
+          path: build/soldatserver/*.AppImage
 
   windows:
     runs-on: windows-latest
@@ -122,3 +164,16 @@ jobs:
         with:
           name: macos-build
           path: build/soldat
+
+  continuous:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Display structure of downloaded files
+        run: ls -R
