@@ -45,5 +45,5 @@ endif()
 
 install(
   PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldatserver>
-  DESTINATION ${target_full_binary_install_dir}
+  DESTINATION ${target_binary_install_dir}
 )
