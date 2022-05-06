@@ -149,6 +149,7 @@ jobs:
 
   continuous:
     runs-on: ubuntu-latest
+    needs: [appimage, windows, macos]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
