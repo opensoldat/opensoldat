@@ -74,7 +74,7 @@ EOF
 #!/bin/sh
 
 cd "\$(dirname "\$0")"
-data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/Soldat/Soldat"
+data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/Soldat/SoldatServer"
 mkdir -p "\$data_dir"
 
 export LD_LIBRARY_PATH=lib
