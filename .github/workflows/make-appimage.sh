@@ -38,13 +38,18 @@ EOF
 
   # Generate main run script
   cat <<EOF > "$appdir_path/AppDir/AppRun"
-#!/usr/bin/env bash
+#!/bin/sh
+
 cd "\$(dirname "\$0")"
-if [ "\$1" == "server" ]; then
+data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/Soldat/Soldat"
+mkdir -p "\$data_dir"
+
+export LD_LIBRARY_PATH=lib
+if [ "\$1" = "server" ]; then
   shift
-  ./bin/soldatserver -fs_userpath ~/.local/share/Soldat/Soldat \$@
+  ./bin/soldatserver -fs_userpath "\$data_dir" "\$@"
 else
-  LD_LIBRARY_PATH=lib ./bin/soldat -fs_portable 0 \$@
+  ./bin/soldat -fs_portable 0 -fs_userpath "\$data_dir" "\$@"
 fi
 EOF
 else
@@ -66,9 +71,14 @@ EOF
 
   # Generate main run script
   cat <<EOF > "$appdir_path/AppDir/AppRun"
-#!/usr/bin/env bash
+#!/bin/sh
+
 cd "\$(dirname "\$0")"
-./bin/soldatserver \$@
+data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/Soldat/Soldat"
+mkdir -p "\$data_dir"
+
+export LD_LIBRARY_PATH=lib
+./bin/soldatserver -fs_userpath "\$data_dir" "\$@"
 EOF
 fi
 
