@@ -1,7 +1,7 @@
 on: [push, pull_request, workflow_dispatch]
 name: soldat
 jobs:
-  linux:
+  linux-build-smoke:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -22,24 +22,6 @@ jobs:
           make install
           cmake .. -DBUILD_CLIENT=0 -DCMAKE_INSTALL_PREFIX=./soldatserver -DCMAKE_BUILD_TYPE=Release
           make install
-
-      # We use .tar to preserve file permissions.
-      - name: Tar files
-        run: |
-          tar -cvf soldat.tar -C build soldat
-          tar -cvf soldatserver.tar -C build soldatserver
-
-      - name: Upload game build
-        uses: actions/upload-artifact@v2
-        with:
-          name: soldat-linux-x64
-          path: soldat.tar
-
-      - name: Upload server-only build
-        uses: actions/upload-artifact@v2
-        with:
-          name: soldatserver-linux-x64
-          path: soldatserver.tar
 
   appimage:
     runs-on: ubuntu-18.04
@@ -68,8 +50,8 @@ jobs:
 
       - name: Build AppImages
         run: |
-          ./.github/workflows/make-appimage build/soldat client
-          ./.github/workflows/make-appimage build/soldatserver server
+          ./.github/workflows/make-appimage.sh build/soldat client
+          ./.github/workflows/make-appimage.sh build/soldatserver server
 
       - name: Upload client AppImage
         uses: actions/upload-artifact@v2
@@ -167,7 +149,6 @@ jobs:
 
   continuous:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

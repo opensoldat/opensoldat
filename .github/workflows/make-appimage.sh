@@ -44,7 +44,7 @@ if [ "\$1" == "server" ]; then
   shift
   ./bin/soldatserver -fs_userpath ~/.local/share/Soldat/Soldat \$@
 else
-  ./bin/soldat -fs_portable 0 \$@
+  LD_LIBRARY_PATH=lib ./bin/soldat -fs_portable 0 \$@
 fi
 EOF
 else
@@ -68,7 +68,7 @@ EOF
   cat <<EOF > "$appdir_path/AppDir/AppRun"
 #!/usr/bin/env bash
 cd "\$(dirname "\$0")"
-./bin/soldatserver -fs_userpath ~/.local/share/Soldat/Soldat \$@
+./bin/soldatserver \$@
 EOF
 fi
 
