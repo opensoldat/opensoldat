@@ -157,5 +157,22 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
 
-      - name: Display structure of downloaded files
-        run: ls -R
+      - name: Zip build dirs back together
+        run: |
+          cd windows-build
+          zip -r windows-build.zip *
+          cd ..
+          cd macos-build
+          zip -r macos-build.zip *
+          cd ..
+
+      - name: Upload release
+        uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
+        with:
+          tag_name: continuous
+          files: |
+            windows-build/windows-build.zip
+            macos-build/macos-build.zip
+            appimages/*.AppImage
+          body: Soldat 1.8 alpha dev build
+          name: Soldat 1.8 alpha dev build
