@@ -159,20 +159,16 @@ jobs:
 
       - name: Zip build dirs back together
         run: |
-          cd windows-build
-          zip -r windows-build.zip *
-          cd ..
-          cd macos-build
-          zip -r macos-build.zip *
-          cd ..
+          zip -r windows-build.zip windows-build
+          zip -r macos-build.zip macos-build
 
       - name: Upload release
         uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
         with:
           tag_name: continuous
           files: |
-            windows-build/windows-build.zip
-            macos-build/macos-build.zip
+            windows-build.zip
+            macos-build.zip
             appimages/*.AppImage
           body: Soldat 1.8 alpha dev build
           name: Soldat 1.8 alpha dev build
