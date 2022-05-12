@@ -86,7 +86,8 @@ chmod +x "$appdir_path/AppDir/AppRun"
 
 # Download list of libraries that shouldn't be embedded in the package
 lib_blacklist="$(curl https://raw.githubusercontent.com/AppImage/pkg2appimage/master/excludelist \
-  | sed "s/#.*//" \
+  | sed "s|#.*||" \
+  | sed "s|\+|\\\+|g" \
   | grep -E -v '^$' \
   | tr '\n' '|')"
 lib_blacklist="${lib_blacklist%?}"
