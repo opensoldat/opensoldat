@@ -40,6 +40,8 @@ EOF
   cat <<EOF > "$appdir_path/AppDir/AppRun"
 #!/bin/sh
 
+set -e
+
 cd "\$(dirname "\$0")"
 data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/Soldat/Soldat"
 mkdir -p "\$data_dir"
@@ -72,6 +74,8 @@ EOF
   # Generate main run script
   cat <<EOF > "$appdir_path/AppDir/AppRun"
 #!/bin/sh
+
+set -e
 
 cd "\$(dirname "\$0")"
 data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/Soldat/SoldatServer"
