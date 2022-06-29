@@ -7,7 +7,7 @@ uses
 
 const
   REFRESHX_HEADER_CHARS = 10;
-  RCON_AUTH_TIMEOUT = 5000; // Authentication timeout (ms)
+  RCON_AUTH_TIMEOUT = 5000;  // Authentication timeout (ms)
 
 type
   TAdminServerConnectionThread = class;
@@ -108,7 +108,7 @@ uses
   Server, Util, TraceLog, Command, Game, ServerHelper, Cvar, Version, Math;
 
 {$PUSH}
-{$WARN 5024 OFF} // Parameter "$1" not used
+{$WARN 5024 OFF}  // Parameter "$1" not used
 function TSockAddrHelper.GetIPString(): String;
 begin
   Result := NetAddrToStr(Self.sin_addr);
