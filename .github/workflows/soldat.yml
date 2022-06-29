@@ -163,6 +163,7 @@ jobs:
           zip -r macos-build.zip macos-build
 
       - name: Upload release
+        if: github.ref == 'refs/heads/develop'
         uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
         with:
           tag_name: continuous
