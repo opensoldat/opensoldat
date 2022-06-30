@@ -11,7 +11,8 @@ import shutil
 import sys
 
 os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
-os.mkdir('check')
+if not os.path.exists('check'):
+    os.mkdir('check')
 api_path = sys.argv[1] + os.sep
 
 # Utils.
@@ -289,12 +290,13 @@ uses
 {$PACKENUM 4}
 {$ELSE}
 {$PACKRECORDS 8}
+{$PACKENUM 4}
 {$ENDIF}
 
 const
   {$IFDEF STEAM}
   {$IFDEF WINDOWS}
-  STEAMLIB = 'steam_api.dll';
+  STEAMLIB = 'steam_api64.dll';
   {$ENDIF}
   {$IFDEF DARWIN}
   STEAMLIB = 'libsteam_api.dylib';
@@ -818,7 +820,7 @@ f.close()
 # Check test script.
 ################################################################################
 
-f = open('check/test.sh', 'w')
+f = open(fix_path('check/test.sh'), 'w')
 
 f.write('''#!/bin/sh
 
@@ -833,6 +835,19 @@ fpc PasCheck.pas -dSTEAM -k-rpath='$ORIGIN' # TODO: pass path to right lib...
 ./PasCheck >PasOut
 
 diff --unified=0 CPPOut PasOut
+''')
+
+f.close()
+
+f = open(fix_path('check/test.bat'), 'w')
+
+f.write('''cl /std:c++14 /EHsc CPPCheck.cpp
+fpc -Twin64 -Px86_64 PasCheck.pas
+
+.\CPPCheck.exe >CPPOut
+.\PasCheck.exe -Fl ''' + fix_path(api_path + '/redistributable_bin/win64/') + ''' >PasOut
+
+fc /L /N CPPOut PasOut
 ''')
 
 f.close()

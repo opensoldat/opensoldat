@@ -19,12 +19,13 @@ uses
 {$PACKENUM 4}
 {$ELSE}
 {$PACKRECORDS 8}
+{$PACKENUM 4}
 {$ENDIF}
 
 const
   {$IFDEF STEAM}
   {$IFDEF WINDOWS}
-  STEAMLIB = 'steam_api.dll';
+  STEAMLIB = 'steam_api64.dll';
   {$ENDIF}
   {$IFDEF DARWIN}
   STEAMLIB = 'libsteam_api.dylib';
