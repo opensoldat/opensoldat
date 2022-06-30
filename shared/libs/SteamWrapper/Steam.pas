@@ -25,7 +25,11 @@ uses
 const
   {$IFDEF STEAM}
   {$IFDEF WINDOWS}
+  {$IFDEF CPUX86_64}
   STEAMLIB = 'steam_api64.dll';
+  {$ELSE}
+  STEAMLIB = 'steam_api.dll';
+  {$ENDIF}
   {$ENDIF}
   {$IFDEF DARWIN}
   STEAMLIB = 'libsteam_api.dylib';

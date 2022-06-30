@@ -73,17 +73,17 @@ end.
 
 To generate `Steam.pas`:
 ```sh
-./gen_steam_bindings.py /path/to/steamworks/sdk
+python3 gen_steam_bindings.py /path/to/steamworks/sdk
 ```
 
 To test `Steam.pas` (prints diff of enum size/value, struct size, field offsets):
 ```sh
-cp /path/to/appropriate/libsteam_api.{so,dll,dylib} check
 cd check
-sh test.sh
+sh test.sh # Linux
+.\test.bat # Windows
 ```
 
-To generate `gns_functions.txt`:
+To generate `gns_functions.txt` (Linux only):
 ```
 ./make_gns_functions_list.sh /path/to/libGameNetworkingSockets.so
 ```

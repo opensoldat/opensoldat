@@ -296,7 +296,11 @@ uses
 const
   {$IFDEF STEAM}
   {$IFDEF WINDOWS}
+  {$IFDEF CPUX86_64}
   STEAMLIB = 'steam_api64.dll';
+  {$ELSE}
+  STEAMLIB = 'steam_api.dll';
+  {$ENDIF}
   {$ENDIF}
   {$IFDEF DARWIN}
   STEAMLIB = 'libsteam_api.dylib';
@@ -829,7 +833,9 @@ f.write('''#!/bin/sh
 set -eu
 
 c++ CPPCheck.cpp -o CPPCheck
-fpc PasCheck.pas -dSTEAM -k-rpath='$ORIGIN' # TODO: pass path to right lib...
+fpc PasCheck.pas -dSTEAM -k-rpath=\'''' + fix_path(api_path + 'redistributable_bin/linux64') + '''\' \\
+                 -Fl\'''' + fix_path(api_path + 'redistributable_bin/linux64') + '''\'
+
 
 ./CPPCheck >CPPOut
 ./PasCheck >PasOut
@@ -845,7 +851,7 @@ f.write('''cl /std:c++14 /EHsc CPPCheck.cpp
 fpc -Twin64 -Px86_64 PasCheck.pas
 
 .\CPPCheck.exe >CPPOut
-.\PasCheck.exe -Fl ''' + fix_path(api_path + '/redistributable_bin/win64/') + ''' >PasOut
+.\PasCheck.exe -Fl\'''' + fix_path(api_path + 'redistributable_bin/win64/') + '''\' >PasOut
 
 fc /L /N CPPOut PasOut
 ''')
