@@ -18,6 +18,9 @@ the official C++ version with method syntax.
 ### Example
 
 ```pascal
+// This example is a little verbose but shows the full init and cleanup process
+// for Steam, GNS, client and server builds. As well as a few other features.
+
 var
   {$IFNDEF STEAM}
   ErrorMsg: SteamNetworkingErrMsg;
@@ -85,9 +88,12 @@ To generate `gns_functions.txt`:
 ./make_gns_functions_list.sh /path/to/libGameNetworkingSockets.so
 ```
 
+### Notes:
+
+* The `k_ERemoteStoragePlatformAll` test fails, at least on Linux, due to it's signed enum type. FPC provides no way to control this, meaning we would have to switch to typed constants instead of enums to make it pass. I would say it doesn't matter, you can ignore that test if it is the only one failing.
+
 ### Todo:
 
 * Do a more thorough job of checking structs which are not properly handled by `steam_api.json`.
 * Translate custom operators.
 * Cleaner `{$IFDEF STEAM}` checks.
-* `k_ERemoteStoragePlatformAll` test fails, maybe something about signed vs. unsigned enum types? Or type enum value is cast to?
