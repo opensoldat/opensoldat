@@ -14,7 +14,7 @@ uses
   {$ENDIF}
 
   // soldat units
-  Net, GameNetworkingSockets, Sprites, Command, Constants;
+  Net, Steam, Sprites, Command, Constants;
 
   procedure ServerSendStringMessage(Text: WideString; ToNum: Byte; From: Byte; MsgType: Byte);
   procedure ServerHandleChatMessage(NetMessage: PSteamNetworkingMessage_t);

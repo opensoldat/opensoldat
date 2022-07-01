@@ -37,11 +37,13 @@ if(ADD_ASSETS)
   add_dependencies(soldatserver soldat_smod)
 endif()
 
-if(NOT BUILD_STEAM)
+if(BUILD_STEAM)
+  target_link_libraries(soldatserver steam_api)
+else()
   target_link_libraries(soldatserver GameNetworkingSockets)
 endif()
 
 install(
   PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldatserver>
-  DESTINATION ${target_full_binary_install_dir}
+  DESTINATION ${target_binary_install_dir}
 )

@@ -12,6 +12,7 @@ unit Sound;
 interface
 
 uses
+  {$IFDEF STEAM}fgl,{$ENDIF}
   SDL2, Vector, openal, PhysFS;
 
 type

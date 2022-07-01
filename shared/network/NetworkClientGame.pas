@@ -10,7 +10,7 @@ uses
   Vector,
 
   // soldat units
-  GameNetworkingSockets, Net, Sprites, Weapons, Sound,
+  Steam, Net, Sprites, Weapons, Sound,
   Constants, GameStrings;
 
 procedure ClientHandleNewPlayer(NetMessage: PSteamNetworkingMessage_t);
@@ -30,7 +30,6 @@ procedure ClientHandleVoiceData(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  {$IFDEF STEAM} Steam, SteamTypes,{$ENDIF}
   Client, NetworkUtils, Game, Demo, ClientGame, Sparks, GameMenus,
   InterfaceGraphics;
 
@@ -61,7 +60,7 @@ begin
   Player.Team := NewPlayerMsg.Team;
 
   {$IFDEF STEAM}
-  Player.SteamID := TSteamID(NewPlayerMsg.SteamID);
+  Player.SteamID := CSteamID(NewPlayerMsg.SteamID);
   Player.SteamFriend := SteamAPI.Friends.HasFriend(Player.SteamID, Ord(k_EFriendFlagImmediate));
   {$ENDIF}
 

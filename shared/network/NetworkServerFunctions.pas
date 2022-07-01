@@ -10,7 +10,7 @@ uses
   Vector, Util,
 
   // soldat units
-  GameNetworkingSockets, Net, Sprites, Weapons, Constants;
+  Steam, Net, Sprites, Weapons, Constants;
 
 procedure SetWeaponActive(ID, WeaponNum: Byte; State: Boolean);
 procedure ForceWeapon(ID, Primary, Secondary, Ammo, SecAmmo: Byte);

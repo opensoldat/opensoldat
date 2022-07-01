@@ -15,7 +15,7 @@ uses
   GameStrings, ClientGame,
   {$ENDIF}
   SysUtils, Classes, Vector, Sprites,
-  {$IFNDEF SERVER}GameNetworkingSockets,{$ENDIF}
+  {$IFNDEF SERVER}Steam,{$ENDIF}
   Net;
 
 
@@ -383,7 +383,7 @@ begin
     packet.m_pData := ReadBuf;
     packet.m_cbSize := RSize;
     UDP.HandleMessages(packet);
-    SteamAPI_SteamNetworkingMessage_t_Release(packet);
+    packet^.Release();
     SetLength(ReadBuf, 0);
 
   until RSize = 1;
