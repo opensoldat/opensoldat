@@ -14,7 +14,7 @@ procedure ServerHeartbeat;
 implementation
 
 uses
-  Server, Game, Demo, GameNetworkingSockets;
+  Server, Game, Demo, Steam;
 
 // HEARTBEAT
 procedure ServerHeartbeat;

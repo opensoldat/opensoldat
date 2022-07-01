@@ -1336,7 +1336,7 @@ begin
                 PlaySound(SFX_DEAD_HIT, SpriteParts.Pos[SpriteC.Num], Sprite[SpriteC.Num].GattlingSoundChannel);
 
               if SpriteC.Num = MySprite then
-                ClientSendStringMessage('/KILL', SpriteC.Num);
+                ClientSendStringMessage('kill', MSGTYPE_CMD);
               {$ENDIF}
               Inc(SpriteC.BodyAnimation.CurrFrame);
 

@@ -35,7 +35,7 @@ function setup_msvc() {
   export PATH="${c_VSINSTALLDIR}Common7/IDE/:$PATH"
 }
 
-setup_msvc
+#setup_msvc
 
 VC='C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat'
 FTDIR='C:\Users\urraka\Desktop\freetype-2.6.1\include'
@@ -44,21 +44,24 @@ mkdir -p out
 
 # # c
 gcc -E -x c c_check.h.in | sed -E '/^(#|$)/d' > out/c_check.h
+gcc -x c c_check.c -Iout -oout/c_check $(pkg-config --cflags --libs freetype2)
 # echo "call \"$VC\"" > out/c_build.bat
 # echo "cl \"/I$FTDIR\" /Fec_check.exe ..\\c_check.c" >> out/c_build.bat
 # cd out
 # start cmd //C c_build.bat
 # cd -
-cl //nologo "/I$FTDIR" //Foout\\c_check.obj //Feout\\c_check.exe c_check.c
-./out/c_check.exe > out/c_result.txt
+#cl //nologo "/I$FTDIR" //Foout\\c_check.obj //Feout\\c_check.exe c_check.c
+#./out/c_check.exe > out/c_result.txt
+./out/c_check > out/c_result.txt
 
 # # pas
 gcc -E -x c pas_check.pas.in | sed -E '/^(#|$)/d' | sed -E 's/"/'"'/g" > out/pas_check.pas
-dcc32 -Q -Eout out\\pas_check.pas
-./out/pas_check.exe > out/pas_result.txt
+fpc -Mdelphi -FEout out/pas_check.pas
+#./out/pas_check.exe > out/pas_result.txt
+./out/pas_check > out/pas_result.txt
 
 echo ''
 echo 'diff:'
-diff out/c_result.txt out/pas_result.txt
+diff -u out/c_result.txt out/pas_result.txt
 
-rm -fr out/
+#rm -fr out/

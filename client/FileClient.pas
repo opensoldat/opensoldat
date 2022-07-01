@@ -21,15 +21,16 @@ type
       FDownloadPos: Int64;
       FDownloadSize: Int64;
       Client: TFPHTTPClient;
-    protected
-      procedure Execute; override;
+
       procedure SetStatus;
       procedure SetError;
-
+      procedure DoProgress(Sender: TObject; Const ContentLength, CurrentPos : Int64);
+      procedure OnFinished;
+      procedure DummySync;
+    protected
+      procedure Execute; override;
     public
       constructor Create(DownloadURL: String; Name: String; CheckSum: TSHA1Digest);
-      procedure DoProgress(Sender: TObject; Const ContentLength, CurrentPos : Int64);
-      procedure DoOnTerminate(Sender: TObject);
       procedure CancelDownload;
       destructor Destroy; override;
   end;
@@ -48,8 +49,7 @@ begin
   FURL := DownloadURL;
   FFilename := AnsiReplaceStr(Name, '..', '');
   FChecksum := Checksum;
-  OnTerminate := DoOnTerminate;
-  FreeOnTerminate := False;
+  FreeOnTerminate := True;
 end;
 
 procedure TDownloadThread.CancelDownload;
@@ -117,9 +117,27 @@ begin
         Synchronize(SetError);
       end;
     end;
-    finally
-      Client.Terminate;
-    end;
+  finally
+    Client.Terminate;
+  end;
+
+  { We can't Synchronize a method that calls JoinServer, because it starts the
+    infinite game loop. As such, execution will never be returned to DownloadThread,
+    and we won't be able to destroy it properly. Instead, we Queue the method
+    that calls JoinServer, and then rely on a hack to make sure that Queued method
+    gets executed before we destroy DownloadThread. We need the DownloadThread
+    instance to be initialized, because we access its properties in OnFinished. }
+  Queue(OnFinished);
+  Synchronize(DummySync);
+end;
+
+// Must be executed from main thread.
+procedure TDownloadThread.OnFinished;
+begin
+  Inc(DownloadRetry);
+  if DownloadRetry = 1 then
+    if FStatus = 1 then
+      JoinServer;
 end;
 
 destructor TDownloadThread.Destroy;
@@ -128,16 +146,8 @@ begin
   inherited Destroy;
 end;
 
-{$push}{$warn 5024 off}
-procedure TDownloadThread.DoOnTerminate(Sender: TObject);
+procedure TDownloadThread.DummySync;
 begin
-  Client.Terminate;
-  Inc(DownloadRetry);
-  if DownloadRetry = 1 then
-    if FStatus = 1 then
-      JoinServer;
-  FreeAndNil(DownloadThread);
 end;
-{$pop}
 
 end.

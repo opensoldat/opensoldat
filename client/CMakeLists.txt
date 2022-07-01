@@ -51,19 +51,21 @@ if(UNIX)
   target_link_libraries(soldat stb)
 endif()
 
-if(NOT BUILD_STEAM)
+if(BUILD_STEAM)
+  target_link_libraries(soldat steam_api)
+else()
   target_link_libraries(soldat GameNetworkingSockets)
 endif()
 
 install(
   PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldat>
-  DESTINATION ${target_full_binary_install_dir}
+  DESTINATION "${target_binary_install_dir}"
 )
 if(ADD_ASSETS)
   install(
-    FILES ${EXECUTABLE_OUTPUT_PATH}/play-regular.ttf
-    # FIXME: this should be target_full_data_install_dir, but soldat can't discover it there
+    FILES "${EXECUTABLE_OUTPUT_PATH}/play-regular.ttf"
+    # FIXME: this should be target_data_install_dir, but soldat can't discover it there
     # (needs wrapper script or some equivalent global config)
-    DESTINATION ${target_full_binary_install_dir}
+    DESTINATION "${target_binary_install_dir}"
   )
 endif()

@@ -314,7 +314,6 @@ begin
   CommandAdd('switchcamflag', CommandSwitchCamFlag, 'switches camera to specific flag', []);
   CommandAdd('demo_tick', CommandDemoTick, 'skips to a tick in demo', []);
   CommandAdd('demo_tick_r', CommandDemoTick, 'skips to a tick (relatively) in demo', []);
-
 end;
 {$pop}
 end.

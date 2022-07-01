@@ -4,7 +4,7 @@ interface
 
 {$IFDEF SERVER}
 uses
-  GameNetworkingSockets;
+  Steam;
 {$ENDIF}
 
 procedure ServerBulletSnapshot(i: Byte; {$IFDEF SERVER}ToNum: Byte;{$ENDIF} Forced: Boolean);

@@ -13,7 +13,7 @@ uses
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
   // soldat units
-  LogFile, GameNetworkingSockets, Net, Sprites, Weapons, Constants, GameStrings,
+  LogFile, Steam, Net, Sprites, Weapons, Constants, GameStrings,
   Cvar, PhysFS;
 
 procedure ClientRequestGame;
@@ -30,7 +30,6 @@ procedure ClientHandleSyncCvars(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  {$IFDEF STEAM} Steam, SteamTypes, {$ENDIF}
   GameRendering, Client, Game, Demo, ClientGame, GameMenus, strutils,
   NetworkUtils, NetworkClientSprite, FileClient, Sha1, Anims, Sound;
 
@@ -312,7 +311,7 @@ begin
       NewPlayer.Team := PlayersListMsg.Team[i];
 
       {$IFDEF STEAM}
-      NewPlayer.SteamID := TSteamID(PlayersListMsg.SteamID[i]);
+      NewPlayer.SteamID := CSteamID(PlayersListMsg.SteamID[i]);
       {$ENDIF}
 
       NewPlayer.SecWep := 0;

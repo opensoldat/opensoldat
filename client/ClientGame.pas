@@ -63,7 +63,7 @@ uses
   Client, Game, Sprites, GameStrings, Demo,
   Net, NetworkClientSprite, NetworkClientConnection,
   {$IFDEF ENABLE_FAE}FaeBase, FaeClient, NetworkClientFae,{$ENDIF}
-  {$IFDEF STEAM}Steam, SteamTypes, NetworkClientGame,{$ENDIF}
+  {$IFDEF STEAM}Steam, NetworkClientGame,{$ENDIF}
   GameRendering, Gfx, UpdateFrame, GameMenus, Util, InterfaceGraphics;
 
 type
@@ -420,7 +420,8 @@ end;
 
 function GetCameraTarget(Backwards: Boolean = False): Byte;
 var
-  NewCam, NumLoops: Byte;
+  NewCam: ShortInt;
+  NumLoops: Byte;
   ValidCam: Boolean;
 begin
   ValidCam := False;

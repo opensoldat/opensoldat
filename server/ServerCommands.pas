@@ -20,7 +20,7 @@ uses
 
   Server, Command, Weapons, Net, NetworkUtils, NetworkServerMessages,
   NetworkServerFunctions, NetworkServerConnection, NetworkServerGame,
-  Sprites, PolyMap, Game, Things, Constants, ServerHelper, BanSystem, Demo{$IFDEF STEAM}, Steam{$ENDIF};
+  Sprites, PolyMap, Game, Things, Constants, ServerHelper, BanSystem, Demo, Steam;
 
 {$PUSH}
 {$WARN 5024 OFF : Parameter "$1" not used}
@@ -101,12 +101,7 @@ end;
 
 procedure CommandRestart(Args: array of AnsiString; Sender: Byte);
 begin
-  MapChangeName := Map.Name;
-  MapChangeCounter := MapChangeTime;
-  ServerMapChange(ALL_PLAYERS);  // Inform clients of Map Change
-  {$IFDEF SCRIPT}
-  ScrptDispatcher.OnBeforeMapChange(MapChangeName);
-  {$ENDIF}
+  PrepareMapChange(Map.Name);
 end;
 
 procedure CommandKick(Args: array of AnsiString; Sender: Byte);

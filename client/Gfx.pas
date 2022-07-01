@@ -1604,7 +1604,8 @@ end;
 procedure RemoveNode(f: PFont; i: Integer);
 begin
   Dec(f.NodesSize);
-  Move(f.Nodes[i + 1], f.Nodes[i], (f.NodesSize - i) * sizeof(TFontNode));
+  if i < f.NodesSize then
+    Move(f.Nodes[i + 1], f.Nodes[i], (f.NodesSize - i) * sizeof(TFontNode));
 end;
 
 function RegionFits(f: PFont; i, w, h: Integer; var y: Integer): Boolean;

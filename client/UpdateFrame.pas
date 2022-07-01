@@ -11,7 +11,7 @@ unit UpdateFrame;
 interface
 
 uses
-  {$IFDEF STEAM}Steam, SteamTypes, NetworkClientGame,{$ENDIF}
+  {$IFDEF STEAM}Steam,{$ENDIF}
   Sound, Demo, Classes, GameStrings, GameRendering, Sprites, Vector, Weapons, Net,
   NetworkClientConnection, Constants,
   Polymap, Game, Client, Util, SysUtils, Calc, LogFile, WeatherEffects, Sparks
