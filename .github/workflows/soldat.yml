@@ -163,6 +163,7 @@ jobs:
           zip -r macos-build.zip macos-build
 
       - name: Chmod and zip AppImages
+        run: |
           chmod u+x appimages/*.AppImage
           zip linux-appimage.zip appimages/Soldat-*.AppImage
           zip linux-server-only-appimage.zip appimages/SoldatServer-*.AppImage
