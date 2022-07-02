@@ -987,7 +987,7 @@ begin
   sv_hostname := TStringCvar.Add('sv_hostname', 'Name of the server', 'Soldat Server', 'Soldat Server', [CVAR_SERVER, CVAR_SYNC], nil, 0, 24);
   sv_website := TStringCvar.Add('sv_website', 'Server website', '', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 255);
 
-  sv_killlimit := TIntegerCvar.Add('sv_killlimit', 'Game point limit', 10, 10, [CVAR_SYNC], nil, 0, 9999);
+  sv_killlimit := TIntegerCvar.Add('sv_killlimit', 'Game point limit', 10, 10, [CVAR_SERVER, CVAR_SYNC], nil, 0, 9999);
   sv_downloadurl := TStringCvar.Add('sv_downloadurl', 'URL from which clients can download missing assets', '', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 100);
   sv_pure := TBooleanCvar.Add('sv_pure', 'Requires clients to use the same game files (.smod) as the server', True, True, [CVAR_SERVER, CVAR_SYNC], nil);
 

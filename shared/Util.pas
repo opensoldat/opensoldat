@@ -191,12 +191,22 @@ begin
 end;
 
 function CreateFileIfMissing(const Filename: string): Boolean;
+var
+  FileHandle: THandle;
 begin
   Result := True;
 
   if not FileExists(Filename) then
-    if FileCreate(Filename) = THandle(-1) then
-      Result := False;
+  begin
+    FileHandle := FileCreate(Filename);
+    if FileHandle = THandle(-1) then
+      Result := False
+    else
+      // Attempting to read a file immediately after creating
+      // it throws an error on Windows. We close the handle
+      // manually to prevent it.
+      FileClose(FileHandle);
+  end;
 end;
 
 function GetSize(Bytes: Int64): String;
