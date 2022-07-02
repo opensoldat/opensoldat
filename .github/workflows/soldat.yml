@@ -162,6 +162,11 @@ jobs:
           zip -r windows-build.zip windows-build
           zip -r macos-build.zip macos-build
 
+      - name: Chmod and zip AppImages
+          chmod u+x appimages/*.AppImage
+          zip linux-appimage.zip appimages/Soldat-*.AppImage
+          zip linux-server-only-appimage.zip appimages/SoldatServer-*.AppImage
+
       - name: Upload release
         if: github.ref == 'refs/heads/develop'
         uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
@@ -170,6 +175,7 @@ jobs:
           files: |
             windows-build.zip
             macos-build.zip
-            appimages/*.AppImage
+            linux-appimage.zip
+            linux-server-only-appimage.zip
           body: Soldat 1.8 alpha dev build
           name: Soldat 1.8 alpha dev build
