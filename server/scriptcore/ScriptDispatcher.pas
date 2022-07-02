@@ -59,8 +59,6 @@ type
   public
     // for backward compatibility
     SafeMode: Boolean;
-    // max script number that can be launched
-    MaxScripts: Byte;
     // directory where scripts reside in
     // COMMENT: perhaps that should be a const?
     Dir: string;
@@ -193,7 +191,6 @@ begin
   Self.FScripts := TList.Create;
   Self.FScriptsToUnregister := TList.Create;
   SafeMode := True;
-  MaxScripts := 255;
   Dir := 'scripts';
 end;
 
@@ -236,12 +233,13 @@ destructor TScriptDispatcher.Destroy;
 var
   I: Integer;
 begin
-  inherited;
   for I := 0 to Self.FScripts.Count - 1 do
     TScript(Self.FScripts[I]).Free;
   FScripts.Free;
   FScriptsToUnregister.Free;
   FCheckFunctions.Free;
+
+  inherited;
 end;
 
 function TScriptDispatcher.GetScriptNames: TStringList;
@@ -264,11 +262,9 @@ procedure TScriptDispatcher.FindScripts(Name: string = '');
 var
   I, J: Integer;
   DirInfo: TSearchRec;
-  ScriptCount: Byte;
   Script: TScript;
   Folders: TStringList;
 begin
-  ScriptCount := 0;
   Folders := TStringList.Create;
   try
     Self.DoLock;
@@ -320,14 +316,9 @@ begin
         if (Script <> nil) and ((Script.Name = Name) or (Name = '')) then
         begin
           Self.FScripts.Add(Script);
-          Inc(ScriptCount);
           Break;
         end;
       end;
-      // FIXME: this will actually make dispatcher load N last, not N first scripts.
-      // Behavior might be even funnier when function called with name parameter
-      if ScriptCount = sc_maxscripts.Value then
-        Break;
     end;
   finally
     Folders.Free;

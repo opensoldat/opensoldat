@@ -29,25 +29,8 @@ type
 
 implementation
 
-function TryEncodeDate(Year, Month, Day: Word; var Date: TDateTime): Boolean;
-begin
-  try
-    Date := EncodeDate(Year, Month, Day);
-    Result := true;
-  except
-    Result := false;
-  end;
-end;
-
-function TryEncodeTime(Hour, Min, Sec, MSec: Word; var Time: TDateTime): Boolean;
-begin
-  try
-    Time := EncodeTime(hour, Min, Sec, MSec);
-    Result := true;
-  except
-    Result := false;
-  end;
-end;
+uses
+  DateUtils;
 
 function DateTimeToUnix(D: TDateTime): Int64;
 begin
@@ -85,10 +68,13 @@ begin
   Compiler.AddFunction('function StrToDateTime(const S: string): TDateTime;');
   Compiler.AddFunction('function EncodeDate(Year, Month, Day: Word): TDateTime;');
   Compiler.AddFunction('function EncodeTime(Hour, Min, Sec, MSec: Word): TDateTime;');
+  Compiler.AddFunction('function EncodeDateTime(Year, Month, Day, Hour, Min, Sec, MSec: Word): TDateTime;');
   Compiler.AddFunction('function TryEncodeDate(Year, Month, Day: Word; var Date: TDateTime): Boolean;');
   Compiler.AddFunction('function TryEncodeTime(Hour, Min, Sec, MSec: Word; var Time: TDateTime): Boolean;');
+  Compiler.AddFunction('function TryEncodeDateTime(Year, Month, Day, Hour, Min, Sec, MSec: Word; var Time: TDateTime): Boolean;');
   Compiler.AddFunction('procedure DecodeDate(const DateTime: TDateTime; var Year, Month, Day: Word);');
   Compiler.AddFunction('procedure DecodeTime(const DateTime: TDateTime; var Hour, Min, Sec, MSec: Word);');
+  Compiler.AddFunction('procedure DecodeDateTime(const DateTime: TDateTime; var Year, Month, Day, Hour, Min, Sec, MSec: Word);');
   Compiler.AddFunction('function DayOfWeek(const DateTime: TDateTime): Word;');
   Compiler.AddFunction('function Date: TDateTime;');
   Compiler.AddFunction('function Time: TDateTime;');
@@ -105,17 +91,20 @@ begin
   Exec.AddFunction(@MyStrToDateTime, 'StrToDateTime');
   Exec.AddFunction(@EncodeDate, 'EncodeDate');
   Exec.AddFunction(@EncodeTime, 'EncodeTime');
+  Exec.AddFunction(@EncodeDateTime, 'EncodeDateTime');
   Exec.AddFunction(@TryEncodeDate, 'TryEncodeDate');
   Exec.AddFunction(@TryEncodeTime, 'TryEncodeTime');
+  Exec.AddFunction(@TryEncodeDateTime, 'TryEncodeDateTime');
   Exec.AddFunction(@DecodeDate, 'DecodeDate');
   Exec.AddFunction(@DecodeTime, 'DecodeTime');
+  Exec.AddFunction(@DecodeDateTime, 'DecodeDateTime');
   Exec.AddFunction(@DayOfWeek, 'DayOfWeek');
   Exec.AddFunction(@Date, 'Date');
   Exec.AddFunction(@Time, 'Time');
   Exec.AddFunction(@Now, 'Now');
   Exec.AddFunction(@DateTimeToUnix, 'DateTimeToUnix');
   Exec.AddFunction(@UnixToDateTime, 'UnixToDateTime');
-  Exec.AddFunction(@MyStrToDate, 'DateToStr');
+  Exec.AddFunction(@MyDateToStr, 'DateToStr');
   Exec.AddFunction(@MyFormatDateTime, 'FormatDateTime');
   Exec.AddFunction(@MyStrToDate, 'StrToDate');
 end;

@@ -24,6 +24,9 @@ uses
   ScriptCoreFunctions,
   ScriptMath,
   ScriptDateUtils,
+  {$IFDEF SCRIPT_FFI_FUZZ}
+  ScriptFFITests,
+  {$ENDIF}
   ScriptFileAPI,
   ScriptGame,
   ScriptMap,
@@ -91,7 +94,6 @@ type
     procedure WriteInfo(Msg: string);
     procedure Deprecated(FnName: string; Msg: string = '');
     function Compile: Boolean;
-    function GetByteCode: Boolean;
     procedure OnException(Sender: TPascalExec; ExError: TPSError;
       const ExParam: string; ExObject: TObject; ProcNo, Position: Cardinal);
     procedure SetHybridMode;
@@ -108,6 +110,8 @@ type
     procedure Launch; override;
     function CallFunc(const Params: array of Variant; FuncName: string;
       DefaultReturn: Variant): Variant; override;
+    function CallEvent(const Event;
+      const Params: array of Variant): Variant; overload;
     // EVENTS
     procedure OnClockTick; override;
     function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
@@ -167,24 +171,23 @@ uses
   Game,
   PascalDebugger,
   ScriptDispatcher,
-  ScriptExceptions;
-
-const
-  // I'd suggest to leave those constants here (instead of moving to Constants.pas), as they should be used only localy
-  BYTECODEEXT = '.psb';
-  DEBUGSYMBOLSEXT = '.psd';
+  ScriptExceptions,
+  Variants;
 
 function CheckFunction(Dir: string): TScriptCore3;
 var
   IniFile: TMemIniFile;
   MainFile, Name: string;
   Version: Single;
+  GlobalVals: TStringList;
 begin
   Result := nil;
+  GlobalVals := nil;
   IniFile := nil;
   if FileExists(Dir + '/config.ini') then
   begin
     try
+      GlobalVals := TStringList.Create;
       IniFile := TMemIniFile.Create(Dir + '/config.ini');
       if IniFile.SectionExists('Config') then
       begin
@@ -237,13 +240,16 @@ begin
         Result.FDebug := IniFile.ReadBool('Config', 'Debug', False);
         if Result.FLegacyMode then
           Result.SetHybridMode;
-        Result.FConfig.Defines.CommaText := sc_defines.Value;
-        Result.FConfig.SearchPaths.CommaText := sc_searchpaths.Value;
+        GlobalVals.CommaText := sc_defines.Value;
+        Result.FConfig.Defines.AddStrings(GlobalVals);
+        GlobalVals.CommaText := sc_searchpaths.Value;
+        Result.FConfig.SearchPaths.AddStrings(GlobalVals);
       end
       else
         ScrptDispatcher.WriteInfo('[' + Dir + '] CONFIG section not found');
     finally
       IniFile.Free;
+      GlobalVals.Free;
     end;
   end;
 end;
@@ -297,8 +303,8 @@ begin
     except
     end;
     try
-      Self.FUnit.ScriptUnit.OnException(ExError,
-        Sender.GetErrorString2(ExError, ExParam), UnitName, FunctionName, Col, Row);
+      Self.CallEvent(Self.FUnit.ScriptUnit.OnException,
+        [ExError, Sender.GetErrorString2(ExError, ExParam), UnitName, FunctionName, Col, Row]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -362,6 +368,9 @@ begin
   Self.FApi.Add(TScriptGlobalAPI.Create(Self));
   Self.FApi.Add(TScriptMathAPI.Create(Self));
   Self.FApi.Add(TCoreFunctionsAPI.Create(Self));
+  {$IFDEF SCRIPT_FFI_FUZZ}
+  Self.FApi.Add(TScriptFFITestsAPI.Create(Self));
+  {$ENDIF}
 end;
 
 procedure TScriptCore3.HandleException(E: Exception);
@@ -397,18 +406,21 @@ begin
         Debugger := TPascalDebugger(Self.FExec);
         Error := Debugger.LastError;
         Debugger.GetPosition(UnitName, Col, Row);
-        if Assigned(Self.FUnit.ScriptUnit.OnUnhandledException) and
-           Self.FUnit.ScriptUnit.OnUnhandledException(Error, E.Message, UnitName, FunctionName, Row, Col) then
-           Exit;
+        if Assigned(Self.FUnit.ScriptUnit.OnUnhandledException) then
+          if Self.CallEvent(Self.FUnit.ScriptUnit.OnUnhandledException,
+             [Error, E.Message, UnitName, FunctionName, Row, Col]) then
+            Exit;
         Message := 'In unit ' + UnitName + '(' + IntToStr(Row) + ':' +
           IntToStr(Col) + ') [' + FunctionName + ']: ' +
             Debugger.GetErrorString(Error, E.Message, Debugger.Exec.ExceptionProcNo, Debugger.Exec.ExceptionPos);
       end
       else
       begin
-        if Assigned(Self.FUnit.ScriptUnit.OnUnhandledException) and
-          Self.FUnit.ScriptUnit.OnUnhandledException(Error, E.Message, '', FunctionName, 0, 0) then
-          Exit;
+        Error := Self.FExec.Exec.ExceptionCode;
+        if Assigned(Self.FUnit.ScriptUnit.OnUnhandledException) then
+          if Self.CallEvent(Self.FUnit.ScriptUnit.OnUnhandledException,
+            [Error, E.Message, '', FunctionName, 0, 0]) then
+            Exit;
         Message := 'In function [' + FunctionName + ']: ' + Self.FExec.GetErrorString2(Error, E.Message);
       end;
     except
@@ -455,17 +467,18 @@ var
   Compiler: TPascalCompiler;
   Messages: TStringList;
   I: Shortint;
-  BytecodeFile: TFileStream;
 begin
   Result := False;
   Self.WriteInfo('Compilation started');
+
   Compiler := TPascalCompiler.Create(Self.FDir, Self.FMainFileName);
-  Compiler.Defines := Self.FConfig.FDefines;
+  Compiler.Defines.AddStrings(Self.FConfig.FDefines);
   Compiler.Api := Self.FApi;
   if Self.FConfig.FAllowDlls then
     Compiler.SupportDLLs := True;
   for I := 0 to Self.FConfig.FSearchPaths.Count - 1 do
     Compiler.AddSearchPath(Self.FDir + Self.FConfig.FSearchPaths[I]);
+
   try
     Result := Compiler.Compile;
   except
@@ -475,98 +488,29 @@ begin
         E.Message);
     end;
   end;
+
   Messages := Compiler.GetMessages();
   for I := 0 to Messages.Count - 1 do
     Self.WriteInfo(Messages[I]);
+
   if not Result then
   begin
     Self.WriteInfo('Compilation failed');
     Exit;
   end;
-  if Self.Debug then
-  begin
-    Self.FDebugSymbols := Compiler.Debugcode;
-    BytecodeFile := TFileStream.Create(Self.FDir +
-      ChangeFileExt(Self.FMainFileName, DEBUGSYMBOLSEXT), fmCreate);
-    BytecodeFile.WriteAnsiString(Self.FDebugSymbols);
-    BytecodeFile.Free;
-  end;
-  Self.FBytecode := Compiler.Bytecode;
-  BytecodeFile := TFileStream.Create(Self.FDir +
-    ChangeFileExt(Self.FMainFileName, BYTECODEEXT), fmCreate);
-  BytecodeFile.WriteAnsiString(Self.FBytecode);
-  BytecodeFile.Free;
-  Self.WriteInfo('Compilation complete');
-end;
 
-function TScriptCore3.GetByteCode: Boolean;
-var
-  SearchRec: TSearchRec;
-  BytecodeTime: Integer;
-  BytecodeFileName: string;
-  FileStream: TFileStream;
-  I: Shortint;
-begin
-  BytecodeFileName := Self.FDir + ChangeFileExt(Self.FMainFileName, BYTECODEEXT);
-  if not FileExists(BytecodeFileName) then
-  begin
-    Result := Self.Compile;
-  end
-  else
-  begin
-    FindFirst(BytecodeFileName, 0, SearchRec);
-    BytecodeTime := SearchRec.Time;
-    FindClose(SearchRec);
-    FindFirst(ParamStr(0), 0, SearchRec);
-    FindClose(SearchRec);
-    if SearchRec.Time > BytecodeTime then
-    begin
-      Result := Self.Compile;
-      Exit;
-    end;
-    FindFirst('server.ini', 0, SearchRec);
-    FindClose(SearchRec);
-    if SearchRec.Time > BytecodeTime then
-    begin
-      Result := Self.Compile;
-      Exit;
-    end;
-    for I := 0 to Self.FConfig.FSearchPaths.Count - 1 do
-      if DirectoryExists(IncludeTrailingPathDelimiter(Self.FDir +
-        Self.FConfig.FSearchPaths[I])) then
-      begin
-        FindFirst(Self.FDir + Self.FConfig.FSearchPaths[I] + '/*', faAnyFile, SearchRec);
-        repeat
-          if SearchRec.Time > BytecodeTime then
-          begin
-            Result := Self.Compile;
-            FindClose(SearchRec);
-            Exit;
-          end;
-        until FindNext(SearchRec) <> 0;
-      end;
-    FindClose(SearchRec);
-    // if arrived here then file exists and does not require recompiling
-    FileStream := TFileStream.Create(BytecodeFileName, fmOpenRead);
-    Self.FBytecode := FileStream.ReadAnsiString;
-    FileStream.Free;
-    // debug file also should exist at this point
-    if Self.FDebug then
-    begin
-      FileStream := TFileStream.Create(ChangeFileExt(BytecodeFileName,
-        DEBUGSYMBOLSEXT), fmOpenRead);
-      Self.FDebugSymbols := FileStream.ReadAnsiString;
-      FileStream.Free;
-    end;
-    Result := True;
-  end;
+  if Self.Debug then
+    Self.FDebugSymbols := Compiler.Debugcode;
+  Self.FBytecode := Compiler.Bytecode;
+
+  Compiler.Free;
 end;
 
 function TScriptCore3.Prepare: Boolean;
 begin
   Result := False;
-  if not Self.GetByteCode then
-    Exit;  // any error message should be displayed in GetByteCode();
+  if not Self.Compile then
+    Exit;  // any error message should be displayed in Compile();
   Self.FExec.Free;  // just in case
   Self.WriteInfo('Loading bytecode');
   try
@@ -631,6 +575,19 @@ begin
   end;
 end;
 
+function TScriptCore3.CallEvent(const Event;
+  const Params: array of Variant): Variant;
+begin
+  try
+    Result := Self.FExec.CallEvent(Event, Params);
+  except
+    on e: TProcNotFoundException do
+      Exit;
+    on e: Exception do
+      Self.HandleException(e);
+  end;
+end;
+
 procedure TScriptCore3.OnClockTick;
 begin
   try
@@ -641,7 +598,7 @@ begin
       if Assigned(Self.FGame.Game.OnClockTick) and
         (Self.FGame.Game.TickThreshold <> 0) and (MainTickCounter mod
         Self.FGame.Game.TickThreshold = 0) then
-        Self.FGame.Game.OnClockTick(MainTickCounter);
+        Self.CallEvent(Self.FGame.Game.OnClockTick, [MainTickCounter]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -664,7 +621,7 @@ begin
         State := Result;
       end;
       if Assigned(Self.FGame.Game.OnRequest) then
-        Result := Self.FGame.Game.OnRequest(Ip, Hw, Port, State, Forwarded, Password);
+        Result := Self.CallEvent(Self.FGame.Game.OnRequest, [Ip, Hw, Port, State, Forwarded, Password]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -676,6 +633,7 @@ end;
 
 function TScriptCore3.OnBeforeJoinTeam(Id, Team, OldTeam: Byte): ShortInt;
 var
+  PlayerObj: TScriptActivePlayer;
   OldTeamObj: TScriptTeam;
 begin
   Result := Team;
@@ -684,15 +642,16 @@ begin
     try
       if Assigned(Self.FGame.Game.Teams[Team].OnBeforeJoin) then
       begin
+        if (Id < 1) or (Id > MAX_PLAYERS) then
+          PlayerObj := nil
+        else
+          PlayerObj := Self.FPlayers.Players[Id];
         if OldTeam = 255 then
           OldTeamObj := nil
         else
           OldTeamObj := Self.FGame.Game.Teams[OldTeam];
-        Result := Self.FGame.Game.Teams[Team].OnBeforeJoin(
-          Self.FPlayers.Players[Id],
-          Self.FGame.Game.Teams[Team],
-          OldTeamObj
-        );
+        Result := Self.CallEvent(Self.FGame.Game.Teams[Team].OnBeforeJoin,
+          [PtrUInt(PlayerObj), PtrUInt(Self.FGame.Game.Teams[Team]), PtrUInt(OldTeamObj)]);
       end;
     except
       on e: Exception do
@@ -716,8 +675,8 @@ begin
         Self.FGame.Game.Teams[OldTeam].RemovePlayer(
           Self.FPlayers.Players[Id]);
         if Assigned(Self.FGame.Game.Teams[OldTeam].OnLeave) then
-          Self.FGame.Game.Teams[OldTeam].OnLeave(Self.FPlayers.Players[Id],
-            Self.FGame.Game.Teams[OldTeam], False);
+          Self.CallEvent(Self.FGame.Game.Teams[OldTeam].OnLeave,
+            [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FGame.Game.Teams[OldTeam]), False]);
       end
       else
       begin
@@ -736,15 +695,15 @@ begin
           Self.FPlayers.Players.Active.Add(Self.FPlayers.Players[Id]);
 
         if Assigned(Self.FGame.Game.OnJoin) then
-          Self.FGame.Game.OnJoin(Self.FPlayers.Players[Id],
-            Self.FGame.Game.Teams[Team]);
+          Self.CallEvent(Self.FGame.Game.OnJoin,
+            [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FGame.Game.Teams[Team])]);
       end;
 
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnJoinTeam(Id, Team, OldTeam, JoinGame);
       if Assigned(Self.FGame.Game.Teams[Team].OnJoin) then
-        Self.FGame.Game.Teams[Team].OnJoin(Self.FPlayers.Players[Id],
-          Self.FGame.Game.Teams[Team]);
+        Self.CallEvent(Self.FGame.Game.Teams[Team].OnJoin,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FGame.Game.Teams[Team])]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -765,10 +724,11 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnLeaveGame(Id, Kicked);
       if Assigned(Self.FGame.Game.OnLeave) then
-        Self.FGame.Game.OnLeave(Self.FPlayers.Players[Id], Kicked);
+        Self.CallEvent(Self.FGame.Game.OnLeave,
+          [PtrUInt(Self.FPlayers.Players[Id]), Kicked]);
       if Assigned(Self.FGame.Game.Teams[Team].OnLeave) then
-        Self.FGame.Game.Teams[Team].OnLeave(Self.FPlayers.Players[Id],
-          Self.FGame.Game.Teams[Team], Kicked);
+        Self.CallEvent(Self.FGame.Game.Teams[Team].OnLeave,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FGame.Game.Teams[Team]), Kicked]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -789,7 +749,7 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnBeforeMapChange(Map);
       if Assigned(Self.FMap.Map.OnBeforeMapChange) then
-        Self.FMap.Map.OnBeforeMapChange(Map);
+        Self.CallEvent(Self.FMap.Map.OnBeforeMapChange, [Map]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -807,7 +767,7 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnAfterMapChange(Map);
       if Assigned(Self.FMap.Map.OnAfterMapChange) then
-        Self.FMap.Map.OnAfterMapChange(Map);
+        Self.CallEvent(Self.FMap.Map.OnAfterMapChange, [Map]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -826,7 +786,7 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnAdminConnect(Ip, Port);
       if Assigned(Self.FGame.Game.OnAdminConnect) then
-        Self.FGame.Game.OnAdminConnect(Ip, Port);
+        Self.CallEvent(Self.FGame.Game.OnAdminConnect, [Ip, Port]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -844,7 +804,7 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnAdminDisconnect(Ip, Port);
       if Assigned(Self.FGame.Game.OnAdminDisconnect) then
-        Self.FGame.Game.OnAdminDisconnect(Ip, Port);
+        Self.CallEvent(Self.FGame.Game.OnAdminDisconnect, [Ip, Port]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -862,7 +822,7 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnAdminMessage(Ip, Port, Message);
       if Assigned(Self.FGame.Game.OnTCPMessage) then
-        Self.FGame.Game.OnTCPMessage(Ip, Port, Message);
+        Self.CallEvent(Self.FGame.Game.OnTCPMessage, [Ip, Port, Message]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -881,8 +841,8 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnFlagGrab(Id, TeamFlag, GrabbedInBase);
       if Assigned(Self.FPlayers.Players[Id].OnFlagGrab) then
-        Self.FPlayers.Players[Id].OnFlagGrab(Self.FPlayers.Players[Id],
-          Self.FMap.Map.GetFlag(TeamFlag), TeamFlag, GrabbedInBase);
+        Self.CallEvent(Self.FPlayers.Players[Id].OnFlagGrab,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FMap.Map.GetFlag(TeamFlag)), TeamFlag, GrabbedInBase]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -900,8 +860,8 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnFlagScore(Id, TeamFlag);
       if Assigned(Self.FPlayers.Players[Id].OnFlagScore) then
-        Self.FPlayers.Players[Id].OnFlagScore(Self.FPlayers.Players[Id],
-          Self.FMap.Map.GetFlag(TeamFlag), TeamFlag);
+        Self.CallEvent(Self.FPlayers.Players[Id].OnFlagScore,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FMap.Map.GetFlag(TeamFlag)), TeamFlag]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -919,8 +879,8 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnFlagReturn(Id, TeamFlag);
       if Assigned(Self.FPlayers.Players[Id].OnFlagReturn) then
-        Self.FPlayers.Players[Id].OnFlagReturn(Self.FPlayers.Players[Id],
-          Self.FMap.Map.GetFlag(TeamFlag), TeamFlag);
+        Self.CallEvent(Self.FPlayers.Players[Id].OnFlagReturn,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FMap.Map.GetFlag(TeamFlag)), TeamFlag]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -936,8 +896,8 @@ begin
     Self.Lock.Acquire;
     try
       if Assigned(Self.FPlayers.Players[Id].OnFlagDrop) then
-        Self.FPlayers.Players[Id].OnFlagDrop(Self.FPlayers.Players[Id],
-          Self.FMap.Map.GetFlag(TeamFlag), TeamFlag, Thrown);
+        Self.CallEvent(Self.FPlayers.Players[Id].OnFlagDrop,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FMap.Map.GetFlag(TeamFlag)), TeamFlag, Thrown]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -953,8 +913,8 @@ begin
     Self.Lock.Acquire;
     try
       if Assigned(Self.FPlayers.Players[Id].OnKitPickup) then
-        Self.FPlayers.Players[Id].OnKitPickup(Self.FPlayers.Players[Id],
-          Self.FMap.Map.Objects[KitId]);
+        Self.CallEvent(Self.FPlayers.Players[Id].OnKitPickup,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FMap.Map.Objects[KitId])]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -964,14 +924,21 @@ begin
   end;
 end;
 
+{$PUSH}
+{$WARN 4055 OFF}
+{$WARN 5027 OFF}
 function TScriptCore3.OnBeforePlayerRespawn(Id: Byte): TVector2;
+var
+  VariantResult: Variant;
 begin
   try
     Self.Lock.Acquire;
     Result := SpriteParts.Pos[Id];
     try
+      VariantResult := PtrUInt(@Result);
       if Assigned(Self.FPlayers.Players[Id].OnBeforeRespawn) then
-        Result := Self.FPlayers.Players[Id].OnBeforeRespawn(Self.FPlayers.Players[Id]);
+        VariantResult := Self.CallEvent(Self.FPlayers.Players[Id].OnBeforeRespawn,
+          [PtrUInt(Self.FPlayers.Players[Id])]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -980,6 +947,7 @@ begin
     Self.Lock.Release;
   end;
 end;
+{$POP}
 
 procedure TScriptCore3.OnAfterPlayerRespawn(Id: Byte);
 begin
@@ -989,7 +957,8 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnAfterPlayerRespawn(Id);
       if Assigned(Self.FPlayers.Players[Id].OnAfterRespawn) then
-        Self.FPlayers.Players[Id].OnAfterRespawn(Self.FPlayers.Players[Id]);
+        Self.CallEvent(Self.FPlayers.Players[Id].OnAfterRespawn,
+          [PtrUInt(Self.FPlayers.Players[Id])]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1012,9 +981,8 @@ begin
         Damage := Result;
       end;
       if Assigned(Self.FPlayers.Players[Shooter].OnDamage) then
-        Result := Self.FPlayers.Players[Shooter].OnDamage(
-          Self.FPlayers.Players[Shooter], Self.FPlayers.Players[Victim],
-          Damage, BulletID);
+        Result := Self.CallEvent(Self.FPlayers.Players[Shooter].OnDamage,
+          [PtrUInt(Self.FPlayers.Players[Shooter]), PtrUInt(Self.FPlayers.Players[Victim]), Damage, BulletID]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1032,8 +1000,8 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnPlayerKill(Killer, Victim, Bullet[BulletID].OwnerWeapon);
       if Assigned(Self.FPlayers.Players[Killer].OnKill) then
-        Self.FPlayers.Players[Killer].OnKill(Self.FPlayers.Players[Killer],
-          Self.FPlayers.Players[Victim], BulletID);
+        Self.CallEvent(Self.FPlayers.Players[Killer].OnKill,
+          [PtrUInt(Self.FPlayers.Players[Killer]), PtrUInt(Self.FPlayers.Players[Victim]), BulletID]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1057,9 +1025,8 @@ begin
         Self.FOnWeaponChangeNewPrimary.SetGun(Primary, PrimaryAmmo);
         Self.FOnWeaponChangeNewSecondary.SetGun(Secondary, SecondaryAmmo);
         {$push}{$warn 4040 off}
-        Self.FPlayers.Players[Id].OnWeaponChange(Self.FPlayers.Players[Id],
-          TScriptPlayerWeapon(Self.FOnWeaponChangeNewPrimary),
-          TScriptPlayerWeapon(Self.FOnWeaponChangeNewSecondary));
+        Self.CallEvent(Self.FPlayers.Players[Id].OnWeaponChange,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(TScriptPlayerWeapon(Self.FOnWeaponChangeNewPrimary)), PtrUInt(TScriptPlayerWeapon(Self.FOnWeaponChangeNewSecondary))]);
         {$pop}
       end;
     except
@@ -1081,8 +1048,8 @@ begin
       if Assigned(Self.FAdapter) then
         Result := Self.FAdapter.OnVoteMapStart(Id, Map);
       if Assigned(Self.FPlayers.Players[Id].OnVoteMapStart) then
-        Result := Result or Self.FPlayers.Players[Id].OnVoteMapStart(
-          Self.FPlayers.Players[Id], Map);
+        Result := Result or Self.CallEvent(Self.FPlayers.Players[Id].OnVoteMapStart,
+          [PtrUInt(Self.FPlayers.Players[Id]), Map]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1103,8 +1070,8 @@ begin
       // ID may be 255 if it's a votekick started by server cheat checks.
       // FIXME: this means that server triggered votekicks won't be announced to scripts.
       if (Id <> 255) and Assigned(Self.FPlayers.Players[Id].OnVoteKickStart) then
-        Result := Result or Self.FPlayers.Players[Id].OnVoteKickStart(
-          Self.FPlayers.Players[Id], Self.FPlayers.Players[Victim], Reason);
+        Result := Result or Self.CallEvent(Self.FPlayers.Players[Id].OnVoteKickStart,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FPlayers.Players[Victim]), Reason]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1122,7 +1089,8 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnVoteMap(Id, Map);
       if Assigned(Self.FPlayers.Players[Id].OnVoteMap) then
-        Self.FPlayers.Players[Id].OnVoteMap(Self.FPlayers.Players[Id], Map);
+        Self.CallEvent(Self.FPlayers.Players[Id].OnVoteMap,
+          [PtrUInt(Self.FPlayers.Players[Id]), Map]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1140,8 +1108,8 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnVoteKick(Id, Victim);
       if Assigned(Self.FPlayers.Players[Id].OnVoteKick) then
-        Self.FPlayers.Players[Id].OnVoteKick(Self.FPlayers.Players[Id],
-          Self.FPlayers.Players[Victim]);
+        Self.CallEvent(Self.FPlayers.Players[Id].OnVoteKick,
+          [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(Self.FPlayers.Players[Victim])]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1159,7 +1127,8 @@ begin
       if Assigned(Self.FAdapter) then
         Self.FAdapter.OnPlayerSpeak(Id, Text);
       if Assigned(Self.FPlayers.Players[Id].OnSpeak) then
-        Self.FPlayers.Players[Id].OnSpeak(Self.FPlayers.Players[Id], Text);
+        Self.CallEvent(Self.FPlayers.Players[Id].OnSpeak,
+          [PtrUInt(Self.FPlayers.Players[Id]), Text]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1178,13 +1147,14 @@ begin
       if Assigned(Self.FAdapter) then
         Result := Self.FAdapter.OnPlayerCommand(Id, Command);
       if Assigned(Self.FPlayers.Players[Id].OnCommand) then
-        Result := Result or Self.FPlayers.Players[Id].OnCommand(
-          Self.FPlayers.Players[Id], Command);
+        Result := Result or Self.CallEvent(Self.FPlayers.Players[Id].OnCommand,
+          [PtrUInt(Self.FPlayers.Players[Id]), Command]);
       if Assigned(Self.FGame.Game.OnAdminCommand) then
         if IsRemoteAdminIP(Self.FPlayers.Players[Id].IP) or
            IsAdminIP(Self.FPlayers.Players[Id].IP) then
           Result := Result or
-            Self.FGame.Game.OnAdminCommand(Self.FPlayers.Players[Id], Command);
+            Self.CallEvent(Self.FGame.Game.OnAdminCommand,
+              [PtrUInt(Self.FPlayers.Players[Id]), Command]);
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1194,6 +1164,8 @@ begin
   end;
 end;
 
+{$PUSH}
+{$WARN 4055 OFF}
 function TScriptCore3.OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
 begin
   Result := False;
@@ -1205,10 +1177,11 @@ begin
       if Assigned(Self.FGame.Game.OnTCPCommand) then
       begin
         Self.Deprecated('Game.OnTCPCommand', 'Use OnAdminCommand instead (Player = nil)');
-        Result := Self.FGame.Game.OnTCPCommand(Ip, Port, Command) or Result;
+        Result := Self.CallEvent(Self.FGame.Game.OnTCPCommand, [Ip, Port, Command]) or Result;
       end;
       if Assigned(Self.FGame.Game.OnAdminCommand) then
-        Result := Self.FGame.Game.OnAdminCommand(nil, Command) or Result;
+        Result := Self.CallEvent(Self.FGame.Game.OnAdminCommand,
+          [PtrUInt(nil), Command]) or Result;
     except
       on e: Exception do
         Self.HandleException(e);
@@ -1217,5 +1190,6 @@ begin
     Self.Lock.Release;
   end;
 end;
+{$POP}
 
 end.

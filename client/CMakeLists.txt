@@ -36,7 +36,8 @@ add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/client/libs/openal")
 
 # source files
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/client/*"
-     "${CMAKE_SOURCE_DIR}/shared/*.pas" "${CMAKE_SOURCE_DIR}/3rdparty/*.pas")
+     "${CMAKE_SOURCE_DIR}/shared/*.pas" "${CMAKE_SOURCE_DIR}/3rdparty/*.pas"
+     "${CMAKE_SOURCE_DIR}/3rdparty/*.inc")
 
 set_source_files_properties(soldat.lpr PROPERTIES OBJECT_DEPENDS "${sources}")
 

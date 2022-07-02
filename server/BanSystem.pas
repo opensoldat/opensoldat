@@ -24,13 +24,14 @@ uses
   procedure UpdateHWBanList;
 
 type
-  TBanIP = record
+  // These records are packed so they can be sent over the wall to PascalScript.
+  TBanIP = packed record
     IP: string;
     Time: Integer;
     Reason: string;
   end;
 
-  TBanHW = record
+  TBanHW = packed record
     HW: string;
     Time: Integer;
     Reason: string;

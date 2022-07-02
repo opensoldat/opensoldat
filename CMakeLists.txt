@@ -12,6 +12,9 @@ option(CROSS_WINDOWS_32 "Cross compile to Windows i386" False)
 option(CROSS_DARWIN_64 "Cross compile to macOS x86_64" False)
 option(CROSS_DARWIN_32 "Cross compile to macOS i386" False)
 
+option(ADD_BFT "Copy BFT test to scripts directory" False)
+option(ADD_FFI_FUZZ "Enable ScriptCore FFI fuzz tests" False)
+
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
 include(${CMAKE_MODULE_PATH}/utils.cmake)
@@ -200,7 +203,7 @@ install(
   PATTERN "*.dylib"
   # Ignore subdirectories, just in case... it's not necessary on clean build,
   # only if you ran client/server executables before installing.
-  REGEX "configs|demos|logs|maps|mods|screens" EXCLUDE
+  REGEX "configs|demos|logs|maps|mods|screens|scripts" EXCLUDE
 )
 
 if(ADD_ASSETS)
