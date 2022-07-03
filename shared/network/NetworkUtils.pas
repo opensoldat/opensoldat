@@ -51,7 +51,6 @@ function IsFloodID(ID: Cardinal): Boolean;
 
 function AddIPToRemoteAdmins(SrcIP: string): Boolean;
 {$ENDIF}
-function ArrayToString(c: array of Char): string;
 procedure StringToArray(var c: array of Char; s: string);
 implementation
 
@@ -387,20 +386,6 @@ begin
 end;
 {$ENDIF}
 
-function ArrayToString(c: array of Char): string;
-var
-  i: Integer;
-begin
-  Result := '';
-  if Length(c) < 1 then
-    Exit;
-  for i := Low(c) to High(c) do
-    if c[i] <> #0 then
-    begin
-      Result := Result + c[i];
-    end;
-end;
-
 procedure StringToArray(var c: array of Char; s: string);
 var
   i: Integer;
@@ -416,7 +401,8 @@ begin
   begin
     c[i] := s[i + 1];
   end;
-  c[Length(s)] := #0;
+  if Length(s) < Length(c) then
+    c[Length(s)] := #0;
 end;
 
 end.

@@ -167,12 +167,12 @@ end;
 
 function TScriptMath.DegToRad(A: Extended): Extended;
 begin
-  Result := Math.cotan(a);
+  Result := Math.DegToRad(a);
 end;
 
 function TScriptMath.RadToDeg(A: Extended): Extended;
 begin
-  Result := Math.cotan(a);
+  Result := Math.RadToDeg(a);
 end;
 
 function TScriptMath.DegNormalize(A: Extended): Extended;
@@ -214,8 +214,8 @@ procedure TScriptMathAPI.CompilerRegister(Compiler: TPascalCompiler);
 var
   AClass: TPascalCompiletimeClass;
 begin
-  Compiler.AddType('TValueSign', btEnum);
-  Compiler.AddType('TRoundToRange', btEnum);
+  Compiler.AddType('TValueSign', btS8);
+  Compiler.AddType('TRoundToRange', btS8);
   AClass := Compiler.AddClass(nil, 'TMathAPI');
   with AClass do
   begin

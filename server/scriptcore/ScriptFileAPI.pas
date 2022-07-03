@@ -41,6 +41,10 @@ type
   TMyStringList = class(TStringList)
   private
     FAPI: TScriptFileAPI;
+    FOnChange: TNotifyEvent;
+    FOnChanging: TNotifyEvent;
+    procedure MyOnChange(Sender: TObject);
+    procedure MyOnChanging(Sender: TObject);
   public
     constructor Create(API: TScriptFileAPI);
     procedure LoadFromFile(const FileName: string); override;
@@ -54,6 +58,22 @@ type
     constructor Create(API: TScriptFileAPI);
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string);
+    function Read(var Buffer: String; Count:LongInt): LongInt;
+      {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
+    function Write(const Buffer: String; Count:LongInt): LongInt;
+      {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
+    procedure ReadBuffer(var Buffer: String; Count:LongInt);
+    procedure WriteBuffer(const Buffer: String; Count:LongInt);
+  end;
+
+  TMyStringStream = class(TStringStream)
+  public
+    constructor Create;
+    function Read(var Buffer: String; Count: LongInt): LongInt;
+      {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
+    function Write(const Buffer: String; Count: LongInt): LongInt;
+      {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
+    function ReadString(Count: LongInt): String;
   end;
 
   TScriptFile = class(TObject)
@@ -77,7 +97,6 @@ type
   // ... some day
   TScriptFileAPI = class(TScriptCore3API)
   private
-    FScript: TScript;
     FFile: TScriptFile;
     function GetSandboxLevel: Byte;
     function GetAllowIniEdit: Boolean;
@@ -165,6 +184,20 @@ constructor TMyStringList.Create(API: TScriptFileAPI);
 begin
   inherited Create;
   Self.FAPI := API;
+  Self.OnChange := Self.MyOnChange;
+  Self.OnChanging := Self.MyOnChanging;
+end;
+
+procedure TMyStringList.MyOnChange(Sender: TObject);
+begin
+  if Assigned(Self.FOnChange) then
+    Self.FAPI.CallEvent(FOnChange, [PtrUInt(Sender)]);
+end;
+
+procedure TMyStringList.MyOnChanging(Sender: TObject);
+begin
+  if Assigned(Self.FOnChanging) then
+    Self.FAPI.CallEvent(FOnChanging, [PtrUInt(Sender)]);
 end;
 
 procedure TMyStringList.LoadFromFile(const FileName: string);
@@ -211,6 +244,54 @@ begin
   if not Self.FAPI.CheckAccess(Path) then
     raise EAccessDenied.Create('Path is out of sandbox');
   inherited SaveToFile(Path);
+end;
+
+function TMyMemoryStream.Read(var Buffer: String; Count: LongInt): LongInt;
+begin
+  Result := inherited Read(Buffer[1], Count);
+end;
+
+function TMyMemoryStream.Write(const Buffer: String; Count: LongInt): LongInt;
+begin
+  Result := inherited Write(Buffer[1], Count);
+end;
+
+procedure TMyMemoryStream.ReadBuffer(var Buffer: String; Count: LongInt);
+begin
+  inherited ReadBuffer(Buffer[1], Count);
+end;
+
+procedure TMyMemoryStream.WriteBuffer(const Buffer: String; Count: LongInt);
+begin
+  inherited WriteBuffer(Buffer[1], Count);
+end;
+
+constructor TMyStringStream.Create();
+begin
+  inherited Create('');
+end;
+
+function TMyStringStream.Read(var Buffer: String; Count: LongInt): LongInt;
+begin
+  Result := inherited Read(Buffer[1], Count);
+end;
+
+function TMyStringStream.Write(const Buffer: String; Count: LongInt): LongInt;
+begin
+  Result := inherited Write(Buffer[1], Count);
+end;
+
+function TMyStringStream.ReadString(Count: LongInt): String;
+begin
+  Result := inherited ReadString(Count);
+  {$IFDEF FPC}
+  {$IF (FPC_FULLVERSION >= 30200) and (FPC_FULLVERSION < 30202)}
+  // Bug where position is not advanced when calling ReadAnsiString/ReadString
+  // in FPC 3.2.0, fixed by:
+  // https://gitlab.com/freepascal.org/fpc/source/-/commit/0baf7db5e4fdc8e82e50a32505ea5b3a11cf7dbd
+  Self.Position := Self.Position + Length(Result);
+  {$ENDIF}
+  {$ENDIF}
 end;
 
 constructor TScriptFile.Create(API: TScriptFileAPI);
@@ -331,7 +412,7 @@ end;
 
 constructor TScriptFileAPI.Create(Script: TScript);
 begin
-  Self.FScript := Script;
+  inherited Create(Script);
   Self.FFile := TScriptFile.Create(Self);
 end;
 
@@ -467,7 +548,7 @@ begin
   Self.Size := Result;
 end;
 
-procedure DataStringReadHelper(Self: TStringStream; var Result: string);
+procedure DataStringReadHelper(Self: TMyStringStream; var Result: string);
 begin
   Result := Self.DataString;
 end;
@@ -561,22 +642,22 @@ end;
 
 procedure OnChangeReadHelper(Self: TMyStringList; var Result: TNotifyEvent);
 begin
-  Result := Self.OnChange;
+  Result := Self.FOnChange;
 end;
 
 procedure OnChangeWriteHelper(Self: TMyStringList; const Result: TNotifyEvent);
 begin
-  Self.OnChange := Result;
+  Self.FOnChange := Result;
 end;
 
 procedure OnChangingReadHelper(Self: TMyStringList; var Result: TNotifyEvent);
 begin
-  Result := Self.OnChanging;
+  Result := Self.FOnChanging;
 end;
 
 procedure OnChangingWriteHelper(Self: TMyStringList; const Result: TNotifyEvent);
 begin
-  Self.OnChanging := Result;
+  Self.FOnChanging := Result;
 end;
 
 
@@ -594,21 +675,8 @@ begin
   Compiler.AddType('TDuplicates', '(dupIgnore, dupAccept, dupError)');
   Compiler.AddType('TStringListSortCompare',
     'function(List: TStringList; Index1, Index2: Integer): Integer');
+  Compiler.AddType('TSeekOrigin', '(soBeginning, soCurrent, soEnd)');
 
-  with Compiler.AddConstant('soFromBeginning', 'Integer') do
-  begin
-    SetInt(1);
-  end;
-
-  with Compiler.AddConstant('soFromCurrent', 'Integer') do
-  begin
-    SetInt(2);
-  end;
-
-  with Compiler.AddConstant('soFromEnd', 'Integer') do
-  begin
-    SetInt(3);
-  end;
   with StringList do
   begin
     RegisterMethod('procedure Free');
@@ -695,11 +763,11 @@ begin
   begin
     IsAbstract := True;
     RegisterMethod('procedure Free');
-    RegisterMethod('function Read(var Buffer:string;Count:LongInt):LongInt');
-    RegisterMethod('function Write(const Buffer:string;Count:LongInt):LongInt');
-    RegisterMethod('function Seek(Offset:LongInt;Origin:Word):LongInt');
-    RegisterMethod('procedure ReadBuffer(Buffer:string;Count:LongInt)');
-    RegisterMethod('procedure WriteBuffer(Buffer:string;Count:LongInt)');
+    RegisterMethod('function Read(var Buffer:String;Count:LongInt):LongInt');
+    RegisterMethod('function Write(const Buffer:String;Count:LongInt):LongInt');
+    RegisterMethod('function Seek(Offset:Int64;Origin:TSeekOrigin):Int64');
+    RegisterMethod('procedure ReadBuffer(var Buffer:String;Count:LongInt)');
+    RegisterMethod('procedure WriteBuffer(const Buffer:String;Count:LongInt)');
     RegisterMethod('function CopyFrom(Source:TStream;Count:Int64):LongInt');
     RegisterProperty('Position', 'Int64', iptRW);
     RegisterProperty('Size', 'Int64', iptRW);
@@ -713,14 +781,18 @@ begin
     RegisterMethod('procedure SaveToStream(Stream:TStream)');
     RegisterMethod('procedure SaveToFile(FileName:string)');
     RegisterMethod('procedure SetSize(NewSize:LongInt)');
+    RegisterMethod('function Read(var Buffer:String;Count:LongInt):LongInt');
+    RegisterMethod('function Write(const Buffer:String;Count:LongInt):LongInt');
+    RegisterMethod('procedure ReadBuffer(var Buffer:String;Count:LongInt)');
+    RegisterMethod('procedure WriteBuffer(const Buffer:String;Count:LongInt)');
   end;
 
   with Compiler.AddClass(Stream, 'TStringStream') do
   begin
-    RegisterMethod('constructor Create(const AString: string)');
+    RegisterMethod('constructor Create');
     RegisterMethod('function Read(var Buffer: string; Count: Longint): Longint');
     RegisterMethod('function ReadString(Count: Longint): string');
-    RegisterMethod('function Seek(Offset: Longint; Origin: Word): Longint');
+    RegisterMethod('function Seek(Offset: Int64; Origin: TSeekOrigin): Int64');
     RegisterMethod('function Write(const Buffer: string; Count: Longint): Longint');
     RegisterMethod('procedure WriteString(const AString: string)');
     RegisterProperty('DataString', 'string', iptR);
@@ -745,7 +817,25 @@ begin
   SIRegisterTPARSER(Compiler.Compiler);
 end;
 
+// These procedural types/variables are used to obtain pointers to the correct
+// function overloads. See discussion:
+// https://forum.lazarus.freepascal.org/index.php?topic=23620.0.
+type
+  TSeekFn = function(const Offset: Int64; Origin: TSeekOrigin): Int64 of object;
+  TReadFn = function(var Buffer: String; Count: LongInt): LongInt of object;
+  TReadBufferFn = procedure(var Buffer: String; Count: LongInt) of object;
+  TWriteFn = function(const Buffer: String; Count: LongInt): LongInt of object;
+  TWriteBufferFn = procedure(const Buffer: String; Count: LongInt) of object;
+  TReadStringFn = function(Count: LongInt): String of object;
+
 procedure TScriptFileAPI.RuntimeRegisterApi(Exec: TPascalExec);
+var
+  SeekPointer: TSeekFn;
+  ReadPointer: TReadFn;
+  ReadBufferPointer: TReadBufferFn;
+  WritePointer: TWriteFn;
+  WriteBufferPointer: TWriteBufferFn;
+  ReadStringPointer: TReadStringFn;
 begin
   RIRegisterTBITS(Exec.ClassImporter);
   RIRegisterTPARSER(Exec.ClassImporter);
@@ -859,16 +949,28 @@ begin
     RegisterMethod(@TMyMemoryStream.SaveToStream, 'SaveToStream');
     RegisterMethod(@TMyMemoryStream.SaveToFile, 'SaveToFile');
     RegisterMethod(@TMyMemoryStream.SetSize, 'SetSize');
+    ReadPointer := TMyMemoryStream.Read;
+    RegisterMethod(@ReadPointer, 'Read');
+    ReadBufferPointer := TMyMemoryStream.ReadBuffer;
+    RegisterMethod(@ReadBufferPointer, 'ReadBuffer');
+    WritePointer := TMyMemoryStream.Write;
+    RegisterMethod(@WritePointer, 'Write');
+    WriteBufferPointer := TMyMemoryStream.WriteBuffer;
+    RegisterMethod(@WriteBufferPointer, 'WriteBuffer');
   end;
 
-  with Exec.AddClass(TStringStream) do
+  with Exec.AddClass(TMyStringStream, 'TStringStream') do
   begin
-    RegisterConstructor(@TStringStream.Create, 'Create');
-    RegisterMethod(@TStringStream.Read, 'Read');
-    RegisterMethod(@TStringStream.ReadString, 'ReadString');
-    RegisterMethod(@TStringStream.Seek, 'Seek');
-    RegisterMethod(@TStringStream.Write, 'Write');
-    RegisterMethod(@TStringStream.WriteString, 'WriteString');
+    RegisterConstructor(@TMyStringStream.Create, 'Create');
+    ReadPointer := TMyStringStream.Read;
+    RegisterMethod(@ReadPointer, 'Read');
+    ReadStringPointer := TMyStringStream.ReadString;
+    RegisterMethod(@ReadStringPointer, 'ReadString');
+    SeekPointer := TMyStringStream.Seek;
+    RegisterMethod(@SeekPointer, 'Seek');
+    WritePointer := TMyStringStream.Write;
+    RegisterMethod(@WritePointer, 'Write');
+    RegisterMethod(@TMyStringStream.WriteString, 'WriteString');
     RegisterPropertyHelper(@DataStringReadHelper, nil, 'DataString');
   end;
 

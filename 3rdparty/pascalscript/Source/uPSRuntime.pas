@@ -1,9 +1,4 @@
 unit uPSRuntime;
-
-// PATCH soldat: don't pollute the build log
-{$warnings off}
-{$hints off}
-
 {$I PascalScript.inc}
 {
 
@@ -12,9 +7,16 @@ Copyright (C) 2000-2009 by Carlo Kok (ck@carlo-kok.com)
 
 }
 
+// @SoldatPatch
+{$WARN 4056 OFF}
+{$WARN 5024 OFF}
+
 interface
 uses
-  SysUtils, uPSUtils{$IFDEF DELPHI6UP}, variants{$ENDIF}{$IFDEF MACOS},uPSCMac{$ELSE}{$IFNDEF PS_NOIDISPATCH}{$IFDEF DELPHI3UP}, ActiveX, Windows{$ELSE}, Ole2{$ENDIF}{$ENDIF}{$ENDIF};
+  {$IFNDEF FPC} {$IFDEF DELPHI2010UP} System.Rtti,{$ENDIF} {$ENDIF}
+  {$IFDEF FPC}{$IFDEF USEINVOKECALL}Rtti,{$ENDIF}{$ENDIF}
+  SysUtils, uPSUtils{$IFDEF DELPHI6UP}, variants{$ENDIF}
+  {$IFNDEF PS_NOIDISPATCH}{$IFDEF DELPHI3UP}, ActiveX, Windows{$ELSE}, Ole2{$ENDIF}{$ENDIF};
 
 
 type
@@ -1103,10 +1105,26 @@ function MakeWString(const s: tbtunicodestring): tbtstring;
 function IDispatchInvoke(Self: IDispatch; PropertySet: Boolean; const Name: tbtString; const Par: array of Variant): Variant;
 {$ENDIF}
 
+// @SoldatPatch: Make TScriptMethodInfo public.
+type
+  PScriptMethodInfo = ^TScriptMethodInfo;
+  TScriptMethodInfo = record
+    Se: TPSExec;
+    ProcNo: Cardinal;
+  end;
+
 
 implementation
+
+// @SoldatPatch
+{$WARN 4056 OFF}
+{$WARN 5024 OFF}
+
 uses
-  TypInfo {$IFDEF DELPHI3UP}{$IFNDEF FPC}{$IFNDEF KYLIX} , ComObj {$ENDIF}{$ENDIF}{$ENDIF}{$IFDEF PS_FPC_HAS_COM}, ComObj{$ENDIF};
+  TypInfo {$IFDEF DELPHI3UP}
+  {$IFNDEF FPC}{$IFDEF MSWINDOWS} , ComObj {$ENDIF}{$ENDIF}{$ENDIF}
+  {$IFDEF PS_FPC_HAS_COM}, ComObj{$ENDIF}
+  {$IF NOT DEFINED (NEXTGEN) AND NOT DEFINED (MACOS) AND  DEFINED (DELPHI_TOKYO_UP)}, AnsiStrings{$IFEND};
 
 {$IFDEF DELPHI3UP }
 resourceString
@@ -1351,40 +1369,45 @@ begin
 end;
 //-------------------------------------------------------------------
 
-{$warnings off}
 {$IFNDEF PS_NOWIDESTRING}
 function wPadl(s: tbtwidestring; i: longInt): tbtwidestring;
 begin
-  result := StringOfChar(tbtwidechar(' '), i - length(s)) + s;
+  // @SoldatPatch
+  result := tbtwidestring(StringOfChar(tbtwidechar(' '), i - length(s))) + s;
 end;
 //-------------------------------------------------------------------
 
 function wPadz(s: tbtwidestring; i: longInt): tbtwidestring;
 begin
-  result := StringOfChar(tbtwidechar('0'), i - length(s)) + s;
+  // @SoldatPatch
+  result := tbtwidestring(StringOfChar(tbtwidechar('0'), i - length(s))) + s;
 end;
 //-------------------------------------------------------------------
 
 function wPadr(s: tbtwidestring; i: longInt): tbtwidestring;
 begin
-  result := s + StringOfChar(tbtwidechar(' '), i - Length(s));
+  // @SoldatPatch
+  result := s + tbtwidestring(StringOfChar(tbtwidechar(' '), i - Length(s)));
 end;
 
 function uPadl(s: tbtunicodestring; i: longInt): tbtunicodestring;
 begin
-  result := StringOfChar(tbtwidechar(' '), i - length(s)) + s;
+  // @SoldatPatch
+  result := tbtwidestring(StringOfChar(tbtwidechar(' '), i - length(s))) + s;
 end;
 //-------------------------------------------------------------------
 
 function uPadz(s: tbtunicodestring; i: longInt): tbtunicodestring;
 begin
-  result := StringOfChar(tbtwidechar('0'), i - length(s)) + s;
+  // @SoldatPatch
+  result := tbtunicodestring(StringOfChar(tbtwidechar('0'), i - length(s))) + s;
 end;
 //-------------------------------------------------------------------
 
 function uPadr(s: tbtunicodestring; i: longInt): tbtunicodestring;
 begin
-  result := s + StringOfChar(tbtwidechar(' '), i - Length(s));
+  // @SoldatPatch
+  result := s + tbtunicodestring(StringOfChar(tbtwidechar(' '), i - Length(s)));
 end;
 
 {$ENDIF}
@@ -1545,9 +1568,9 @@ begin
       tkVariant: begin Result := '[Variant]'; exit; end;
 	  {$IFDEF DELPHI6UP}
 	  {$IFNDEF PS_NOWIDESTRING}
-      tkWString: begin Result := ''''+tbtString(GetWideStrProp(Instance, pp))+''; end;
+      tkWString: begin Result := ''''+tbtString(GetWideStrProp(Instance, pp))+''''; exit; end;
 	  {$IFDEF DELPHI2009UP}
-      tkUString: begin Result := ''''+tbtString(GetUnicodeStrProp(Instance, pp))+''; end;
+      tkUString: begin Result := ''''+tbtString({$IFDEF DELPHI_TOKYO_UP}GetStrProp{$ELSE}GetUnicodeStrProp{$ENDIF}(Instance, pp))+''''; exit; end;
 	  {$ENDIF}
       {$ENDIF}
 	  {$ENDIF}
@@ -1717,9 +1740,9 @@ begin
     {$ENDIF}{$IFNDEF PS_NOINTERFACES}btInterface, {$ENDIF}
     btclass, btPChar, btString: FrealSize := PointerSize;
     btSingle, bts32, btU32: FRealSize := 4;
-    btProcPtr: FRealSize := 2 * sizeof(Pointer) + sizeof(Cardinal);
+    btProcPtr: FRealSize := 3 * sizeof(Pointer);
     btCurrency: FrealSize := Sizeof(Currency);
-    btPointer: FRealSize := 2 * sizeof(Pointer) + sizeof(LongBool); // ptr, type, freewhendone
+    btPointer: FRealSize := 3 * sizeof(Pointer); // ptr, type, freewhendone
     btDouble{$IFNDEF PS_NOINT64}, bts64{$ENDIF}: FrealSize := 8;
     btExtended: FrealSize := SizeOf(Extended);
     btReturnAddress: FrealSize := Sizeof(TBTReturnAddress);
@@ -2538,6 +2561,8 @@ var
     Result := True;
   end;
 
+// @SoldatPatch
+{$PUSH}
 {$WARNINGS OFF}
 
   function LoadTypes: Boolean;
@@ -2939,7 +2964,8 @@ var
     end;
   end;
 {$WARNINGS ON}
-{$warnings off} // PATCH soldat: don't pollute the build log
+// @SoldatPatch
+{$POP}
 
   function LoadVars: Boolean;
   var
@@ -3536,6 +3562,15 @@ begin
   end;
 end;
 
+function PSGetAnsiChar(Src: Pointer; aType: TPSTypeRec): tbtchar;
+var Res : tbtString;
+begin
+  Res := PSGetAnsiString(Src,aType);
+  if Length(Res) > 0 then
+    Result := Res[{$IFDEF DELPHI2009UP}Low(Res){$ELSE}1{$ENDIF}]
+  else
+    Result := #0;
+end;
 
 function PSGetAnsiString(Src: Pointer; aType: TPSTypeRec): tbtString;
 begin
@@ -3568,7 +3603,8 @@ begin
     if (src = nil) or (aType = nil) then raise Exception.Create(RPS_TypeMismatch);
   end;
   case aType.BaseType of
-    btU8: Result := chr(tbtu8(src^));
+    // @SoldatPatch
+    btU8: Result := widechar(chr(tbtu8(src^)));
     btU16: Result := widechar(src^);
     btChar: Result := tbtwidestring(tbtchar(Src^));
     btPchar: Result := tbtwidestring(pansichar(src^));
@@ -3590,7 +3626,8 @@ begin
     if (src = nil) or (aType = nil) then raise Exception.Create(RPS_TypeMismatch);
   end;
   case aType.BaseType of
-    btU8: Result := chr(tbtu8(src^));
+    // @SoldatPatch
+    btU8: Result := widechar(chr(tbtu8(src^)));
     btU16: Result := widechar(src^);
     btChar: Result := tbtunicodestring(tbtchar(Src^));
     btPchar: Result := tbtunicodestring(pansichar(src^));
@@ -3949,8 +3986,8 @@ begin
         for i := 0 to Len -1 do
         begin
           tbtU32(Dest^) := tbtU32(Src^);
-          Dest := Pointer(IPointer(Dest) + 4);
-          Src := Pointer(IPointer(Src) + 4);
+          Dest := Pointer(IPointer(Dest) + PointerSize);
+          Src := Pointer(IPointer(Src) + PointerSize);
           Pointer(Dest^) := Pointer(Src^);
           Dest := Pointer(IPointer(Dest) + PointerSize);
           Src := Pointer(IPointer(Src) + PointerSize);
@@ -4119,9 +4156,9 @@ begin
               Pointer(Dest^) := Pointer(Src^);
               Dest := Pointer(IPointer(Dest) + PointerSize);
               Src := Pointer(IPointer(Src) + PointerSize);
-              LongBool(Dest^) := false;
-              Dest := Pointer(IPointer(Dest) + sizeof(LongBool));
-              Src := Pointer(IPointer(Src) + sizeof(LongBool));
+              Pointer(Dest^) := nil;
+              Dest := Pointer(IPointer(Dest) + PointerSize);
+              Src := Pointer(IPointer(Src) + PointerSize);
             end;
           end else begin
             for i := 0 to Len -1 do
@@ -4152,8 +4189,8 @@ begin
                 Pointer(Pointer(IPointer(Dest) + PointerSize)^) := nil;
                 Pointer(Pointer(IPointer(Dest) + PointerSize2)^) := nil;
               end;
-              Dest := Pointer(IPointer(Dest) + PointerSize*2+sizeof(LongBool));
-              Src := Pointer(IPointer(Src) + PointerSize*2+sizeof(LongBool));
+              Dest := Pointer(IPointer(Dest) + PointerSize*3);
+              Src := Pointer(IPointer(Src) + PointerSize*3);
             end;
           end;
         end;
@@ -4512,7 +4549,7 @@ begin
       btPChar: pansichar(dest^) := pansichar(PSGetAnsiString(Src, srctype));
       btString:
         tbtstring(dest^) := PSGetAnsiString(Src, srctype);
-      btChar: tbtchar(dest^) := tbtchar(PSGetUInt(Src, srctype));
+      btChar: tbtchar(dest^) := PSGetAnsiChar(Src, srctype);
       {$IFNDEF PS_NOWIDESTRING}
       btWideString: tbtwidestring(dest^) := PSGetWideString(Src, srctype);
       btUnicodeString: tbtUnicodeString(dest^) := PSGetUnicodeString(Src, srctype);
@@ -4573,6 +4610,10 @@ begin
         begin
           if srctype.BaseType = btClass then
             TObject(Dest^) := TObject(Src^)
+          else
+          if srctype.BaseType = btVariant then
+            // @SoldatPatch
+            IPointer(Dest^) := Variant(Src^)
           else
           // nx change start
           if (srctype.BaseType in [btS32, btU32]) then
@@ -6771,7 +6812,9 @@ begin
             begin
               if Param >= Cardinal(PSDynArrayGetLength(Pointer(Dest.P^), dest.aType)) then
               begin
-                CMD_Err(erOutOfRange);
+                CMD_Err2(erCustomError,
+                         tbtstring(Format('Out Of Range! Element index is out of Array range: Element Index is %d, Array length = %d',
+                                [Cardinal(PSDynArrayGetLength(Pointer(Dest.P^), dest.aType)),Param])));
                 Result := False;
                 exit;
               end;
@@ -6782,7 +6825,9 @@ begin
             begin
               if Param >= Cardinal(TPSTypeRec_StaticArray(Dest.aType).Size) then
               begin
-                CMD_Err(erOutOfRange);
+                CMD_Err2(erCustomError,
+                         tbtstring(Format('Out Of Range! Element index is out of Array range: Element Index is %d, Array length = %d',
+                                [Cardinal(TPSTypeRec_StaticArray(Dest.aType).Size),Param])));
                 Result := False;
                 exit;
               end;
@@ -6923,7 +6968,9 @@ begin
             begin
               if Cardinal(Param) >= Cardinal(PSDynArrayGetLength(Pointer(Dest.P^), dest.aType)) then
               begin
-                CMD_Err(erOutOfRange);
+                CMD_Err2(erCustomError,
+                         tbtstring(Format('Out Of Range! Element index is out of Array range: Element Index is %d, Array length = %d',
+                                [Cardinal(PSDynArrayGetLength(Pointer(Dest.P^), dest.aType)),Param])));
                 Result := False;
                 exit;
               end;
@@ -6934,7 +6981,9 @@ begin
             begin
               if Param >= Cardinal(TPSTypeRec_StaticArray(Dest.aType).Size) then
               begin
-                CMD_Err(erOutOfRange);
+                CMD_Err2(erCustomError,
+                         tbtstring(Format('Out Of Range! Element index is out of Array range: Element Index is %d, Array length = %d',
+                                [Cardinal(TPSTypeRec_StaticArray(Dest.aType).Size),Param])));
                 Result := False;
                 exit;
               end;
@@ -7063,6 +7112,9 @@ begin
     Result := False;
 end;
 
+// @SoldatPatch
+{$PUSH}
+{$WARN 5093 OFF}
 function TPSExec.RunProcP(const Params: array of Variant; const Procno: Cardinal): Variant;
 var
   ParamList: TPSList;
@@ -7165,6 +7217,8 @@ begin
     FreePIFVariantList(ParamList);
   end;
 end;
+// @SoldatPatch
+{$POP}
 
 function TPSExec.RunProcPN(const Params: array of Variant; const ProcName: tbtString): Variant;
 var
@@ -8721,7 +8775,8 @@ function NVarProc(Caller: TPSExec; p: TPSExternalProcRec; Global, Stack: TPSStac
 var
   tmp: TPSVariantIFC;
 begin
-   case Longint(p.Ext1) of
+   // @SoldatPatch
+   case PtrUInt(p.Ext1) of
     0:
       begin
         if @Caller.FOnSetNVariant = nil then begin Result := False; exit; end;
@@ -8756,7 +8811,8 @@ begin
     -UPSRuntime.DefProc
     -UPSRuntime.TPSExec.RegisterStandardProcs
   }
-  case Longint(p.Ext1) of
+  // @SoldatPatch
+  case PtrUInt(p.Ext1) of
     0: Stack.SetAnsiString(-1, tbtstring(SysUtils.IntToStr(Stack.{$IFNDEF PS_NOINT64}GetInt64{$ELSE}GetInt{$ENDIF}(-2)))); // inttostr
     1: Stack.SetInt(-1, StrToInt(Stack.GetAnsiString(-2))); // strtoint
     2: Stack.SetInt(-1, StrToIntDef(Stack.GetAnsiString(-2), Stack.GetInt(-3))); // strtointdef
@@ -8834,7 +8890,7 @@ begin
     8: // StrSet
       begin
         temp := NewTPSVariantIFC(Stack[Stack.Count -3], True);
-        if (temp.Dta = nil) or not (temp.aType.BaseType in [btString, btUnicodeString]) then 
+        if (temp.Dta = nil) or not (temp.aType.BaseType in [btString, btUnicodeString]) then
         begin
           Result := False;
           exit;
@@ -8881,7 +8937,7 @@ begin
       else if Stack.GetItem(Stack.Count -2)^.FType.BaseType = btWideString then
         Stack.SetWideString(-1, SysUtils.Trim(Stack.GetWideString(-2))) // Trim
       else
-{$ENDIF}      
+{$ENDIF}
         Stack.SetAnsiString(-1, AnsiString(SysUtils.Trim(String(Stack.GetAnsiString(-2)))));// Trim
     13: Stack.SetInt(-1, Length(Stack.GetAnsiString(-2))); // Length
     14: // SetLength
@@ -9263,6 +9319,7 @@ begin
   Result:=true;
   arr:=NewTPSVariantIFC(Stack[Stack.Count-1],true);
   case arr.aType.BaseType of
+    // @SoldatPatch
     btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)-Stack.GetInt(-2));     //Byte
     btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)-Stack.GetInt(-2));     //ShortInt
     btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)-Stack.GetInt(-2));    //Word
@@ -9283,6 +9340,7 @@ begin
   Result:=true;
   arr:=NewTPSVariantIFC(Stack[Stack.Count-1],true);
   case arr.aType.BaseType of
+    // @SoldatPatch
     btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)+Stack.GetInt(-2));     //Byte
     btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)+Stack.GetInt(-2));     //ShortInt
     btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)+Stack.GetInt(-2));    //Word
@@ -9327,7 +9385,7 @@ begin
 end;
 
 
-{$IFNDEF DELPHI6UP}
+{$IFDEF DELPHI6UP}
 function _VarArrayGet(var S : Variant; I : Integer) : Variant;
 begin
   result := VarArrayGet(S, [I]);
@@ -9396,7 +9454,7 @@ begin
   {$ENDIF}
   RegisterDelphiFunction(@Null, 'Null', cdRegister);
   RegisterDelphiFunction(@VarIsNull, 'VarIsNull', cdRegister);
-  RegisterDelphiFunction(@VarType, 'VarType', cdRegister);
+  RegisterDelphiFunction(@{$IFDEF FPC}variants.{$ENDIF}VarType, 'VarType', cdRegister);
   {$IFNDEF PS_NOIDISPATCH}
   RegisterDelphiFunction(@IDispatchInvoke, 'IdispatchInvoke', cdregister);
   {$ENDIF}
@@ -9427,7 +9485,7 @@ begin
   RegisterFunctionName('WStrSet', DefProc, Pointer(44), nil);
 
   {$ENDIF}
-  {$IFNDEF DELPHI6UP}
+  {$IFDEF DELPHI6UP}
   RegisterDelphiFunction(@_VarArrayGet, 'VarArrayGet', cdRegister);
   RegisterDelphiFunction(@_VarArraySet, 'VarArraySet', cdRegister);
   {$ENDIF}
@@ -9437,7 +9495,8 @@ end;
 
 function ToString(p: PansiChar): tbtString;
 begin
-  SetString(Result, p, StrLen(p));
+  SetString(Result, p,
+  {$IF NOT DEFINED (NEXTGEN) AND NOT DEFINED (MACOS) AND DEFINED (DELPHI_TOKYO_UP)}AnsiStrings.StrLen(p){$ELSE}Length(p){$IFEND});
 end;
 
 function IntPIFVariantToVariant(Src: pointer; aType: TPSTypeRec; var Dest: Variant): Boolean;
@@ -9460,6 +9519,9 @@ function IntPIFVariantToVariant(Src: pointer; aType: TPSTypeRec; var Dest: Varia
     end;
     result := true;
   end;
+// @SoldatPatch
+var
+  ip: IPointer;
 begin
   if aType = nil then
   begin
@@ -9508,6 +9570,11 @@ begin
     btWideChar: Dest := tbtwidestring(tbtwidechar(src^));
     btUnicodeString: Dest := tbtUnicodeString(src^);
   {$ENDIF}
+    // @SoldatPatch
+    btRecord: begin
+      ip := Dest;
+      CopyRecordContents(Pointer(ip), Src, TPSTypeRec_Record(aType));
+    end;
   else
     begin
       Result := False;
@@ -9695,7 +9762,7 @@ begin
 {$ENDIF}
       end;
     end;
-    datap := Pointer(IPointer(datap)+ (2*sizeof(Pointer)+sizeof(Longbool)));
+    datap := Pointer(IPointer(datap)+ (3*sizeof(Pointer)));
     p := PansiChar(p) + Result^.ElementSize;
   end;
 end;
@@ -9811,7 +9878,7 @@ begin
 {$ENDIF}
 {$ENDIF}
       end;
-      datap := Pointer(IPointer(datap)+ (2*sizeof(Pointer)+sizeof(LongBool)));
+      datap := Pointer(IPointer(datap)+ (3*sizeof(Pointer)));
       p := Pointer(IPointer(p) + Cardinal(v^.ElementSize));
     end;
     FreeMem(v.Data, v.ElementSize * v.ItemCount);
@@ -9820,41 +9887,55 @@ begin
 end;
 
 
-{$ifndef FPC}
-{$IFDEF Delphi6UP}
-  {$IFDEF CPUX64}
-    {$include x64.inc}
+{$IFNDEF FPC}
+  {$UNDEF _INVOKECALL_INC_}
+  {$UNDEF USEINVOKECALL}
+
+  {$IFDEF DELPHI23UP}
+  {$IFNDEF AUTOREFCOUNT}
+  {$IFNDEF PS_USECLASSICINVOKE}
+    {$DEFINE USEINVOKECALL}
+  {$ENDIF}
+  {$ENDIF}
+  {$ENDIF}
+
+  {$IFDEF USEINVOKECALL}
+    {$include InvokeCall.inc}
+    {$DEFINE _INVOKECALL_INC_}
   {$ELSE}
-  {$include x86.inc}
+    {$IFDEF Delphi6UP}
+      {$IFDEF CPUX64}
+        {$include x64.inc}
+      {$ELSE}
+        {$include x86.inc}
+      {$ENDIF}
+    {$ELSE}
+      {$include x86.inc}
+    {$ENDIF}
   {$ENDIF}
 {$ELSE}
-  {$include x86.inc}
-{$ENDIF}
-{$else}
-{$IFDEF Delphi6UP}
-  {$if defined(cpu86)}
+  
+  {$IFDEF USEINVOKECALL}
+    {$include InvokeCall.inc}
+    {$DEFINE _INVOKECALL_INC_}
+  {$ELSE}
+  {$IFDEF Delphi6UP}
+    {$if defined(cpu86)}
+      {$include x86.inc}
+    {$elseif defined(cpupowerpc)}
+      {$include powerpc.inc}
+    {$elseif defined(cpuarm)}
+      {$include arm.inc}
+    {$elseif defined(CPUX86_64)}
+      {$include x64.inc}
+    {$else}
+      {$fatal Pascal Script is not supported for your architecture at the moment!}
+    {$ifend}
+  {$ELSE}
     {$include x86.inc}
-  {$elseif defined(cpupowerpc)}
-    {$include powerpc.inc}
-  {$elseif defined(cpuarm)}
-    {$include arm.inc}
-  {$elseif defined(CPUX86_64)}
-    {$include x64.inc}
-  {$else}
-    {$fatal Pascal Script is not supported for your architecture at the moment!}
-  {$ifend}
-{$ELSE}
-{$include x86.inc}
+  {$ENDIF}
+  {$ENDIF}
 {$ENDIF}
-{$endif}
-
-type
-  PScriptMethodInfo = ^TScriptMethodInfo;
-  TScriptMethodInfo = record
-    Se: TPSExec;
-    ProcNo: Cardinal;
-  end;
-
 
 function MkMethod(FSE: TPSExec; No: Cardinal): TMethod;
 begin
@@ -9920,7 +10001,8 @@ var
 begin
  {$IFDEF FPC}
  x := Pointer(TObject(FSelf).ClassType) + vmtMethodStart;
- Result := x^[Longint(Ptr)];
+ // @SoldatPatch
+ Result := x^[PtrUInt(Ptr)];
  {$ELSE}
  Result := PPtrArr(PPointer(FSelf)^)^[Longint(Ptr)];
  {$ENDIF}
@@ -9934,7 +10016,8 @@ var
 begin
   {$IFDEF FPC}
   x := Pointer(FSelf) + vmtMethodStart;
-  Result := x^[Longint(Ptr)];
+  // @SoldatPatch
+  Result := x^[PtrUInt(Ptr)];
   {$ELSE}
   Result := PPtrArr(FSelf)^[Longint(Ptr)];
   {$ENDIF}
@@ -10268,7 +10351,7 @@ begin
   // the VMT class pointer in EDX so they are effectively swaped
   // using register calling convention
   {$IFDEF CPU64}
-  PPSVariantU32(IntVal).Data := Int64(FSelf);
+  PPSVariantS64(IntVal).Data := Int64(FSelf);
   {$ELSE}
   PPSVariantU32(IntVal).Data := Cardinal(FSelf);
   {$ENDIF}
@@ -10297,7 +10380,11 @@ begin
     v := NewPPSVariantIFC(Stack[CurrStack + 1], True);
   end else v := nil;
   try
+    {$IFDEF _INVOKECALL_INC_}
+    Result := Caller.InnerfuseCall(FSelf, p.Ext1, TPSCallingConvention(Integer(cc) or 64), MyList, v);
+    {$ELSE}
     Result := Caller.InnerfuseCall(FSelf, p.Ext1, {$IFDEF FPC}TPSCallingConvention(Integer(cc) or 64){$ELSE}cc{$ENDIF}, MyList, v);
+    {$ENDIF}
   finally
     DisposePPSVariantIFC(v);
     DisposePPSVariantIFCList(mylist);
@@ -10382,7 +10469,11 @@ begin
     v := NewPPSVariantIFC(Stack[CurrStack + 1], True);
   end else v := nil;
   try
+    {$IFDEF _INVOKECALL_INC_}
+    Result := Caller.InnerfuseCall(FSelf, VirtualClassMethodPtrToPtr(p.Ext1, FSelf), TPSCallingConvention(Integer(cc) or 128), MyList, v);
+    {$ELSE}
     Result := Caller.InnerfuseCall(FSelf, VirtualClassMethodPtrToPtr(p.Ext1, FSelf), {$IFDEF FPC}TPSCallingConvention(Integer(cc) or 128){$ELSE}cc{$ENDIF}, MyList, v);
+    {$ENDIF}
   finally
     DisposePPSVariantIFC(v);
     DisposePPSVariantIFCList(mylist);
@@ -10647,7 +10738,7 @@ begin
 {$IFNDEF DELPHI2009UP}btUnicodeString,{$ENDIF}
   btWideString: SetWideStrProp(TObject(FSelf), P.Ext1, tbtWidestring(n.dta^));
 {$IFDEF DELPHI2009UP}
-  btUnicodeString: SetUnicodeStrProp(TObject(FSelf), P.Ext1, tbtUnicodestring(n.dta^));
+  btUnicodeString: {$IFDEF DELPHI_TOKYO_UP}SetStrProp{$ELSE}SetUnicodeStrProp{$ENDIF}(TObject(FSelf), P.Ext1, tbtUnicodestring(n.dta^));
 {$ENDIF}
   {$ENDIF}
 {$ENDIF}
@@ -10704,7 +10795,7 @@ begin
 	  {$IFDEF DELPHI6UP}
 {$IFNDEF PS_NOWIDESTRING}
         {$IFDEF DELPHI2009UP}
-        btUnicodeString: tbtUnicodeString(n.dta^) := GetUnicodeStrProp(TObject(FSelf), P.Ext1);
+        btUnicodeString: tbtUnicodeString(n.dta^) := {$IFDEF DELPHI_TOKYO_UP}GetStrProp{$ELSE}GetUnicodeStrProp{$ENDIF}(TObject(FSelf), P.Ext1);
         {$ELSE}
         btUnicodeString,
         {$ENDIF}
@@ -11348,7 +11439,7 @@ begin
  end;
  pp := fExceptionStack[fExceptionStack.Count-1];
  result := pp.ExceptionObject;
-end; 
+end;
 
 { TPSRuntimeClass }
 
@@ -11586,11 +11677,12 @@ end;
 
 {$ifdef CPUX64}
 
-{$DEFINE empty_methods_handler}
+{.$DEFINE empty_methods_handler}
 {$ENDIF}
 
 {$ifdef fpc}
-  {$if defined(cpupowerpc) or defined(cpuarm) or defined(cpu64)}
+  // @SoldatPatch
+  {$if defined(cpupowerpc) or defined(cpuarm)}
     {$define empty_methods_handler}
   {$ifend}
 {$endif}
@@ -11605,6 +11697,22 @@ end;
 function MyAllMethodsHandler2(Self: PScriptMethodInfo; const Stack: PPointer; _EDX, _ECX: Pointer): Integer; forward;
 
 procedure MyAllMethodsHandler;
+{$ifdef CPUX64}
+//  On entry:
+//  RCX = Self pointer
+//  RDX, R8, R9 = param1 .. param3
+//  STACK = param4... paramcount
+asm
+  PUSH  R9
+  MOV   R9,R8     // R9:=_ECX
+  MOV   R8,RDX    // R8:=_EDX
+  MOV   RDX, RSP  // RDX:=Stack
+  SUB   RSP, 20h
+  CALL MyAllMethodsHandler2
+  ADD   RSP, 20h  //Restore stack
+  POP   R9
+end;
+{$else}
 //  On entry:
 //     EAX = Self pointer
 //     EDX, ECX = param1 and param2
@@ -11623,6 +11731,7 @@ asm
   mov [esp], edx
   mov eax, ecx
 end;
+{$endif}
 
 function ResultAsRegister(b: TPSTypeRec): Boolean;
 begin
@@ -11702,7 +11811,7 @@ end;
 procedure PutOnFPUStackExtended(ft: extended);
 asm
 //  fstp tbyte ptr [ft]
-  fld tbyte ptr [ft]
+  //fld tbyte ptr [ft]
 
 end;
 
@@ -11890,7 +11999,8 @@ begin
         if res^.FType.BaseType <> btS64 then
 {$ENDIF}
           //CopyArrayContents(Pointer(Longint(Stack)-PointerSize2), @PPSVariantData(res)^.Data, 1, Res^.FType);
-          CopyArrayContents(Pointer(Longint(Stack)-Longint(PointerSize2)), @PPSVariantData(res)^.Data, 1, Res^.FType);
+          // @SoldatPatch
+          CopyArrayContents(Pointer(PtrUInt(Stack)-PtrUInt(PointerSize2)), @PPSVariantData(res)^.Data, 1, Res^.FType);
       end;
     end;
     DestroyHeapVariant(res);
@@ -12689,7 +12799,8 @@ begin
        begin
          if i = DISP_E_EXCEPTION then
            {$IFDEF FPC}
-           raise Exception.Create(ExceptInfo.Source+': '+ExceptInfo.Description)
+           // @SoldatPatch
+           raise Exception.Create(tbtstring(ExceptInfo.Source)+': '+tbtstring(ExceptInfo.Description))
            {$ELSE}
            raise Exception.Create(ExceptInfo.bstrSource+': '+ExceptInfo.bstrDescription)
            {$ENDIF}
@@ -12728,11 +12839,8 @@ end;
 
 procedure TPSTypeRec_ProcPtr.CalcSize;
 begin
-  FRealSize := 2 * sizeof(Pointer) + Sizeof(Cardinal);
+  FRealSize := 3 * sizeof(Pointer);
 end;
 
 end.
-
-{$warnings on}
-{$hints on}
 

@@ -948,7 +948,6 @@ begin
   // ScriptCore cvars
   sc_enable := TBooleanCvar.Add('sc_enable', 'Enables/Disables scripting', True, True, [CVAR_SERVER, CVAR_INITONLY], nil);
   sc_onscriptcrash := TStringCvar.Add('sc_onscriptcrash', 'What action to take when a script crashes. Available parameters are recompile, shutdown, ignore and disable', 'ignore', 'ignore', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 10);
-  sc_maxscripts := TIntegerCvar.Add('sc_maxscripts', 'Set the maximum number of scripts which can be loaded by this server.', 0, 255, [CVAR_SERVER, CVAR_INITONLY], nil, 0, 255);
   sc_safemode := TBooleanCvar.Add('sc_safemode', 'Enables/Disables Safe Mode for Scripts', False, False, [CVAR_SERVER, CVAR_INITONLY], nil);
   sc_allowdlls := TBooleanCvar.Add('sc_allowdlls', 'Enables/Disables loading external dlls', False, False, [CVAR_SERVER, CVAR_INITONLY], nil);
   sc_sandboxed := TIntegerCvar.Add('sc_sandboxed', 'ScriptCore global sandbox level ', 2, 2, [CVAR_SERVER, CVAR_INITONLY], nil, 0, 2);
@@ -987,7 +986,7 @@ begin
   sv_hostname := TStringCvar.Add('sv_hostname', 'Name of the server', 'Soldat Server', 'Soldat Server', [CVAR_SERVER, CVAR_SYNC], nil, 0, 24);
   sv_website := TStringCvar.Add('sv_website', 'Server website', '', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 255);
 
-  sv_killlimit := TIntegerCvar.Add('sv_killlimit', 'Game point limit', 10, 10, [CVAR_SYNC], nil, 0, 9999);
+  sv_killlimit := TIntegerCvar.Add('sv_killlimit', 'Game point limit', 10, 10, [CVAR_SERVER, CVAR_SYNC], nil, 0, 9999);
   sv_downloadurl := TStringCvar.Add('sv_downloadurl', 'URL from which clients can download missing assets', '', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 100);
   sv_pure := TBooleanCvar.Add('sv_pure', 'Requires clients to use the same game files (.smod) as the server', True, True, [CVAR_SERVER, CVAR_SYNC], nil);
 

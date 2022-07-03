@@ -1,7 +1,7 @@
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 name: soldat
 jobs:
-  linux:
+  linux-build-smoke:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -23,23 +23,47 @@ jobs:
           cmake .. -DBUILD_CLIENT=0 -DCMAKE_INSTALL_PREFIX=./soldatserver -DCMAKE_BUILD_TYPE=Release
           make install
 
-      # We use .tar to preserve file permissions.
-      - name: Tar files
+  appimage:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Otherwise `git describe --tags` doesn't work
+
+      - name: Install dependencies
         run: |
-          tar -cvf soldat.tar -C build soldat
-          tar -cvf soldatserver.tar -C build soldatserver
+          sudo apt-get update
+          sudo apt-get install cmake git fpc libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6
 
-      - name: Upload game build
+      - name: Compile soldat
+        run: |
+          export BUILD_ID=${GITHUB_SHA::8}
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_INSTALL_PREFIX=./soldat/AppDir -DCMAKE_BUILD_TYPE=Release
+          make
+          make install
+          make clean
+          cmake .. -DBUILD_CLIENT=0 -DCMAKE_INSTALL_PREFIX=./soldatserver/AppDir -DCMAKE_BUILD_TYPE=Release
+          make install
+
+      - name: Build AppImages
+        run: |
+          ./.github/workflows/make-appimage.sh build/soldat client
+          ./.github/workflows/make-appimage.sh build/soldatserver server
+
+      - name: Upload client AppImage
         uses: actions/upload-artifact@v2
         with:
-          name: soldat-linux-x64
-          path: soldat.tar
+          name: appimages
+          path: build/soldat/*.AppImage
 
-      - name: Upload server-only build
+      - name: Upload server AppImage
         uses: actions/upload-artifact@v2
         with:
-          name: soldatserver-linux-x64
-          path: soldatserver.tar
+          name: appimages
+          path: build/soldatserver/*.AppImage
 
   windows:
     runs-on: windows-latest
@@ -80,7 +104,7 @@ jobs:
 
       - name: Build soldat
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           set PATH=%PATH%;C:\fpc\3.0.4\bin\i386-win32
           set OPENSSL_ROOT_DIR=C:\vcpkg\installed\x64-windows
           set PHYSFSDIR=C:\vcpkg\installed\x64-windows
@@ -122,3 +146,37 @@ jobs:
         with:
           name: macos-build
           path: build/soldat
+
+  continuous:
+    runs-on: ubuntu-latest
+    needs: [appimage, windows, macos]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Zip build dirs back together
+        run: |
+          zip -r windows-build.zip windows-build
+          zip -r macos-build.zip macos-build
+
+      - name: Chmod and zip AppImages
+        run: |
+          chmod u+x appimages/*.AppImage
+          zip linux-appimage.zip appimages/Soldat-*.AppImage
+          zip linux-server-only-appimage.zip appimages/SoldatServer-*.AppImage
+
+      - name: Upload release
+        if: github.ref == 'refs/heads/develop'
+        uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
+        with:
+          tag_name: continuous
+          files: |
+            windows-build.zip
+            macos-build.zip
+            linux-appimage.zip
+            linux-server-only-appimage.zip
+          body: Soldat 1.8 alpha dev build
+          name: Soldat 1.8 alpha dev build

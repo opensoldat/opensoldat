@@ -7,7 +7,7 @@ uses
   Vector,
 
   // soldat units
-  {$IFDEF SERVER}GameNetworkingSockets,{$ENDIF}
+  {$IFDEF SERVER}Steam,{$ENDIF}
   Net, Sprites, Constants;
 
 {$IFDEF SERVER}

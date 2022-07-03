@@ -4,12 +4,16 @@ option(ADD_ASSETS "Include soldat.smod and font file" True)
 option(BUILD_CLIENT "Build client" True)
 option(BUILD_SERVER "Build server" True)
 option(BUILD_STEAM "Build steam version" False)
+option(BUILD_GNS "Build GameNetworkingSockets" True)
 option(CROSS_LINUX_64 "Cross compile to Linux 64bit" False)
 option(CROSS_LINUX_32 "Cross compile to Linux 32bit" False)
 option(CROSS_WINDOWS_64 "Cross compile to Windows x86_64" False)
 option(CROSS_WINDOWS_32 "Cross compile to Windows i386" False)
 option(CROSS_DARWIN_64 "Cross compile to macOS x86_64" False)
 option(CROSS_DARWIN_32 "Cross compile to macOS i386" False)
+
+option(ADD_BFT "Copy BFT test to scripts directory" False)
+option(ADD_FFI_FUZZ "Enable ScriptCore FFI fuzz tests" False)
 
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
@@ -160,7 +164,9 @@ if(BUILD_CLIENT OR BUILD_SERVER)
     file(WRITE ${PROJECT_BINARY_DIR}/bin/steam_appid.txt "638490")
   else()
     # GameNetworkingSockets
-    add_subdirectory(shared/libs/GameNetworkingSockets)
+    if(BUILD_GNS)
+      add_subdirectory(shared/libs/GameNetworkingSockets)
+    endif()
   endif()
 endif()
 
@@ -186,7 +192,7 @@ endif()
 # to provide all .so files on linux - users can get those easily from package managers.
 install(
   DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/
-  DESTINATION ${target_full_library_install_dir}
+  DESTINATION ${target_library_install_dir}
   FILES_MATCHING
   PATTERN "*.sh" EXCLUDE
   PATTERN "*.bat" EXCLUDE
@@ -197,15 +203,15 @@ install(
   PATTERN "*.dylib"
   # Ignore subdirectories, just in case... it's not necessary on clean build,
   # only if you ran client/server executables before installing.
-  REGEX "configs|demos|logs|maps|mods|screens" EXCLUDE
+  REGEX "configs|demos|logs|maps|mods|screens|scripts" EXCLUDE
 )
 
 if(ADD_ASSETS)
   install(
     DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/
-    # FIXME: should be target_full_data_install_dir, but unsupported by soldat
+    # FIXME: should be target_data_install_dir, but unsupported by soldat
     # (needs wrapper script or some equivalent global config)
-    DESTINATION ${target_full_binary_install_dir}
+    DESTINATION "${target_binary_install_dir}"
     FILES_MATCHING
     PATTERN "*.smod"
   )

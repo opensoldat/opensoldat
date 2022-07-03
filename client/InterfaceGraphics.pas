@@ -51,7 +51,7 @@ uses
   Client, SysUtils, Types, TraceLog,
   Game, Math, Calc, Version, Util, PolyMap,
   Demo, Weapons, GameStrings, Net, GameMenus, Gfx, GameRendering, PhysFS,
-  ClientGame, Console, MapGraphics, GameNetworkingSockets;
+  ClientGame, Console, MapGraphics, Steam;
 
 type
   TInterfaceRelInfo = record
@@ -256,7 +256,7 @@ var
   AddrFile: PHYSFS_Buffer;
   AddrRec: TInterface;
 const
-  CUSTOM_INTERFACE_DIR = 'custom-intercases/';
+  CUSTOM_INTERFACE_DIR = 'custom-interfaces/';
 begin
   Result := False;
   IntAlign.Weapon    := 0;
@@ -1892,7 +1892,7 @@ var
   Spr: PGfxSprite;
   WideScreenCut: Boolean;
   Str: WideString;
-  NetworkStats: SteamNetworkingQuickConnectionStatus;
+  NetworkStats: SteamNetConnectionRealTimeStatus_t;
   SniperLine: Boolean;
 begin
   SpriteMe := NIL;
@@ -2959,7 +2959,7 @@ begin
             DemoPlayer.Header.TicksNum]), 460 * x, 80 * y);
       end else
       begin
-        NetworkStats := UDP.GetQuickConnectionStatus(UDP.Peer);
+        NetworkStats := UDP.GetConnectionRealTimeStatus(UDP.Peer);
         SetFontStyle(FONT_SMALLEST);
         GfxDrawText('Ping: ' + NetworkStats.m_nPing.ToString, 460 * x, 40 * y);
         GfxDrawText('Quality: Local ' + Single(NetworkStats.m_flConnectionQualityLocal * 100).ToString(ffFixed, 7, 0) +

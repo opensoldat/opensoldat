@@ -13,7 +13,7 @@ uses
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
   // soldat units
-  LogFile, GameNetworkingSockets, Net, Sprites, Weapons, Constants, GameStrings,
+  LogFile, Steam, Net, Sprites, Weapons, Constants, GameStrings,
   Cvar, PhysFS;
 
 procedure ClientRequestGame;
@@ -30,7 +30,6 @@ procedure ClientHandleSyncCvars(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  {$IFDEF STEAM} Steam, SteamTypes, {$ENDIF}
   GameRendering, Client, Game, Demo, ClientGame, GameMenus, strutils,
   NetworkUtils, NetworkClientSprite, FileClient, Sha1, Anims, Sound;
 
@@ -70,6 +69,7 @@ begin
   StrPCopy(RequestMsg.Password, JoinPassword);
   UDP.SendData(RequestMsg^, Size, k_nSteamNetworkingSend_Reliable);
   RequestingGame := True;
+  ReceivedUnAccepted := False;
 end;
 
 // SEND INFO ABOUT NAME, COLOR, PASS etc. TO SERVER OR CHANGE TEAM
@@ -312,7 +312,7 @@ begin
       NewPlayer.Team := PlayersListMsg.Team[i];
 
       {$IFDEF STEAM}
-      NewPlayer.SteamID := TSteamID(PlayersListMsg.SteamID[i]);
+      NewPlayer.SteamID := CSteamID(PlayersListMsg.SteamID[i]);
       {$ENDIF}
 
       NewPlayer.SecWep := 0;
@@ -459,7 +459,7 @@ end;
 procedure ClientHandleUnAccepted(NetMessage: PSteamNetworkingMessage_t);
 var
   UnAcceptedMsg: PMsg_UnAccepted;
-  Text: WideString;
+  Text: String;
   TextLen: Integer;
 begin
   if not VerifyPacketLargerOrEqual(sizeof(UnAcceptedMsg), NetMessage^.m_cbSize, MsgID_UnAccepted) then
@@ -468,7 +468,7 @@ begin
   UnAcceptedMsg := PMsg_UnAccepted(NetMessage^.m_pData);
   TextLen := NetMessage^.m_cbSize - SizeOf(TMsg_UnAccepted);
 
-  if (TextLen > 0) and (UnAcceptedMsg.Text[TextLen-1] = #0) then
+  if (TextLen > 0) and (PChar(UnAcceptedMsg.Text)[TextLen-1] = #0) then
     Text := PChar(UnAcceptedMsg.Text)
   else
     Text := '';
@@ -502,6 +502,7 @@ begin
       RenderGameInfo(_('Rejected by Anti-Cheat:') + ' ' + Text);
   end;
 
+  ReceivedUnAccepted := True;
   ClientDisconnect;
   ExitToMenu;
 end;

@@ -11,7 +11,7 @@ uses
   {$ENDIF}
 
   // soldat units
-  GameNetworkingSockets, Net, Sprites, Constants;
+  Steam, Net, Sprites, Constants;
 
 procedure ServerHandlePlayerDisconnect(NetMessage: PSteamNetworkingMessage_t);
 procedure ServerMapChange(ID: Byte);

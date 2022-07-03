@@ -147,6 +147,7 @@ var
   Temp: String;
   Split, Ret: TStringArray;
 begin
+  Ret := Default(TStringArray);
   Split := Default(TStringArray);
   if log_level.Value = 3 then
     WriteLn('|| Split();');

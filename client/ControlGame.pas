@@ -306,7 +306,7 @@ begin
   if KeyMods = KM_NONE then case KeyCode of
     SDL_SCANCODE_ESCAPE: begin
       if not ShouldRenderFrames then
-        ShutDown;
+        GameLoopRun := False;
     end;
     SDL_SCANCODE_PAGEDOWN: begin
       if FragsMenuShow then

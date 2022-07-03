@@ -25,8 +25,13 @@ type
     Stack: Pointer;        // 56
     Items: {$IFDEF FPC}PtrUInt{$ELSE}IntPtr{$ENDIF}; // 64
     SingleBits: Integer; // 72
+    // @SoldatPatch
+    Patch_btProcPtr: Boolean;  // 76
   end;
 
+// @SoldatPatch
+{$PUSH}
+{$WARN 7104 OFF}
 procedure x64call(
   Address: Pointer;
   out _RAX: IPointer;
@@ -61,6 +66,17 @@ asm
   push [rdx]
 {$ENDIF}
   dec rcx
+  // @SoldatPatch
+  or rcx, rcx
+  jnz @next
+@Patch_RegisterEventPropertyHelper:
+  cmp byte ptr [rax+76], 0  // Patch_btProcPtr
+  jz @next
+  push rbx
+  lea rbx, [rsp+8]   // load address of previous pushed item
+  mov [rax+8], rbx   // store the address to be invoked by call rax later
+  pop rbx
+@next:
   sub rdx,8
 @compareitems:
   or rcx, rcx
@@ -130,16 +146,19 @@ asm
 
   mov rax, [rbp-32] //registers
 
-  bt [rax+72], 8                 // if atype.basetype  <> btSingle
+  // @SoldatPatch
+  bt dword ptr [rax+72], 8       // if atype.basetype  <> btSingle
   jnc @g5                        //
   cvtss2sd xmm1,xmm0             // convert single to double  into xmm1
   mov rdx,[rbp-24]               // @_xmm0  ;rbp -24
-  movsd qword ptr [rdx], xmm1    // save  xmm1 to param _xmm0
+  // @SoldatPatch
+  movsd [rdx], xmm1              // save  xmm1 to param _xmm0
   jmp @g5e                       // exit if atype.basetype  = btSingle
 
   @g5:                           //else "if atype.basetype  = btSingle"
     mov rdx,[rbp-24]             // @_xmm0  ;rbp -24
-    movsd qword ptr [rdx], xmm0  // save  xmm1 to param _xmm0
+    // @SoldatPatch
+    movsd [rdx], xmm0            // save  xmm1 to param _xmm0
 
   @g5e:
 
@@ -147,6 +166,8 @@ asm
   leave
   ret
 end;
+// @SoldatPatch
+{$POP}
 {$ELSE}
 type
   TRegisters = packed record
@@ -164,8 +185,13 @@ type
     _XMM6,              // 88
     _XMM7: Double;      // 96
     SingleBits: Integer; //104
+    // @SoldatPatch
+    _ST0: Extended;     // 108
   end;
 
+// @SoldatPatch
+{$PUSH}
+{$WARN 7104 OFF}
 procedure x64call(
   Address: Pointer;
   out _RAX: IPointer;
@@ -205,9 +231,9 @@ asm
 @work:
 {$IFDEF FPC}
   push qword ptr [rcx]
-{$ELSE} 
+{$ELSE}
   push [rcx]
-{$ENDIF}  
+{$ENDIF}
   dec r8
   sub rcx,8
 @compareitems:
@@ -216,8 +242,9 @@ asm
 
   // copy registers
   // xmm0
+  // @SoldatPatch
   mov rdx,[rbp-24]
-  bt [rax+104], 0
+  bt dword ptr [rax+104], 0
   jnc @skipxmm0
   cvtsd2ss xmm0,[rdx]
   jmp @skipxmm0re
@@ -226,7 +253,8 @@ asm
   @skipxmm0re:
 
   // xmm1
-  bt [rax+104], 1
+  // @SoldatPatch
+  bt dword ptr [rax+104], 1
   jnc @skipxmm1
   cvtsd2ss xmm1,[rax+48]
   jmp @skipxmm1re
@@ -235,7 +263,8 @@ asm
   @skipxmm1re:
 
   // xmm2
-  bt [rax+104], 2
+  // @SoldatPatch
+  bt dword ptr [rax+104], 2
   jnc @skipxmm2
   cvtsd2ss xmm2,[rax+56]
   jmp @skipxmm2re
@@ -244,7 +273,8 @@ asm
   @skipxmm2re:
 
   // xmm3
-  bt [rax+104], 3
+  // @SoldatPatch
+  bt dword ptr [rax+104], 3
   jnc @skipxmm3
   cvtsd2ss xmm3,[rax+64]
   jmp @skipxmm3re
@@ -253,7 +283,8 @@ asm
   @skipxmm3re:
 
   // xmm4
-  bt [rax+104], 4
+  // @SoldatPatch
+  bt dword ptr [rax+104], 4
   jnc @skipxmm4
   cvtsd2ss xmm4,[rax+72]
   jmp @skipxmm4re
@@ -262,7 +293,8 @@ asm
   @skipxmm4re:
 
   // xmm5
-  bt [rax+104], 5
+  // @SoldatPatch
+  bt dword ptr [rax+104], 5
   jnc @skipxmm5
   cvtsd2ss xmm5,[rax+80]
   jmp @skipxmm5re
@@ -271,7 +303,8 @@ asm
   @skipxmm5re:
 
   // xmm6
-  bt [rax+104], 6
+  // @SoldatPatch
+  bt dword ptr [rax+104], 6
   jnc @skipxmm6
   cvtsd2ss xmm6,[rax+88]
   jmp @skipxmm6re
@@ -279,8 +312,9 @@ asm
   movq xmm6,[rax+88]         // move quadword to xmm6 from Registers._XMM6
   @skipxmm6re:
 
-// xmm7
-  bt [rax+104], 7
+  // xmm7
+  // @SoldatPatch
+  bt dword ptr [rax+104], 7
   jnc @skipxmm7
   cvtsd2ss xmm7,[rax+96]
   jmp @skipxmm7re
@@ -307,21 +341,32 @@ asm
   // add RSP, 32 // undo the damage done earlier
 
   // copy result back
-  mov rsi, [rbp-16]          // _RAX parameter
+  mov rsi, [rbp-16]           // _RAX parameter
   mov [rsi], RAX
-  mov rsi, [rbp-24]          // _XMM0 parameter
+  mov rsi, [rbp-24]           // _XMM0 parameter
 
   // xmm0 res
-  mov rax, [rbp-32]          // Registers parameter
-  bt [rax+104], 8            // if atype.basetype  <> btSingle
-  jnc @skipres               // then goto skipres else begin
-  cvtss2sd xmm1,xmm0         // convert single to double  into xmm1
-  movq [rsi],xmm1            // move quadword to _XMM0
-  jmp @skipresre             // end
+  // @SoldatPatch
+  mov rax, qword ptr [rbp-32] // Registers parameter
+  bt dword ptr [rax+104], 8   // if atype.basetype  <> btSingle
+  jnc @skipres                // then goto skipres else begin
+  cvtss2sd xmm1,xmm0          // convert single to double  into xmm1
+  movq [rsi],xmm1             // move quadword to _XMM0
+  jmp @skipresre              // end
   @skipres:
-  movq [rsi],xmm0            // move quadword to _XMM0
+  movq [rsi],xmm0             // move quadword to _XMM0
   @skipresre:
 
+  // @SoldatPatch
+  // st0 res
+  bt qword ptr [rax+104], 9  // if atype.basetype  <> btExtended
+  jnc @skipextres            // then goto skipextres else begin
+  fstp tbyte ptr [rax+108]   // pop real10 to Registers._ST0
+  @skipextres:
+
+  // @SoldatPatch: For returning record results
+  mov [rax+16], rdx
+  movq [rax+48], xmm1
 
   pop rdx
   pop r9   // xmm0
@@ -330,8 +375,160 @@ asm
   leave
   ret
 end;
+// @SoldatPatch
+{$POP}
 {$ENDIF}
 
+// @SoldatPatch
+{$IFNDEF WINDOWS}
+// System V x86-64 storage class implementation.
+// This is decently tested although there may still be edge cases missing.
+// It does not support vector or complex types (neither does PascalScript in
+// general). Also static arrays and sets probably don't work.
+type
+  PSVStorageClass = ^TSVStorageClass;
+  TSVStorageClass = (SVNO_CLASS, SVSSE, SVINT, SVX87, SVMEM);
+
+const
+  MAX_CLASSES = 2;
+
+type
+  TStorageClasses = Array[0..MAX_CLASSES - 1] of TSVStorageClass;
+
+// Get alignment of non-aggregate types.
+function GetSimpleAlignment(AType: TPSTypeRec): Integer;
+begin
+  case AType.BaseType of
+    btU8, btS8, btChar:
+      Result := 1;
+    btU16, btS16, {$IFNDEF PS_NOWIDESTRING}btWideChar{$ENDIF}:
+      Result := 2;
+    btU32, btS32, btSingle:
+      Result := 4;
+    btString, btArray, btPointer, btPChar, {$IFNDEF PS_NOINT64}btS64,{$ENDIF}
+    {$IFNDEF PS_NOWIDESTRING}btWideString,{$ENDIF} btStaticArray, btSet,
+    btCurrency, btClass, btInterface, btUnicodeString, btEnum, btExtClass,
+    btDouble, btProcPtr, btNotificationVariant:
+      Result := 8;
+    btExtended:
+      Result := 16;
+  end;
+end;
+
+procedure ClassifyStorageInt(var Classes: TStorageClasses; AType: TPSTypeRec;
+  var Alignment: Integer; Offset: Integer);
+var
+  i, SubAlignment: Integer;
+  StartEightByte, EndEightByte: Integer;
+  Rec: TPSTypeRec_Record;
+  FieldClass: TSVStorageClass;
+begin
+  // Simple case
+  if AType.BaseType <> btRecord then
+  begin
+    Alignment := GetSimpleAlignment(AType);
+
+    case AType.BaseType of
+      btSingle, btDouble:
+        FieldClass := SVSSE;
+      btU8, btS8, btU16, btS16, btU32, btS32, btString, btArray, btPointer,
+      btPChar, {$IFNDEF PS_NOINT64}btS64,{$ENDIF} btChar,
+      {$IFNDEF PS_NOWIDESTRING}btWideString, btWideChar,{$ENDIF} btProcPtr,
+      btStaticArray, btVariant, btSet, btCurrency, btClass, btInterface,
+      btNotificationVariant, btUnicodeString, btEnum, btExtClass:
+        FieldClass := SVINT;
+      btExtended:
+        FieldClass := SVX87;
+    end;
+
+    if Offset mod Alignment <> 0 then
+      FieldClass := SVMEM;
+
+    StartEightByte := Offset div 8;
+    // Alignment is the same as type size for non-aggregate types we support.
+    EndEightByte := (Offset + Alignment - 1) div 8;
+
+    for i := StartEightByte to EndEightByte do
+    begin
+      if i > High(Classes) then
+        Break;
+
+      if (FieldClass <> SVX87) and (Classes[i] = SVX87) then
+        Classes[i] := SVMEM;
+      if Ord(FieldClass) > Ord(Classes[i]) then
+        Classes[i] := FieldClass;
+    end;
+
+    Exit;
+  end;
+
+  // Record case
+  Rec := TPSTypeRec_Record(AType);
+
+  Rec.CalcSize;
+  if Rec.RealSize > 16 then
+    Classes[0] := SVMEM;
+
+  Alignment := 0;
+
+  for i := 0 to Rec.FieldTypes.Count - 1 do
+  begin
+    ClassifyStorageInt(Classes, Rec.FieldTypes[i], SubAlignment,
+      Offset + IPointer(Rec.RealFieldOffsets[i]));
+
+    if SubAlignment > Alignment then
+      Alignment := SubAlignment;
+  end;
+
+  for i := Low(Classes) to High(Classes) do
+  begin
+    if Classes[i] = SVMEM then
+    begin
+      Classes[0] := SVMEM;
+      Break;
+    end;
+  end;
+end;
+
+procedure ClassifyStorage(var Classes: TStorageClasses; AType: TPSTypeRec;
+  var Alignment: Integer);
+var
+  i: Integer;
+begin
+  for i := Low(Classes) to High(Classes) do
+    Classes[i] := SVNO_CLASS;
+
+  ClassifyStorageInt(Classes, AType, Alignment, 0);
+end;
+
+function ContainsManaged(AType: TPSTypeRec): Boolean;
+var
+  i: Integer;
+  Rec: TPSTypeRec_Record;
+begin
+  if AType.BaseType in [btString, btWideString, btUnicodeString, btVariant] then
+  begin
+    Result := True;
+    Exit;
+  end
+  else if AType.BaseType <> btRecord then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  Rec := TPSTypeRec_Record(AType);
+  for i := 0 to Rec.FieldTypes.Count - 1 do
+    if ContainsManaged(Rec.FieldTypes[i]) then
+      Exit;
+
+  Result := False;
+end;
+{$ENDIF}
+
+// @SoldatPatch
+{$PUSH}
+{$WARN 5027 OFF}
 function TPSExec.InnerfuseCall(_Self, Address: Pointer; CallingConv: TPSCallingConvention; Params: TPSList; res: PPSVariantIFC): Boolean;
 var
   Stack: array of Byte;
@@ -340,11 +537,33 @@ _XMM0: Double;
   Registers: TRegisters;
 {$IFNDEF WINDOWS}
   RegUsageFloat: Byte;
+  // @SoldatPatch
+  Alignment: Integer;
+  StorageClasses: TStorageClasses;
+  p: Pointer;
+  ResultReg, ResultRegFloat: Integer;
+  ResContainsManaged: Boolean;
+{$ENDIF}
+{$IFDEF FPC}
+  IsConstructor,IsVirtualCons: Boolean;
 {$ENDIF}
   RegUsage: Byte;
   CallData: TPSList;
   I: Integer;
   pp: ^Byte;
+
+  procedure StoreStack(const aData; Len: Integer);
+  var
+    p: Pointer;
+  begin
+    SetLength(Stack, Length(Stack)+Len);
+    p := @Stack[Length(Stack)-Len];
+    Move(aData, p^, Len);
+
+    // @SoldatPatch
+    if Length(Stack) mod 8 <> 0 then
+      SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
+  end;
 
   function rp(p: PPSVariantIFC): PPSVariantIFC;
   begin
@@ -362,7 +581,6 @@ _XMM0: Double;
   end;
 {$IFDEF WINDOWS}
   procedure StoreReg(data: IPointer);   overload;
-  var p: Pointer;
   begin
     case RegUsage of
       0: begin inc(RegUsage); Registers._RCX:=Data; end;
@@ -370,15 +588,13 @@ _XMM0: Double;
       2: begin inc(RegUsage); Registers._R8:=Data; end;
       3: begin inc(RegUsage); Registers._R9:=Data; end;
     else begin
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      IPointer(p^) := data;
+      // @SoldatPatch
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
   {$ELSE}
   procedure StoreReg(data: IPointer);   overload;
-  var p: Pointer;
   begin
     case RegUsage of
       0: begin inc(RegUsage); Registers._RDI:=Data; end;
@@ -388,30 +604,15 @@ _XMM0: Double;
       4: begin inc(RegUsage); Registers._R8:=Data; end;
       5: begin inc(RegUsage); Registers._R9:=Data; end;
     else begin
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      IPointer(p^) := data;
+      // @SoldatPatch
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
 {$ENDIF}
 
-  procedure StoreStack(const aData; Len: Integer);
-  var
-    p: Pointer;
-  begin
-    if Len > 8 then
-      if Length(Stack) mod 16 <> 0 then begin
-        SetLength(Stack, Length(Stack)+ (16-(Length(Stack) mod 16)));
-      end;
-    SetLength(Stack, Length(Stack)+Len);
-    p := @Stack[Length(Stack)-Len];
-    Move(aData, p^, Len);
-  end;
-
 {$IFDEF WINDOWS}
   procedure StoreReg(data: Double); overload;
-  var p: Pointer;
   begin
     case RegUsage of
       0: begin inc(RegUsage); _XMM0:=Data; end;
@@ -419,14 +620,12 @@ _XMM0: Double;
       2: begin inc(RegUsage); Registers._XMM2:=Data; end;
       3: begin inc(RegUsage); Registers._XMM3:=Data; end;
     else begin
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      Double(p^) := data;
+      // @SoldatPatch
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
   procedure StoreReg(data: Single); overload;
-  var p: Pointer;
   begin
     case RegUsage of
       0: begin inc(RegUsage); Registers.SingleBits := Registers.SingleBits or 1;_XMM0:=Data; end;
@@ -434,15 +633,13 @@ _XMM0: Double;
       2: begin inc(RegUsage); Registers.SingleBits := Registers.SingleBits or 4;Registers._XMM2:=Data; end;
       3: begin inc(RegUsage); Registers.SingleBits := Registers.SingleBits or 8; Registers._XMM3:=Data; end;
     else begin
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      Double(p^) := data;
+      // @SoldatPatch
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
   {$ELSE}
   procedure StoreReg(data: Double); overload;
-  var p: Pointer;
   begin
     case RegUsageFloat of
       0: begin inc(RegUsageFloat); _XMM0:=Data; end;
@@ -454,14 +651,12 @@ _XMM0: Double;
       6: begin inc(RegUsageFloat); Registers._XMM6:=Data; end;
       7: begin inc(RegUsageFloat); Registers._XMM7:=Data; end;
     else begin
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      Double(p^) := data;
+      // @SoldatPatch
+      StoreStack(data, SizeOf(data));
     end;
     end;
   end;
   procedure StoreReg(data: Single); overload;
-  var p: Pointer;
   begin
     case RegUsageFloat of
       0: begin inc(RegUsageFloat); Registers.SingleBits := Registers.SingleBits or 1; _XMM0:=Data; end;
@@ -473,11 +668,31 @@ _XMM0: Double;
       6: begin inc(RegUsageFloat); Registers.SingleBits := Registers.SingleBits or 64; Registers._XMM6:=Data; end;
       7: begin inc(RegUsageFloat); Registers.SingleBits := Registers.SingleBits or 128; Registers._XMM7:=Data; end;
     else begin
-      SetLength(Stack, Length(Stack)+8);
-      p := @Stack[LEngth(Stack)-8];
-      Double(p^) := data;
+      // @SoldatPatch
+      StoreStack(data, SizeOf(data));
     end;
     end;
+  end;
+  {$ENDIF}
+  // @SoldatPatch
+  {$IFNDEF WINDOWS}
+  procedure DoClassifyStorage(var Classes: TStorageClasses; AType: TPSTypeRec;
+    var Alignment: Integer; RegUsageCheck, RegUsageFloatCheck: Integer);
+  var
+    i: Integer;
+  begin
+    ClassifyStorage(Classes, AType, Alignment);
+
+    for i := Low(Classes) to High(Classes) do
+    begin
+      if Classes[i] = SVINT then
+        Inc(RegUsageCheck);
+      if Classes[i] = SVSSE then
+        Inc(RegUsageFloatCheck);
+    end;
+
+    if (RegUsageCheck > 6) or (RegUsageFloatCheck > 8) then
+      Classes[0] := SVMEM;
   end;
   {$ENDIF}
   function GetPtr(fVar: PPSVariantIFC): Boolean;
@@ -486,6 +701,12 @@ _XMM0: Double;
     //UseReg: Boolean;
     //tempstr: tbtstring;
     p: Pointer;
+    // @SoldatPatch
+    {$IFNDEF WINDOWS}
+    ip: IPointer;
+    i, Alignment: Integer;
+    StorageClasses: TStorageClasses;
+    {$ENDIF}
   begin
     Result := False;
     if FVar = nil then exit;
@@ -561,18 +782,55 @@ _XMM0: Double;
           end;
         btRecord:
           begin
-            if fvar^.aType.RealSize <= sizeof(IPointer) then
+            // @SoldatPatch
+            {$IFDEF WINDOWS}
+            fvar^.aType.CalcSize;
+            if fvar^.aType.RealSize in [1, 2, 4, 8] then
               StoreReg(IPointer(fvar.dta^))
             else
               StoreReg(IPointer(fVar.Dta));
+            {$ELSE}
+            fvar^.aType.CalcSize;
+            DoClassifyStorage(StorageClasses, fVar.aType, Alignment, RegUsage, RegUsageFloat);
+            if (StorageClasses[0] = SVMEM) or (StorageClasses[0] = SVX87) then
+            begin
+              // Because the records are packed, only align to 8...
+              StoreStack(fvar.Dta^, fVar^.aType.RealSize);
+            end
+            else
+            begin
+              p := fVar.Dta;
+              for i := Low(StorageClasses) to High(StorageClasses) do
+              begin
+                if StorageClasses[i] = SVINT then
+                begin
+                  StoreReg(IPointer(p^));
+                  Inc(p, 8);
+                end;
+                if StorageClasses[i] = SVSSE then
+                begin
+                  StoreReg(Double(p^));
+                  Inc(p, 8);
+                end;
+              end;
+            end;
+            {$ENDIF}
           end;
         btVariant
         , btStaticArray:
           begin
             StoreReg(IPointer(fVar.Dta));
           end;
-        btExtended, btDouble: {8 bytes} begin
+        // @SoldatPatch
+        btDouble: {8 bytes} begin
             StoreReg(double(fvar.dta^));
+          end;
+        btExtended: begin
+            {$IFDEF WINDOWS}
+            StoreReg(double(fvar.dta^));
+            {$ELSE}
+            StoreStack(fvar.dta^, SizeOf(Extended));
+            {$ENDIF}
           end;
         btCurrency: {8 bytes} begin
             StoreReg(IPointer(fvar.dta^));
@@ -613,10 +871,25 @@ _XMM0: Double;
 
         btProcPtr:
           begin
+            // @SoldatPatch
+            {$IFNDEF WINDOWS}
+            // Code pointer
+            ip := IPointer(@MyAllMethodsHandler);
+            StoreReg(ip);
+            // Data pointer
+            ip := IPointer(GetMethodInfoRec(Self, LongInt(FVar.Dta^)));
+            StoreReg(ip);
+            {$ELSE}
             GetMem(p, PointerSize2);
             TMethod(p^) := MKMethod(Self, Longint(FVar.Dta^));
+            if Length(Stack) mod 16 <> 0 then
+              SetLength(Stack, Length(Stack)+ (16-(Length(Stack) mod 16)));
             StoreStack(p^, Pointersize2);
             FreeMem(p);
+            // @SoldatPatch
+            if RegUsage < 4 then
+              Registers.Patch_btProcPtr := True;
+            {$ENDIF}
           end;
 
         bts64:
@@ -628,6 +901,26 @@ _XMM0: Double;
     Result := True;
   end;
 begin
+  // @SoldatPatch
+  {$IFDEF WINDOWS}
+  Registers.Patch_btProcPtr := False;
+  {$ELSE}
+  for i := Low(StorageClasses) to High(StorageClasses) do
+    StorageClasses[i] := SVNO_CLASS;
+  {$ENDIF}
+  {$IFDEF FPC}
+  if (Integer(CallingConv) and 128) <> 0 then begin
+    IsVirtualCons := true;
+    CAllingConv := TPSCallingConvention(Integer(CallingConv) and not 128);
+  end else
+    IsVirtualCons:= false;
+  if (Integer(CallingConv) and 64) <> 0 then begin
+    IsConstructor := true;
+    CAllingConv := TPSCallingConvention(Integer(CallingConv) and not 64);
+  end else
+    IsConstructor := false;
+  {$ENDIF}
+
   InnerfuseCall := False;
   if Address = nil then
     exit; // need address
@@ -637,7 +930,7 @@ begin
   if res <> nil then
     res.VarParam := true;
   try
-{$IFNDEF WINDOWS}
+    {$IFNDEF WINDOWS}
     (*_RSI := 0;
     _RDI := 0;
     _XMM4 := 0;
@@ -645,79 +938,167 @@ begin
     _XMM6 := 0;
     _XMM7 := 0;*)
     RegUsageFloat := 0;
-{$ENDIF}
-  _XMM0 := 0;
-  FillChar(Registers, Sizeof(REgisters), 0);
+    {$ENDIF}
+    _XMM0 := 0;
+    FillChar(Registers, Sizeof(REgisters), 0);
     _RAX := 0;
     RegUsage := 0;
+
+    {$IF DEFINED (fpc) and (fpc_version >= 3)} // FIX FOR FPC constructor calls
+    if IsConstructor then begin
+      if not GetPtr(rp(Params[0])) then exit; // this goes first
+      DisposePPSVariantIFC(Params[0]);
+      Params.Delete(0);
+    end;
+    {$ENDIF}
+
     if assigned(_Self) then begin
       StoreReg(IPointer(_Self));
     end;
-    if assigned(res) and (res^.atype.basetype = btSingle) then begin
-      Registers.Singlebits  := Registers.Singlebits or 256;
-    end;
-{$IFDEF PS_RESBEFOREPARAMETERS}
-   if assigned(res) then begin
-    case res^.aType.BaseType of
-      {$IFDEF x64_string_result_as_varparameter}
-      btstring, btWideString, btUnicodeString,
-      {$ENDIF}
-      btInterface, btArray, btVariant, btStaticArray:
-        GetPtr(res);
-      btRecord,
-      btSet:
-        begin
-          if res.aType.RealSize > PointerSize then GetPtr(res);
-        end;
-    end;
-   end;
-{$ENDIF}
-    for I := 0 to Params.Count - 1 do
-    begin
-      if not GetPtr(rp(Params[I])) then Exit;
-    end;
+
+    // @SoldatPatch
+    {$IFDEF PS_RESBEFOREPARAMETERS}
     if assigned(res) then begin
-{$IFNDEF PS_RESBEFOREPARAMETERS}
       case res^.aType.BaseType of
         {$IFDEF x64_string_result_as_varparameter}
         btstring, btWideString, btUnicodeString,
         {$ENDIF}
         btInterface, btArray, btVariant, btStaticArray:
           GetPtr(res);
-        btRecord,
+        // @SoldatPatch
+        btRecord: begin
+          {$IFNDEF WINDOWS}
+          res^.aType.CalcSize;
+          DoClassifyStorage(StorageClasses, res^.aType, Alignment, RegUsage, RegUsageFloat);
+          ResContainsManaged := ContainsManaged(res^.aType);
+          if (StorageClasses[0] = SVMEM) or ResContainsManaged then
+            StoreReg(IPointer(res.dta));
+          {$ELSE}
+          res^.aType.CalcSize;
+          if not (res^.aType.RealSize in [1, 2, 4, 8]) then
+          begin
+            if not GetPtr(res) then
+              Exit;
+          end;
+          {$ENDIF}
+        end;
         btSet:
           begin
+            // @SoldatPatch
+            res.aType.CalcSize;
             if res.aType.RealSize > PointerSize then GetPtr(res);
           end;
       end;
-{$ENDIF}
+    end;
+    {$ENDIF}
+
+    if assigned(res) and (res^.atype.basetype = btSingle) then begin
+      Registers.Singlebits  := Registers.Singlebits or 256;
+    end;
+
+    for I := 0 to Params.Count - 1 do
+    begin
+      if not GetPtr(rp(Params[I])) then Exit;
+    end;
+
+    if assigned(res) then begin
+      // @SoldatPatch
+      {$IFNDEF WINDOWS}
+      if (res^.aType.BaseType = btExtended) or (StorageClasses[0] = SVX87) then
+        Registers.SingleBits := Registers.SingleBits or 512;
+      {$ENDIF}
+      {$IFNDEF PS_RESBEFOREPARAMETERS}
+      case res^.aType.BaseType of
+        {$IFDEF x64_string_result_as_varparameter}
+        btstring, btWideString, btUnicodeString,
+        {$ENDIF}
+        btInterface, btArray, btVariant, btStaticArray:
+          GetPtr(res);
+        //btRecord,
+        btSet:
+          begin
+            // @SoldatPatch
+            res.aType.CalcSize;
+            if res.aType.RealSize > PointerSize then GetPtr(res);
+          end;
+      end;
+      {$ENDIF}
       {$IFDEF WINDOWS}
       if (length(Stack) mod 16) <> 0 then begin
         SetLength(Stack, Length(Stack)+16 - (Length(Stack) mod 16));
       end;
-      {$ENDIF} 
+      {$ENDIF}
       if Stack = nil then pp := nil else pp := @Stack[Length(Stack) -8];
-{$IFDEF WINDOWS}
+      {$IFDEF WINDOWS}
       Registers.Stack := pp;
       Registers.Items := Length(Stack) div 8;
       x64call(Address, _RAX, _XMM0, Registers);
-{$ELSE}
+      {$ELSE}
       x64call(Address, _RAX, Registers, pp, Length(Stack) div 8, _XMM0);
-{$ENDIF}
+      {$ENDIF}
+
       case res^.aType.BaseType of
         btRecord, btSet:
           begin
-            case res.aType.RealSize of
-              1: byte(res.Dta^) := _RAX;
-              2: word(res.Dta^) := _RAX;
-              3,
-              4: Longint(res.Dta^) := _RAX;
-              5,6,7,8: IPointer(res.dta^) := _RAX;
+            // @SoldatPatch
+            {$IFNDEF WINDOWS}
+            if StorageClasses[0] = SVX87 then
+            begin
+              PExtended(res.Dta)^ := Registers._ST0;
+            end
+            else if (StorageClasses[0] <> SVMEM) and (not ResContainsManaged) then
+            begin
+              ResultReg := 0;
+              ResultRegFloat := 0;
+              p := res.Dta;
+              for i := Low(StorageClasses) to High(StorageClasses) do
+              begin
+                if StorageClasses[i] = SVINT then
+                begin
+                  if ResultReg = 0 then
+                    PUint64(p)^ := _RAX
+                  else if ResultReg = 1 then
+                    PUint64(p)^ := Registers._RDX;
+
+                  Inc(ResultReg);
+                end;
+                if StorageClasses[i] = SVSSE then
+                begin
+                  if ResultRegFloat = 0 then
+                    PDouble(p)^ := _XMM0
+                  else if ResultRegFloat = 1 then
+                    PDouble(p)^ := Registers._XMM1;
+
+                  Inc(ResultRegFloat);
+                end;
+
+                Inc(p, 8);
+              end;
             end;
+            {$ELSE}
+            if (res.aType.BaseType = btRecord) and (res.aType.RealSize in [1, 2, 4, 8]) then
+            begin
+              IPointer(res.dta^) := _RAX;
+            end else if res.aType.BaseType = btSet then
+            begin
+              case res.aType.RealSize of
+                1: byte(res.Dta^) := _RAX;
+                2: word(res.Dta^) := _RAX;
+                3,
+                4: Longint(res.Dta^) := _RAX;
+                5,6,7,8: IPointer(res.dta^) := _RAX;
+              end;
+            end;
+            {$ENDIF}
           end;
         btSingle:      tbtsingle(res.Dta^) := _XMM0;
         btDouble:      tbtdouble(res.Dta^) := _XMM0;
-        btExtended:    tbtextended(res.Dta^) := _XMM0;
+        // @SoldatPatch
+        {$IFNDEF WINDOWS}
+        btExtended:    tbtextended(res.Dta^) := Registers._ST0;
+        {$ELSE}
+        btExtended:    tbtdouble(res.Dta^) := _XMM0;
+        {$ENDIF}
         btchar,btU8, btS8:    tbtu8(res.dta^) := _RAX;
         btWideChar, btu16, bts16:  tbtu16(res.dta^) := _RAX;
         btClass : IPointer(res.dta^) := _RAX;
@@ -742,16 +1123,17 @@ begin
       if (length(Stack) mod 16) <> 0 then begin
         SetLength(Stack, Length(Stack)+16 - (Length(Stack) mod 16));
       end;
-      {$ENDIF} 
-	if Stack = nil then pp := nil else pp := @Stack[Length(Stack) -8];
-{$IFDEF WINDOWS}
+      {$ENDIF}
+        if Stack = nil then pp := nil else pp := @Stack[Length(Stack) -8];
+        {$IFDEF WINDOWS}
         Registers.Stack := pp;
         Registers.Items := Length(Stack) div 8;
         x64call(Address, _RAX, _XMM0, Registers);
-{$ELSE}
+        {$ELSE}
        x64call(Address, _RAX, Registers, pp, Length(Stack) div 8, _XMM0);
-{$ENDIF}
+        {$ENDIF}
     end;
+
     Result := True;
   finally
     for i := CallData.Count -1 downto 0 do
@@ -764,5 +1146,7 @@ begin
     CallData.Free;
   end;
 end;
+// @SoldatPatch
+{$POP}
 
 

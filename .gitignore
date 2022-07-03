@@ -15,8 +15,6 @@
 *.lps
 *.o
 *.ppu
-*.res
-*.rsj
 *.saved
 *.so
 *.stat

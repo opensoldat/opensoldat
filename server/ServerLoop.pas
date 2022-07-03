@@ -2,8 +2,8 @@ unit ServerLoop;
 
 interface
 
-  procedure UpdateFrame;
-  procedure AppOnIdle;
+procedure UpdateFrame;
+procedure AppOnIdle;
 
 implementation
 

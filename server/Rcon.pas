@@ -7,7 +7,7 @@ uses
 
 const
   REFRESHX_HEADER_CHARS = 10;
-  RCON_AUTH_TIMEOUT = 5000; // Authentication timeout (ms)
+  RCON_AUTH_TIMEOUT = 5000;  // Authentication timeout (ms)
 
 type
   TAdminServerConnectionThread = class;
@@ -102,13 +102,13 @@ type
 implementation
 
 uses
-  {$IFDEF STEAM}SteamTypes,{$ENDIF}
+  {$IFDEF STEAM}Steam,{$ENDIF}
   {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
   {$IFDEF UNIX}BaseUnix,{$ENDIF}
   Server, Util, TraceLog, Command, Game, ServerHelper, Cvar, Version, Math;
 
 {$PUSH}
-{$WARN 5024 OFF} // Parameter "$1" not used
+{$WARN 5024 OFF}  // Parameter "$1" not used
 function TSockAddrHelper.GetIPString(): String;
 begin
   Result := NetAddrToStr(Self.sin_addr);
@@ -319,7 +319,7 @@ begin
         begin
           RefreshMsgX.Name[i] := Sprite[SortedPlayers[i].PlayerNum].Player.Name;
           {$IFDEF STEAM}
-          RefreshMsgX.hwid[i] := IntToStr(TSteamID(Sprite[SortedPlayers[i].PlayerNum].Player.SteamID).GetAccountID);
+          RefreshMsgX.hwid[i] := IntToStr(CSteamID(Sprite[SortedPlayers[i].PlayerNum].Player.SteamID).m_unAccountID);
           {$ELSE}
           RefreshMsgX.hwid[i] := Sprite[SortedPlayers[i].PlayerNum].Player.hwid;
           {$ENDIF}

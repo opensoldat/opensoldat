@@ -6,7 +6,6 @@ uses
   sysutils, Classes, fphttpserver, strutils;
 
 type
-
   THTTPServer = class(TFPHTTPServer)
   public
     property Address;
@@ -37,7 +36,8 @@ var
 
 implementation
 
-uses Server{$IFDEF STEAM}, Steam{$ENDIF};
+uses
+  Server{$IFDEF STEAM}, Steam{$ENDIF};
 
 constructor THTTPServerThread.Create(AAddress: AnsiString; APort: Word; const OnRequest: THTTPServerRequestHandler);
 begin
@@ -125,6 +125,7 @@ var
 begin
   Uri := ARequest.URI;
 
+  // TODO: dont hardcode version
   if (ARequest.UserAgent <> 'soldatclient/1.8.0') or (ARequest.Method <> 'GET') then
   begin
     AResponse.Free;
@@ -159,7 +160,7 @@ begin
   begin
     WriteLn('[FileServer] File request: ' + Uri + ' by ' + ARequest.RemoteAddress);
     try
-      F:=TFileStream.Create(ServePath, fmOpenRead or fmShareDenyWrite);
+      F := TFileStream.Create(ServePath, fmOpenRead or fmShareDenyWrite);
       try
         AResponse.SetCustomHeader('content-disposition', 'attachment; filename="' + ExtractFileName(F.FileName) + '"');
         AResponse.ContentType := 'application/octet-stream';

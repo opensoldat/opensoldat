@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------- //
-// FreeType bindings (based on 2.6.1 for x86/x64)
+// FreeType bindings (based on 2.11.1 for x86/x64)
 
 unit FreeType;
 {$NOTES OFF}
@@ -118,6 +118,7 @@ const
   FT_OUTLINE_IGNORE_DROPOUTS = $0008;
   FT_OUTLINE_SMART_DROPOUTS  = $0010;
   FT_OUTLINE_INCLUDE_STUBS   = $0020;
+  FT_OUTLINE_OVERLAP         = $0040;
   FT_OUTLINE_HIGH_PRECISION  = $0100;
   FT_OUTLINE_SINGLE_PASS     = $0200;
 
@@ -133,6 +134,7 @@ const
   FT_RASTER_FLAG_AA          = 1;
   FT_RASTER_FLAG_DIRECT      = 2;
   FT_RASTER_FLAG_CLIP        = 4;
+  FT_RASTER_FLAG_SDF         = 8;
 
 type
   FT_Vector_ptr        = ^FT_Vector;
@@ -381,6 +383,8 @@ const
   FT_Err_Could_Not_Find_Context        = $99;
   FT_Err_Invalid_Post_Table_Format     = $9A;
   FT_Err_Invalid_Post_Table            = $9B;
+  FT_Err_DEF_In_Glyf_Bytecode          = $9C;
+  FT_Err_Missing_Bitmap                = $9D;
   FT_Err_Syntax_Error                  = $A0;
   FT_Err_Stack_Underflow               = $A1;
   FT_Err_Ignore                        = $A2;
@@ -407,10 +411,11 @@ type
     FT_ENCODING_MS_SYMBOL      = $73796d62,          // ['s', 'y', 'm', 'b']
     FT_ENCODING_UNICODE        = $756e6963,          // ['u', 'n', 'i', 'c']
     FT_ENCODING_SJIS           = $736a6973,          // ['s', 'j', 'i', 's']
-    FT_ENCODING_GB2312         = $67622020,          // ['g', 'b', ' ', ' ']
+    FT_ENCODING_PRC            = $67622020,          // ['g', 'b', ' ', ' ']
     FT_ENCODING_BIG5           = $62696735,          // ['b', 'i', 'g', '5']
     FT_ENCODING_WANSUNG        = $77616e73,          // ['w', 'a', 'n', 's']
     FT_ENCODING_JOHAB          = $6a6f6861,          // ['j', 'o', 'h', 'a']
+    FT_ENCODING_GB2312         = FT_ENCODING_PRC,
     FT_ENCODING_MS_SJIS        = FT_ENCODING_SJIS,
     FT_ENCODING_MS_GB2312      = FT_ENCODING_GB2312,
     FT_ENCODING_MS_BIG5        = FT_ENCODING_BIG5,
@@ -439,6 +444,7 @@ type
     FT_RENDER_MODE_MONO,
     FT_RENDER_MODE_LCD,
     FT_RENDER_MODE_LCD_V,
+    FT_RENDER_MODE_SDF,
     FT_RENDER_MODE_MAX
   );
 
@@ -464,6 +470,7 @@ const
   FT_FACE_FLAG_CID_KEYED                 = 1 shl 12;
   FT_FACE_FLAG_TRICKY                    = 1 shl 13;
   FT_FACE_FLAG_COLOR                     = 1 shl 14;
+  FT_FACE_FLAG_VARIATION                 = 1 shl 15;
 
   FT_STYLE_FLAG_ITALIC                   = 1;
   FT_STYLE_FLAG_BOLD                     = 2;
@@ -491,6 +498,7 @@ const
   FT_LOAD_NO_AUTOHINT                    = 1 shl 15;
   FT_LOAD_COLOR                          = 1 shl 20;
   FT_LOAD_COMPUTE_METRICS                = 1 shl 21;
+  FT_LOAD_BITMAP_METRICS_ONLY            = 1 shl 22;
   FT_LOAD_ADVANCE_ONLY                   = 1 shl  8;
   FT_LOAD_SBITS_ONLY                     = 1 shl 14;
 
@@ -519,6 +527,7 @@ type
   FT_Library_ptr   = ^FT_Library;
   FT_Face_ptr      = ^FT_Face;
   FT_Open_Args_ptr = ^FT_Open_Args;
+  FT_Parameter_ptr = ^FT_Parameter;
 
   FT_Glyph_Metrics = record
     width:        FT_Pos;
@@ -628,7 +637,7 @@ type
     lib:               FT_Library;
     face:              FT_Face;
     next:              FT_GlyphSlot;
-    reserved:          FT_UInt;
+    glyph_index:       FT_UInt;
     generic:           FT_Generic;
     metrics:           FT_Glyph_Metrics;
     linearHoriAdvance: FT_Fixed;
@@ -691,6 +700,8 @@ function FT_IS_FIXED_WIDTH(face: FT_Face): Boolean;
 function FT_HAS_FIXED_SIZES(face: FT_Face): Boolean;
 function FT_HAS_GLYPH_NAMES(face: FT_Face): Boolean;
 function FT_HAS_MULTIPLE_MASTERS(face: FT_Face): Boolean;
+function FT_IS_NAMED_INSTANCE(face: FT_Face): Boolean;
+function FT_IS_VARIATION(face: FT_Face): Boolean;
 function FT_IS_CID_KEYED(face: FT_Face): Boolean;
 function FT_IS_TRICKY(face: FT_Face): Boolean;
 function FT_HAS_COLOR(face: FT_Face): Boolean;
@@ -715,6 +726,7 @@ function  FT_Set_Pixel_Sizes(face: FT_Face; pixel_width: FT_UInt; pixel_height: 
 function  FT_Load_Glyph(face: FT_Face; glyph_index: FT_UInt; load_flags: FT_Int32): FT_Error; cdecl; external FTLIB;
 function  FT_Load_Char(face: FT_Face; char_code: FT_ULong; load_flags: FT_Int32): FT_Error; cdecl; external FTLIB;
 procedure FT_Set_Transform(face: FT_Face; matrix: FT_Matrix_ptr; delta: FT_Vector_ptr); cdecl; external FTLIB;
+procedure FT_Get_Transform(face: FT_Face; matrix: FT_Matrix_ptr; delta: FT_Vector_ptr); cdecl; external FTLIB;
 function  FT_Render_Glyph(slot: FT_GlyphSlot; render_mode: FT_Render_Mode): FT_Error; cdecl; external FTLIB;
 function  FT_Get_Kerning(face: FT_Face; left_glyph: FT_UInt; right_glyph: FT_UInt; kern_mode: FT_UInt; akerning: FT_Vector_ptr): FT_Error; cdecl; external FTLIB;
 function  FT_Get_Track_Kerning(face: FT_Face; point_size: FT_Fixed; degree: FT_Int; akerning: FT_Fixed_ptr): FT_Error; cdecl; external FTLIB;
@@ -726,6 +738,7 @@ function  FT_Get_Charmap_Index(charmap: FT_CharMap): FT_Int; cdecl; external FTL
 function  FT_Get_Char_Index(face: FT_Face; charcode: FT_ULong): FT_UInt; cdecl; external FTLIB;
 function  FT_Get_First_Char(face: FT_Face; agindex: FT_UInt_ptr): FT_ULong; cdecl; external FTLIB;
 function  FT_Get_Next_Char(face: FT_Face; char_code: FT_ULong; agindex: FT_UInt_ptr): FT_ULong; cdecl; external FTLIB;
+function  FT_Face_Properties(face: FT_Face; num_properties: FT_UInt; properties: FT_Parameter_ptr): FT_Error; cdecl; external FTLIB;
 function  FT_Get_Name_Index(face: FT_Face; glyph_name: FT_String_ptr): FT_UInt; cdecl; external FTLIB;
 function  FT_Get_SubGlyph_Info(glyph: FT_GlyphSlot; sub_index: FT_UInt; p_index: FT_Int_ptr; p_flags: FT_UInt_ptr; p_arg1: FT_Int_ptr; p_arg2: FT_Int_ptr; p_transform: FT_Matrix_ptr): FT_Error; cdecl; external FTLIB;
 function  FT_Get_FSType_Flags(face: FT_Face): FT_UShort; cdecl; external FTLIB;
@@ -802,6 +815,16 @@ end;
 function FT_HAS_MULTIPLE_MASTERS(face: FT_Face): Boolean;
 begin
   Result := (face.face_flags and FT_FACE_FLAG_MULTIPLE_MASTERS) <> 0;
+end;
+
+function FT_IS_NAMED_INSTANCE(face: FT_Face): Boolean;
+begin
+  Result := (face.face_index and $7FFF0000) <> 0;
+end;
+
+function FT_IS_VARIATION(face: FT_Face): Boolean;
+begin
+  Result := (face.face_flags and FT_FACE_FLAG_VARIATION) <> 0;
 end;
 
 function FT_IS_CID_KEYED(face: FT_Face): Boolean;

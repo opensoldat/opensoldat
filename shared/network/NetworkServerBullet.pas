@@ -4,7 +4,7 @@ interface
 
 {$IFDEF SERVER}
 uses
-  GameNetworkingSockets;
+  Steam;
 {$ENDIF}
 
 procedure ServerBulletSnapshot(i: Byte; {$IFDEF SERVER}ToNum: Byte;{$ENDIF} Forced: Boolean);
@@ -47,7 +47,7 @@ begin
 
   for j := 1 to MAX_SPRITES do
     if Sprite[j].Active and
-       (Sprite[j].Player.ControlMethod = HUMAN) and (j <> Bullet[i].Owner) then
+       (Sprite[j].Player.ControlMethod = HUMAN) and ((j <> Bullet[i].Owner) or Forced) then
        if (ToNum = 0) or (j = ToNum) then
         if BulletCanSend(Bulletparts.Pos[i].X, Bulletparts.Pos[i].Y,
          Sprite[j].Player.Camera, Bulletparts.Velocity[i].X) or Forced then
@@ -152,7 +152,7 @@ begin
   if Style = BULLET_STYLE_M2 then
   begin
     OnStatGun := False;
-    for i := 0 to MAX_THINGS do
+    for i := 1 to MAX_THINGS do
       if (Thing[i].Style = OBJECT_STATIONARY_GUN) {Stat Gun} and (OnStatGun = False) then
         if Distance(Sprite[p].Skeleton.Pos[1].x, Sprite[p].Skeleton.Pos[1].y,
            Thing[i].Skeleton.pos[1].x, Thing[i].Skeleton.pos[1].y) < STAT_RADIUS * 2 then

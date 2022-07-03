@@ -13,9 +13,7 @@ MESSAGE(STATUS "***  GameNetworkingSockets -- START --")
     # e.g.: -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
 ## 2. Set the path to your vcpkg installation
 SET(VCPKG_ROOT "C:/vcpkg" CACHE PATH "Path to your vcpkg installation." FORCE) 
-## 3. Announce where your git executable lives, if it is not in the PATH
-#    SET(GIT_EXECUTABLE "C:/Program Files/Git/cmd/git.exe")
-## 4. Set Directories
+## 3. Set Directories
 # Project Root
 SET(PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR}/build)
 # local install - change to your liking
@@ -39,9 +37,10 @@ project(GameNetworkingSockets)
 #SET(Protobuf_LITE_LIBRARY_DEBUG   "${VCPKG_ROOT}/installed/x64-windows/libdebug/libprotobuf-lited.lib") # The protobuf lite library (debug)
 ## OpenSSL Recognition with vcpkg works nicely
 #ENDIF()
-# git settings
-SET(GNS_SOURCE_DIR "${PROJECT_ROOT}/gns_git" )
-SET(GNS_TAG "v1.3.0" )
+# download settings
+SET(GNS_SOURCE_DIR "${PROJECT_ROOT}/gns_download" )
+SET(GNS_TAG "v1.4.0" )
+SET(GNS_URL "https://github.com/ValveSoftware/GameNetworkingSockets/archive/refs/tags/${GNS_TAG}.tar.gz" )
 
 #############################################################
 ## Fetch and build GNS
@@ -49,11 +48,8 @@ SET(GNS_TAG "v1.3.0" )
 
 FetchContent_Declare(
     gamenetworkingsockets
-    GIT_REPOSITORY "https://github.com/ValveSoftware/GameNetworkingSockets.git"
-    GIT_TAG        ${GNS_TAG}
-    GIT_SHALLOW    TRUE
-    GIT_PROGRESS   TRUE
-    FETCHCONTENT_QUIET FALSE
+    URL ${GNS_URL}
+    URL_HASH SHA1=9c28ea4fdf279dca05258ca89716d66ef7a5e5d4
     USES_TERMINAL_DOWNLOAD TRUE
     SOURCE_DIR     ${GNS_SOURCE_DIR}
 )
@@ -62,11 +58,6 @@ FetchContent_Populate(gamenetworkingsockets)
 
 option(GAMENETWORKINGSOCKETS_BUILD_EXAMPLES OFF)
 option(GAMENETWORKINGSOCKETS_BUILD_TESTS OFF)
-
-# Soldat expects libGameNetworkingSockets.dll on Windows.
-if(MSVC)
-  set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
-endif(MSVC)
 
 ADD_SUBDIRECTORY( ${GNS_SOURCE_DIR} EXCLUDE_FROM_ALL)
 ADD_DEPENDENCIES(GameNetworkingSockets GameNetworkingSockets)

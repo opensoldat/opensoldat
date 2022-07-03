@@ -922,7 +922,7 @@ procedure TScriptActivePlayer.Say(Text: string; MsgType: Byte);
 begin
   if not Self.Active then
     Exit;
-  ServerSendStringMessage(WideString(Text), Self.ID, 255, MsgType);
+  ServerSendStringMessage(WideString(Text), ALL_PLAYERS, Self.ID, MsgType);
   MainConsole.Console('[' + Self.Name + '] ' + Text, CHAT_MESSAGE_COLOR);
 end;
 
@@ -2517,7 +2517,7 @@ begin
       @ScriptActivePlayerSetOnKitPickup, 'OnKitPickup');
     RegisterEventPropertyHelper(@ScriptActivePlayerGetOnBeforeRespawn,
       @ScriptActivePlayerSetOnBeforeRespawn, 'OnBeforeRespawn');
-    RegisterEventPropertyHelper(@ScriptActivePlayerGetOnBeforeRespawn,
+    RegisterEventPropertyHelper(@ScriptActivePlayerGetOnAfterRespawn,
       @ScriptActivePlayerSetOnAfterRespawn, 'OnAfterRespawn');
     RegisterEventPropertyHelper(@ScriptActivePlayerGetOnDamage,
       @ScriptActivePlayerSetOnDamage, 'OnDamage');
