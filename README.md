@@ -79,12 +79,6 @@ If you decide to follow the approaches below, you will have to download opensold
 2. Open `server/soldatserver.lpi` with Lazarus, press CTRL + F9 to compile the server
 3. Open `client/soldat.lpi` with Lazarus, press CTRL + F9 to compile the game client
 
-#### Compilation using Makefiles
-
-1. Install [FreePascal Compiler](https://freepascal.org)
-2. Run `make` from `server` folder. The executable can be found in the `build` folder
-3. Run `make` from `client` folder. The executable can be found in the `build` folder
-
 ## Running opensoldat
 
 You need to start the server first, and then join the game with client.
