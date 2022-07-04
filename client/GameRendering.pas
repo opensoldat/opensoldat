@@ -34,13 +34,14 @@ procedure SetFontStyle(Style: Integer); overload;
 procedure SetFontStyle(Style: Integer; Scale: Single); overload;
 function FontStyleSize(Style: Integer): Single;
 procedure TakeScreenshot(Filename: string; Async: Boolean = True);
-function PngOverride(const Filename: string): string;
+procedure FillCaseInsensitiveImageMap;
+function FindImagePath(const Filename: string): string;
 
 implementation
 
 uses
   Client,
-  Math, SysUtils, IniFiles, Classes,
+  Math, SysUtils, IniFiles, Classes, Contnrs,
   Constants, Sprites, Parts, Game, Weapons, PolyMap, MapFile, Vector, Util,
   InterfaceGraphics, ClientGame, GameStrings, GostekGraphics, Input,
   PhysFS, Cvar, MapGraphics, TraceLog {$IFDEF TESTING},  Version{$ENDIF};
@@ -86,6 +87,7 @@ var
   InterfaceSpritesheet: TGfxSpritesheet;
   Fonts: array[1..2] of TGfxFont;
   FontStyles: array[0..FONT_LAST] of TFontStyle;
+  CaseInsensitiveImageMap: TFPStringHashTable;
   ActionSnapTexture: TGfxTexture;
   RenderTarget: TGfxTexture;
   RenderTargetAA: TGfxTexture;
@@ -173,24 +175,12 @@ begin
   end;
 
   // cleanup
-
-  if Assigned(RootIni) then
-    FreeAndNil(RootIni);
-
-  if Assigned(ModIni) then
-    FreeAndNil(ModIni);
-
-  if Assigned(InterfaceIni) then
-    FreeAndNil(InterfaceIni);
-
-  if Assigned(RootIniStream) then
-    FreeAndNil(RootIniStream);
-
-  if Assigned(RootIniStream) then
-    FreeAndNil(ModIniStream);
-
-  if Assigned(RootIniStream) then
-    FreeAndNil(InterfaceIniStream);
+  RootIni.Free;
+  ModIni.Free;
+  InterfaceIni.Free;
+  RootIniStream.Free;
+  ModIniStream.Free;
+  InterfaceIniStream.Free;
 end;
 
 function GetImageScale(ImagePath: String): Single;
@@ -236,9 +226,77 @@ begin
   ScreenshotAsync := Async;
 end;
 
-function PngOverride(const Filename: string): string;
+procedure FillCaseInsensitiveImageMap;
+var
+  ImageDir: String;
+  ImageDirs: Array of String;
+  Images: Array of String;
+  Image: String;
 begin
-  Result := OverrideFileExt(StringReplace(Filename, '\', '/', [rfReplaceAll]), '.png');
+  if CaseInsensitiveImageMap = Nil then
+    Exit;
+  CaseInsensitiveImageMap.Clear();
+
+  ImageDirs := TStringArray.Create(
+    'scenery-gfx/',
+    'current_map/scenery-gfx/',
+    'textures/',
+    'textures/edges/',
+    'textures/objects/',
+    'current_map/textures/',
+    'current_map/textures/edges/',
+    ModDir + 'textures/',
+    ModDir + 'textures/edges/',
+    ModDir + 'textures/objects/',
+    'gostek-gfx/',
+    'gostek-gfx/ranny/',
+    'gostek-gfx/team2/',
+    'gostek-gfx/team2/ranny/',
+    ModDir + 'gostek-gfx/',
+    ModDir + 'gostek-gfx/ranny/',
+    ModDir + 'gostek-gfx/team2/',
+    ModDir + 'gostek-gfx/team2/ranny/',
+    'weapons-gfx/',
+    ModDir + 'weapons-gfx/',
+    'sparks-gfx/',
+    'sparks-gfx/explosion/',
+    'sparks-gfx/flames/',
+    ModDir + 'sparks-gfx/',
+    ModDir + 'sparks-gfx/explosion/',
+    ModDir + 'sparks-gfx/flames/',
+    'interface-gfx/',
+    'interface-gfx/guns/',
+    ModDir + 'interface-gfx/',
+    ModDir + 'interface-gfx/guns/',
+    'objects-gfx/',
+    ModDir + 'objects-gfx/'
+  );
+
+  for ImageDir in ImageDirs do
+  begin
+    Images := PHYSFS_GetEnumeratedFiles(ImageDir);
+    for Image in Images do
+      if CaseInsensitiveImageMap[LowerCase(ImageDir + Image)] = '' then
+        CaseInsensitiveImageMap.Add(LowerCase(ImageDir + Image), ImageDir + Image);
+  end;
+end;
+
+// Handles .png override and case insensitivity.
+function FindImagePath(const Filename: string): string;
+var
+  Orig, Png: String;
+begin
+  Result := Filename;
+  if CaseInsensitiveImageMap = Nil then
+    Exit;
+
+  Orig := StringReplace(LowerCase(Filename), '\', '/', [rfReplaceAll]);
+  Png := ChangeFileExt(Orig, '.png');
+
+  if CaseInsensitiveImageMap[Png] <> '' then
+    Result := CaseInsensitiveImageMap[Png]
+  else if CaseInsensitiveImageMap[Orig] <> '' then
+    Result := CaseInsensitiveImageMap[Orig]
 end;
 
 procedure LoadMainTextures();
@@ -268,10 +326,10 @@ begin
       Color.b := (LOAD_DATA[i].ColorKey and $00FF0000) shr 16;
       Color.a := (LOAD_DATA[i].ColorKey and $FF000000) shr 24;
 
-      Path := PngOverride(ModDir + LOAD_DATA[i].Path);
+      Path := FindImagePath(ModDir + LOAD_DATA[i].Path);
 
       if not PHYSFS_exists(PChar(Path)) then
-        Path := PngOverride(LOAD_DATA[i].Path);
+        Path := FindImagePath(LOAD_DATA[i].Path);
 
 
       ImageScale[i] := GetImageScale(Path);
@@ -338,17 +396,17 @@ begin
       if IsCustom and (i >= CUSTOM_FIRST) and (i <= CUSTOM_LAST) then
       begin
         Path := Prefix + Copy(LOAD_DATA[i].Path, CutLength + 1, MaxInt);
-        Path := PngOverride(Path);
+        Path := FindImagePath(Path);
 
        if not PHYSFS_exists(PChar(Path)) then
-          Path := PngOverride(LOAD_DATA[i].Path);
+          Path := FindImagePath(LOAD_DATA[i].Path);
       end
       else
       begin
-        Path := PngOverride(ModDir + LOAD_DATA[i].Path);
+        Path := FindImagePath(ModDir + LOAD_DATA[i].Path);
 
         if not PHYSFS_exists(PChar(Path)) then
-          Path := PngOverride(LOAD_DATA[i].Path);
+          Path := FindImagePath(LOAD_DATA[i].Path);
       end;
 
       ImageScale[i] := GetImageScale(Path);
@@ -479,6 +537,9 @@ var
 begin
   Result := True;
 
+  CaseInsensitiveImageMap := TFPStringHashTable.Create();
+  FillCaseInsensitiveImageMap();
+
   if Initialized then
   begin
     if GameRenderingParams.InterfaceName <> LoadedInterfaceName then
@@ -545,6 +606,7 @@ begin
 
   SetLength(Textures, GFXID_END + 1);
   LoadModInfo();
+
   LoadMainTextures();
   LoadInterface();
   LoadFonts();
@@ -607,6 +669,7 @@ begin
   FreeAndNil(ScaleData.CurrentMod);
   FreeAndNil(ScaleData.CustomInterface);
 
+  FillCaseInsensitiveImageMap();
   LoadModInfo();
   LoadMainTextures();
   LoadInterface();
@@ -638,6 +701,7 @@ begin
   if RenderTargetAA <> nil then
     GfxDeleteTexture(RenderTargetAA);
 
+  FreeAndNil(CaseInsensitiveImageMap);
   DestroyMapGraphics();
   GfxDestroyContext();
 

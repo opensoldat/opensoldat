@@ -517,6 +517,7 @@ end;
 procedure ActivateServer;
 var
   i, j: Integer;
+  s: String;
 begin
   MainThreadID := GetThreadID;
 
@@ -616,16 +617,28 @@ begin
 
   // Create the basic folder structure
   CreateDirIfMissing(UserDirectory + '/configs');
+  CreateDirIfMissing(UserDirectory + '/configs/bots');
   CreateDirIfMissing(UserDirectory + '/demos');
   CreateDirIfMissing(UserDirectory + '/logs');
   CreateDirIfMissing(UserDirectory + '/logs/kills');
   CreateDirIfMissing(UserDirectory + '/maps');
   CreateDirIfMissing(UserDirectory + '/mods');
+  {$IFDEF SCRIPT}
+  CreateDirIfMissing(UserDirectory + '/scripts');
+  {$ENDIF}
 
-  // Copy default configs if they are missing
+  // Copy default configs and accessory files if they are missing
   PHYSFS_CopyFileFromArchive('configs/server.cfg', UserDirectory + '/configs/server.cfg');
   PHYSFS_CopyFileFromArchive('configs/weapons.ini', UserDirectory + '/configs/weapons.ini');
   PHYSFS_CopyFileFromArchive('configs/weapons_realistic.ini', UserDirectory + '/configs/weapons_realistic.ini');
+  PHYSFS_CopyFileFromArchive('configs/mapslist.txt', UserDirectory + '/configs/mapslist.txt');
+  PHYSFS_CopyFileFromArchive('configs/remote.txt', UserDirectory + '/configs/remote.txt');
+  {$IFDEF SCRIPT}
+  PHYSFS_CopyFileFromArchive('scripts/README.txt', UserDirectory + '/scripts/README.txt');
+  {$ENDIF}
+
+  for s in PHYSFS_GetEnumeratedFiles('configs/bots') do
+    PHYSFS_CopyFileFromArchive('configs/bots/' + s, UserDirectory + '/configs/bots/' + s);
 
   LoadConfig('server.cfg');
 
