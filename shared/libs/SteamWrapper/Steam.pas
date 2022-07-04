@@ -13,13 +13,12 @@ interface
 uses
   ctypes, sysutils;
 
-{$PUSH}
+{$PACKENUM 4}
+
 {$IFDEF UNIX}
 {$PACKRECORDS 4}
-{$PACKENUM 4}
 {$ELSE}
 {$PACKRECORDS 8}
-{$PACKENUM 4}
 {$ENDIF}
 
 const
@@ -2592,7 +2591,6 @@ type
   FSteamNetworkingSocketsDebugOutput = procedure(a0: ESteamNetworkingSocketsDebugOutputType; a1: PAnsiChar); cdecl;
   SteamAPIWarningMessageHook_t = procedure(a0: Integer; a1: PAnsiChar); cdecl;
 
-  {$PUSH}
   {$PACKRECORDS 1}
   PCSteamID = ^CSteamID;
   CSteamID = bitpacked record
@@ -2610,9 +2608,7 @@ type
     m_nType: 0..255; // 8 bits
     m_nModID: 0..4294967295; // 32 bits
   end;
-  {$POP}
 
-  {$PUSH}
   {$PACKRECORDS C}
   SteamNetworkingConfigValue_t = record
     m_eValue: ESteamNetworkingConfigValue;
@@ -2624,15 +2620,22 @@ type
       3: (m_string: PAnsiChar);
       4: (m_functionPtr: procedure);
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
-  {$PUSH}
   {$PACKRECORDS 1}
   SteamIPAddress_t = record
     m_rgubIPv6: Array[0..16 - 1] of UInt8;
     m_eType: ESteamIPType;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   FriendGameInfo_t = record
     m_gameID: CGameID;
@@ -2642,13 +2645,16 @@ type
     m_steamIDLobby: CSteamID;
   end;
 
-  {$PUSH}
   {$PACKRECORDS C}
   MatchMakingKeyValuePair_t = record
     m_szKey: Array[0..256 - 1] of AnsiChar;
     m_szValue: Array[0..256 - 1] of AnsiChar;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   servernetadr_t = record
     m_usConnectionPort: UInt16;
@@ -2706,7 +2712,6 @@ type
     m_nRemotePort: UInt16;
   end;
 
-  {$PUSH}
   {$PACKRECORDS 1}
   InputAnalogActionData_t = record
     eMode: EInputSourceMode;
@@ -2714,15 +2719,22 @@ type
     y: Single;
     bActive: Boolean;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
-  {$PUSH}
   {$PACKRECORDS 1}
   InputDigitalActionData_t = record
     bState: Boolean;
     bActive: Boolean;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   InputMotionData_t = record
     rotQuatX: Single;
@@ -2773,22 +2785,28 @@ type
     m_unFlags: UInt16;
   end;
 
-  {$PUSH}
   {$PACKRECORDS 1}
   SteamNetworkingIPAddr = record
     m_ipv6: Array[0..16 - 1] of UInt8;
     m_port: UInt16;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
-  {$PUSH}
   {$PACKRECORDS 1}
   SteamNetworkingIdentity = record
     m_eType: ESteamNetworkingIdentityType;
     m_cbSize: Integer;
     m_szUnknownRawString: Array[0..128 - 1] of AnsiChar;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   SteamNetConnectionInfo_t = record
     m_identityRemote: SteamNetworkingIdentity;
@@ -2832,7 +2850,6 @@ type
     reserved: Array[0..10 - 1] of UInt32;
   end;
 
-  {$PUSH}
   {$PACKRECORDS C}
   SteamNetworkingMessage_t = record
     m_pData: Pointer;
@@ -2850,14 +2867,21 @@ type
     m_idxLane: UInt16;
     _pad1__: UInt16;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
-  {$PUSH}
   {$PACKRECORDS C}
   SteamNetworkPingLocation_t = record
     m_data: Array[0..512 - 1] of UInt8;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   SteamDatagramHostedAddress = record
     m_cbSize: Integer;
@@ -3003,7 +3027,6 @@ type
     m_steamIDUser: CSteamID;
   end;
 
-  {$PUSH}
   {$PACKRECORDS 1}
   GameConnectedChatLeave_t = record
     m_steamIDClanChat: CSteamID;
@@ -3011,7 +3034,11 @@ type
     m_bKicked: Boolean;
     m_bDropped: Boolean;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   DownloadClanActivityCountsResult_t = record
     m_bSuccess: Boolean;
@@ -3160,13 +3187,16 @@ type
     m_ulSteamIDLobby: UInt64;
   end;
 
-  {$PUSH}
   {$PACKRECORDS 1}
   PSNGameBootInviteResult_t = record
     m_bGameBootInviteExists: Boolean;
     m_steamIDLobby: CSteamID;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   FavoritesListAccountsUpdated_t = record
     m_eResult: EResult;
@@ -3542,13 +3572,16 @@ type
     m_steamIDRemote: CSteamID;
   end;
 
-  {$PUSH}
   {$PACKRECORDS 1}
   P2PSessionConnectFail_t = record
     m_steamIDRemote: CSteamID;
     m_eP2PSessionError: UInt8;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   SocketStatusCallback_t = record
     m_hSocket: SNetSocket_t;
@@ -3985,12 +4018,15 @@ type
     m_unVideoAppID: AppId_t;
   end;
 
-  {$PUSH}
   {$PACKRECORDS C}
   SteamParentalSettingsChanged_t = record
     Dummy: Byte;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   SteamRemotePlaySessionConnected_t = record
     m_unSessionID: RemotePlaySessionID_t;
@@ -4000,19 +4036,25 @@ type
     m_unSessionID: RemotePlaySessionID_t;
   end;
 
-  {$PUSH}
   {$PACKRECORDS 1}
   SteamNetworkingMessagesSessionRequest_t = record
     m_identityRemote: SteamNetworkingIdentity;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
-  {$PUSH}
   {$PACKRECORDS 1}
   SteamNetworkingMessagesSessionFailed_t = record
     m_info: SteamNetConnectionInfo_t;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   SteamNetConnectionStatusChangedCallback_t = record
     m_hConn: HSteamNetConnection;
@@ -4025,7 +4067,6 @@ type
     m_debugMsg: Array[0..256 - 1] of AnsiChar;
   end;
 
-  {$PUSH}
   {$PACKRECORDS C}
   SteamRelayNetworkStatus_t = record
     m_eAvail: ESteamNetworkingAvailability;
@@ -4034,7 +4075,11 @@ type
     m_eAvailAnyRelay: ESteamNetworkingAvailability;
     m_debugMsg: Array[0..256 - 1] of AnsiChar;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   GSClientApprove_t = record
     m_SteamID: CSteamID;
@@ -4069,7 +4114,6 @@ type
     m_unTotalMinutesPlayed: UInt32;
   end;
 
-  {$PUSH}
   {$PACKRECORDS 1}
   GSClientGroupStatus_t = record
     m_SteamIDUser: CSteamID;
@@ -4077,7 +4121,11 @@ type
     m_bMember: Boolean;
     m_bOfficer: Boolean;
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   GSReputation_t = record
     m_eResult: EResult;
@@ -4122,7 +4170,6 @@ type
     m_unPorts: Array[0..8 - 1] of UInt16;
   end;
 
-  {$PUSH}
   {$PACKRECORDS 1}
   SteamInputActionEvent_t__DigitalAction_t = record
     actionHandle: InputDigitalActionHandle_t;
@@ -4141,7 +4188,11 @@ type
       0: (analogAction: SteamInputActionEvent_t__AnalogAction_t);
       1: (digitalAction: SteamInputActionEvent_t__DigitalAction_t);
   end;
-  {$POP}
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}
 
   PSteamDatagramRelayAuthTicket = ^SteamDatagramRelayAuthTicket;
   SteamDatagramRelayAuthTicket = record end;
@@ -4540,8 +4591,6 @@ type
     m_pubParam: PUInt8;
     m_cubParam: Integer;
   end;
-
-{$POP}
 
 {$IFNDEF STEAM}
 function GameNetworkingSockets_Init(const pIdentity: PSteamNetworkingIdentity; errMsg: PSteamNetworkingErrMsg): Boolean; cdecl; external STEAMLIB;

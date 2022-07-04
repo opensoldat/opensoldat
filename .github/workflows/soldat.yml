@@ -111,14 +111,15 @@ jobs:
           set BUILD_ID=%GITHUB_SHA:~0,8%
           mkdir build
           cd build
-          cmake -G "NMake Makefiles" -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake"  -DSDL2_BUILDING_LIBRARY=1 ..
+          cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=.\soldat -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake"  -DSDL2_BUILDING_LIBRARY=1 ..
           nmake
+          nmake install
         shell: cmd
 
       - uses: actions/upload-artifact@v2
         with:
           name: windows-build
-          path: build/bin/
+          path: build/soldat/
 
   macos:
     runs-on: macos-latest
@@ -149,6 +150,7 @@ jobs:
 
   continuous:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
     needs: [appimage, windows, macos]
     steps:
       - name: Checkout code
@@ -164,12 +166,13 @@ jobs:
 
       - name: Chmod and zip AppImages
         run: |
-          chmod u+x appimages/*.AppImage
-          zip linux-appimage.zip appimages/Soldat-*.AppImage
-          zip linux-server-only-appimage.zip appimages/SoldatServer-*.AppImage
+          cd appimages
+          chmod u+x *.AppImage
+          zip linux-appimage.zip Soldat-*.AppImage
+          zip linux-server-only-appimage.zip SoldatServer-*.AppImage
+          mv linux-appimage.zip linux-server-only-appimage.zip ..
 
       - name: Upload release
-        if: github.ref == 'refs/heads/develop'
         uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
         with:
           tag_name: continuous
