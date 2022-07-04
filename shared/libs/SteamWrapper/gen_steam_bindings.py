@@ -284,13 +284,12 @@ interface
 uses
   ctypes, sysutils;
 
-{$PUSH}
+{$PACKENUM 4}
+
 {$IFDEF UNIX}
 {$PACKRECORDS 4}
-{$PACKENUM 4}
 {$ELSE}
 {$PACKRECORDS 8}
-{$PACKENUM 4}
 {$ENDIF}
 
 const
@@ -363,8 +362,7 @@ f.write('  SteamAPIWarningMessageHook_t = ' + fix_type('void (*)(int, const char
 f.write('\n');
 
 # CSteamID, CGameID, SteamNetworkingConfigValue_t. TODO: Big Endian?
-f.write('''  {$PUSH}
-  {$PACKRECORDS 1}
+f.write('''  {$PACKRECORDS 1}
   PCSteamID = ^CSteamID;
   CSteamID = bitpacked record
     // n = num_bits, 0..(2^n - 1)
@@ -381,9 +379,7 @@ f.write('''  {$PUSH}
     m_nType: 0..255; // 8 bits
     m_nModID: 0..4294967295; // 32 bits
   end;
-  {$POP}
 
-  {$PUSH}
   {$PACKRECORDS C}
   SteamNetworkingConfigValue_t = record
     m_eValue: ESteamNetworkingConfigValue;
@@ -395,7 +391,11 @@ f.write('''  {$PUSH}
       3: (m_string: PAnsiChar);
       4: (m_functionPtr: procedure);
   end;
-  {$POP}\n\n''')
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}\n\n''')
 
 # Structs.
 special_pack = {
@@ -425,7 +425,6 @@ for struct in api['structs'] + api['callback_structs']:
         continue
 
     if struct['struct'] in special_pack:
-        f.write('  {$PUSH}\n')
         f.write('  {$PACKRECORDS ' + special_pack[struct['struct']] + '}\n')
     f.write('  ' + struct['struct'] + ' = record\n')
 
@@ -438,12 +437,15 @@ for struct in api['structs'] + api['callback_structs']:
 
     f.write('  end;\n');
     if struct['struct'] in special_pack:
-        f.write('  {$POP}\n')
+        f.write('''  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}\n''')
     f.write('\n')
 
 # SteamInputActionEvent_t
-f.write('''  {$PUSH}
-  {$PACKRECORDS 1}
+f.write('''  {$PACKRECORDS 1}
   SteamInputActionEvent_t__DigitalAction_t = record
     actionHandle: InputDigitalActionHandle_t;
     digitalActionData: InputDigitalActionData_t;
@@ -461,7 +463,11 @@ f.write('''  {$PUSH}
       0: (analogAction: SteamInputActionEvent_t__AnalogAction_t);
       1: (digitalAction: SteamInputActionEvent_t__DigitalAction_t);
   end;
-  {$POP}\n\n''');
+  {$IFDEF UNIX}
+  {$PACKRECORDS 4}
+  {$ELSE}
+  {$PACKRECORDS 8}
+  {$ENDIF}\n\n''');
 
 # SteamDatagramRelayAuthTicket
 f.write('  PSteamDatagramRelayAuthTicket = ^SteamDatagramRelayAuthTicket;\n')
@@ -508,9 +514,6 @@ f.write('''  PCallbackMsg_t = ^CallbackMsg_t;
     m_pubParam: PUInt8;
     m_cubParam: Integer;
   end;\n\n''')
-
-# Done writing GNS structs, don't need the PACKRECORDS.
-f.write('{$POP}\n\n')
 
 # GNS functions.
 f.write('{$IFNDEF STEAM}\n')
