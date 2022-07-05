@@ -65,7 +65,7 @@ uses
 {$IFNDEF SERVER}
 procedure PlayRadioSound(RadioID: Byte);
 begin
-  if (RadioCooldown > 0) or (sv_radio.Value) then
+  if (RadioCooldown > 0) or (not sv_radio.Value) then
     Exit;
   if (sv_gamemode.Value <> GAMESTYLE_CTF) and (sv_gamemode.Value <> GAMESTYLE_HTF) and
      (sv_gamemode.Value <> GAMESTYLE_INF) then
