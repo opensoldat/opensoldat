@@ -20,7 +20,7 @@ procedure ClientHandleSpecialMessage(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Client, Game, InterfaceGraphics;
+  Client, Game, InterfaceGraphics, NetworkUtils;
 
 procedure ClientSendStringMessage(Text: WideString; MsgType: Byte);
 var
@@ -52,6 +52,7 @@ procedure ClientHandleChatMessage(NetMessage: PSteamNetworkingMessage_t);
 var
   cs: WideString = '';
   prefix: WideString = '';
+  RadioCommand: WideString;
   i, d: Integer;
   MsgType: Byte;
   col: Cardinal;
@@ -62,6 +63,13 @@ begin
 
   if MsgType > MSGTYPE_RADIO then
     Exit;
+
+  if MsgType = MSGTYPE_RADIO then
+  begin
+    RadioCommand := Copy(cs, 2, 2);
+    Delete(cs, 1, 3);
+  end;
+
   // chat from server
   if i = 255 then
   begin
@@ -106,10 +114,8 @@ begin
     MainConsole.Console(' ' + cs, col);
   end;
 
-  {if Radio and Sprite[i].IsInSameTeam(Sprite[MySprite]) then
-  begin
-    PlayRadioSound(RadioID)
-  end;}
+  if (MsgType = MSGTYPE_RADIO) and Sprite[i].IsInSameTeam(Sprite[MySprite]) then
+    PlayRadioSound(StrToIntDef(RadioCommand, -1));
 end;
 
 procedure ClientHandleSpecialMessage(NetMessage: PSteamNetworkingMessage_t);

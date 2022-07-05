@@ -99,7 +99,10 @@ begin
 
   Inc(Player.ChatWarnings);
 
-  cschat := cs;
+  if MsgType = MSGTYPE_RADIO then
+    cschat := Copy(cs, 4, Length(cs))
+  else
+    cschat := cs;
 
   // command
   if MsgType = MSGTYPE_CMD then
@@ -115,7 +118,7 @@ begin
     Exit;
   end;
 
-  cschat := '[' + WideString(Player.Name) + '] ' + cs;
+  cschat := '[' + WideString(Player.Name) + '] ' + cschat;
 
   if MsgType = MSGTYPE_TEAM then
     cschat := '(TEAM) ' + cschat;
@@ -134,6 +137,7 @@ begin
   if Player.Muted = 1 then
     Exit;  // cs := '(Muted)';
 
+  // TODO(pewpew): MSGTYPE_RADIO prefix is never true, figure out why this is here, if it did something in old scriptcore
   if MsgType = MSGTYPE_TEAM then
     cs := iif(MsgType = MSGTYPE_RADIO, '*', '^') + cs;
 
