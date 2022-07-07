@@ -487,7 +487,8 @@ get_all_under_tag(constants, 'consts', api)
 for constant in constants:
     f.write('  ' + constant['constname'] + ': '
                  + fix_type(constant['consttype']) + ' = '
-                 + fix_constant_val(constant['constval']) + ';\n')
+                 + fix_type(constant['consttype']) + '('
+                 + fix_constant_val(constant['constval']) + ');\n')
 f.write('\n');
 
 # Interface types.
