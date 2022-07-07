@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Game Menus Unit for SOLDAT                      }
+{       Game Menus Unit for OPENSOLDAT                  }
 {                                                       }
 {       Copyright (c) 2002 Michal Marcinkowski          }
 {                                                       }

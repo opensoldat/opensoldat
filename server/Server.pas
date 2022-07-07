@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Main Unit for SOLDAT                            }
+{       Main Unit for OPENSOLDAT                        }
 {                                                       }
 {       Copyright (c) 2002 Michal Marcinkowski          }
 {                                                       }
@@ -38,7 +38,7 @@ uses
 
   FileServer, LobbyClient,
 
-  // soldat units
+  // opensoldat units
   Steam, Net, NetworkUtils,
   NetworkServerSprite, NetworkServerConnection, NetworkServerGame,
   ServerCommands, PhysFS, Console, ServerHelper,
@@ -278,8 +278,6 @@ var
   ShotRicochet: Integer;
 
   HTFTime: Integer = HTF_SEC_POINT;
-
-  CurrentConf: string = 'soldat.ini';
 
   WMName, WMVersion: string;
   LastWepMod: string;
@@ -522,21 +520,21 @@ begin
   MainThreadID := GetThreadID;
 
   WriteLn('');
-  WriteLn('             -= Soldat Dedicated Server ' + SOLDAT_VERSION + ' - ' +
-    DEDVERSION + ' (build ' + SOLDAT_VERSION_LONG + ') =-');
+  WriteLn('             -= OpenSoldat Dedicated Server ' + OPENSOLDAT_VERSION + ' - ' +
+    DEDVERSION + ' (build ' + OPENSOLDAT_VERSION_LONG + ') =-');
   WriteLn('');
   WriteLn('----------------------------------------------------------------');
-  WriteLn('         Soldat Dedicated Server initializing...');
+  WriteLn('         OpenSoldat Dedicated Server initializing...');
   WriteLn('----------------------------------------------------------------');
   WriteLn('');
   WriteLn('   Need help running your server?');
-  WriteLn('   Discord: https://discord.soldat.pl');
+  WriteLn('   Discord: https://discord.gg/a8BeCkue');
   WriteLn('');
   WriteLn('   ---> https://forums.soldat.pl/');
   WriteLn('');
   WriteLn('   Additional parameters:');
-  WriteLn('   ./soldatserver -net_port PORT -sv_maxplayers MAXPLAYERS -sv_password PASSWORD');
-  WriteLn('   Example: ./soldatserver -net_port 23073 -sv_maxplayers 16 -sv_password "my pass"');
+  WriteLn('   ./opensoldatserver -net_port PORT -sv_maxplayers MAXPLAYERS -sv_password PASSWORD');
+  WriteLn('   Example: ./opensoldatserver -net_port 23073 -sv_maxplayers 16 -sv_password "my pass"');
   WriteLn('');
   WriteLn('');
 
@@ -661,7 +659,7 @@ begin
       net_port.Value, // The port that clients will connect to for gameplay.
       net_port.Value + 20, // The port that will manage server browser related duties and info pings from clients.
       eServerModeAuthenticationAndSecure, // Sets the authentication method of the server.
-      PChar(SOLDAT_VERSION)
+      PChar(OPENSOLDAT_VERSION)
     );
 
   SteamAPI_ManualDispatch_Init();
@@ -675,6 +673,7 @@ begin
   begin
     SteamAPI.Utils.SetWarningMessageHook(@SteamWarning);
 
+    // TODO: opensoldat on steam
     SteamAPI.GameServer.SetModDir(PChar('Soldat'));
     SteamAPI.GameServer.SetProduct(PChar('Soldat'));
     SteamAPI.GameServer.SetGameDescription(PChar('Soldat'));

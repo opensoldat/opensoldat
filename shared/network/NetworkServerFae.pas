@@ -24,7 +24,7 @@ uses
 
 function IsFaeGameDataValid(Response: TFaeResponse): Boolean;
 begin
-  // TODO check that Response.GameKey matches Soldat's signature public key
+  // TODO check that Response.GameKey matches OpenSoldat's signature public key
   // TODO check that Response.GameVersion matches the client version we expect
   Response := Response;
   Result := True;
@@ -110,7 +110,7 @@ begin
     else
     case OuterStatus of
       1: Reason := 'Test Error'; // test by setting client's env.-var: FAE_TESTMODE=status1
-      2: Reason := 'Soldat Restart Required';
+      2: Reason := 'OpenSoldat Restart Required';
       3: Reason := 'Anti-Cheat Activation Failed';
       else Reason := 'Initialization Error #' + IntToStr(OuterStatus);
     end;

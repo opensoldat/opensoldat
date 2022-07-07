@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Main Unit for SOLDAT                            }
+{       Main Unit for OPENSOLDAT                        }
 {                                                       }
 {       Copyright (c) 2003 Michal Marcinkowski          }
 {                                                       }
@@ -40,7 +40,7 @@ uses
   // anti-cheat units
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
-  // soldat units
+  // opensoldat units
   Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
   NetworkClientConnection, GameMenus, Demo, Console,
   Weapons, Constants, Game, GameRendering;
@@ -578,7 +578,7 @@ var
   i: Integer;
 begin
   ExeName := ParamStr(0);
-  UserPathSDL := SDL_GetPrefPath('Soldat', 'Soldat');
+  UserPathSDL := SDL_GetPrefPath('OpenSoldat', 'OpenSoldat');
   BasePathSDL := SDL_GetBasePath();
 
   CvarInit();
@@ -886,7 +886,7 @@ begin
     LoadAnimObjects(ModDir);
 
   // greet!
-  MainConsole.Console(_('Welcome to Soldat') + ' ' + SOLDAT_VERSION,
+  MainConsole.Console(_('Welcome to OpenSoldat') + ' ' + OPENSOLDAT_VERSION,
     DEFAULT_MESSAGE_COLOR);
 
   {$IFDEF ENABLE_FAE}

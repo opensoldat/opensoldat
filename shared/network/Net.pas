@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Net Unit for SOLDAT                             }
+{       Net Unit for OPENSOLDAT                         }
 {                                                       }
 {       Copyright (c) 2002-03 Michal Marcinkowski       }
 {                                                       }
@@ -27,7 +27,7 @@ uses
 
   Steam,
 
-  // soldat units
+  // opensoldat units
   Weapons, Constants;
 
 const
@@ -538,7 +538,7 @@ type
   PMsg_RequestGame = ^TMsg_RequestGame;
   TMsg_RequestGame = packed record
     Header: TMsgHeader;
-    Version: array[0..SOLDAT_VERSION_CHARS - 1] of char;
+    Version: array[0..OPENSOLDAT_VERSION_CHARS - 1] of char;
     Forwarded: Byte;
     HaveAntiCheat: Byte;
     HardwareID: string[PLAYERHWID_CHARS];
@@ -585,7 +585,7 @@ type
   TMsg_UnAccepted = packed record
     Header: TMsgHeader;
     State: Byte;
-    Version: array[0..SOLDAT_VERSION_CHARS - 1] of char;
+    Version: array[0..OPENSOLDAT_VERSION_CHARS - 1] of char;
     Text: array[0..0] of char;
   end;
 

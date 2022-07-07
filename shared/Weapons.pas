@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Weapons Unit for SOLDAT                         }
+{       Weapons Unit for OPENSOLDAT                     }
 {                                                       }
 {       Copyright (c) 2012 Daniel Forssten              }
 {                                                       }

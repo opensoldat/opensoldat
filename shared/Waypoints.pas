@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Waypoints Unit for SOLDAT                       }
+{       Waypoints Unit for OPENSOLDAT                   }
 {                                                       }
 {       Copyright (c) 2002 Michal Marcinkowski          }
 {                                                       }

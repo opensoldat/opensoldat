@@ -2,7 +2,7 @@ unit uPSComponent;
 
 {$I PascalScript.inc}
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$HINTS OFF}
 
 interface
@@ -938,7 +938,7 @@ begin
   FMainFileName := Value;
 end;
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$PUSH}
 {$WARN 5093 OFF}
 function TPSScript.GetExecErrorFileName: tbtstring;

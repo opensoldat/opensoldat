@@ -1,4 +1,4 @@
-project(soldat)
+project(opensoldat)
 
 option(ADD_ASSETS "Include soldat.smod and font file" True)
 option(BUILD_CLIENT "Build client" True)
@@ -58,7 +58,7 @@ if(UNIX)
   if(APPLE)
     set(target_full_library_install_dir "${CMAKE_INSTALL_PREFIX}/../Frameworks/")
     set(target_library_install_dir "../Frameworks/")
-    #set(CMAKE_INSTALL_PREFIX "Soldat.app/Contents/MacOS/")
+    #set(CMAKE_INSTALL_PREFIX "OpenSoldat.app/Contents/MacOS/")
     set(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks")
     set(CMAKE_BUILD_WITH_INSTALL_NAME_DIR TRUE)
     set(CMAKE_INSTALL_NAME_DIR "@executable_path/../Frameworks")
@@ -154,7 +154,7 @@ if(NOT PHYSFS_LIBRARY OR NOT PHYSFS_INCLUDE_DIR)
 endif()
 
 if(ADD_ASSETS)
-  include(${CMAKE_MODULE_PATH}/SoldatAssets.cmake)
+  include(${CMAKE_MODULE_PATH}/OpenSoldatAssets.cmake)
   download_assets()
 endif()
 
@@ -209,7 +209,7 @@ install(
 if(ADD_ASSETS)
   install(
     DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/
-    # FIXME: should be target_data_install_dir, but unsupported by soldat
+    # FIXME: should be target_data_install_dir, but unsupported by opensoldat
     # (needs wrapper script or some equivalent global config)
     DESTINATION "${target_binary_install_dir}"
     FILES_MATCHING

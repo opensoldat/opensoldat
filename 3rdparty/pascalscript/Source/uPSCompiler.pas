@@ -4,7 +4,7 @@ unit uPSCompiler;
 
 interface
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$HINTS OFF}
 {$WARN 4056 OFF}
 {$WARN 4082 OFF}
@@ -1225,7 +1225,7 @@ type
 
     property AttributesCloseTokenID: TPSPasToken read FAttributesCloseTokenID write FAttributesCloseTokenID;
 
-    // @SoldatPatch
+    // @OpenSoldatPatch
     {$PUSH}
     {$WARNINGS OFF}
     property UnitName: tbtString read FUnitName;
@@ -7174,7 +7174,7 @@ function TPSPascalCompiler.ProcessSub(BlockInfo: TPSBlockInfo): Boolean;
     begin
       FType := GetTypeNo(BlockInfo, p);
       if FType = nil then exit;
-      // @SoldatPatch
+      // @OpenSoldatPatch
       if (FType.BaseType <> btInterface) and (Ftype.BaseType <> BtVariant) and (FType.BaseType <> btNotificationVariant) then Exit;
 
       CheckArrayProperty:=(FParser.CurrTokenID=CSTI_OpenBlock) and
@@ -13156,7 +13156,7 @@ begin
       OrgName:='x';
       Mode:=pmInOut;
     end;
-    // @SoldatPatch
+    // @OpenSoldatPatch
     with AddParam do
     begin
       OrgName:='y';
@@ -13169,7 +13169,7 @@ begin
       OrgName:='x';
       Mode:=pmInOut;
     end;
-    // @SoldatPatch
+    // @OpenSoldatPatch
     with AddParam do
     begin
       OrgName:='y';

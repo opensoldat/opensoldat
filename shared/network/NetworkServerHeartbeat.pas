@@ -6,7 +6,7 @@ uses
   // delphi and system units
   SysUtils, Classes,
 
-  // soldat units
+  // opensoldat units
   Net, Sprites, Weapons, Constants;
 
 procedure ServerHeartbeat;

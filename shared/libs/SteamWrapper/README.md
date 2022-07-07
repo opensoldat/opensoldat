@@ -8,7 +8,7 @@ GameNetworkingSockets, which only provides a subset of the SteamWorks API. To
 use the full SteamWorks API, compile with `-DSTEAM`. Check git tags for
 bindings to specific versions.
 
-There is a little bit of Soldat specific code in here, such as `TSteam` and
+There is a little bit of OpenSoldat specific code in here, such as `TSteam` and
 `TSteamGS`. But it compiles on its own and should be useful to anyone wanting
 to use the SteamWorks SDK from an FPC project.
 

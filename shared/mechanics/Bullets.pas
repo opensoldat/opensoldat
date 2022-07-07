@@ -489,8 +489,8 @@ begin
   // Calculate new x/y for cursor
   // cx := (px + Cos(alpha) * radius);
 
-  // If Soldat uses a coordinate system where y < 0 at top instead of bottom,
-  // this needs subtraction instead of addition
+  // If OpenSoldat uses a coordinate system where y < 0 at top instead of
+  // bottom, this needs subtraction instead of addition
   // cy := (py - Sin(alpha) * radius);
 
   //M.X := (dx / Sprite[CameraFollowSprite].AimDistCoef) * 3;

@@ -11,7 +11,7 @@ uses
 
   {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
 
-  // soldat units
+  // opensoldat units
   PolyMap, {$IFDEF SERVER}Steam,{$ENDIF} Net, Sprites, Weapons, Constants;
 
   {$IFDEF SERVER}
@@ -606,7 +606,7 @@ begin
   // fill memory
   UnAccepted.Header.ID := MsgID_UnAccepted;
   UnAccepted.State := State;
-  UnAccepted.Version := SOLDAT_VERSION;
+  UnAccepted.Version := OPENSOLDAT_VERSION;
   StrPCopy(UnAccepted.Text, Message);
 
   UDP.SendData(UnAccepted^, Size, Peer, k_nSteamNetworkingSend_Reliable);

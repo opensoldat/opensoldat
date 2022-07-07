@@ -66,7 +66,7 @@ ADD_DEPENDENCIES(GameNetworkingSockets GameNetworkingSockets)
 ##############################################################
 
 # Commented out, because we don't really need this step when installing
-# Soldat. Reenable this if you would like to export GNS libraries to a
+# OpenSoldat. Reenable this if you would like to export GNS libraries to a
 # custom destination.
 #install(TARGETS
 #    GameNetworkingSockets

@@ -12,13 +12,13 @@
         <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="soldat"/>
+      <Title Value="opensoldat"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True/PM"/>
-        <TextName Value="pl.soldat.soldat-client"/>
+        <TextName Value="io.github.opensoldat.opensoldat-client"/>
         <TextDesc Value=""/>
       </XPManifest>
       <Icon Value="0"/>
@@ -31,7 +31,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat"/>
+            <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
@@ -77,7 +77,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat"/>
+            <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="..\3rdparty\Indy10\Lib\Core;..\shared;$(ProjOutDir)"/>
@@ -123,7 +123,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat"/>
+            <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
@@ -156,7 +156,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat" ApplyConventions="False"/>
+            <Filename Value="build\opensoldat" ApplyConventions="False"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
@@ -202,7 +202,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat"/>
+            <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
@@ -237,7 +237,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat" ApplyConventions="False"/>
+            <Filename Value="build\opensoldat" ApplyConventions="False"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
@@ -283,7 +283,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat"/>
+            <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
@@ -323,7 +323,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat"/>
+            <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
@@ -372,7 +372,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat"/>
+            <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
@@ -413,7 +413,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat"/>
+            <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
@@ -463,7 +463,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat"/>
+            <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
@@ -497,7 +497,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldat" ApplyConventions="False"/>
+            <Filename Value="build\opensoldat" ApplyConventions="False"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
@@ -568,7 +568,7 @@
     </RunParams>
     <Units Count="62">
       <Unit0>
-        <Filename Value="soldat.lpr"/>
+        <Filename Value="opensoldat.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
@@ -821,7 +821,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="build\soldat"/>
+      <Filename Value="build\opensoldat"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>

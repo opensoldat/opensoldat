@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       ScriptCoreInterface unit for SOLDAT             }
+{       ScriptCoreInterface unit for OPENSOLDAT         }
 {                                                       }
 {       Copyright (c) 2012 Tomasz Kolosowski            }
 {                                                       }
@@ -24,7 +24,7 @@ uses
   Vector,
   // pascal script
   uPSComponent, uPSRuntime,
-  // soldat
+  // opensoldat
   PascalCore;
 
 // Scriptcore functions
@@ -1178,7 +1178,7 @@ begin
     SetVal(Script, 'GameStyle', Byte(sv_gamemode.Value));
 
     SetString(Script, 'ServerName', sv_hostname.Value);
-    SetString(Script, 'Version', SOLDAT_VERSION);
+    SetString(Script, 'Version', OPENSOLDAT_VERSION);
     SetString(Script, 'ServerVersion', DEDVERSION);
     SetVal(Script, 'ServerPort', net_port.Value);
     SetString(Script, 'ServerIP', ServerIP);

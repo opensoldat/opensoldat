@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://i.imgur.com/HrYPYjh.png" />
   <h2>opensoldat</h2>
-  <a href="https://discord.soldat.pl"><img src="https://img.shields.io/discord/234733999879094272.svg" /></a>
+  <a href="https://discord.gg/a8BeCkue"><img src="https://img.shields.io/discord/109442485285052416.svg" /></a>
 </div>
 
 Opensoldat is a unique 2D (side-view) multiplayer action game. It has been influenced by the best of games such as Liero, Worms, Quake, Counter-Strike, and provides a fast-paced gaming experience with tons of blood and flesh.
@@ -67,20 +67,20 @@ Example: `cmake .. -DCMAKE_BUILD_TYPE=Release -DADD_ASSETS=1 -DBUILD_CLIENT=0` t
 ### Compilation using other methods
 
 If you decide to follow the approaches below, you will have to download opensoldat's assets and pre-built libraries for the game to work.
-1. Download pre-built libraries. The best way would probably be to download libraries from the latest build of opensoldat (from Github Actions, or Releases). You can download latest from [here](https://nightly.link/Soldat/soldat/workflows/soldat/develop) (includes libraries for 3 platforms - pick the ones you need) 2. Copy libraries to `client/build` and `server/build`
+1. Download pre-built libraries. The best way would probably be to download libraries from the latest build of opensoldat (from Github Actions, or Releases). You can download latest from [here](https://nightly.link/opensoldat/opensoldat/workflows/opensoldat/develop) (includes libraries for 3 platforms - pick the ones you need) 2. Copy libraries to `client/build` and `server/build`
 3. Get soldat.smod file from [base repository](https://github.com/opensoldat/base.git). You can either download the file from the [latest release](https://github.com/opensoldat/base/releases/latest) (recommended), or generate the .smod file yourself following the provided instructions
 4. Copy `soldat.smod` file to `client/build` and `server/build`
-5. Download `play-regular.ttf` file from [base repository](https://github.com/opensoldat/base), either from the [latest release](https://github.com/opensoldat/base/releases/latest) or from `base/client` folder
+5. Download `play-regular.ttf` file from [base repository](https://github.com/opensoldat/base) from the [latest release](https://github.com/opensoldat/base/releases/latest)
 6. Copy `play-regular.ttf` file to `client/build`
 
 #### Compilation using Lazarus IDE
 
 1. Install [Lazarus IDE](https://www.lazarus-ide.org/)
-2. Open `server/soldatserver.lpi` with Lazarus, press CTRL + F9 to compile the server
-3. Open `client/soldat.lpi` with Lazarus, press CTRL + F9 to compile the game client
+2. Open `server/opensoldatserver.lpi` with Lazarus, press CTRL + F9 to compile the server
+3. Open `client/opensoldat.lpi` with Lazarus, press CTRL + F9 to compile the game client
 
 ## Running opensoldat
 
 You need to start the server first, and then join the game with client.
-1. Run `soldatserver`
-2. Run `soldat -join 127.0.0.1 23073` (more generically `-join ip port`)
+1. Run `opensoldatserver`
+2. Run `opensoldat -join 127.0.0.1 23073` (more generically `-join ip port`)

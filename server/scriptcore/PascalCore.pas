@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       PascalCore unit for SOLDAT                      }
+{       PascalCore unit for OPENSOLDAT                  }
 {                                                       }
 {       Copyright (c) 2012 Tomasz Kolosowski            }
 {                                                       }

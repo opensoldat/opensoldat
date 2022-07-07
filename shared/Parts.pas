@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Particle Unit for SOLDAT                        }
+{       Particle Unit for OPENSOLDAT                    }
 {                                                       }
 {       Copyright (c) 2001-02 Michal Marcinkowski       }
 {                                                       }
@@ -9,7 +9,7 @@
 {  by Michal Marcinkowski                               }
 {                                                       }
 {  version history:                                     }
-{  Current - Modified for SOLDAT                        }
+{  Current - Modified for OPENSOLDAT                    }
 {  1.0.7 - Changed to 2D                                }
 {  1.0.6 - Added Constraint Active variable             }
 {  1.0.5 - Added PO Constraints only loading            }

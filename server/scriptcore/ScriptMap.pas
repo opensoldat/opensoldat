@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       ScriptMap unit for SOLDAT                       }
+{       ScriptMap unit for OPENSOLDAT                   }
 {                                                       }
 {       Copyright (c) 2012 Tomasz Kolosowski            }
 {                                                       }

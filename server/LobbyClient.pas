@@ -72,7 +72,7 @@ begin
   Json.Add('Realistic', sv_realisticmode.Value);
   Json.Add('Respawn', sv_respawntime.Value);
   Json.Add('Survival', sv_survivalmode.Value);
-  Json.Add('Version', SOLDAT_VERSION);
+  Json.Add('Version', OPENSOLDAT_VERSION);
   Json.Add('WM', LoadedWMChecksum <> DefaultWMChecksum);
 
   JsonPlayers := TJsonArray.Create;
@@ -95,7 +95,7 @@ begin
   with Client do
   try
     try
-      AddHeader('User-Agent', 'soldatserver/' + SOLDAT_VERSION);
+      AddHeader('User-Agent', 'opensoldatserver/' + OPENSOLDAT_VERSION);
       AddHeader('Content-Type', 'application/json');
       AllowRedirect := False;
       RequestBody := FData;

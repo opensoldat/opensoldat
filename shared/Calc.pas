@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Calc Unit for SOLDAT                            }
+{       Calc Unit for OPENSOLDAT                        }
 {                                                       }
 {       Copyright (c) 2001 Michal Marcinkowski          }
 {                                                       }

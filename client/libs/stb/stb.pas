@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       stb Unit for SOLDAT                             }
+{       stb Unit for OPENSOLDAT                         }
 {                                                       }
 {       Copyright (c) 2015 Mariano Cuatrin              }
 {                                                       }

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       ScriptCore script unit for SOLDAT               }
+{       ScriptCore script unit for OPENSOLDAT           }
 {                                                       }
 {       Copyright (c) 2012 Tomasz Kolosowski            }
 {                                                       }

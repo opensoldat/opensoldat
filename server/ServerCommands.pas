@@ -416,7 +416,7 @@ begin
   end;
 
   LoadConfig(Name);
-  MainConsole.Console('Config reloaded ' + CurrentConf, CLIENT_MESSAGE_COLOR, Sender);
+  MainConsole.Console('Config reloaded ' + Name, CLIENT_MESSAGE_COLOR, Sender);
   StartServer;
 end;
 

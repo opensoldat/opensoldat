@@ -13,7 +13,7 @@ uses
   ScriptDispatcher,
   {$ENDIF}
 
-  // soldat units
+  // opensoldat units
   Steam, Net, Sprites, Weapons, Constants, PolyMap;
 
 procedure ServerSpriteSnapshot(r: Byte);

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Main Unit for SOLDAT                            }
+{       Main Unit for OPENSOLDAT                        }
 {                                                       }
 {       Copyright (c) 2012 Michal Marcinkowski          }
 {                                                       }
@@ -29,7 +29,7 @@ var
   CtrlCHit: Boolean = False;
 
 {$IFDEF MSWINDOWS}
-// The windows server needs a hook to make soldatserver exit normally
+// The windows server needs a hook to make opensoldatserver exit normally
 function ConsoleHandlerRoutine(CtrlType: DWORD): BOOL; stdcall;
 begin
   Result := False;
@@ -202,7 +202,7 @@ procedure RunServer;
 begin
   if IsRoot then
   begin
-    WriteLn('You are running soldatserver as root! Don''t do that! ' +
+    WriteLn('You are running opensoldatserver as root! Don''t do that! ' +
       'There are not many valid' + #10 +
       'reasons for this and it can, in theory, cause great damage!');
     Exit;
@@ -212,8 +212,8 @@ begin
       Exit;
 
     WriteLn('You have been warned.' + #10 +
-      'Hit CTRL+C now if you don''t want to run soldatserver as root.' + #10 +
-      'Soldatserver will start in 30 seconds.');
+      'Hit CTRL+C now if you don''t want to run opensoldatserver as root.' + #10 +
+      'OpenSoldatServer will start in 30 seconds.');
     Sleep(30000);}
   end;
 

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Animation Unit for SOLDAT                       }
+{       Animation Unit for OPENSOLDAT                   }
 {       Based on Strike of the Dragon ENGINE            }
 {       by Michal Marcinkowski                          }
 {                                                       }

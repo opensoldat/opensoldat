@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       BinPack Unit for SOLDAT                         }
+{       BinPack Unit for OPENSOLDAT                     }
 {                                                       }
 {       Copyright (c) 2015 Mariano Cuatrin              }
 {                                                       }

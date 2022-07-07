@@ -574,7 +574,7 @@ begin
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, r_msaa.Value);
   end;
 
-  GameWindow := SDL_CreateWindow('Soldat'{$IFDEF TESTING} + ' build ' + SOLDAT_VERSION_LONG{$ENDIF},
+  GameWindow := SDL_CreateWindow('OpenSoldat'{$IFDEF TESTING} + ' build ' + OPENSOLDAT_VERSION_LONG{$ENDIF},
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WindowWidth, WindowHeight, WindowFlags);
 
   FileBuffer := PHYSFS_readBuffer('icon.bmp');

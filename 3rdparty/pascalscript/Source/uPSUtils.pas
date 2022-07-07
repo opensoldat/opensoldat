@@ -1187,7 +1187,7 @@ var
 
   function _GetToken(CurrTokenPos, CurrTokenLen: Cardinal): TbtString;
   var
-    // @SoldatPatch
+    // @OpenSoldatPatch
     s: tbtString = '';
   begin
     SetLength(s, CurrTokenLen);

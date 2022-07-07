@@ -37,7 +37,7 @@ var
 implementation
 
 uses
-  Server{$IFDEF STEAM}, Steam{$ENDIF};
+  Server{$IFDEF STEAM}, Steam{$ENDIF}, Version;
 
 constructor THTTPServerThread.Create(AAddress: AnsiString; APort: Word; const OnRequest: THTTPServerRequestHandler);
 begin
@@ -125,8 +125,7 @@ var
 begin
   Uri := ARequest.URI;
 
-  // TODO: dont hardcode version
-  if (ARequest.UserAgent <> 'soldatclient/1.8.0') or (ARequest.Method <> 'GET') then
+  if (ARequest.UserAgent <> 'opensoldatclient/' + OPENSOLDAT_VERSION) or (ARequest.Method <> 'GET') then
   begin
     AResponse.Free;
     Exit;

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Sound Unit for SOLDAT                           }
+{       Sound Unit for OPENSOLDAT                       }
 {                                                       }
 {       Copyright (c) 2002-2003 Michal Marcinkowski     }
 {                                                       }

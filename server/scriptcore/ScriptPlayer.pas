@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       ScriptPlayer unit for SOLDAT                    }
+{       ScriptPlayer unit for OPENSOLDAT                }
 {                                                       }
 {       Copyright (c) 2012 Tomasz Kolosowski            }
 {                                                       }

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       ScriptExceptions unit for SOLDAT                }
+{       ScriptExceptions unit for OPENSOLDAT            }
 {                                                       }
 {       Copyright (c) 2013 Tomasz Kolosowski            }
 {                                                       }

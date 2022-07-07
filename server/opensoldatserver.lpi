@@ -12,7 +12,7 @@
         <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="soldatserver"/>
+      <Title Value="opensoldatserver"/>
       <ResourceType Value="res"/>
     </General>
     <LazDoc Paths="docs"/>
@@ -23,7 +23,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver"/>
+            <Filename Value="build\opensoldatserver"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -72,7 +72,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver"/>
+            <Filename Value="build\opensoldatserver"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -121,7 +121,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver"/>
+            <Filename Value="build\opensoldatserver"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -170,7 +170,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver"/>
+            <Filename Value="build\opensoldatserver"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -210,7 +210,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver" ApplyConventions="False"/>
+            <Filename Value="build\opensoldatserver" ApplyConventions="False"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -259,7 +259,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver"/>
+            <Filename Value="build\opensoldatserver"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -296,7 +296,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver" ApplyConventions="False"/>
+            <Filename Value="build\opensoldatserver" ApplyConventions="False"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -345,7 +345,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver"/>
+            <Filename Value="build\opensoldatserver"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -385,7 +385,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver"/>
+            <Filename Value="build\opensoldatserver"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -433,7 +433,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver"/>
+            <Filename Value="build\opensoldatserver"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -467,7 +467,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="build\soldatserver" ApplyConventions="False"/>
+            <Filename Value="build\opensoldatserver" ApplyConventions="False"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
@@ -537,7 +537,7 @@
     </RunParams>
     <Units Count="87">
       <Unit0>
-        <Filename Value="soldatserver.lpr"/>
+        <Filename Value="opensoldatserver.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
@@ -891,7 +891,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="build\soldatserver"/>
+      <Filename Value="build\opensoldatserver"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>

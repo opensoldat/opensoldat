@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       ScriptGame unit for SOLDAT                      }
+{       ScriptGame unit for OPENSOLDAT                  }
 {                                                       }
 {       Copyright (c) 2013 Tomasz Kolosowski            }
 {                                                       }

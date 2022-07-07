@@ -25,11 +25,11 @@ type
     Stack: Pointer;        // 56
     Items: {$IFDEF FPC}PtrUInt{$ELSE}IntPtr{$ENDIF}; // 64
     SingleBits: Integer; // 72
-    // @SoldatPatch
+    // @OpenSoldatPatch
     Patch_btProcPtr: Boolean;  // 76
   end;
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$PUSH}
 {$WARN 7104 OFF}
 procedure x64call(
@@ -66,7 +66,7 @@ asm
   push [rdx]
 {$ENDIF}
   dec rcx
-  // @SoldatPatch
+  // @OpenSoldatPatch
   or rcx, rcx
   jnz @next
 @Patch_RegisterEventPropertyHelper:
@@ -146,18 +146,18 @@ asm
 
   mov rax, [rbp-32] //registers
 
-  // @SoldatPatch
+  // @OpenSoldatPatch
   bt dword ptr [rax+72], 8       // if atype.basetype  <> btSingle
   jnc @g5                        //
   cvtss2sd xmm1,xmm0             // convert single to double  into xmm1
   mov rdx,[rbp-24]               // @_xmm0  ;rbp -24
-  // @SoldatPatch
+  // @OpenSoldatPatch
   movsd [rdx], xmm1              // save  xmm1 to param _xmm0
   jmp @g5e                       // exit if atype.basetype  = btSingle
 
   @g5:                           //else "if atype.basetype  = btSingle"
     mov rdx,[rbp-24]             // @_xmm0  ;rbp -24
-    // @SoldatPatch
+    // @OpenSoldatPatch
     movsd [rdx], xmm0            // save  xmm1 to param _xmm0
 
   @g5e:
@@ -166,7 +166,7 @@ asm
   leave
   ret
 end;
-// @SoldatPatch
+// @OpenSoldatPatch
 {$POP}
 {$ELSE}
 type
@@ -185,11 +185,11 @@ type
     _XMM6,              // 88
     _XMM7: Double;      // 96
     SingleBits: Integer; //104
-    // @SoldatPatch
+    // @OpenSoldatPatch
     _ST0: Extended;     // 108
   end;
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$PUSH}
 {$WARN 7104 OFF}
 procedure x64call(
@@ -242,7 +242,7 @@ asm
 
   // copy registers
   // xmm0
-  // @SoldatPatch
+  // @OpenSoldatPatch
   mov rdx,[rbp-24]
   bt dword ptr [rax+104], 0
   jnc @skipxmm0
@@ -253,7 +253,7 @@ asm
   @skipxmm0re:
 
   // xmm1
-  // @SoldatPatch
+  // @OpenSoldatPatch
   bt dword ptr [rax+104], 1
   jnc @skipxmm1
   cvtsd2ss xmm1,[rax+48]
@@ -263,7 +263,7 @@ asm
   @skipxmm1re:
 
   // xmm2
-  // @SoldatPatch
+  // @OpenSoldatPatch
   bt dword ptr [rax+104], 2
   jnc @skipxmm2
   cvtsd2ss xmm2,[rax+56]
@@ -273,7 +273,7 @@ asm
   @skipxmm2re:
 
   // xmm3
-  // @SoldatPatch
+  // @OpenSoldatPatch
   bt dword ptr [rax+104], 3
   jnc @skipxmm3
   cvtsd2ss xmm3,[rax+64]
@@ -283,7 +283,7 @@ asm
   @skipxmm3re:
 
   // xmm4
-  // @SoldatPatch
+  // @OpenSoldatPatch
   bt dword ptr [rax+104], 4
   jnc @skipxmm4
   cvtsd2ss xmm4,[rax+72]
@@ -293,7 +293,7 @@ asm
   @skipxmm4re:
 
   // xmm5
-  // @SoldatPatch
+  // @OpenSoldatPatch
   bt dword ptr [rax+104], 5
   jnc @skipxmm5
   cvtsd2ss xmm5,[rax+80]
@@ -303,7 +303,7 @@ asm
   @skipxmm5re:
 
   // xmm6
-  // @SoldatPatch
+  // @OpenSoldatPatch
   bt dword ptr [rax+104], 6
   jnc @skipxmm6
   cvtsd2ss xmm6,[rax+88]
@@ -313,7 +313,7 @@ asm
   @skipxmm6re:
 
   // xmm7
-  // @SoldatPatch
+  // @OpenSoldatPatch
   bt dword ptr [rax+104], 7
   jnc @skipxmm7
   cvtsd2ss xmm7,[rax+96]
@@ -346,7 +346,7 @@ asm
   mov rsi, [rbp-24]           // _XMM0 parameter
 
   // xmm0 res
-  // @SoldatPatch
+  // @OpenSoldatPatch
   mov rax, qword ptr [rbp-32] // Registers parameter
   bt dword ptr [rax+104], 8   // if atype.basetype  <> btSingle
   jnc @skipres                // then goto skipres else begin
@@ -357,14 +357,14 @@ asm
   movq [rsi],xmm0             // move quadword to _XMM0
   @skipresre:
 
-  // @SoldatPatch
+  // @OpenSoldatPatch
   // st0 res
   bt qword ptr [rax+104], 9  // if atype.basetype  <> btExtended
   jnc @skipextres            // then goto skipextres else begin
   fstp tbyte ptr [rax+108]   // pop real10 to Registers._ST0
   @skipextres:
 
-  // @SoldatPatch: For returning record results
+  // @OpenSoldatPatch: For returning record results
   mov [rax+16], rdx
   movq [rax+48], xmm1
 
@@ -375,11 +375,11 @@ asm
   leave
   ret
 end;
-// @SoldatPatch
+// @OpenSoldatPatch
 {$POP}
 {$ENDIF}
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$IFNDEF WINDOWS}
 // System V x86-64 storage class implementation.
 // This is decently tested although there may still be edge cases missing.
@@ -526,7 +526,7 @@ begin
 end;
 {$ENDIF}
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$PUSH}
 {$WARN 5027 OFF}
 function TPSExec.InnerfuseCall(_Self, Address: Pointer; CallingConv: TPSCallingConvention; Params: TPSList; res: PPSVariantIFC): Boolean;
@@ -537,7 +537,7 @@ _XMM0: Double;
   Registers: TRegisters;
 {$IFNDEF WINDOWS}
   RegUsageFloat: Byte;
-  // @SoldatPatch
+  // @OpenSoldatPatch
   Alignment: Integer;
   StorageClasses: TStorageClasses;
   p: Pointer;
@@ -560,7 +560,7 @@ _XMM0: Double;
     p := @Stack[Length(Stack)-Len];
     Move(aData, p^, Len);
 
-    // @SoldatPatch
+    // @OpenSoldatPatch
     if Length(Stack) mod 8 <> 0 then
       SetLength(Stack, Length(Stack)+ (8-(Length(Stack) mod 8)));
   end;
@@ -588,7 +588,7 @@ _XMM0: Double;
       2: begin inc(RegUsage); Registers._R8:=Data; end;
       3: begin inc(RegUsage); Registers._R9:=Data; end;
     else begin
-      // @SoldatPatch
+      // @OpenSoldatPatch
       StoreStack(data, SizeOf(data));
     end;
     end;
@@ -604,7 +604,7 @@ _XMM0: Double;
       4: begin inc(RegUsage); Registers._R8:=Data; end;
       5: begin inc(RegUsage); Registers._R9:=Data; end;
     else begin
-      // @SoldatPatch
+      // @OpenSoldatPatch
       StoreStack(data, SizeOf(data));
     end;
     end;
@@ -620,7 +620,7 @@ _XMM0: Double;
       2: begin inc(RegUsage); Registers._XMM2:=Data; end;
       3: begin inc(RegUsage); Registers._XMM3:=Data; end;
     else begin
-      // @SoldatPatch
+      // @OpenSoldatPatch
       StoreStack(data, SizeOf(data));
     end;
     end;
@@ -633,7 +633,7 @@ _XMM0: Double;
       2: begin inc(RegUsage); Registers.SingleBits := Registers.SingleBits or 4;Registers._XMM2:=Data; end;
       3: begin inc(RegUsage); Registers.SingleBits := Registers.SingleBits or 8; Registers._XMM3:=Data; end;
     else begin
-      // @SoldatPatch
+      // @OpenSoldatPatch
       StoreStack(data, SizeOf(data));
     end;
     end;
@@ -651,7 +651,7 @@ _XMM0: Double;
       6: begin inc(RegUsageFloat); Registers._XMM6:=Data; end;
       7: begin inc(RegUsageFloat); Registers._XMM7:=Data; end;
     else begin
-      // @SoldatPatch
+      // @OpenSoldatPatch
       StoreStack(data, SizeOf(data));
     end;
     end;
@@ -668,13 +668,13 @@ _XMM0: Double;
       6: begin inc(RegUsageFloat); Registers.SingleBits := Registers.SingleBits or 64; Registers._XMM6:=Data; end;
       7: begin inc(RegUsageFloat); Registers.SingleBits := Registers.SingleBits or 128; Registers._XMM7:=Data; end;
     else begin
-      // @SoldatPatch
+      // @OpenSoldatPatch
       StoreStack(data, SizeOf(data));
     end;
     end;
   end;
   {$ENDIF}
-  // @SoldatPatch
+  // @OpenSoldatPatch
   {$IFNDEF WINDOWS}
   procedure DoClassifyStorage(var Classes: TStorageClasses; AType: TPSTypeRec;
     var Alignment: Integer; RegUsageCheck, RegUsageFloatCheck: Integer);
@@ -701,7 +701,7 @@ _XMM0: Double;
     //UseReg: Boolean;
     //tempstr: tbtstring;
     p: Pointer;
-    // @SoldatPatch
+    // @OpenSoldatPatch
     {$IFNDEF WINDOWS}
     ip: IPointer;
     i, Alignment: Integer;
@@ -782,7 +782,7 @@ _XMM0: Double;
           end;
         btRecord:
           begin
-            // @SoldatPatch
+            // @OpenSoldatPatch
             {$IFDEF WINDOWS}
             fvar^.aType.CalcSize;
             if fvar^.aType.RealSize in [1, 2, 4, 8] then
@@ -821,7 +821,7 @@ _XMM0: Double;
           begin
             StoreReg(IPointer(fVar.Dta));
           end;
-        // @SoldatPatch
+        // @OpenSoldatPatch
         btDouble: {8 bytes} begin
             StoreReg(double(fvar.dta^));
           end;
@@ -871,7 +871,7 @@ _XMM0: Double;
 
         btProcPtr:
           begin
-            // @SoldatPatch
+            // @OpenSoldatPatch
             {$IFNDEF WINDOWS}
             // Code pointer
             ip := IPointer(@MyAllMethodsHandler);
@@ -886,7 +886,7 @@ _XMM0: Double;
               SetLength(Stack, Length(Stack)+ (16-(Length(Stack) mod 16)));
             StoreStack(p^, Pointersize2);
             FreeMem(p);
-            // @SoldatPatch
+            // @OpenSoldatPatch
             if RegUsage < 4 then
               Registers.Patch_btProcPtr := True;
             {$ENDIF}
@@ -901,7 +901,7 @@ _XMM0: Double;
     Result := True;
   end;
 begin
-  // @SoldatPatch
+  // @OpenSoldatPatch
   {$IFDEF WINDOWS}
   Registers.Patch_btProcPtr := False;
   {$ELSE}
@@ -956,7 +956,7 @@ begin
       StoreReg(IPointer(_Self));
     end;
 
-    // @SoldatPatch
+    // @OpenSoldatPatch
     {$IFDEF PS_RESBEFOREPARAMETERS}
     if assigned(res) then begin
       case res^.aType.BaseType of
@@ -965,7 +965,7 @@ begin
         {$ENDIF}
         btInterface, btArray, btVariant, btStaticArray:
           GetPtr(res);
-        // @SoldatPatch
+        // @OpenSoldatPatch
         btRecord: begin
           {$IFNDEF WINDOWS}
           res^.aType.CalcSize;
@@ -984,7 +984,7 @@ begin
         end;
         btSet:
           begin
-            // @SoldatPatch
+            // @OpenSoldatPatch
             res.aType.CalcSize;
             if res.aType.RealSize > PointerSize then GetPtr(res);
           end;
@@ -1002,7 +1002,7 @@ begin
     end;
 
     if assigned(res) then begin
-      // @SoldatPatch
+      // @OpenSoldatPatch
       {$IFNDEF WINDOWS}
       if (res^.aType.BaseType = btExtended) or (StorageClasses[0] = SVX87) then
         Registers.SingleBits := Registers.SingleBits or 512;
@@ -1017,7 +1017,7 @@ begin
         //btRecord,
         btSet:
           begin
-            // @SoldatPatch
+            // @OpenSoldatPatch
             res.aType.CalcSize;
             if res.aType.RealSize > PointerSize then GetPtr(res);
           end;
@@ -1040,7 +1040,7 @@ begin
       case res^.aType.BaseType of
         btRecord, btSet:
           begin
-            // @SoldatPatch
+            // @OpenSoldatPatch
             {$IFNDEF WINDOWS}
             if StorageClasses[0] = SVX87 then
             begin
@@ -1093,7 +1093,7 @@ begin
           end;
         btSingle:      tbtsingle(res.Dta^) := _XMM0;
         btDouble:      tbtdouble(res.Dta^) := _XMM0;
-        // @SoldatPatch
+        // @OpenSoldatPatch
         {$IFNDEF WINDOWS}
         btExtended:    tbtextended(res.Dta^) := Registers._ST0;
         {$ELSE}
@@ -1146,7 +1146,7 @@ begin
     CallData.Free;
   end;
 end;
-// @SoldatPatch
+// @OpenSoldatPatch
 {$POP}
 
 

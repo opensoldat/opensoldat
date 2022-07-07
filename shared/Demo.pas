@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Demo Unit for SOLDAT                            }
+{       Demo Unit for OPENSOLDAT                        }
 {                                                       }
 {       Copyright (c) 2002 Michal Marcinkowski          }
 {                                                       }
