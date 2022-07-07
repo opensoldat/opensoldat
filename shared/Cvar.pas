@@ -888,7 +888,7 @@ begin
   sv_lockedmode := TBooleanCvar.Add('sv_lockedmode', 'When Locked Mode is enabled, admins will not be able to type /loadcon, /password or /maxplayers', False, False, [CVAR_SERVER], nil);
   sv_pidfilename := TStringCvar.Add('sv_pidfilename', 'Sets the Process ID file name', 'opensoldatserver.pid', 'opensoldatserver.pid', [CVAR_SERVER], nil, 1, 256);
   sv_maplist := TStringCvar.Add('sv_maplist', 'Sets the name of maplist file', 'mapslist.txt', 'mapslist.txt', [CVAR_SERVER], nil, 1, 256); // TODO: OnChange load new maplist
-  sv_lobby := TBooleanCvar.Add('sv_lobby', 'Enables/Disables registering in lobby', True, True, [CVAR_SERVER], nil);
+  sv_lobby := TBooleanCvar.Add('sv_lobby', 'Enables/Disables registering in lobby', False, False, [CVAR_SERVER], nil);
   sv_lobbyurl := TStringCvar.Add('sv_lobbyurl', 'URL of the lobby server', 'http://api.soldat.pl:443', 'http://api.soldat.pl:443', [CVAR_SERVER], nil, 1, 256);
 
   sv_steamonly := TBooleanCvar.Add('sv_steamonly', 'Enables/Disables steam only mode', False, False, [CVAR_SERVER], nil);
