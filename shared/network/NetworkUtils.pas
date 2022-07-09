@@ -11,7 +11,7 @@ uses
   // helper units
   Version, StrUtils,
 
-  // soldat units
+  // opensoldat units
   {$IFNDEF SERVER}
   Sound,
   {$ENDIF}
@@ -224,10 +224,10 @@ begin
 end;
 {$ENDIF}
 
-// Checks if the Requested and the current Soldat version are the same
+// Checks if the Requested and the current OpenSoldat version are the same
 function IsWrongGameVersion(RequestVersion: string): Boolean;
 begin
-  Result := RequestVersion <> SOLDAT_VERSION;
+  Result := RequestVersion <> OPENSOLDAT_VERSION;
 end;
 
 {$IFNDEF SERVER}

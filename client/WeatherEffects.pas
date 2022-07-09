@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       WeatherEffects Unit for SOLDAT                  }
+{       WeatherEffects Unit for OPENSOLDAT              }
 {                                                       }
 {       Copyright (c) 2003 Michal Marcinkowski          }
 {                                                       }

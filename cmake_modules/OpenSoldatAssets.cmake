@@ -14,7 +14,7 @@ macro(download_assets)
   set(DOWNLOAD_URL ${BASE_REPOSITORY_URL}/releases/download/${BASE_GIT_TAG})
   set(DOWNLOADS_DIR downloads)
 
-  message(STATUS "Soldat assets will be downloaded from ${DOWNLOAD_URL}")
+  message(STATUS "OpenSoldat assets will be downloaded from ${DOWNLOAD_URL}")
   file(DOWNLOAD
     ${DOWNLOAD_URL}/soldat.smod
     ${DOWNLOADS_DIR}/soldat.smod
@@ -36,7 +36,7 @@ macro(download_assets)
     COMMENT "Copying soldat.smod to ${EXECUTABLE_OUTPUT_PATH}"
   )
   add_custom_target(
-    soldat_font
+    opensoldat_font
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DOWNLOADS_DIR}/play-regular.ttf
                                                   ${EXECUTABLE_OUTPUT_PATH}/play-regular.ttf
     COMMENT "Copying font to ${EXECUTABLE_OUTPUT_PATH}"

@@ -1,33 +1,26 @@
-{*******************************************************}
-{                                                       }
-{       SOLDAT                                          }
-{                                                       }
-{       Copyright (c) 2001 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*********************************************************}
+{                                                         }
+{   OpenSoldatServer                                      }
+{                                                         }
+{   Copyright (c) 2001 Michal Marcinkowski                }
+{                                                         }
+{*********************************************************}
 
-program soldat;
-
-{$IFDEF MSWINDOWS}
-{$APPTYPE CONSOLE}
-{$ENDIF}
+program opensoldatserver;
 
 {$IFDEF DARWIN}
-{$linklib freetype}
-{$linklib stb}
 {$linklib physfs}
 {$linklib GameNetworkingSockets}
 {$ENDIF}
 
 uses
-  {$IFDEF UNIX}
-  cthreads,
-  cwstring,
+  {$IFNDEF WINDOWS}
+  cthreads, // needs to be first included unit in project
   {$ENDIF}
-  {$IFDEF MSWINDOWS}Windows,{$ENDIF}
-  SysUtils,
-  {$IFDEF AUTOUPDATER}AutoUpdater,{$ENDIF}
-  Client in 'Client.pas';
+  {$IFDEF AUTOUPDATER}
+  AutoUpdater,
+  {$ENDIF}
+  Main in 'Main.pas';
 
 {$IFDEF MSWINDOWS}
 const
@@ -47,16 +40,11 @@ const
   {$SetPEOptFlags IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE}
 {$ENDIF MSWINDOWS}
 
-{$IFDEF MSWINDOWS}
-{$R *.res}
-{$ENDIF}
-
 begin
   {$IFDEF AUTOUPDATER}
   StartAutoUpdater;
   {$ENDIF}
+  RunServer;
 
   DefaultSystemCodePage := CP_UTF8;
-
-  StartGame;
 end.

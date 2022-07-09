@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       ScriptFileAPI unit for SOLDAT                   }
+{       ScriptFileAPI unit for OPENSOLDAT               }
 {                                                       }
 {       Copyright (c) 2013 Tomasz Kolosowski            }
 {                                                       }
@@ -452,7 +452,7 @@ begin
     // to normalize slashes for further functions (expand function does it).
     // Though since they don't fall into scope of permission check...
     0: Result := True;
-    // Level 1 sandbox, restrict to soldatserver's folder
+    // Level 1 sandbox, restrict to opensoldatserver's folder
     1:
     begin
       Result := UserDirectory = Copy(FilePath, 1, Length(UserDirectory));
@@ -477,7 +477,7 @@ begin
   end;
 
   // Since some API functions allow to show the path (the normalized one),
-  // relativise it to hide soldatserver's folder absolute path
+  // relativise it to hide opensoldatserver's folder absolute path
   if Result then
     FilePath := ExtractRelativepath(UserDirectory, FilePath);
 end;

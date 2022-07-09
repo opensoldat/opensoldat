@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       PascalExec unit for SOLDAT                      }
+{       PascalExec unit for OPENSOLDAT                  }
 {                                                       }
 {       Copyright (c) 2012 Tomasz Kolosowski            }
 {                                                       }

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Gfx Unit for SOLDAT                             }
+{       Gfx Unit for OPENSOLDAT                         }
 {                                                       }
 {       Copyright (c) 2015 Mariano Cuatrin              }
 {                                                       }

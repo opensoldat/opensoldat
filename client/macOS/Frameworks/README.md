@@ -39,11 +39,11 @@ Use the official `SDL2.framework` file from SDL's website.
 
 ```
 cd <SDL2 source directory>
-CFLAGS="-arch i386" LDFLAGS="-arch i386" ./configure --host=i386-apple-darwin --prefix=/tmp/soldatdeps/out32
+CFLAGS="-arch i386" LDFLAGS="-arch i386" ./configure --host=i386-apple-darwin --prefix=/tmp/opensoldatdeps/out32
 make -j4 && make install
-./configure --host=x86_64-apple-darwin --prefix=/tmp/soldatdeps/out64
+./configure --host=x86_64-apple-darwin --prefix=/tmp/opensoldatdeps/out64
 make -j4 && make install
-cd /tmp/soldatdeps
+cd /tmp/opensoldatdeps
 lipo -create -output libSDL2.dylib out32/lib/libSDL2-2.0.0.dylib out64/lib/libSDL2-2.0.0.dylib
 install_name_tool -id @loader_path/libSDL2.dylib libSDL2.dylib
 ```

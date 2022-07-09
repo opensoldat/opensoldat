@@ -1,6 +1,6 @@
 {******************************************************************}
 {                                                                  }
-{             Script dispatcher unit for SOLDAT                    }
+{             Script dispatcher unit for OPENSOLDAT                }
 {                                                                  }
 {             Copyright (c) 2012 Tomasz Kolosowski                 }
 {                                                                  }

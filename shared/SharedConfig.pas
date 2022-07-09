@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       SharedConfig Unit for SOLDAT                    }
+{       SharedConfig Unit for OPENSOLDAT                }
 {                                                       }
 {       Copyright (c) 2012 Daniel Forssten              }
 {                                                       }

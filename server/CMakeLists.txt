@@ -36,13 +36,13 @@ file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/server/*"
      "${CMAKE_SOURCE_DIR}/shared/*.pas" "${CMAKE_SOURCE_DIR}/3rdparty/*.pas"
      "${CMAKE_SOURCE_DIR}/3rdparty/*.inc")
 
-set_source_files_properties(soldatserver.lpr PROPERTIES OBJECT_DEPENDS
+set_source_files_properties(opensoldatserver.lpr PROPERTIES OBJECT_DEPENDS
                                                         "${sources}")
 
-add_executable(soldatserver soldatserver.lpr)
+add_executable(opensoldatserver opensoldatserver.lpr)
 
 if(ADD_ASSETS)
-  add_dependencies(soldatserver soldat_smod)
+  add_dependencies(opensoldatserver soldat_smod)
 endif()
 
 if(BUILD_SCRIPTCORE AND (ADD_BFT OR ADD_FFI_FUZZ))
@@ -50,12 +50,12 @@ if(BUILD_SCRIPTCORE AND (ADD_BFT OR ADD_FFI_FUZZ))
 endif()
 
 if(BUILD_STEAM)
-  target_link_libraries(soldatserver steam_api)
+  target_link_libraries(opensoldatserver steam_api)
 else()
-  target_link_libraries(soldatserver GameNetworkingSockets)
+  target_link_libraries(opensoldatserver GameNetworkingSockets)
 endif()
 
 install(
-  PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldatserver>
+  PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:opensoldatserver>
   DESTINATION ${target_binary_install_dir}
 )

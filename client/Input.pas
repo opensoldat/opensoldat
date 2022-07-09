@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Input Unit for SOLDAT                           }
+{       Input Unit for OPENSOLDAT                       }
 {                                                       }
 {       Copyright (c) 2016 Paweł Drzazga                }
 {                                                       }

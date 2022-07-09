@@ -1,5 +1,5 @@
-Soldat contributors (sorted alphabetically)
-============================================
+OpenSoldat contributors (sorted alphabetically)
+===============================================
 
 Peters "daaw" Brede  
 Gregor. "Shoozza" A. Cieslak  

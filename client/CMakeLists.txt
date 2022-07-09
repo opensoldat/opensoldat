@@ -39,32 +39,32 @@ file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/client/*"
      "${CMAKE_SOURCE_DIR}/shared/*.pas" "${CMAKE_SOURCE_DIR}/3rdparty/*.pas"
      "${CMAKE_SOURCE_DIR}/3rdparty/*.inc")
 
-set_source_files_properties(soldat.lpr PROPERTIES OBJECT_DEPENDS "${sources}")
+set_source_files_properties(opensoldat.lpr PROPERTIES OBJECT_DEPENDS "${sources}")
 
-add_executable(soldat soldat.lpr)
+add_executable(opensoldat opensoldat.lpr)
 
 if(ADD_ASSETS)
-  add_dependencies(soldat soldat_smod soldat_font)
+  add_dependencies(opensoldat soldat_smod opensoldat_font)
 endif()
 
 if(UNIX)
-  target_link_libraries(soldat stb)
+  target_link_libraries(opensoldat stb)
 endif()
 
 if(BUILD_STEAM)
-  target_link_libraries(soldat steam_api)
+  target_link_libraries(opensoldat steam_api)
 else()
-  target_link_libraries(soldat GameNetworkingSockets)
+  target_link_libraries(opensoldat GameNetworkingSockets)
 endif()
 
 install(
-  PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:soldat>
+  PROGRAMS ${EXECUTABLE_OUTPUT_PATH}/$<TARGET_FILE_NAME:opensoldat>
   DESTINATION "${target_binary_install_dir}"
 )
 if(ADD_ASSETS)
   install(
     FILES "${EXECUTABLE_OUTPUT_PATH}/play-regular.ttf"
-    # FIXME: this should be target_data_install_dir, but soldat can't discover it there
+    # FIXME: this should be target_data_install_dir, but opensoldat can't discover it there
     # (needs wrapper script or some equivalent global config)
     DESTINATION "${target_binary_install_dir}"
   )

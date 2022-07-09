@@ -98,7 +98,7 @@ begin
   with Client do
   try
     try
-      AddHeader('User-Agent', 'soldatclient/' + SOLDAT_VERSION);
+      AddHeader('User-Agent', 'opensoldatclient/' + OPENSOLDAT_VERSION);
       AllowRedirect := False;
       IOTimeout := 1000;
       OnDataReceived := DoProgress;

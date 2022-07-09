@@ -6,8 +6,8 @@ BFT is a ScriptCore3 integration test suite.
 
 The tests are intrusive to normal development so they aren't run by default.
 If you're using CMake, you can set the `ADD_BFT` option to true and the tests
-will be copied to the scripts directory of soldatserver automatically. If you
-are using another build system, just manually copy the bft directory to the
+will be copied to the scripts directory of OpenSoldatServer automatically. If
+you are using another build system, just manually copy the bft directory to the
 scripts directory (e.g. `server/build/x86_64-linux/scripts`).
 
 What do we test?
@@ -35,7 +35,7 @@ values.
 
 To run the tests with CMake, make sure to have `BUILD_SCRIPTCORE` and
 `ADD_FFI_FUZZ` options set to true. Then build CMake target `gen-ffi-fuzz`
-(or run `gen_ffi_tests.py` manually), build and run soldatserver.
+(or run `gen_ffi_tests.py` manually), build and run OpenSoldatServer.
 
 To run the tests with another build system:
 1. Run `./gen_ffi_tests.py`
@@ -43,5 +43,5 @@ To run the tests with another build system:
 You have 2 options:
    - Temporarily copy `ScriptFFITests.pas` to the `server/scriptcore` directory
    - Add `server/scriptcore/test` directory to search paths of units (`-Fu` parameter)
-3. Build soldatserver with `-dSCRIPT_FFI_FUZZ` custom option
-4. Copy the `ffi` directory to the `scripts` directory of your soldatserver build
+3. Build OpenSoldatServer with `-dSCRIPT_FFI_FUZZ` custom option
+4. Copy the `ffi` directory to the `scripts` directory of your OpenSoldatServer build

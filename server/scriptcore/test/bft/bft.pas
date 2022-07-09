@@ -4,8 +4,8 @@
 // Most of these tests are pretty cursory, just to check that the script engine
 // under test doesn't have any terrible flaws (cough cough PascalScript).
 // The bulk of the testing job here falls to the test suite of the standard
-// library we're wrapping, PascalScript, and manual Soldat testing. But this is
-// still a good final integration test to make sure nothing broke. Also it
+// library we're wrapping, PascalScript, and manual OpenSoldat testing. But this
+// is still a good final integration test to make sure nothing broke. Also it
 // doesn't actually test every single function exposed by SC3 because I got sick
 // of typing test code. :)
 //

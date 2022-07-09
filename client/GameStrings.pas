@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       GameStrings Unit for SOLDAT                     }
+{       GameStrings Unit for OPENSOLDAT                 }
 {                                                       }
 {       Copyright (c) 2003 Michal Marcinkowski          }
 {                                                       }

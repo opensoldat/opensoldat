@@ -1,6 +1,6 @@
 {******************************************************************************}
 {                                                                              }
-{       Vector Unit for SOLDAT                                                 }
+{       Vector Unit for OPENSOLDAT                                             }
 {                                                                              }
 {       Copyright (c) 2013 Gregor A. Cieslak                                   }
 {                                                                              }

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       LogFile Unit for SOLDAT                         }
+{       LogFile Unit for OPENSOLDAT                     }
 {                                                       }
 {       Copyright (c) 2002 Michal Marcinkowski          }
 {                                                       }

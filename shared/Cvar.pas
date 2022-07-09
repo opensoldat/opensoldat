@@ -886,9 +886,9 @@ begin
   sv_maxping := TIntegerCvar.Add('sv_maxping', 'The maximum ping a player can have to play in your server', 400, 400, [CVAR_SERVER], nil, 0, 9999);
   sv_votepercent := TIntegerCvar.Add('sv_votepercent', 'Percentage of players in favor of a map/kick vote to let it pass', 60, 60, [CVAR_SERVER], nil, 0, 200);
   sv_lockedmode := TBooleanCvar.Add('sv_lockedmode', 'When Locked Mode is enabled, admins will not be able to type /loadcon, /password or /maxplayers', False, False, [CVAR_SERVER], nil);
-  sv_pidfilename := TStringCvar.Add('sv_pidfilename', 'Sets the Process ID file name', 'soldatserver.pid', 'soldatserver.pid', [CVAR_SERVER], nil, 1, 256);
+  sv_pidfilename := TStringCvar.Add('sv_pidfilename', 'Sets the Process ID file name', 'opensoldatserver.pid', 'opensoldatserver.pid', [CVAR_SERVER], nil, 1, 256);
   sv_maplist := TStringCvar.Add('sv_maplist', 'Sets the name of maplist file', 'mapslist.txt', 'mapslist.txt', [CVAR_SERVER], nil, 1, 256); // TODO: OnChange load new maplist
-  sv_lobby := TBooleanCvar.Add('sv_lobby', 'Enables/Disables registering in lobby', True, True, [CVAR_SERVER], nil);
+  sv_lobby := TBooleanCvar.Add('sv_lobby', 'Enables/Disables registering in lobby', False, False, [CVAR_SERVER], nil);
   sv_lobbyurl := TStringCvar.Add('sv_lobbyurl', 'URL of the lobby server', 'http://api.soldat.pl:443', 'http://api.soldat.pl:443', [CVAR_SERVER], nil, 1, 256);
 
   sv_steamonly := TBooleanCvar.Add('sv_steamonly', 'Enables/Disables steam only mode', False, False, [CVAR_SERVER], nil);
@@ -983,7 +983,7 @@ begin
   sv_radio := TBooleanCvar.Add('sv_radio', 'Enables/disables radio chat', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_info := TStringCvar.Add('sv_info', 'A website or e-mail address, or any other short text describing your server', '', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 60);
   sv_gravity := TSingleCvar.Add('sv_gravity', 'Gravity', 0.06, 0.06, [CVAR_SERVER, CVAR_SYNC], @sv_gravityChange, MinSingle, MaxSingle);
-  sv_hostname := TStringCvar.Add('sv_hostname', 'Name of the server', 'Soldat Server', 'Soldat Server', [CVAR_SERVER, CVAR_SYNC], nil, 0, 24);
+  sv_hostname := TStringCvar.Add('sv_hostname', 'Name of the server', 'OpenSoldat Server', 'OpenSoldat Server', [CVAR_SERVER, CVAR_SYNC], nil, 0, 24);
   sv_website := TStringCvar.Add('sv_website', 'Server website', '', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 255);
 
   sv_killlimit := TIntegerCvar.Add('sv_killlimit', 'Game point limit', 10, 10, [CVAR_SERVER, CVAR_SYNC], nil, 0, 9999);

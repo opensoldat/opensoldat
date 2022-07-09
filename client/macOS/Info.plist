@@ -5,17 +5,17 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
-	<string>Soldat</string>
+	<string>OpenSoldat</string>
 	<key>CFBundleExecutable</key>
-	<string>soldat</string>
+	<string>opensoldat</string>
 	<key>CFBundleIconFile</key>
-	<string>Soldat.icns</string>
+	<string>OpenSoldat.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>pl.soldat.soldat-client</string>
+	<string>io.github.opensoldat.opensoldat-client</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Soldat</string>
+	<string>OpenSoldat</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

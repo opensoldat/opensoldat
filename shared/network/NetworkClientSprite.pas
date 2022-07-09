@@ -9,7 +9,7 @@ uses
   // helper units
   Vector,
 
-  // soldat units
+  // opensoldat units
   Steam, Net, Sprites, Weapons, Sound,
   Constants, GameStrings;
 

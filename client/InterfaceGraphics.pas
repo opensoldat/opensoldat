@@ -664,7 +664,7 @@ begin
   GfxTextColor(RGBA(230, 235, 255, 190));
   GfxTextVerticalAlign(GFX_BOTTOM);
   GfxDrawText(EscMenu.x + EscMenu.w + dx - 2 -
-    RectWidth(GfxTextMetrics('Soldat ' + SOLDAT_VERSION)),
+    RectWidth(GfxTextMetrics('OpenSoldat ' + OPENSOLDAT_VERSION)),
     EscMenu.y + EscMenu.h + dy);
   GfxTextVerticalAlign(GFX_TOP);
 
@@ -1906,7 +1906,7 @@ begin
   {$IF DEFINED(TESTING) or DEFINED(RELEASE_CANDIDATE)}
   SetFontStyle(FONT_SMALL);
   GfxTextColor(RGBA(250, 245, 255, 150));
-  GfxDrawText(SOLDAT_VERSION_LONG, 565 * _iscala.x, 465 * _iscala.y);
+  GfxDrawText(OPENSOLDAT_VERSION_LONG, 565 * _iscala.x, 465 * _iscala.y);
   {$IFEND}
 
   if MySprite > 0 then

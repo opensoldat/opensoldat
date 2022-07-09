@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       AI Unit for SOLDAT                              }
+{       AI Unit for OPENSOLDAT                          }
 {                                                       }
 {       Copyright (c) 2002 Michal Marcinkowski          }
 {                                                       }

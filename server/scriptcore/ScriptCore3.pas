@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       ScriptCore3 unit for SOLDAT                     }
+{       ScriptCore3 unit for OPENSOLDAT                 }
 {                                                       }
 {       Copyright (c) 2012 Tomasz Kolosowski            }
 {                                                       }

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Control Unit for SOLDAT                         }
+{       Control Unit for OPENSOLDAT                     }
 {                                                       }
 {       Copyright (c) 2003 Michal Marcinkowski          }
 {                                                       }
@@ -1996,7 +1996,7 @@ begin
           SpriteC.BodyApplyAnimation(SlideBack, 1);
 
         // this piece of code fixes the infamous crouch bug
-        // how you ask? well once upon time soldat's code decided that
+        // how you ask? well once upon time opensoldat's code decided that
         // randomly the animation for roll for the body and legs will magically
         // go out of sync, which is causing the crouch bug. so this piece of
         // awesome code simply syncs them when they go out of sync <3

@@ -7,7 +7,7 @@ Copyright (C) 2000-2009 by Carlo Kok (ck@carlo-kok.com)
 
 }
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$WARN 4056 OFF}
 {$WARN 5024 OFF}
 
@@ -1105,7 +1105,7 @@ function MakeWString(const s: tbtunicodestring): tbtstring;
 function IDispatchInvoke(Self: IDispatch; PropertySet: Boolean; const Name: tbtString; const Par: array of Variant): Variant;
 {$ENDIF}
 
-// @SoldatPatch: Make TScriptMethodInfo public.
+// @OpenSoldatPatch: Make TScriptMethodInfo public.
 type
   PScriptMethodInfo = ^TScriptMethodInfo;
   TScriptMethodInfo = record
@@ -1116,7 +1116,7 @@ type
 
 implementation
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$WARN 4056 OFF}
 {$WARN 5024 OFF}
 
@@ -1372,41 +1372,41 @@ end;
 {$IFNDEF PS_NOWIDESTRING}
 function wPadl(s: tbtwidestring; i: longInt): tbtwidestring;
 begin
-  // @SoldatPatch
+  // @OpenSoldatPatch
   result := tbtwidestring(StringOfChar(tbtwidechar(' '), i - length(s))) + s;
 end;
 //-------------------------------------------------------------------
 
 function wPadz(s: tbtwidestring; i: longInt): tbtwidestring;
 begin
-  // @SoldatPatch
+  // @OpenSoldatPatch
   result := tbtwidestring(StringOfChar(tbtwidechar('0'), i - length(s))) + s;
 end;
 //-------------------------------------------------------------------
 
 function wPadr(s: tbtwidestring; i: longInt): tbtwidestring;
 begin
-  // @SoldatPatch
+  // @OpenSoldatPatch
   result := s + tbtwidestring(StringOfChar(tbtwidechar(' '), i - Length(s)));
 end;
 
 function uPadl(s: tbtunicodestring; i: longInt): tbtunicodestring;
 begin
-  // @SoldatPatch
+  // @OpenSoldatPatch
   result := tbtwidestring(StringOfChar(tbtwidechar(' '), i - length(s))) + s;
 end;
 //-------------------------------------------------------------------
 
 function uPadz(s: tbtunicodestring; i: longInt): tbtunicodestring;
 begin
-  // @SoldatPatch
+  // @OpenSoldatPatch
   result := tbtunicodestring(StringOfChar(tbtwidechar('0'), i - length(s))) + s;
 end;
 //-------------------------------------------------------------------
 
 function uPadr(s: tbtunicodestring; i: longInt): tbtunicodestring;
 begin
-  // @SoldatPatch
+  // @OpenSoldatPatch
   result := s + tbtunicodestring(StringOfChar(tbtwidechar(' '), i - Length(s)));
 end;
 
@@ -2561,7 +2561,7 @@ var
     Result := True;
   end;
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$PUSH}
 {$WARNINGS OFF}
 
@@ -2964,7 +2964,7 @@ var
     end;
   end;
 {$WARNINGS ON}
-// @SoldatPatch
+// @OpenSoldatPatch
 {$POP}
 
   function LoadVars: Boolean;
@@ -3603,7 +3603,7 @@ begin
     if (src = nil) or (aType = nil) then raise Exception.Create(RPS_TypeMismatch);
   end;
   case aType.BaseType of
-    // @SoldatPatch
+    // @OpenSoldatPatch
     btU8: Result := widechar(chr(tbtu8(src^)));
     btU16: Result := widechar(src^);
     btChar: Result := tbtwidestring(tbtchar(Src^));
@@ -3626,7 +3626,7 @@ begin
     if (src = nil) or (aType = nil) then raise Exception.Create(RPS_TypeMismatch);
   end;
   case aType.BaseType of
-    // @SoldatPatch
+    // @OpenSoldatPatch
     btU8: Result := widechar(chr(tbtu8(src^)));
     btU16: Result := widechar(src^);
     btChar: Result := tbtunicodestring(tbtchar(Src^));
@@ -4612,7 +4612,7 @@ begin
             TObject(Dest^) := TObject(Src^)
           else
           if srctype.BaseType = btVariant then
-            // @SoldatPatch
+            // @OpenSoldatPatch
             IPointer(Dest^) := Variant(Src^)
           else
           // nx change start
@@ -7112,7 +7112,7 @@ begin
     Result := False;
 end;
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$PUSH}
 {$WARN 5093 OFF}
 function TPSExec.RunProcP(const Params: array of Variant; const Procno: Cardinal): Variant;
@@ -7217,7 +7217,7 @@ begin
     FreePIFVariantList(ParamList);
   end;
 end;
-// @SoldatPatch
+// @OpenSoldatPatch
 {$POP}
 
 function TPSExec.RunProcPN(const Params: array of Variant; const ProcName: tbtString): Variant;
@@ -8775,7 +8775,7 @@ function NVarProc(Caller: TPSExec; p: TPSExternalProcRec; Global, Stack: TPSStac
 var
   tmp: TPSVariantIFC;
 begin
-   // @SoldatPatch
+   // @OpenSoldatPatch
    case PtrUInt(p.Ext1) of
     0:
       begin
@@ -8811,7 +8811,7 @@ begin
     -UPSRuntime.DefProc
     -UPSRuntime.TPSExec.RegisterStandardProcs
   }
-  // @SoldatPatch
+  // @OpenSoldatPatch
   case PtrUInt(p.Ext1) of
     0: Stack.SetAnsiString(-1, tbtstring(SysUtils.IntToStr(Stack.{$IFNDEF PS_NOINT64}GetInt64{$ELSE}GetInt{$ENDIF}(-2)))); // inttostr
     1: Stack.SetInt(-1, StrToInt(Stack.GetAnsiString(-2))); // strtoint
@@ -9319,7 +9319,7 @@ begin
   Result:=true;
   arr:=NewTPSVariantIFC(Stack[Stack.Count-1],true);
   case arr.aType.BaseType of
-    // @SoldatPatch
+    // @OpenSoldatPatch
     btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)-Stack.GetInt(-2));     //Byte
     btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)-Stack.GetInt(-2));     //ShortInt
     btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)-Stack.GetInt(-2));    //Word
@@ -9340,7 +9340,7 @@ begin
   Result:=true;
   arr:=NewTPSVariantIFC(Stack[Stack.Count-1],true);
   case arr.aType.BaseType of
-    // @SoldatPatch
+    // @OpenSoldatPatch
     btU8         : Stack.SetInt(-1,Tbtu8(arr.dta^)+Stack.GetInt(-2));     //Byte
     btS8         : Stack.SetInt(-1,Tbts8(arr.dta^)+Stack.GetInt(-2));     //ShortInt
     btU16        : Stack.SetInt(-1,Tbtu16(arr.dta^)+Stack.GetInt(-2));    //Word
@@ -9519,7 +9519,7 @@ function IntPIFVariantToVariant(Src: pointer; aType: TPSTypeRec; var Dest: Varia
     end;
     result := true;
   end;
-// @SoldatPatch
+// @OpenSoldatPatch
 var
   ip: IPointer;
 begin
@@ -9570,7 +9570,7 @@ begin
     btWideChar: Dest := tbtwidestring(tbtwidechar(src^));
     btUnicodeString: Dest := tbtUnicodeString(src^);
   {$ENDIF}
-    // @SoldatPatch
+    // @OpenSoldatPatch
     btRecord: begin
       ip := Dest;
       CopyRecordContents(Pointer(ip), Src, TPSTypeRec_Record(aType));
@@ -10001,7 +10001,7 @@ var
 begin
  {$IFDEF FPC}
  x := Pointer(TObject(FSelf).ClassType) + vmtMethodStart;
- // @SoldatPatch
+ // @OpenSoldatPatch
  Result := x^[PtrUInt(Ptr)];
  {$ELSE}
  Result := PPtrArr(PPointer(FSelf)^)^[Longint(Ptr)];
@@ -10016,7 +10016,7 @@ var
 begin
   {$IFDEF FPC}
   x := Pointer(FSelf) + vmtMethodStart;
-  // @SoldatPatch
+  // @OpenSoldatPatch
   Result := x^[PtrUInt(Ptr)];
   {$ELSE}
   Result := PPtrArr(FSelf)^[Longint(Ptr)];
@@ -11681,7 +11681,7 @@ end;
 {$ENDIF}
 
 {$ifdef fpc}
-  // @SoldatPatch
+  // @OpenSoldatPatch
   {$if defined(cpupowerpc) or defined(cpuarm)}
     {$define empty_methods_handler}
   {$ifend}
@@ -11999,7 +11999,7 @@ begin
         if res^.FType.BaseType <> btS64 then
 {$ENDIF}
           //CopyArrayContents(Pointer(Longint(Stack)-PointerSize2), @PPSVariantData(res)^.Data, 1, Res^.FType);
-          // @SoldatPatch
+          // @OpenSoldatPatch
           CopyArrayContents(Pointer(PtrUInt(Stack)-PtrUInt(PointerSize2)), @PPSVariantData(res)^.Data, 1, Res^.FType);
       end;
     end;
@@ -12799,7 +12799,7 @@ begin
        begin
          if i = DISP_E_EXCEPTION then
            {$IFDEF FPC}
-           // @SoldatPatch
+           // @OpenSoldatPatch
            raise Exception.Create(tbtstring(ExceptInfo.Source)+': '+tbtstring(ExceptInfo.Description))
            {$ELSE}
            raise Exception.Create(ExceptInfo.bstrSource+': '+ExceptInfo.bstrDescription)

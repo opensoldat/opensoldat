@@ -449,7 +449,7 @@ begin
   InputBuffer := Default(TBuffer);
 
   if not Terminated then
-    WriteString('Soldat Admin Connection Established.');
+    WriteString('OpenSoldat Admin Connection Established.');
 
   while not Terminated do
   begin
@@ -493,7 +493,7 @@ begin
             //MainConsole.Console('[RCON] Admin connected (' + FData.RemoteAddress.GetIPString + ').', GAME_MESSAGE_COLOR);
             Debug('[RCON] Admin connected (' + FData.RemoteAddress.GetIPString + ').');
             WriteString('Welcome, you are in command of the server now.');
-            WriteString('List of commands available in the Soldat game Manual.');
+            WriteString('List of commands available in the OpenSoldat game Manual.');
             WriteString('Server Version: ' + DEDVERSION);
 
             {$IFDEF SCRIPT}

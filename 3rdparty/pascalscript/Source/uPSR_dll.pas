@@ -1,6 +1,6 @@
 unit uPSR_dll;
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$WARN 5024 OFF}
 
 {$I PascalScript.inc}
@@ -106,7 +106,7 @@ begin
       begin
         // don't pass an empty filename to LoadLibrary, just treat it as uncallable
         p.Ext2 := Pointer(1);
-        // @SoldatPatch
+        // @OpenSoldatPatch
         {$IFDEF WINDOWS}
         ErrorCode := ERROR_MOD_NOT_FOUND;
         {$ELSE}
@@ -142,7 +142,7 @@ begin
       if dllhandle = 0 then
       begin
         p.Ext2 := Pointer(1);
-        // @SoldatPatch(pewpew): Probably this should use dlerror on non-windows
+        // @OpenSoldatPatch(pewpew): Probably this should use dlerror on non-windows
         {$IFDEF WINDOWS}
         ErrorCode := GetLastError;
         {$ENDIF}
@@ -164,7 +164,7 @@ begin
   if p.Ext1 = nil then
   begin
     p.Ext2 := Pointer(1);
-    // @SoldatPatch(pewpew): Probably this should use dlerror on non-windows
+    // @OpenSoldatPatch(pewpew): Probably this should use dlerror on non-windows
     {$IFDEF WINDOWS}
     ErrorCode := GetLastError;
     {$ENDIF}

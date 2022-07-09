@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       UpdateFrame Unit for SOLDAT                     }
+{       UpdateFrame Unit for OPENSOLDAT                 }
 {                                                       }
 {       Copyright (c) 2003 Michal Marcinkowski          }
 {                                                       }

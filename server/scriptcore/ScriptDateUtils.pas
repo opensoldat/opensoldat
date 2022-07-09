@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       DateUtils unit for SOLDAT                       }
+{       DateUtils unit for OPENSOLDAT                   }
 {                                                       }
 {       Copyright (c) 2012 Tomasz Kolosowski            }
 {                                                       }

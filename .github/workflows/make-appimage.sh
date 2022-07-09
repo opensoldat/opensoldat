@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Script to generate `.AppImage` files for Soldat client and server.
+# Script to generate `.AppImage` files for OpenSoldat client and server.
 # Pass the directory containing the AppDir, not the AppDir itself, and as the
 # second argument the string "client" or "server".
 
@@ -20,17 +20,17 @@ appimage_type="$2"
 
 if [ "$appimage_type" = "client" ]; then
   # Add icon
-  convert client/soldat.ico build/soldat.png
-  install -Dm 644 build/soldat-2.png "$appdir_path/AppDir/soldat.png"
+  convert client/opensoldat.ico build/opensoldat.png
+  install -Dm 644 build/opensoldat-2.png "$appdir_path/AppDir/opensoldat.png"
 
   # Generate desktop file
-  cat <<EOF > "$appdir_path/AppDir/soldat.desktop"
+  cat <<EOF > "$appdir_path/AppDir/opensoldat.desktop"
 [Desktop Entry]
 Type=Application
 Categories=Game
-Name=Soldat
-Exec=soldat -joinurl %u
-Icon=soldat
+Name=OpenSoldat
+Exec=opensoldat -joinurl %u
+Icon=opensoldat
 StartupNotify=false
 Terminal=false
 MimeType=x-scheme-handler/soldat;
@@ -43,30 +43,30 @@ EOF
 set -e
 
 cd "\$(dirname "\$0")"
-data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/Soldat/Soldat"
+data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/OpenSoldat/OpenSoldat"
 mkdir -p "\$data_dir"
 
 export LD_LIBRARY_PATH=lib
 if [ "\$1" = "server" ]; then
   shift
-  ./bin/soldatserver -fs_userpath "\$data_dir" "\$@"
+  ./bin/opensoldatserver -fs_userpath "\$data_dir" "\$@"
 else
-  ./bin/soldat -fs_portable 0 -fs_userpath "\$data_dir" "\$@"
+  ./bin/opensoldat -fs_portable 0 -fs_userpath "\$data_dir" "\$@"
 fi
 EOF
 else
   # Add icon
-  convert client/soldat.ico build/soldat.png
-  install -Dm 644 build/soldat-2.png "$appdir_path/AppDir/soldat.png"
+  convert client/opensoldat.ico build/opensoldat.png
+  install -Dm 644 build/opensoldat-2.png "$appdir_path/AppDir/opensoldat.png"
 
   # Generate desktop file
-  cat <<EOF > "$appdir_path/AppDir/soldatserver.desktop"
+  cat <<EOF > "$appdir_path/AppDir/opensoldatserver.desktop"
 [Desktop Entry]
 Type=Application
 Categories=Game
-Name=SoldatServer
-Exec=soldatserver
-Icon=soldat
+Name=OpenSoldatServer
+Exec=opensoldatserver
+Icon=opensoldat
 StartupNotify=false
 Terminal=true
 EOF
@@ -78,11 +78,11 @@ EOF
 set -e
 
 cd "\$(dirname "\$0")"
-data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/Soldat/SoldatServer"
+data_dir="\${XDG_DATA_HOME:-\$HOME/.local/share}/OpenSoldat/OpenSoldatServer"
 mkdir -p "\$data_dir"
 
 export LD_LIBRARY_PATH=lib
-./bin/soldatserver -fs_userpath "\$data_dir" "\$@"
+./bin/opensoldatserver -fs_userpath "\$data_dir" "\$@"
 EOF
 fi
 
@@ -107,9 +107,9 @@ LD_LIBRARY_PATH="$appdir_path/AppDir/lib" find "$appdir_path/AppDir" -type f \( 
 arch="$(uname -m)"
 version="$(git describe --tags --always)"
 if [ "$appimage_type" = "client" ]; then
-  appimage_name="Soldat-$version-$arch.AppImage"
+  appimage_name="opensoldat-$version-$arch.AppImage"
 else
-  appimage_name="SoldatServer-$version-$arch.AppImage"
+  appimage_name="opensoldatserver-$version-$arch.AppImage"
 fi
 
 appimagetool_name="appimagetool-$arch.AppImage"

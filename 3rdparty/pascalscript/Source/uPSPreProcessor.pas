@@ -2,7 +2,7 @@
 unit uPSPreProcessor;
 {$I PascalScript.inc}
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$HINTS OFF}
 {$WARN 4056 OFF}
 

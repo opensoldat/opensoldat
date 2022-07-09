@@ -396,11 +396,11 @@ begin
     Exec.SetValue('GameStyle', Byte(sv_gamemode.Value));
 
     Exec.SetValue('ServerName', sv_hostname.Value);
-    Exec.SetValue('Version', SOLDAT_VERSION);
+    Exec.SetValue('Version', OPENSOLDAT_VERSION);
     Exec.SetValue('ServerVersion', DEDVERSION);
     Exec.SetValue('ServerPort', net_port.Value);
     Exec.SetValue('ServerIP', ServerIP);
-    // FScripts.Dir holds full path from soldatserver folder, so scripts/Name/,
+    // FScripts.Dir holds full path from opensoldatserver folder, so scripts/Name/,
     // not just Name, hence Copy(9, Length - 9), where 9 = Length('scripts/') + 1
     // and Max - 9 because we need to substract Length('scripts/')
     // and 1 to remove '/' at the end

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       ScriptBanLists unit for SOLDAT                  }
+{       ScriptBanLists unit for OPENSOLDAT              }
 {                                                       }
 {       Copyright (c) 2015 Tomasz Kolosowski            }
 {                          and  Umut Karakas            }

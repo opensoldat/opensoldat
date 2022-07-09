@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{       Sprites Unit for SOLDAT                         }
+{       Sprites Unit for OPENSOLDAT                     }
 {       Based on Strike of the Dragon Unit              }
 {       by Michal Marcinkowski                          }
 {                                                       }
