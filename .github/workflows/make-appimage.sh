@@ -107,9 +107,9 @@ LD_LIBRARY_PATH="$appdir_path/AppDir/lib" find "$appdir_path/AppDir" -type f \( 
 arch="$(uname -m)"
 version="$(git describe --tags --always)"
 if [ "$appimage_type" = "client" ]; then
-  appimage_name="OpenSoldat-$version-$arch.AppImage"
+  appimage_name="opensoldat-$version-$arch.AppImage"
 else
-  appimage_name="OpenSoldatServer-$version-$arch.AppImage"
+  appimage_name="opensoldatserver-$version-$arch.AppImage"
 fi
 
 appimagetool_name="appimagetool-$arch.AppImage"

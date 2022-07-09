@@ -168,8 +168,8 @@ jobs:
         run: |
           cd appimages
           chmod u+x *.AppImage
-          zip linux-appimage.zip OpenSoldat-*.AppImage
-          zip linux-server-only-appimage.zip OpenSoldatServer-*.AppImage
+          zip linux-appimage.zip opensoldat-*.AppImage
+          zip linux-server-only-appimage.zip opensoldatserver-*.AppImage
           mv linux-appimage.zip linux-server-only-appimage.zip ..
 
       - name: Upload release
