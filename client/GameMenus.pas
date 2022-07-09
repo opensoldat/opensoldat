@@ -49,7 +49,7 @@ implementation
 
 uses
   SDL2, SysUtils, Client, Weapons, Game, GameStrings, ClientGame, Sound, InterfaceGraphics,
-  Constants, Net, NetworkClientConnection, NetworkClientSprite, Sprites, Cvar,
+  Constants, MainMenuRendering, Net, NetworkClientConnection, NetworkClientSprite, Sprites, Cvar,
   NetworkClientGame, NetworkClientMessages{$IFDEF STEAM}, Steam{$ENDIF};
 
 var
@@ -289,8 +289,7 @@ begin
       case ButtonIndex of
         0: begin
           ClientDisconnect;
-
-          Halt(0);
+          GameLoopRun := False;
         end;
         1: GameMenuShow(MapMenu, not MapMenu.Active);
         2: GameMenuShow(KickMenu, not KickMenu.Active);

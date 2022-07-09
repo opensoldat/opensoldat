@@ -43,7 +43,7 @@ uses
   // opensoldat units
   Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
   NetworkClientConnection, GameMenus, Demo, Console,
-  Weapons, Constants, Game, GameRendering;
+  Weapons, Constants, Game, GameRendering, MainMenuRendering;
 
 procedure JoinServer;
 procedure StartGame;
@@ -63,6 +63,7 @@ type
 
 var
   GameLoopRun: Boolean;
+  ClientLoopRun: Boolean;
   ProgReady: Boolean;
 
   JoinPassword: String; // server password
@@ -925,7 +926,13 @@ begin
     cl_actionsnap.SetValue(False);
 
   WriteLogFile(GameLog, ConsoleLogFileName);
-  RunDeferredCommands();
+
+  ClientLoopRun := True;
+  while ClientLoopRun do
+  begin
+    ShowMainMenu();
+    RunDeferredCommands();
+  end;
 end;
 
 procedure ShutDown;
