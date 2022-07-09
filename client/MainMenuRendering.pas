@@ -25,14 +25,15 @@ type
   PMainTextInput = ^TMainTextInput;
   TMainTextInput = record
     Active: Boolean;
-    x, y, w: Integer;
+    x, y, w, h: Integer;
+    MaxLength: Integer;
     Content: WideString;
   end;
 
 function InitMainMenuGraphics: Boolean;
 procedure StartMainMenuLoop;
 procedure ShowMainMenu;
-procedure MainMenuLoop;
+procedure MainMenuLoop(TimeElapsed: Extended);
 procedure MainMenuInput;
 //function KeyDown(var KeyEvent: TSDL_KeyboardEvent);
 procedure ExitButtonClick;
@@ -43,8 +44,8 @@ implementation
 
 uses
   Client,
-  Math, SysUtils, IniFiles, Classes, Contnrs,
-  Constants, Sprites, Parts, Game, Weapons, PolyMap, MapFile, Vector, Util,
+  Math, SysUtils, Classes,
+  Constants, Weapons, Vector,
   InterfaceGraphics, ClientGame, GameStrings, GostekGraphics, Input,
   PhysFS, Cvar, MapGraphics, TraceLog {$IFDEF TESTING},  Version{$ENDIF};
 
@@ -86,13 +87,20 @@ begin
 end;
 
 procedure InitTextInput(TextInput: Integer;
-  x, y, w: Integer; Content: WideString = '');
+  x, y, MaxLength: Integer; Content: WideString = '');
+var
+  rc: TGfxRect;
 begin
   TextInputs[TextInput].Active := False;
   TextInputs[TextInput].x := x;
   TextInputs[TextInput].y := y;
-  TextInputs[TextInput].w := w;
+  TextInputs[TextInput].MaxLength := MaxLength;
   TextInputs[TextInput].Content := Content;
+
+  SetFontStyle(FONT_SMALL);
+  rc := GfxTextMetrics(DupeString('M', TextInputs[TextInput].MaxLength));
+  TextInputs[TextInput].w := Trunc(RectWidth(rc)) + 4;
+  TextInputs[TextInput].h := Trunc(RectHeight(rc)) + 15;
 end;
 
 function InitMainMenuGraphics: Boolean;
@@ -113,8 +121,8 @@ begin
   InitTextLabel(1, _('Server IP'), Trunc(WindowWidth / 2) - 160, 210);
 
   SetLength(TextInputs, 2);
-  InitTextInput(0, Trunc(WindowWidth / 2) - 150, 150, 20, cl_player_name.Value);
-  InitTextInput(1, Trunc(WindowWidth / 2) - 150, 250, 20);
+  InitTextInput(0, Trunc(WindowWidth / 2) - 150, 150, 24, cl_player_name.Value);
+  InitTextInput(1, Trunc(WindowWidth / 2) - 150, 250, 15);
   ActiveTextInput := nil;
 
   Initialized := True;
@@ -136,7 +144,8 @@ begin
   SDL_StopTextInput;
   for i := Low(TextInputs) to High(TextInputs) do
   begin
-    TextInputs[i].Active := (TextInputs[i].x < mx) and (TextInputs[i].x + 10 * TextInputs[i].w > mx) and (TextInputs[i].y < my) and (TextInputs[i].y + 20 > my);
+    TextInputs[i].Active := (TextInputs[i].x < mx) and (TextInputs[i].x + TextInputs[i].w > mx) and
+                            (TextInputs[i].y < my) and (TextInputs[i].y + TextInputs[i].h > my);
     if (TextInputs[i].Active) then
     begin
       ActiveTextInput := @TextInputs[i];
@@ -178,10 +187,8 @@ procedure MainMenuInput;
 var
   Event: TSDL_Event;
   Str: WideString;
-  ChatEnabled: Boolean;
 begin
   Event := Default(TSDL_Event);
-  //ChatEnabled := Length(ChatText) > 0;
 
   while SDL_PollEvent(@Event) = 1 do
   begin
@@ -194,17 +201,9 @@ begin
         KeyDown(Event.key);
       end;
 
-      //SDL_KEYUP: begin
-        //KeyStatus[Event.key.keysym.scancode] := False;
-        //KeyUp(Event.key);
-      //end;
-
       SDL_MOUSEBUTTONDOWN: begin
         ControlClick();
       end;
-
-      //SDL_MOUSEBUTTONUP:
-        //KeyStatus[Event.button.button + 300] := False;
 
       SDL_TEXTINPUT: begin
         if (ActiveTextInput <> nil) then
@@ -212,8 +211,11 @@ begin
           Str := WideString(UTF8String(RawByteString(PChar(@Event.text.text[0]))));
           //Str := FilterChatText(Str);
           CursorPosition := Length(ActiveTextInput^.Content);
-          Insert(Str, ActiveTextInput^.Content, CursorPosition + 1);
-
+          if (CursorPosition < ActiveTextInput^.MaxLength) then
+          begin
+            Insert(Str, ActiveTextInput^.Content, CursorPosition + 1);
+            CursorPosition := Length(ActiveTextInput^.Content);
+          end;
         end;
       end;
 
@@ -296,19 +298,19 @@ begin
       GfxVertex(TextLabels[i].x + BackgroundWidth, TextLabels[i].y + BackgroundHeight, 1, 0, BackgroundColorSecondary),
       GfxVertex(TextLabels[i].x, TextLabels[i].y + BackgroundHeight, 0, 0, BackgroundColorSecondary)
     );
-    // This doesn't actually center text in the button, but pretty close.
+    // This doesn't actually center text in the label, but pretty close.
     GfxDrawText(TextLabels[i].x + 2, TextLabels[i].y);
   end;
   GfxEnd();
 end;
 
-procedure RenderTextInputs;
+procedure RenderTextInputs(TimeElapsed: Extended);
 var
   i: Integer;
   rc: TGfxRect;
   BackgroundColorSecondary: TGfxColor;
   TextColor: TGfxColor;
-  BackgroundWidth, BackgroundHeight: Integer;
+  x, y, w, h: Single;
 begin
   BackgroundColorSecondary := RGBA(TextInputBackgroundColorRGBA);
   TextColor := RGBA(TextColorRGBA);
@@ -321,60 +323,53 @@ begin
   GfxBegin();
   for i := Low(TextInputs) to High(TextInputs) do
   begin
-    rc := GfxTextMetrics(DupeString('M', TextInputs[i].w));
-    BackgroundWidth := Trunc(RectWidth(rc)) + 4;
-    BackgroundHeight := Trunc(RectHeight(rc)) + 4;
-
     GfxDrawQuad(RenderTarget,
       GfxVertex(TextInputs[i].x, TextInputs[i].y, 0, 1, BackgroundColorSecondary),
-      GfxVertex(TextInputs[i].x + BackgroundWidth, TextInputs[i].y, 1, 1, BackgroundColorSecondary),
-      GfxVertex(TextInputs[i].x + BackgroundWidth, TextInputs[i].y + BackgroundHeight, 1, 0, BackgroundColorSecondary),
-      GfxVertex(TextInputs[i].x, TextInputs[i].y + BackgroundHeight, 0, 0, BackgroundColorSecondary)
+      GfxVertex(TextInputs[i].x + TextInputs[i].w, TextInputs[i].y, 1, 1, BackgroundColorSecondary),
+      GfxVertex(TextInputs[i].x + TextInputs[i].w, TextInputs[i].y + TextInputs[i].h, 1, 0, BackgroundColorSecondary),
+      GfxVertex(TextInputs[i].x, TextInputs[i].y + TextInputs[i].h, 0, 0, BackgroundColorSecondary)
     );
     rc := GfxTextMetrics(TextInputs[i].Content);
-    GfxDrawText(TextInputs[i].x + 2, TextInputs[i].y);
+    GfxDrawText(TextInputs[i].x + 4, TextInputs[i].y);
   end;
   GfxEnd();
 
-  //if (TextInputs[i].Active) then
-  //begin
-    //// cursor blinking
-    ////if (t - Floor(t)) <= 0.5 then
-    ////begin
-      ////StrBeforeCursor := Str;
-      ////if CursorPosition < Length(TextInputs[i].Content) then
-        ////SetLength(StrBeforeCursor, CursorPosition + Length(StrPrefix));
+  if (ActiveTextInput <> nil) then
+  begin
+    // cursor blinking
+    if (TimeElapsed - Floor(TimeElapsed)) <= 0.5 then
+    begin
 
-      //// for some reason GfxTextMetrics ignores the last trailing space while calculating rectangle width...
-      //x := RectWidth(GfxTextMetrics(StrBeforeCursor + iif(StrBeforeCursor[Length(StrBeforeCursor)] = ' ', ' ', '') ));
+      // for some reason GfxTextMetrics ignores the last trailing space while calculating rectangle width...
+      x := ActiveTextInput^.x + RectWidth(GfxTextMetrics(ActiveTextInput^.Content)) + 5;
+      y := ActiveTextInput^.y + 3;
+      w := 2;
+      h := ActiveTextInput^.h - 6;
 
       //x := PixelAlignX(5 + x) + 2 * PixelSize.x;
       //y := PixelAlignY(420 * _iscala.y - RectHeight(rc));
       //w := PixelSize.x;
       //h := PixelAlignY(1.4 * RectHeight(rc));
 
-      //// drawing cursor
-      //GfxDrawQuad(nil,
-        //GfxVertex(x + 0, y + 0, 0, 0, RGBA(255, 230, 170)),
-        //GfxVertex(x + w, y + 0, 0, 0, RGBA(255, 230, 170)),
-        //GfxVertex(x + w, y + h, 0, 0, RGBA(255, 230, 170)),
-        //GfxVertex(x + 0, y + h, 0, 0, RGBA(255, 230, 170))
-      //);
-    ////end;
-  //end;
+      // drawing cursor
+      GfxEnd();
+      GfxDrawQuad(nil,
+        GfxVertex(x + 0, y + 0, 0, 0, RGBA(255, 230, 170)),
+        GfxVertex(x + w, y + 0, 0, 0, RGBA(255, 230, 170)),
+        GfxVertex(x + w, y + h, 0, 0, RGBA(255, 230, 170)),
+        GfxVertex(x + 0, y + h, 0, 0, RGBA(255, 230, 170))
+      );
+      GfxEnd();
+    end;
+  end;
 end;
 
-procedure MainMenuLoop;
+procedure MainMenuLoop(TimeElapsed: Extended);
 var
   BackgroundColorPrimary: TGfxColor;
-  BackgroundColorSecondary: TGfxColor;
-  Rect: PSDL_Rect;
-  i: Integer;
-  rc: TGfxRect;
   T: ^TGfxSpriteArray;
 begin
   BackgroundColorPrimary := RGBA(BackgroundColorPrimaryRGBA);
-  BackgroundColorSecondary := RGBA(BackgroundColorSecondaryRGBA);
   T := @Textures;
 
   GfxTarget(nil);
@@ -384,7 +379,7 @@ begin
 
   RenderButtons;
   RenderTextLabels;
-  RenderTextInputs;
+  RenderTextInputs(TimeElapsed);
 
   if (T <> nil) then
   begin
@@ -399,8 +394,9 @@ end;
 
 procedure StartMainMenuLoop;
 var
-  i, j: Integer;
+  i: Integer;
   InputParse: TStringList;
+  StartTime, Frequency: Extended;
 begin
   for i:=0 To DeferredCommands.Count-1 do
   begin
@@ -417,10 +413,12 @@ begin
     InputParse.Free;
 
   end;
+  StartTime := SDL_GetPerformanceCounter;
+  Frequency := SDL_GetPerformanceFrequency;
   while MainMenuLoopRun do
   begin
     MainMenuInput();
-    MainMenuLoop();
+    MainMenuLoop((SDL_GetPerformanceCounter - StartTime) / Frequency);
   end;
 end;
 
