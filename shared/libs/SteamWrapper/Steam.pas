@@ -51,6 +51,8 @@ const
   STEAM_APPID = 638490;
 
 type
+  TProcedure = Procedure;  // workaround for autocomplete error in lazarus
+
   PSteamServersConnected_t = ^SteamServersConnected_t;
   PSteamServerConnectFailure_t = ^SteamServerConnectFailure_t;
   PSteamServersDisconnected_t = ^SteamServersDisconnected_t;
@@ -2618,7 +2620,7 @@ type
       1: (m_int64: int64);
       2: (m_float: Single);
       3: (m_string: PAnsiChar);
-      4: (m_functionPtr: procedure);
+      4: (m_functionPtr: TProcedure);
   end;
   {$IFDEF UNIX}
   {$PACKRECORDS 4}
