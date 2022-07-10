@@ -113,16 +113,16 @@ begin
   end;
 
   SetLength(Buttons, 2);
-  InitButton(0, _('Join Game'), Trunc(WindowWidth / 2) - 150, 300, 300, 50, JoinButtonClick);
-  InitButton(1, _('Exit'), Trunc(WindowWidth / 2) - 150, 400, 300, 50, ExitButtonClick);
+  InitButton(0, _('Join Game'), Trunc(WindowWidth / 2 - WindowWidth / 10), Trunc(5 * WindowHeight / 10), Trunc(WindowWidth / 5), Trunc(WindowHeight / 15), JoinButtonClick);
+  InitButton(1, _('Exit'), Trunc(WindowWidth / 2 - WindowWidth / 10), Trunc(6 * WindowHeight / 10), Trunc(WindowWidth / 5), Trunc(WindowHeight / 15), ExitButtonClick);
 
   SetLength(TextLabels, 2);
-  InitTextLabel(0, _('Player Name'), Trunc(WindowWidth / 2) - 160, 110);
-  InitTextLabel(1, _('Server IP'), Trunc(WindowWidth / 2) - 160, 210);
+  InitTextLabel(0, _('Player Name'), Trunc(WindowWidth / 2 - WindowWidth / 10), Trunc(1 * WindowHeight / 10));
+  InitTextLabel(1, _('Server IP'), Trunc(WindowWidth / 2 - WindowWidth / 10), Trunc(3 * WindowHeight / 10));
 
   SetLength(TextInputs, 2);
-  InitTextInput(0, Trunc(WindowWidth / 2) - 150, 150, 24, cl_player_name.Value);
-  InitTextInput(1, Trunc(WindowWidth / 2) - 150, 250, 15);
+  InitTextInput(0, Trunc(WindowWidth / 2 - WindowWidth / 11), Trunc(1.5 * WindowHeight / 10), 24, cl_player_name.Value);
+  InitTextInput(1, Trunc(WindowWidth / 2 - WindowWidth / 11), Trunc(3.5 * WindowHeight / 10), 15);
   ActiveTextInput := nil;
 
   Initialized := True;
