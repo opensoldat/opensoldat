@@ -402,7 +402,7 @@ begin
               choose(StrToInt(RMenuState[1]) - 1, ['U', 'M', 'D'])
             ]);
 
-          ChatText := '*' + RMenuState[0] + RMenuState[1] + ChatText;
+          ChatText := '*' + UnicodeString(RMenuState[0]) + UnicodeString(RMenuState[1]) + ChatText;
           ClientSendStringMessage(ChatText, MSGTYPE_RADIO);
           ChatText := '';
           // RadioCooldown := 3;

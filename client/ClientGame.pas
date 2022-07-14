@@ -489,7 +489,7 @@ procedure GetMicData;
 var
   AvailableVoice: EVoiceResult;
   AvailableVoiceBytes: Cardinal;
-  VoiceData: array of Byte;
+  VoiceData: array of Byte = Nil;
 begin
   AvailableVoice := SteamAPI.User.GetAvailableVoice(@AvailableVoiceBytes, nil, 0);
 

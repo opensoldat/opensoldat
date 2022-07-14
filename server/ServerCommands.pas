@@ -8,7 +8,7 @@ implementation
 
 uses
   // system and delphi units
-  SysUtils, Classes, strutils, dateutils,
+  SysUtils, Classes, dateutils,
 
   // helper units
   Vector, Util, Version,

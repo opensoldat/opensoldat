@@ -13080,7 +13080,10 @@ end;
 {$IFNDEF PS_NOINTERFACES}
 const
   IUnknown_Guid: TGuid = (D1: 0; d2: 0; d3: 0; d4: ($c0,00,00,00,00,00,00,$46));
+  // @SoldatPatch
+  {$IFNDEF PS_NOIDISPATCH}
   IDispatch_Guid: Tguid = (D1: $20400; D2: $0; D3: $0; D4:($C0, $0, $0, $0, $0, $0, $0, $46));
+  {$ENDIF}
 {$ENDIF}
 
 procedure TPSPascalCompiler.DefineStandardProcedures;
