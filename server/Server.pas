@@ -831,6 +831,9 @@ begin
   GameNetworkingSockets_Kill();
   {$ENDIF}
 
+  AddLineToLogFile(GameLog, 'PhysFS closing.', ConsoleLogFileName);
+  PhysFS_deinit();
+
   try
     AddLineToLogFile(GameLog, '   End of Log.', ConsoleLogFileName);
     Debug('Updating gamestats');
