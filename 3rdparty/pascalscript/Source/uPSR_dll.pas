@@ -77,13 +77,24 @@ begin
   Dispose(p);
 end;
 
+// @SoldatPatch
+{$IFDEF UNIX}
+{$DEFINE UNIX_OR_KYLIX}
+{$ENDIF}
+{$IFDEF KYLIX}
+{$DEFINE UNIX_OR_KYLIX}
+{$ENDIF}
+
 function LoadDll(Caller: TPSExec; P: TPSExternalProcRec; var ErrorCode: LongInt): Boolean;
 var
   s, s2, s3: tbtstring;
   h, i: Longint;
   ph: PLoadedDll;
   dllhandle: THandle;
+  // @SoldatPatch
+  {$IFNDEF UNIX_OR_KYLIX}
   loadwithalteredsearchpath: Boolean;
+  {$ENDIF}
   {$IFNDEF UNIX}
   Filename: String;
   {$ENDIF}
@@ -95,7 +106,10 @@ begin
   h := makehash(s2);
   s3 := copy(s, 1, pos(tbtchar(#0), s)-1);
   delete(s, 1, length(s3)+1);
+  // @SoldatPatch
+  {$IFNDEF UNIX_OR_KYLIX}
   loadwithalteredsearchpath := bytebool(s[3]);
+  {$ENDIF}
   i := 2147483647; // maxint
   dllhandle := 0;
   repeat
@@ -116,12 +130,7 @@ begin
         exit;
       end;
 
-      {$IFDEF UNIX}
-      {$DEFINE UNIX_OR_KYLIX}
-      {$ENDIF}
-      {$IFDEF KYLIX}
-      {$DEFINE UNIX_OR_KYLIX}
-      {$ENDIF}
+      // @SoldatPatch
 
       {$IFDEF UNIX_OR_KYLIX}
       dllhandle := LoadLibrary(PChar(s2));

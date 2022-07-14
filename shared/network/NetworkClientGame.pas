@@ -484,7 +484,7 @@ procedure ClientSendVoiceData(Data: Pointer; DataSize: Word);
 var
   VoiceMsg: PMsg_VoiceData;
   Size: Integer;
-  SendBuffer: array of Byte;
+  SendBuffer: array of Byte = Nil;
 begin
   Size := SizeOf(TMsg_VoiceData) + DataSize;
   SetLength(SendBuffer, Size);
@@ -504,7 +504,7 @@ var
   VoiceMsg: PMsg_VoiceData;
   TextLen: Word;
   VoiceResult: EVoiceResult;
-  AudioData: array of Byte;
+  AudioData: array of Byte = Nil;
   AudioLength: Cardinal;
 begin
   if not cl_voicechat.Value then

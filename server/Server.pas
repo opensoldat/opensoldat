@@ -376,7 +376,7 @@ end;
 
 procedure GetCollectionDetails(Callback: PSteamUGCQueryCompleted_t);
 var
-  CollectionItems: array of PublishedFileId_t;
+  CollectionItems: array of PublishedFileId_t = Nil;
   CollectionDetails: SteamUGCDetails_t;
   ItemState: uint32;
   i, j: Integer;
@@ -431,7 +431,6 @@ end;
 function GetWorkshopItemDir(ItemID: PublishedFileId_t): AnsiString;
 var
   FileSizeOnDisk: uint64 = 0;
-  DirSizeOnDisk: uint32 = 0;
   Path: array[0..PATH_MAX] of Char;
   TimeStamp: Cardinal = 0;
 begin
@@ -515,7 +514,6 @@ end;
 procedure ActivateServer;
 var
   i, j: Integer;
-  s: String;
 begin
   MainThreadID := GetThreadID;
 
