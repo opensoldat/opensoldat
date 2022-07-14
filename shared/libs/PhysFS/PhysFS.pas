@@ -14,7 +14,7 @@ type PHYSFS_Buffer = array of byte;
 
 function PHYSFS_init(argv0: Pchar): LongBool; cdecl; external PHYSFSLIB;
 function PHYSFS_deinit(): LongInt; cdecl; external PHYSFSLIB;
-function PHYSFS_mount(newDir, mountPoint: PChar; appendToPath: LongBool) : LongBool; cdecl; external PHYSFSLIB;
+function PHYSFS_mount(newDir, mountPoint: PChar; appendToPath: LongBool): LongBool; cdecl; external PHYSFSLIB;
 function PHYSFS_openRead(filename: PChar): PHYSFS_File; cdecl; external PHYSFSLIB;
 function PHYSFS_exists(filename: PChar): LongBool; cdecl; external PHYSFSLIB;
 function PHYSFS_eof(pfile: PHYSFS_File): LongBool; cdecl; external PHYSFSLIB;
@@ -23,13 +23,14 @@ function PHYSFS_close(pfile: PHYSFS_File): Int64; cdecl; external PHYSFSLIB;
 function PHYSFS_getLastError(): PChar; cdecl; external PHYSFSLIB;
 function PHYSFS_fileLength(pfile: PHYSFS_File): Int64; cdecl; external PHYSFSLIB;
 function PHYSFS_removeFromSearchPath(oldDir: PChar): LongBool; cdecl; external PHYSFSLIB;
-procedure PHYSFS_freeList(listVar: Pointer); cdecl; external PHYSFSLIB;
+procedure PHYSFS_freeList(listVar: PPChar); cdecl; external PHYSFSLIB;
 function PHYSFS_enumerateFiles(const dir: PChar): PPChar; cdecl; external PHYSFSLIB;
 
 function PHYSFS_readBuffer(Name: PChar): PHYSFS_Buffer;
 function PHYSFS_readAsStream(Name: PChar): TStream;
 procedure PHYSFS_ReadLn(FileHandle: PHYSFS_File; var Line: AnsiString);
 function PHYSFS_CopyFileFromArchive(SourceFile: AnsiString; Destination: AnsiString): Boolean;
+function PHYSFS_CopyFilesFromArchiveDirectory(SourceDirectory: AnsiString; DestinationDirectory: AnsiString): Boolean;
 function PHYSFS_GetEnumeratedFiles(Dir: String): TStringArray;
 
 implementation
@@ -118,6 +119,30 @@ begin
   end;
 
   ArchiveFile.Free;
+end;
+
+function PHYSFS_CopyFilesFromArchiveDirectory(SourceDirectory: AnsiString; DestinationDirectory: AnsiString): Boolean;
+var
+  FileNames: PPChar;
+  i: Integer;
+begin
+  Result := False;
+  FileNames := PHYSFS_enumerateFiles(PChar(SourceDirectory));
+  if FileNames = nil then
+    Exit;
+
+  Result := True;
+  i := 0;
+  while FileNames[i] <> nil do
+  begin
+    if not PHYSFS_CopyFileFromArchive(SourceDirectory + '/' + FileNames[i],
+       DestinationDirectory + '/' + FileNames[i]) then
+      Result := False;
+
+    i += 1;
+  end;
+
+  PHYSFS_freeList(FileNames);
 end;
 
 function PHYSFS_GetEnumeratedFiles(Dir: String): TStringArray;
