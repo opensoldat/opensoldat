@@ -19,20 +19,21 @@ const
 
 type
   {
-    CVAR_IMMUTABLE - can't be changed after set
-    CVAR_ARCHIVE   - save cvar to cfg file
-    CVAR_SPONLY    - only in singleplayer mode
-    CVAR_NOTIFY    - notify players after change
-    CVAR_MODIFIED  - this flag is set after cvar changed initial value
-    CVAR_CLIENT    - client cvar
-    CVAR_SERVER    - server cvar
-    CVAR_SYNC      - sync cvar to client cvar
-    CVAR_SCRIPT    - cvar set by script
-    CVAR_INITONLY  - cvar can be changed only at startup
+    CVAR_IMMUTABLE       - can't be changed after set
+    CVAR_ARCHIVE         - save cvar to cfg file
+    CVAR_SPONLY          - only in singleplayer mode
+    CVAR_NOTIFY          - notify players after change
+    CVAR_MODIFIED        - this flag is set after cvar changed initial value
+    CVAR_CLIENT          - client cvar
+    CVAR_SERVER          - server cvar
+    CVAR_SYNC            - sync cvar to client cvar
+    CVAR_SCRIPT          - cvar set by script
+    CVAR_INITONLY        - cvar can be changed only at startup
+    CVAR_SERVER_INITONLY - cvar can be changed only at startup by the server
   }
   TCvarFlag = (CVAR_IMMUTABLE, CVAR_ARCHIVE, CVAR_SPONLY, CVAR_NOTIFY,
       CVAR_MODIFIED, CVAR_CLIENT, CVAR_SERVER, CVAR_SYNC, CVAR_SCRIPT,
-      CVAR_INITONLY, CVAR_TOSYNC);
+      CVAR_INITONLY, CVAR_SERVER_INITONLY, CVAR_TOSYNC);
   TCvarFlags = set of TCvarFlag;
 
   TCvarBase = class
@@ -364,6 +365,15 @@ begin
     FErrorMessage := 'Can be set only at startup';
     Exit;
   end;
+
+  {$IFDEF SERVER}
+  if (CVAR_SERVER_INITONLY in FFlags) and CvarsInitialized then
+  begin
+    Result := False;
+    FErrorMessage := 'Can be set only by server at startup';
+    Exit;
+  end;
+  {$ENDIF}
 
   if (Value >= FMinValue) and (Value <= FMaxValue) then
   begin
@@ -963,7 +973,7 @@ begin
 
   // Sync vars (todo);
 
-  sv_gamemode := TIntegerCvar.Add('sv_gamemode', 'Sets the gamemode', 3, 3, [CVAR_SERVER, CVAR_SYNC,CVAR_INITONLY], nil, 0, 6); // Restart server
+  sv_gamemode := TIntegerCvar.Add('sv_gamemode', 'Sets the gamemode', 3, 3, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil, 0, 6); // Restart server
   sv_friendlyfire := TBooleanCvar.Add('sv_friendlyfire', 'Enables friendly fire', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_timelimit := TIntegerCvar.Add('sv_timelimit', 'Time limit of map', 36000, 36000, [CVAR_SERVER, CVAR_SYNC], nil, 0, MaxInt);
   sv_maxgrenades := TIntegerCvar.Add('sv_maxgrenades', 'Sets the max number of grenades a player can carry', 2, 5, [CVAR_SERVER, CVAR_SYNC], nil, 0, 1);
@@ -972,11 +982,11 @@ begin
   sv_balanceteams := TBooleanCvar.Add('sv_balanceteams', 'Enables/disables team balancing', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_guns_collide := TBooleanCvar.Add('sv_guns_collide', 'Enables colliding guns', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_kits_collide := TBooleanCvar.Add('sv_kits_collide', 'Enables colliding kits', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
-  sv_survivalmode := TBooleanCvar.Add('sv_survivalmode', 'Enables survival mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_INITONLY], nil); // Restart server
+  sv_survivalmode := TBooleanCvar.Add('sv_survivalmode', 'Enables survival mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_survivalmode_antispy := TBooleanCvar.Add('sv_survivalmode_antispy', 'Enables anti spy chat in survival mode', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_survivalmode_clearweapons := TBooleanCvar.Add('sv_survivalmode_clearweapons', 'Cluster Grenades bonus availability', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
-  sv_realisticmode := TBooleanCvar.Add('sv_realisticmode', 'Enables realistic mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_INITONLY], nil); // Restart server
-  sv_advancemode := TBooleanCvar.Add('sv_advancemode', 'Enables advance mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_INITONLY], nil); // Restart server
+  sv_realisticmode := TBooleanCvar.Add('sv_realisticmode', 'Enables realistic mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
+  sv_advancemode := TBooleanCvar.Add('sv_advancemode', 'Enables advance mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_advancemode_amount := TIntegerCvar.Add('sv_advancemode_amount', 'Number of kills required in Advance Mode to gain a weapon.', 2, 2, [CVAR_SERVER, CVAR_SYNC], nil, 1, 9999);
   sv_minimap := TBooleanCvar.Add('sv_minimap', 'Enables/disables minimap', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_advancedspectator := TBooleanCvar.Add('sv_advancedspectator', 'Enables/disables advanced spectator mode', True, True, [CVAR_SERVER, CVAR_SYNC], nil);
