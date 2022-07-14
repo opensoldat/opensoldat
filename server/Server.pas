@@ -376,7 +376,7 @@ end;
 
 procedure GetCollectionDetails(Callback: PSteamUGCQueryCompleted_t);
 var
-  CollectionItems: array of PublishedFileId_t;
+  CollectionItems: array of PublishedFileId_t = Nil;
   CollectionDetails: SteamUGCDetails_t;
   ItemState: uint32;
   i, j: Integer;
@@ -431,7 +431,6 @@ end;
 function GetWorkshopItemDir(ItemID: PublishedFileId_t): AnsiString;
 var
   FileSizeOnDisk: uint64 = 0;
-  DirSizeOnDisk: uint32 = 0;
   Path: array[0..PATH_MAX] of Char;
   TimeStamp: Cardinal = 0;
 begin
@@ -515,7 +514,6 @@ end;
 procedure ActivateServer;
 var
   i, j: Integer;
-  s: String;
 begin
   MainThreadID := GetThreadID;
 
@@ -615,7 +613,6 @@ begin
 
   // Create the basic folder structure
   CreateDirIfMissing(UserDirectory + '/configs');
-  CreateDirIfMissing(UserDirectory + '/configs/bots');
   CreateDirIfMissing(UserDirectory + '/demos');
   CreateDirIfMissing(UserDirectory + '/logs');
   CreateDirIfMissing(UserDirectory + '/logs/kills');
@@ -635,8 +632,16 @@ begin
   PHYSFS_CopyFileFromArchive('scripts/README.txt', UserDirectory + '/scripts/README.txt');
   {$ENDIF}
 
-  for s in PHYSFS_GetEnumeratedFiles('configs/bots') do
-    PHYSFS_CopyFileFromArchive('configs/bots/' + s, UserDirectory + '/configs/bots/' + s);
+  // Copy default bots if configs/bots directory is missing.
+  // We don't want to copy default bots on every launch; this allows
+  // server owners to delete some bots without the risk of having them
+  // recreated on next launch.
+  if not DirectoryExists(UserDirectory + '/configs/bots') then
+    if not CreateDir(UserDirectory + '/configs/bots') then
+      WriteLn('Could not create bots directory.')
+    else
+      if not PHYSFS_CopyFilesFromArchiveDirectory('configs/bots', UserDirectory + '/configs/bots') then
+        WriteLn('Could not copy bots from mod archive.');
 
   LoadConfig('server.cfg');
 
@@ -825,6 +830,9 @@ begin
   {$IFNDEF STEAM}
   GameNetworkingSockets_Kill();
   {$ENDIF}
+
+  AddLineToLogFile(GameLog, 'PhysFS closing.', ConsoleLogFileName);
+  PhysFS_deinit();
 
   try
     AddLineToLogFile(GameLog, '   End of Log.', ConsoleLogFileName);

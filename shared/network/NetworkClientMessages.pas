@@ -115,7 +115,7 @@ begin
   end;
 
   if (MsgType = MSGTYPE_RADIO) and Sprite[i].IsInSameTeam(Sprite[MySprite]) then
-    PlayRadioSound(StrToIntDef(RadioCommand, -1));
+    PlayRadioSound(StrToIntDef(AnsiString(RadioCommand), -1));
 end;
 
 procedure ClientHandleSpecialMessage(NetMessage: PSteamNetworkingMessage_t);

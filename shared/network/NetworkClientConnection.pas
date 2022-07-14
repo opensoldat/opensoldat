@@ -484,7 +484,7 @@ begin
       RenderGameInfo(_('Wrong server password'));
 
     BANNED_IP:
-      RenderGameInfo(_('You have been banned on this server. Reason:') + ' ' + Text);
+      RenderGameInfo(_('You have been banned on this server. Reason:') + ' ' + UnicodeString(Text));
 
     SERVER_FULL:
       RenderGameInfo(_('Server is full'));
@@ -499,7 +499,7 @@ begin
       RenderGameInfo(_('This server accepts only Steam players.'));
 
     ANTICHEAT_REJECTED:
-      RenderGameInfo(_('Rejected by Anti-Cheat:') + ' ' + Text);
+      RenderGameInfo(_('Rejected by Anti-Cheat:') + ' ' + UnicodeString(Text));
   end;
 
   ReceivedUnAccepted := True;
