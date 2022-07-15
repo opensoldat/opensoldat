@@ -1,7 +1,7 @@
 on: [push, pull_request, workflow_dispatch]
 name: opensoldat
 jobs:
-  linux-build-smoke:
+  linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,53 +17,36 @@ jobs:
           export BUILD_ID=${GITHUB_SHA::8}
           mkdir build
           cd build
-          cmake .. -DCMAKE_INSTALL_PREFIX=./opensoldat -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DCMAKE_INSTALL_PREFIX=./opensoldat \
+                   -DCMAKE_BUILD_TYPE=Release \
+                   -DCMAKE_INSTALL_LIBDIR="." \
+                   -DCMAKE_INSTALL_BINDIR="." \
+                   -DCMAKE_INSTALL_DATADIR="."
           make
           make install
-          cmake .. -DBUILD_CLIENT=0 -DCMAKE_INSTALL_PREFIX=./opensoldatserver -DCMAKE_BUILD_TYPE=Release
+          cd opensoldat
+          ../../.github/workflows/copy-libs.sh . .
+          cd ..
+
+          cmake .. -DBUILD_CLIENT=0 \
+                   -DCMAKE_INSTALL_PREFIX=./opensoldatserver \
+                   -DCMAKE_BUILD_TYPE=Release \
+                   -DCMAKE_INSTALL_LIBDIR="." \
+                   -DCMAKE_INSTALL_BINDIR="." \
+                   -DCMAKE_INSTALL_DATADIR="."
           make install
+          cd opensoldatserver
+          ../../.github/workflows/copy-libs.sh . .
 
-  appimage:
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/upload-artifact@v2
         with:
-          fetch-depth: 0 # Otherwise `git describe --tags` doesn't work
+          name: linux-build
+          path: build/opensoldat/
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install cmake git fpc libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6
-
-      - name: Compile opensoldat
-        run: |
-          export BUILD_ID=${GITHUB_SHA::8}
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_INSTALL_PREFIX=./opensoldat/AppDir -DCMAKE_BUILD_TYPE=Release
-          make
-          make install
-          make clean
-          cmake .. -DBUILD_CLIENT=0 -DCMAKE_INSTALL_PREFIX=./opensoldatserver/AppDir -DCMAKE_BUILD_TYPE=Release
-          make install
-
-      - name: Build AppImages
-        run: |
-          ./.github/workflows/make-appimage.sh build/opensoldat client
-          ./.github/workflows/make-appimage.sh build/opensoldatserver server
-
-      - name: Upload client AppImage
-        uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2
         with:
-          name: appimages
-          path: build/opensoldat/*.AppImage
-
-      - name: Upload server AppImage
-        uses: actions/upload-artifact@v2
-        with:
-          name: appimages
-          path: build/opensoldatserver/*.AppImage
+          name: linux-server-build
+          path: build/opensoldatserver/
 
   windows:
     runs-on: windows-latest
@@ -151,7 +134,7 @@ jobs:
   continuous:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
-    needs: [appimage, windows, macos]
+    needs: [windows, macos]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -164,14 +147,6 @@ jobs:
           zip -r windows-build.zip windows-build
           zip -r macos-build.zip macos-build
 
-      - name: Chmod and zip AppImages
-        run: |
-          cd appimages
-          chmod u+x *.AppImage
-          zip linux-appimage.zip opensoldat-*.AppImage
-          zip linux-server-only-appimage.zip opensoldatserver-*.AppImage
-          mv linux-appimage.zip linux-server-only-appimage.zip ..
-
       - name: Upload release
         uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
         with:
@@ -179,7 +154,5 @@ jobs:
           files: |
             windows-build.zip
             macos-build.zip
-            linux-appimage.zip
-            linux-server-only-appimage.zip
           body: OpenSoldat 1.8 alpha dev build
           name: OpenSoldat 1.8 alpha dev build

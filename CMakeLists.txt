@@ -65,7 +65,7 @@ if(UNIX)
     set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
   else()
     set(CMAKE_INSTALL_RPATH
-      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/:${target_full_library_install_dir}"
+      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/"
     )
     set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
   endif()
