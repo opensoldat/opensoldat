@@ -2,7 +2,7 @@ on: [push, pull_request, workflow_dispatch]
 name: opensoldat
 jobs:
   linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -10,7 +10,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install cmake git fpc libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6
+          sudo apt-get install cmake git fpc libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6 patchelf
 
       - name: Compile opensoldat
         run: |
@@ -26,6 +26,10 @@ jobs:
           make install
           cd opensoldat
           ../../.github/workflows/copy-libs.sh . .
+          # Some libraries with absolute paths in .ELF DT_RUNPATH need to be patched unfortunately...
+          if ls libpulse\.* 2>&1 1>/dev/null; then
+            patchelf --remove-rpath libpulse\.*
+          fi
           cd ..
 
           cmake .. -DBUILD_CLIENT=0 \

@@ -64,8 +64,10 @@ if(UNIX)
     set(CMAKE_INSTALL_NAME_DIR "@executable_path/../Frameworks")
     set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
   else()
+    # We need to use RPATH, not RUNPATH
+    add_flag_append(CMAKE_Pascal_FLAGS "-k--disable-new-dtags")
     set(CMAKE_INSTALL_RPATH
-      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/:${target_full_library_install_dir}"
+      "$ORIGIN/../${target_library_install_dir}/:$ORIGIN/"
     )
     set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
   endif()
