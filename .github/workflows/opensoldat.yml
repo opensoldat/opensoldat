@@ -158,6 +158,7 @@ jobs:
         run: |
           zip -r windows-build.zip windows-build
           zip -r macos-build.zip macos-build
+          zip -r linux-server-build.zip linux-server-build
 
       - name: Upload release
         uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
@@ -166,5 +167,6 @@ jobs:
           files: |
             windows-build.zip
             macos-build.zip
+            linux-server-build.zip
           body: OpenSoldat 1.8 alpha dev build
           name: OpenSoldat 1.8 alpha dev build
