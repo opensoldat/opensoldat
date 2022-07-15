@@ -143,6 +143,29 @@ jobs:
           make
           make install
 
+      - name: Package soldat
+        run: |
+          cd build
+          cp Frameworks/libGameNetworkingSockets.dylib opensoldat/
+          cp Frameworks/libstb.dylib opensoldat/
+          cp /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib opensoldat/
+          cp /usr/local/opt/freetype/lib/libfreetype.6.dylib opensoldat/
+          cp /usr/local/opt/physfs/lib/libphysfs.1.dylib opensoldat/
+          cp /usr/local/opt/libpng/lib/libpng16.16.dylib opensoldat/
+          cp /usr/local/opt/protobuf/lib/libprotobuf.30.dylib opensoldat/
+          cp /usr/local/opt/openssl@1.1/lib/libcrypto.1.1.dylib opensoldat/
+          chmod -R u+w opensoldat/lib*
+          install_name_tool -change /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2-2.0.0.dylib ./opensoldat/opensoldat
+          install_name_tool -change /usr/local/opt/freetype/lib/libfreetype.6.dylib @executable_path/libfreetype.6.dylib ./opensoldat/opensoldat
+          install_name_tool -change /usr/local/opt/physfs/lib/libphysfs.1.dylib @executable_path/libphysfs.1.dylib ./opensoldat/opensoldat
+          install_name_tool -change /usr/local/opt/physfs/lib/libphysfs.1.dylib @executable_path/libphysfs.1.dylib ./opensoldat/opensoldatserver
+          install_name_tool -change @executable_path/../Frameworks/libstb.dylib @executable_path/libstb.dylib ./opensoldat/opensoldat
+          install_name_tool -change @executable_path/../Frameworks/libGameNetworkingSockets.dylib @executable_path/libGameNetworkingSockets.dylib ./opensoldat/opensoldat
+          install_name_tool -change @executable_path/../Frameworks/libGameNetworkingSockets.dylib @executable_path/libGameNetworkingSockets.dylib ./opensoldat/opensoldatserver
+          install_name_tool -change /usr/local/opt/libpng/lib/libpng16.16.dylib @executable_path/libpng16.16.dylib ./opensoldat/libfreetype.6.dylib
+          install_name_tool -change /usr/local/opt/protobuf/lib/libprotobuf.30.dylib @executable_path/libprotobuf.30.dylib ./opensoldat/libGameNetworkingSockets.dylib
+          install_name_tool -change /usr/local/opt/openssl@1.1/lib/libcrypto.1.1.dylib @executable_path/libcrypto.1.1.dylib ./opensoldat/libGameNetworkingSockets.dylib
+
       - uses: actions/upload-artifact@v2
         with:
           name: macos-build
@@ -162,6 +185,8 @@ jobs:
       - name: Zip build dirs back together
         run: |
           zip -r windows-build.zip windows-build
+          chmod +x macos-build/opensoldat
+          chmod +x macos-build/opensoldatserver
           zip -r macos-build.zip macos-build
 
       - name: Chmod and zip AppImages
