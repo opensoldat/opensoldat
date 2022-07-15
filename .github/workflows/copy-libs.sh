@@ -28,7 +28,7 @@ lib_blacklist="${lib_blacklist%?}"
 
 find "$binary_path" -type f \( -executable -or -name "*.so*" \) -exec ldd {} + \
   | grep "=> /" | awk '{print $3}' \
-  | grep -v "$binary_path" \
+  | grep -v "$(git rev-parse --show-toplevel)" \
   | grep -E -v "($lib_blacklist)" \
   | sort -u \
   | xargs install -Dm 644 -t "$library_output_path"

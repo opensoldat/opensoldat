@@ -38,15 +38,23 @@ jobs:
           cd opensoldatserver
           ../../.github/workflows/copy-libs.sh . .
 
-      - uses: actions/upload-artifact@v2
+      # We use .tar to preserve file permissions
+      - name: Tar files
+        run: |
+          tar -cvf opensoldat.tar -C build opensoldat
+          tar -cvf opensoldatserver.tar -C build opensoldatserver
+
+      - name: Upload game build
+        uses: actions/upload-artifact@v2
         with:
           name: linux-build
-          path: build/opensoldat/
+          path: opensoldat.tar
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload server-only build
+        uses: actions/upload-artifact@v2
         with:
           name: linux-server-build
-          path: build/opensoldatserver/
+          path: opensoldatserver.tar
 
   windows:
     runs-on: windows-latest
