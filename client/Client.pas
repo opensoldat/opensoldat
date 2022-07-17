@@ -342,7 +342,7 @@ begin
   else 
     Prefix := '';
 
-  MainConsole.Console('Loading Weapon Names from ' + Prefix + 'txt/weaponnames.txt', DEBUG_MESSAGE_COLOR);
+  MainConsole.Console(_('Loading Weapon Names from') + ' ' + Prefix + 'txt/weaponnames.txt', DEBUG_MESSAGE_COLOR);
   TF := PHYSFS_openRead(PChar(Prefix + 'txt/weaponnames.txt'));
   if TF <> nil then
     for i := 0 to EXTENDED_WEAPONS - 1 do
