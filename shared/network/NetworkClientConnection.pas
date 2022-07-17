@@ -226,7 +226,7 @@ begin
         if not PhysFS_mount(PChar(UserDirectory + 'mods/' + ModName + '.smod'),
           PChar('mods/' + ModName + '/'), False) then
         begin
-          ShowMessage(_('Could not load mod archive (' + ModName + ').'));
+          ShowMessage(_('Could not load mod archive') + WideString(' (' + ModName + ').'));
           Exit;
         end;
         ModDir := 'mods/' + ModName + '/';
@@ -235,7 +235,7 @@ begin
         LoadSounds(ModDir);
         ForceGraphicsReload := True;
         UsesServerMod := True;
-        MainConsole.Console(_('Loading server mod: ' + ModName), MODE_MESSAGE_COLOR);
+        MainConsole.Console(_('Loading server mod:') + WideString(' ' + ModName), MODE_MESSAGE_COLOR);
       end
       else
       begin
@@ -261,7 +261,7 @@ begin
   begin
     if not Map.LoadMap(MapStatus, r_forcebg.Value, r_forcebg_color1.Value, r_forcebg_color2.Value) then
     begin
-      RenderGameInfo(_('Could not load map: ') + WideString(MapName));
+      RenderGameInfo(_('Could not load map:') + ' ' + WideString(MapName));
       ExitToMenu;
       Exit;
     end;
@@ -271,7 +271,7 @@ begin
     {$IFDEF STEAM}
     if MapStatus.WorkshopID > 0 then
     begin
-      RenderGameInfo(_('Downloading workshop item: ') + WideString(IntToStr(MapStatus.WorkshopID)));
+      RenderGameInfo(_('Downloading workshop item:') + ' ' + WideString(IntToStr(MapStatus.WorkshopID)));
       SteamAPI.UGC.DownloadItem(MapStatus.WorkshopID, True);
       MapChangeItemID := MapStatus.WorkshopID;
       ForceReconnect := True;
