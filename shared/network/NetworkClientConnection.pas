@@ -231,6 +231,7 @@ begin
         end;
         ModDir := 'mods/' + ModName + '/';
         CustomModChecksum := Checksum;
+        LoadWeaponNames();
         LoadAnimObjects(ModDir);
         LoadSounds(ModDir);
         ForceGraphicsReload := True;
@@ -248,6 +249,7 @@ begin
       if UsesServerMod then // reset to original mod
       begin
         ModDir := fs_mod.Value;
+        LoadWeaponNames();
         LoadAnimObjects(ModDir);
         LoadSounds(ModDir);
         ForceGraphicsReload := True;
