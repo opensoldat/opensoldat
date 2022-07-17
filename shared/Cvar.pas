@@ -197,6 +197,12 @@ end;
 
 function fs_basepathChange(var Cvar: TCvarBase; NewValue: String): Boolean;
 begin
+  if BaseDirectory <> '' then
+  begin
+    Cvar.FErrorMessage := 'fs_basepath must be set from the command line';
+    Result := False;
+  end;
+
   if DirectoryExists(NewValue) then
   begin
     BaseDirectory := IncludeTrailingPathDelimiter(NewValue);
@@ -211,6 +217,12 @@ end;
 
 function fs_userpathChange(var Cvar: TCvarBase; NewValue: String): Boolean;
 begin
+  if UserDirectory <> '' then
+  begin
+    Cvar.FErrorMessage := 'fs_userpath must be set from the command line';
+    Result := False;
+  end;
+
   if DirectoryExists(NewValue) then
   begin
     UserDirectory := IncludeTrailingPathDelimiter(NewValue);
