@@ -344,7 +344,7 @@ begin
     tkSString: Result := QuotedStr(ShortString(AValue));
     tkAString: Result := QuotedStr(AnsiString(AValue));
     tkWString: Result := QuotedStr(AnsiString(WideString(AValue)));
-    tkUString: Result := QuotedStr(AnsiString(UnicodeString(AValue)));
+    tkUString: Result := QuotedStr(AnsiString(WideString(AValue)));
     tkClass: Result := TObject(AValue).ToString;
     tkEnumeration: Result := GetEnumName(ATypeInfo, Integer(AValue));
     tkSet: Result := SetToString(ATypeInfo, Integer(AValue), True).Replace(',', ', ');
