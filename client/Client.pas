@@ -358,7 +358,7 @@ var
   Data: TSDL_MessageBoxData;
   Response: LongInt;
 begin
-  RenderGameInfo('Server Redirect');
+  RenderGameInfo(_('Server Redirect'));
   Buttons[0].flags := SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
   Buttons[0].buttonid := 0;
   Buttons[0].text := 'Yes';
