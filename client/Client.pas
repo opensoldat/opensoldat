@@ -693,15 +693,15 @@ begin
   else
   {$ENDIF}if fs_mod.Value <> '' then
   begin
-    Debug('[PhysFS] Mounting mods/' + LowerCase(fs_mod.Value) + '.smod');
-    if not PhysFS_mount(PChar(UserDirectory + 'mods/' + LowerCase(fs_mod.Value) + '.smod'),
-      PChar('mods/' + LowerCase(fs_mod.Value) + '/'), False) then
+    Debug('[PhysFS] Mounting mods/' + fs_mod.Value + '.smod');
+    if not PhysFS_mount(PChar(UserDirectory + 'mods/' + fs_mod.Value + '.smod'),
+      PChar('mods/' + fs_mod.Value + '/'), False) then
     begin
       ShowMessage(_('Could not load mod archive (' + fs_mod.Value + ').'));
       Exit;
     end;
-    ModDir := 'mods/' + LowerCase(fs_mod.Value) + '/';
-    CustomModChecksum := Sha1File(UserDirectory + 'mods/' + LowerCase(fs_mod.Value) + '.smod', 4096);
+    ModDir := 'mods/' + fs_mod.Value + '/';
+    CustomModChecksum := Sha1File(UserDirectory + 'mods/' + fs_mod.Value + '.smod', 4096);
   end;
 
   {$IFDEF STEAM}

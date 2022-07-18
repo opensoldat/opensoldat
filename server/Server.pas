@@ -639,16 +639,16 @@ begin
 
   if fs_mod.Value <> '' then
   begin
-    if not PhysFS_mount(PChar(UserDirectory + 'mods/' + LowerCase(fs_mod.Value) + '.smod'),
-      PChar('mods/' + LowerCase(fs_mod.Value) + '/'), False) then
+    if not PhysFS_mount(PChar(UserDirectory + 'mods/' + fs_mod.Value + '.smod'),
+      PChar('mods/' + fs_mod.Value + '/'), False) then
     begin
       WriteLn('Could not load mod archive (' + fs_mod.Value + ').');
       ProgReady := False;
       sc_enable.SetValue(False);
       Exit;
     end;
-    ModDir := 'mods/' + LowerCase(fs_mod.Value) + '/';
-    CustomModChecksum := Sha1File(UserDirectory + 'mods/' + LowerCase(fs_mod.Value) + '.smod', 4096);
+    ModDir := 'mods/' + fs_mod.Value + '/';
+    CustomModChecksum := Sha1File(UserDirectory + 'mods/' + fs_mod.Value + '.smod', 4096);
   end;
 
   NewLogFiles;
