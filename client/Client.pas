@@ -52,6 +52,8 @@ procedure ExitToMenu;
 procedure RestartGraph;
 procedure ShowMessage(MessageText: AnsiString); overload;
 procedure ShowMessage(MessageText: WideString); overload;
+// TODO: Make this part of a cleaner "LoadMod".
+procedure LoadWeaponNames();
 
 type
   TWeaponStat = record

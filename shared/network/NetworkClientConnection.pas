@@ -231,7 +231,9 @@ begin
         end;
         ModDir := 'mods/' + ModName + '/';
         CustomModChecksum := Checksum;
+        // TODO: Replace with LoadMod
         LoadWeaponNames();
+        InitGameMenus();
         LoadAnimObjects(ModDir);
         LoadSounds(ModDir);
         ForceGraphicsReload := True;
