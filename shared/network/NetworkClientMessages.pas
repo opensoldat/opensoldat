@@ -52,7 +52,7 @@ procedure ClientHandleChatMessage(NetMessage: PSteamNetworkingMessage_t);
 var
   cs: WideString = '';
   prefix: WideString = '';
-  RadioCommand: WideString;
+  RadioCommand: WideString = '';
   i, d: Integer;
   MsgType: Byte;
   col: Cardinal;

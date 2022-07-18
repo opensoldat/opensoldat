@@ -148,7 +148,7 @@ implementation
   uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} TraceLog, Math, Game {$IFNDEF SERVER}, Sound, Demo {$ENDIF};
 
 {$IFNDEF SERVER}
-function snd_volumeChange(var Cvar: TCvarBase; NewValue: Integer): Boolean;
+function snd_volumeChange(Cvar: TCvarBase; NewValue: Integer): Boolean;
 begin
   VolumeInternal := ScaleVolumeSetting(NewValue);
   SetVolume(-1, VolumeInternal);
@@ -166,7 +166,7 @@ begin
     Result := True;
 end;
 
-function cl_player_wepChange(var Cvar: TCvarBase; NewValue: Integer): Boolean;
+function cl_player_wepChange(Cvar: TCvarBase; NewValue: Integer): Boolean;
 begin
   if WeaponActive[NewValue] = 1 then
     Sprite[MySprite].SelWeapon := NewValue;
@@ -187,7 +187,7 @@ begin
   end;
 end;
 {$ELSE}
-function killlimitChange(var Cvar: TStringCvar; NewValue: Integer): Boolean;
+function killlimitChange(Cvar: TStringCvar; NewValue: Integer): Boolean;
 begin
   sv_killlimit.SetValue(NewValue);
   Cvar.FErrorMessage := '';
@@ -195,8 +195,15 @@ begin
 end;
 {$ENDIF}
 
-function fs_basepathChange(var Cvar: TCvarBase; NewValue: String): Boolean;
+function fs_basepathChange(Cvar: TCvarBase; NewValue: String): Boolean;
 begin
+  if BaseDirectory <> '' then
+  begin
+    Cvar.FErrorMessage := 'fs_basepath must be set from the command line';
+    Result := False;
+    Exit;
+  end;
+
   if DirectoryExists(NewValue) then
   begin
     BaseDirectory := IncludeTrailingPathDelimiter(NewValue);
@@ -209,8 +216,15 @@ begin
   end;
 end;
 
-function fs_userpathChange(var Cvar: TCvarBase; NewValue: String): Boolean;
+function fs_userpathChange(Cvar: TCvarBase; NewValue: String): Boolean;
 begin
+  if UserDirectory <> '' then
+  begin
+    Cvar.FErrorMessage := 'fs_userpath must be set from the command line';
+    Result := False;
+    Exit;
+  end;
+
   if DirectoryExists(NewValue) then
   begin
     UserDirectory := IncludeTrailingPathDelimiter(NewValue);
@@ -223,7 +237,7 @@ begin
   end;
 end;
 
-function sv_gravityChange(var Cvar: TCvarBase; NewValue: Single): Boolean;
+function sv_gravityChange(Cvar: TCvarBase; NewValue: Single): Boolean;
 begin
   Cvar := Cvar;
   GRAV := NewValue;

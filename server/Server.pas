@@ -568,6 +568,8 @@ begin
   InitServerCommands();
   ParseCommandLine();
 
+  // NOTE: fs_basepath and fs_userpath must be set from command line, not in
+  // server.cfg.
   if fs_basepath.Value = '' then
     BaseDirectory := ExtractFilePath(ParamStr(0));
   if fs_userpath.Value = '' then
@@ -595,23 +597,8 @@ begin
 
   GameModChecksum := Sha1File(BaseDirectory + '/soldat.smod', 4096);
 
-  ModDir := '';
-
-  if fs_mod.Value <> '' then
-  begin
-    if not PhysFS_mount(PChar(UserDirectory + 'mods/' + LowerCase(fs_mod.Value) + '.smod'),
-      PChar('mods/' + LowerCase(fs_mod.Value) + '/'), False) then
-    begin
-      WriteLn('Could not load mod archive (' + fs_mod.Value + ').');
-      ProgReady := False;
-      sc_enable.SetValue(False);
-      Exit;
-    end;
-    ModDir := 'mods/' + LowerCase(fs_mod.Value) + '/';
-    CustomModChecksum := Sha1File(UserDirectory + 'mods/' + LowerCase(fs_mod.Value) + '.smod', 4096);
-  end;
-
-  // Create the basic folder structure
+  // Now that we have UserDirectory and BaseDirectory set, we can create the
+  // basic directory structure and unpack the necessary config files.
   CreateDirIfMissing(UserDirectory + '/configs');
   CreateDirIfMissing(UserDirectory + '/demos');
   CreateDirIfMissing(UserDirectory + '/logs');
@@ -645,7 +632,24 @@ begin
 
   LoadConfig('server.cfg');
 
+  // NOTE: Code depending on CVars should be run after this line if possible.
   CvarsInitialized := True;
+
+  ModDir := '';
+
+  if fs_mod.Value <> '' then
+  begin
+    if not PhysFS_mount(PChar(UserDirectory + 'mods/' + fs_mod.Value + '.smod'),
+      PChar('mods/' + fs_mod.Value + '/'), False) then
+    begin
+      WriteLn('Could not load mod archive (' + fs_mod.Value + ').');
+      ProgReady := False;
+      sc_enable.SetValue(False);
+      Exit;
+    end;
+    ModDir := 'mods/' + fs_mod.Value + '/';
+    CustomModChecksum := Sha1File(UserDirectory + 'mods/' + fs_mod.Value + '.smod', 4096);
+  end;
 
   NewLogFiles;
 
