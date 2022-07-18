@@ -215,6 +215,7 @@ begin
 
           if IdleCounter > IDLE_KICK then
           begin
+            RenderGameInfo(_('Idle kick (didn''t move mouse for > 3 minutes)'));
             ClientDisconnect;
             ExitToMenu;
           end;
