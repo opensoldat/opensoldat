@@ -1,8 +1,10 @@
 #!/bin/sh
 
 # Script to copy all necessary libraries for OpenSoldat client and server.
-# Possibly `LD_LIBRARY_PATH`, pass the directory where the binaries are located,
-# and the destination for the libraries.
+# Possibly set `LD_LIBRARY_PATH`, pass the directory where the binaries are
+# located, and the destination for the libraries.
+#
+# Relies on curl, ldd and patchelf.
 
 set -eux
 
@@ -27,8 +29,17 @@ lib_blacklist="$(curl https://raw.githubusercontent.com/AppImage/pkg2appimage/ma
 lib_blacklist="${lib_blacklist%?}"
 
 find "$binary_path" -type f \( -executable -or -name "*.so*" \) -exec ldd {} + \
-  | grep "=> /" | awk '{print $3}' \
+  | grep "=> /" \
+  | awk '{print $3}' \
   | grep -v "$(git rev-parse --show-toplevel)" \
   | grep -E -v "($lib_blacklist)" \
   | sort -u \
   | xargs install -Dm 644 -t "$library_output_path"
+
+# Unfortunately, the GNU dynamic linker ld.so ignores any DT_RPATH entries if
+# there is a single DT_RUNPATH entry in an entire DAG. So, we have to remove any
+# DT_RUNPATH entries to have our RPATH settings respected. Since we copy the
+# whole DAG, removing RPATH settings shouldn't affect anything.
+for lib in "$binary_path"/*.so*; do
+  patchelf --remove-rpath "$lib"
+done

@@ -26,10 +26,6 @@ jobs:
           make install
           cd opensoldat
           ../../.github/workflows/copy-libs.sh . .
-          # Some libraries with absolute paths in .ELF DT_RUNPATH need to be patched unfortunately...
-          if ls libpulse\.* 2>&1 1>/dev/null; then
-            patchelf --remove-rpath libpulse\.*
-          fi
           cd ..
 
           cmake .. -DBUILD_CLIENT=0 \
