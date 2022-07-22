@@ -269,9 +269,6 @@ end;
 
 procedure DumpCvar(Cvar: TCvarBase; Value, DefaultValue: Variant);
 begin
-  // FIXME: Workaround for access violation due to uninitialized log_level
-  if Cvar.Name = 'log_level' then
-    Exit;
   Debug('[CVAR] CvarAdd: ' + Cvar.Name + ' Value: '
       + VarToStr(Value) + ' DefaultValue: ' + VarToStr(DefaultValue) +
       ' FLAGS: 0 ' + ' Description: ' + Cvar.Description);
