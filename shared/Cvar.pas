@@ -735,7 +735,7 @@ begin
   Cvars := TFPHashList.Create;
   CvarsSync := TFPHashList.Create;
 
-  log_level := TIntegerCvar.Add('log_level', 'Sets log level', 0, 0, [], nil, 0, 3);
+  log_level := TIntegerCvar.Add('log_level', 'Sets log level', LEVEL_OFF, LEVEL_OFF, [], nil, LEVEL_OFF, LEVEL_TRACE);
   log_enable := TBooleanCvar.Add('log_enable', 'Enables logging to file', False, False, [], nil);
   log_filesupdate := TIntegerCvar.Add('log_filesupdate', 'How often the log files should be updated', 3600, 3600, [], nil, 0, MaxInt);
   {$IFDEF SERVER}

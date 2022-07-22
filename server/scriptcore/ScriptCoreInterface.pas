@@ -111,7 +111,7 @@ uses
   NetworkServerMessages, NetworkServerGame,
   Server, Game, Calc, IniFiles, Sprites, fpmasks,
   Math, ScriptDispatcher, Weapons, Things, Command, Bullets,
-  Constants, strutils, Version, RegExpr, Cvar, ServerHelper {$IFDEF RCON}, Rcon{$ENDIF};
+  TraceLog, Constants, strutils, Version, RegExpr, Cvar, ServerHelper {$IFDEF RCON}, Rcon{$ENDIF};
 
 function ExistsFile(FileName: String): Boolean;
 var
@@ -149,8 +149,7 @@ var
 begin
   Ret := Default(TStringArray);
   Split := Default(TStringArray);
-  if log_level.Value = 3 then
-    WriteLn('|| Split();');
+  Trace('|| Split();');
 
   Temp := Source;
   Count := 0;
@@ -218,8 +217,7 @@ var
   NumLines, NumLinesEnc: Integer;
 begin
   Result := '';
-  if log_level.Value = 3 then
-    WriteLn('|| ScriptCore.ReadFile(' + FileName + ');');
+  Trace('|| ScriptCore.ReadFile(' + FileName + ');');
 
   Name := AnsiReplaceStr(FileName, '..', '');
   assignfile(VarFile, UserDirectory + Name);
@@ -441,8 +439,7 @@ function AppendFile(FileName: String; Data: String): Boolean;
 var
   VarFile: TextFile;
 begin
-  if log_level.Value = 3 then
-    WriteLn('|| ScriptCore.AppendFile(' + FileName + ');');
+  Trace('|| ScriptCore.AppendFile(' + FileName + ');');
 
   FileName := AnsiReplaceStr(FileName, '..', '');
   try
@@ -1040,8 +1037,7 @@ function WriteFile(FileName: String; SData: String): Boolean;
 var
   VarFile: TextFile;
 begin
-  if log_level.Value = 3 then
-    WriteLn('|| ScriptCore.WriteFile(' + FileName + ');');
+  Trace('|| ScriptCore.WriteFile(' + FileName + ');');
 
   FileName := AnsiReplaceStr(FileName, '..', '');
   try
@@ -1101,8 +1097,7 @@ begin
   Result := False;
   if not sc_enable.Value then
     Exit;
-  // if log_level.Value = 3 then
-  // WriteLn('|| ScriptCore.SetVal('+Variable+', '+inttostr(Value)+');');
+  // Trace('|| ScriptCore.SetVal('+Variable+', '+inttostr(Value)+');');
 
   VSetInt(Script.GetVariable(UpperCase(Variable)), Value);
   Result := True;
@@ -1113,8 +1108,7 @@ begin
   Result := False;
   if not sc_enable.Value then
     Exit;
-  // if log_level.Value = 3 then
-  // WriteLn('|| ScriptCore.SetString('+Variable+','+Value+');');
+  // Trace('|| ScriptCore.SetString('+Variable+','+Value+');');
 
   VSetString(Script.GetVariable(UpperCase(Variable)), Value);
   Result := True;
