@@ -1111,16 +1111,7 @@ begin
         if Tex1 = 0 then
           Exit;
 
-        if log_level.Value = 1 then
-        begin
-          if not StaticType then
-            GfxDrawSprite(T^[Tex1], _p.x, _p.y, _ra.x, _ra.y, -Roto)
-          else
-            GfxDrawSprite(T^[Tex1], _p.x, _p.y, _ra.x, _ra.y, -Roto, RGBA($FFFFFF, 115));
-        end else
-        begin
-          GfxDrawSprite(T^[Tex1], _p.x, _p.y, _ra.x, _ra.y, -Roto);
-        end;
+        GfxDrawSprite(T^[Tex1], _p.x, _p.y, _ra.x, _ra.y, -Roto);
 
         if Tex2 > 0 then
           GfxDrawSprite(T^[Tex2], _p.x, _p.y, _ra.x, _ra.y, -Roto);
