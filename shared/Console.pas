@@ -35,7 +35,20 @@ type
   end;
 
 implementation
-  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Game, LogFile, sysutils {$IFDEF SERVER}, Net, NetworkServerMessages {$IFDEF RCON}, Rcon{$ENDIF}{$ENDIF};
+
+uses
+  {$IFDEF SERVER}
+  Server,
+  Net,
+  NetworkServerMessages,
+  {$IFDEF RCON}Rcon,{$ENDIF}
+  {$ELSE}
+  Client,
+  TraceLog,
+  {$ENDIF}
+  Game,
+  LogFile,
+  SysUtils;
 
 procedure TConsole.ScrollConsole;
 var
@@ -119,6 +132,7 @@ begin
   if Count = CountMax then
     ScrollConsole;
   {$ELSE}
+  Debug('[Console] ' + AnsiString(What));
   MainConsole.ConsoleAdd(What, Col);
   BigConsole.ConsoleAdd(What, Col);
   {$ENDIF}
