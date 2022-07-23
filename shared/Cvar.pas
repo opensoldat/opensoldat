@@ -734,7 +734,7 @@ begin
 
   log_level := TIntegerCvar.Add('log_level', 'Sets log level', LEVEL_OFF, LEVEL_OFF, [], nil, LEVEL_OFF, LEVEL_TRACE);
   log_enable := TBooleanCvar.Add('log_enable', 'Enables logging to file', False, False, [], nil);
-  log_filesupdate := TIntegerCvar.Add('log_filesupdate', 'How often the log files should be updated', 3600, 3600, [], nil, 0, MaxInt);
+  log_filesupdate := TIntegerCvar.Add('log_filesupdate', 'How often the log files should be updated in ticks (60 ticks = 1 second)', 3600, 3600, [], nil, 0, MaxInt);
   {$IFDEF SERVER}
   log_timestamp := TBooleanCvar.Add('log_timestamp', 'Enables/Disables timestamps in console', False, False, [CVAR_SERVER], nil);
   {$ENDIF}
