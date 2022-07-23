@@ -52,6 +52,8 @@ procedure ExitToMenu;
 procedure RestartGraph;
 procedure ShowMessage(MessageText: AnsiString); overload;
 procedure ShowMessage(MessageText: WideString); overload;
+// TODO: Make this part of a cleaner "LoadMod".
+procedure LoadWeaponNames();
 
 type
   TWeaponStat = record
@@ -342,7 +344,7 @@ begin
   else 
     Prefix := '';
 
-  MainConsole.Console('Loading Weapon Names from ' + Prefix + 'txt/weaponnames.txt', DEBUG_MESSAGE_COLOR);
+  MainConsole.Console(_('Loading Weapon Names from') + WideString(' ' + Prefix + 'txt/weaponnames.txt'), DEBUG_MESSAGE_COLOR);
   TF := PHYSFS_openRead(PChar(Prefix + 'txt/weaponnames.txt'));
   if TF <> nil then
     for i := 0 to EXTENDED_WEAPONS - 1 do
@@ -356,7 +358,7 @@ var
   Data: TSDL_MessageBoxData;
   Response: LongInt;
 begin
-  RenderGameInfo('Server Redirect');
+  RenderGameInfo(_('Server Redirect'));
   Buttons[0].flags := SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
   Buttons[0].buttonid := 0;
   Buttons[0].text := 'Yes';
@@ -691,15 +693,15 @@ begin
   else
   {$ENDIF}if fs_mod.Value <> '' then
   begin
-    Debug('[PhysFS] Mounting mods/' + LowerCase(fs_mod.Value) + '.smod');
-    if not PhysFS_mount(PChar(UserDirectory + 'mods/' + LowerCase(fs_mod.Value) + '.smod'),
-      PChar('mods/' + LowerCase(fs_mod.Value) + '/'), False) then
+    Debug('[PhysFS] Mounting mods/' + fs_mod.Value + '.smod');
+    if not PhysFS_mount(PChar(UserDirectory + 'mods/' + fs_mod.Value + '.smod'),
+      PChar('mods/' + fs_mod.Value + '/'), False) then
     begin
       ShowMessage(_('Could not load mod archive (' + fs_mod.Value + ').'));
       Exit;
     end;
-    ModDir := 'mods/' + LowerCase(fs_mod.Value) + '/';
-    CustomModChecksum := Sha1File(UserDirectory + 'mods/' + LowerCase(fs_mod.Value) + '.smod', 4096);
+    ModDir := 'mods/' + fs_mod.Value + '/';
+    CustomModChecksum := Sha1File(UserDirectory + 'mods/' + fs_mod.Value + '.smod', 4096);
   end;
 
   {$IFDEF STEAM}
