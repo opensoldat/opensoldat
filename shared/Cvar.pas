@@ -965,13 +965,13 @@ begin
   net_floodingpacketslan := TIntegerCvar.Add('net_floodingpacketslan', 'When running on a LAN, controls how many packets should be considered flooding', 80, 80, [CVAR_SERVER], nil, 0, 100);
   net_floodingpacketsinternet := TIntegerCvar.Add('net_floodingpacketsinternet', 'When running on the Internet, controls how many packets should be considered flooding', 42, 42, [CVAR_SERVER], nil, 0, 100);
 
-  net_t1_snapshot := TIntegerCvar.Add('net_t1_snapshot', 'Maximum number of simultaneous file transfer connections', 35, 35, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_majorsnapshot := TIntegerCvar.Add('net_t1_majorsnapshot', 'Maximum number of simultaneous file transfer connections', 19, 19, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_deadsnapshot := TIntegerCvar.Add('net_t1_deadsnapshot', 'Maximum number of simultaneous file transfer connections', 50, 50, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_heartbeat := TIntegerCvar.Add('net_t1_heartbeat', 'Maximum number of simultaneous file transfer connections', 135, 135, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_delta := TIntegerCvar.Add('net_t1_delta', 'Maximum number of simultaneous file transfer connections', 4, 4, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_ping := TIntegerCvar.Add('net_t1_ping', 'Maximum number of simultaneous file transfer connections', 21, 21, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_thingsnapshot := TIntegerCvar.Add('net_t1_thingsnapshot', 'Maximum number of simultaneous file transfer connections', 31, 31, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_snapshot := TIntegerCvar.Add('net_t1_snapshot', 'How often to send sprite snapshot packets on the internet in ticks (60 ticks = 1 second)', 35, 35, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_majorsnapshot := TIntegerCvar.Add('net_t1_majorsnapshot', 'How often to send major sprite snapshot packets on the internet in ticks (60 ticks = 1 second)', 19, 19, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_deadsnapshot := TIntegerCvar.Add('net_t1_deadsnapshot', 'How often to send dead sprite snapshot packets on the internet in ticks (60 ticks = 1 second)', 50, 50, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_heartbeat := TIntegerCvar.Add('net_t1_heartbeat', 'How often to send heartbeat packets on the internet in ticks (60 ticks = 1 second)', 135, 135, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_delta := TIntegerCvar.Add('net_t1_delta', 'How often to send bot sprite deltas on the internet in ticks (60 ticks = 1 second)', 4, 4, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_ping := TIntegerCvar.Add('net_t1_ping', 'How often to send ping packets on the internet in ticks (60 ticks = 1 second)', 21, 21, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_thingsnapshot := TIntegerCvar.Add('net_t1_thingsnapshot', 'How often to send thing snapshot packets on the internet in ticks (60 ticks = 1 second)', 31, 31, [CVAR_SERVER], nil, 1, 1000);
 
   // Bots cvars
   bots_random_noteam := TIntegerCvar.Add('bots_random_noteam', 'Number of bots in DM, PM and RM modes', 0, 0, [CVAR_SERVER], nil, 0, 32);
@@ -1011,7 +1011,7 @@ begin
   sv_kits_collide := TBooleanCvar.Add('sv_kits_collide', 'Enables colliding kits', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_survivalmode := TBooleanCvar.Add('sv_survivalmode', 'Enables survival mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_survivalmode_antispy := TBooleanCvar.Add('sv_survivalmode_antispy', 'Enables anti spy chat in survival mode', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
-  sv_survivalmode_clearweapons := TBooleanCvar.Add('sv_survivalmode_clearweapons', 'Cluster Grenades bonus availability', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
+  sv_survivalmode_clearweapons := TBooleanCvar.Add('sv_survivalmode_clearweapons', 'Clear weapons in between survivalmode rounds', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_realisticmode := TBooleanCvar.Add('sv_realisticmode', 'Enables realistic mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_advancemode := TBooleanCvar.Add('sv_advancemode', 'Enables advance mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_advancemode_amount := TIntegerCvar.Add('sv_advancemode_amount', 'Number of kills required in Advance Mode to gain a weapon.', 2, 2, [CVAR_SERVER, CVAR_SYNC], nil, 1, 9999);
