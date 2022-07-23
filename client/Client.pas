@@ -964,6 +964,8 @@ begin
 
   WriteLogFile(GameLog, ConsoleLogFileName);
 
+  CommandCleanup();
+
   Halt(0);
 end;
 

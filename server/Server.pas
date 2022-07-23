@@ -854,6 +854,8 @@ begin
     on e: Exception do
       WriteLn('Error on SHUTDOWN during log writing: ' + e.Message);
   end;
+
+  CommandCleanup();
 end;
 
 function LoadMapsList(Filename: string = ''): Boolean;
