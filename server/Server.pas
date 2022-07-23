@@ -856,6 +856,7 @@ begin
   end;
 
   CommandCleanup();
+  CvarCleanup();
 end;
 
 function LoadMapsList(Filename: string = ''): Boolean;

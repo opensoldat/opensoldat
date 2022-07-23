@@ -135,6 +135,7 @@ type
   end;
 
 procedure CvarInit();
+procedure CvarCleanup();
 function DumpFlags(Cvar: TCvarBase): AnsiString;
 procedure ResetSyncCvars;
 
@@ -1027,6 +1028,17 @@ begin
   sv_pure := TBooleanCvar.Add('sv_pure', 'Requires clients to use the same game files (.smod) as the server', True, True, [CVAR_SERVER, CVAR_SYNC], nil);
 
   CommandInit();
+end;
+
+procedure CvarCleanup();
+var
+  i: Integer;
+begin
+  FreeAndNil(CvarsSync);
+  if Cvars <> Nil then
+    for i := 0 to Cvars.Count - 1 do
+      TCvarBase(Cvars[i]).Free;
+  FreeAndNil(Cvars);
 end;
 
 end.
