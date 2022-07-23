@@ -195,6 +195,18 @@ begin
 end;
 {$ENDIF}
 
+function fs_portableChange(Cvar: TCvarBase; NewValue: Boolean): Boolean;
+begin
+  if (UserDirectory <> '') or (BaseDirectory <> '') then
+  begin
+    Cvar.FErrorMessage := 'fs_portable must be set from the command line';
+    Result := False;
+    Exit;
+  end;
+
+  Result := True;
+end;
+
 function fs_basepathChange(Cvar: TCvarBase; NewValue: String): Boolean;
 begin
   if BaseDirectory <> '' then
@@ -746,7 +758,7 @@ begin
 
   fs_localmount := TBooleanCvar.Add('fs_localmount', 'Mount game directory as game mod', False, False, [CVAR_CLIENT, CVAR_INITONLY], nil);
   fs_mod := TStringCvar.Add('fs_mod', 'File name of mod placed in mods directory (without .smod extension)', '', '', [CVAR_INITONLY], nil, 0, 255);
-  fs_portable := TBooleanCvar.Add('fs_portable', 'Enables portable mode', True, True, [CVAR_CLIENT, CVAR_INITONLY], nil);
+  fs_portable := TBooleanCvar.Add('fs_portable', 'Enables portable mode', True, True, [CVAR_CLIENT, CVAR_INITONLY], @fs_portableChange);
   fs_basepath := TStringCvar.Add('fs_basepath', 'Path to base game directory', '', '', [CVAR_INITONLY], @fs_basepathChange, 0, 255);
   fs_userpath := TStringCvar.Add('fs_userpath', 'Path to user game directory', '', '', [CVAR_INITONLY], @fs_userpathChange, 0, 255);
 
