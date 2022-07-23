@@ -584,9 +584,7 @@ begin
   BasePathSDL := SDL_GetBasePath();
 
   CvarInit();
-
   InitClientCommands();
-
   ParseCommandLine();
 
   // NOTE: fs_basepath, fs_userpath and fs_portable must be set from command
@@ -627,16 +625,6 @@ begin
   CvarsInitialized := True;
 
   NewLogFiles;
-
-  MainConsole.CountMax := Round(15 * _rscala.y);
-  MainConsole.ScrollTickMax := 150;
-  MainConsole.NewMessageWait := 150;
-  MainConsole.AlphaCount := 255;
-  MainConsole.Count := 0;
-  MainConsole.CountMax := Round(ui_console_length.Value * _rscala.y);
-
-  if MainConsole.CountMax > 254 then
-    MainConsole.CountMax := 254;
 
   // TODO remove HWIDs, replace by Fae auth tickets
   HWID := '00000000000';
