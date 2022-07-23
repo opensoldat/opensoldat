@@ -762,7 +762,7 @@ begin
 
   fs_localmount := TBooleanCvar.Add('fs_localmount', 'Mount game directory as game mod', False, False, [CVAR_CLIENT, CVAR_INITONLY], nil);
   fs_mod := TStringCvar.Add('fs_mod', 'File name of mod placed in mods directory (without .smod extension)', '', '', [CVAR_INITONLY], nil, 0, 255);
-  fs_portable := TBooleanCvar.Add('fs_portable', 'Enables portable mode', True, True, [CVAR_CLIENT, CVAR_INITONLY], @fs_portableChange);
+  fs_portable := TBooleanCvar.Add('fs_portable', 'Enables portable mode', False, False, [CVAR_CLIENT, CVAR_INITONLY], @fs_portableChange);
   fs_basepath := TStringCvar.Add('fs_basepath', 'Path to base game directory', '', '', [CVAR_INITONLY], @fs_basepathChange, 0, 255);
   fs_userpath := TStringCvar.Add('fs_userpath', 'Path to user game directory', '', '', [CVAR_INITONLY], @fs_userpathChange, 0, 255);
 
