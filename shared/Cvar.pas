@@ -195,6 +195,8 @@ begin
 end;
 {$ENDIF}
 
+{$PUSH}
+{$WARN 5024 OFF : Parameter "$1" not used}
 function fs_portableChange(Cvar: TCvarBase; NewValue: Boolean): Boolean;
 begin
   if (UserDirectory <> '') or (BaseDirectory <> '') then
@@ -206,6 +208,7 @@ begin
 
   Result := True;
 end;
+{$POP}
 
 function fs_basepathChange(Cvar: TCvarBase; NewValue: String): Boolean;
 begin
