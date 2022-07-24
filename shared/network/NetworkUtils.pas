@@ -55,12 +55,12 @@ procedure StringToArray(var c: array of Char; s: string);
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Net, Game,
   {$IFDEF SERVER}
-  BanSystem, TraceLog;
+  Server, BanSystem,
   {$ELSE}
-  GameMenus;
+  Client, GameMenus,
   {$ENDIF}
+  Net, Game, TraceLog;
 
 {$IFNDEF SERVER}
 procedure PlayRadioSound(RadioID: Byte);
@@ -153,7 +153,7 @@ begin
     Dropped := ' - DROPPED (wrong size <> ' + IntToStr(ValidSize) + ')';
     Result := False;
   end;
-  if log_level.Value > 1 then
+  if log_level.Value >= LEVEL_TRACE then
     MainConsole.Console('[NET] Received Packet (' + IntToStr(PacketId) +
       ') Size:' + IntToStr(ReceiveSize) + Dropped, DEBUG_MESSAGE_COLOR);
 end;
@@ -168,7 +168,7 @@ begin
     Dropped := ' - DROPPED (wrong size, expected at least ' + IntToStr(ValidSize) + ')';
     Result := False;
   end;
-  if log_level.Value > 1 then
+  if log_level.Value >= LEVEL_TRACE then
     MainConsole.Console('[NET] Received Packet (' + IntToStr(PacketId) +
       ') Size:' + IntToStr(ReceiveSize) + Dropped, DEBUG_MESSAGE_COLOR);
 end;

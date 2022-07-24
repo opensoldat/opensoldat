@@ -835,6 +835,8 @@ begin
   GameNetworkingSockets_Kill();
   {$ENDIF}
 
+  FreeAndNil(DummyPlayer);
+
   AddLineToLogFile(GameLog, 'PhysFS closing.', ConsoleLogFileName);
   PhysFS_deinit();
 
@@ -854,6 +856,9 @@ begin
     on e: Exception do
       WriteLn('Error on SHUTDOWN during log writing: ' + e.Message);
   end;
+
+  CommandCleanup();
+  CvarCleanup();
 end;
 
 function LoadMapsList(Filename: string = ''): Boolean;

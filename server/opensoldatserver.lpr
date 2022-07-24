@@ -44,7 +44,7 @@ begin
   {$IFDEF AUTOUPDATER}
   StartAutoUpdater;
   {$ENDIF}
-  RunServer;
-
   DefaultSystemCodePage := CP_UTF8;
+
+  RunServer;
 end.

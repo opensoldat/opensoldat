@@ -135,6 +135,7 @@ type
   end;
 
 procedure CvarInit();
+procedure CvarCleanup();
 function DumpFlags(Cvar: TCvarBase): AnsiString;
 procedure ResetSyncCvars;
 
@@ -194,6 +195,21 @@ begin
   Result := True;
 end;
 {$ENDIF}
+
+{$PUSH}
+{$WARN 5024 OFF : Parameter "$1" not used}
+function fs_portableChange(Cvar: TCvarBase; NewValue: Boolean): Boolean;
+begin
+  if (UserDirectory <> '') or (BaseDirectory <> '') then
+  begin
+    Cvar.FErrorMessage := 'fs_portable must be set from the command line';
+    Result := False;
+    Exit;
+  end;
+
+  Result := True;
+end;
+{$POP}
 
 function fs_basepathChange(Cvar: TCvarBase; NewValue: String): Boolean;
 begin
@@ -269,9 +285,6 @@ end;
 
 procedure DumpCvar(Cvar: TCvarBase; Value, DefaultValue: Variant);
 begin
-  // FIXME: Workaround for access violation due to uninitialized log_level
-  if Cvar.Name = 'log_level' then
-    Exit;
   Debug('[CVAR] CvarAdd: ' + Cvar.Name + ' Value: '
       + VarToStr(Value) + ' DefaultValue: ' + VarToStr(DefaultValue) +
       ' FLAGS: 0 ' + ' Description: ' + Cvar.Description);
@@ -735,9 +748,9 @@ begin
   Cvars := TFPHashList.Create;
   CvarsSync := TFPHashList.Create;
 
-  log_level := TIntegerCvar.Add('log_level', 'Sets log level', 0, 0, [], nil, 0, 3);
+  log_level := TIntegerCvar.Add('log_level', 'Sets log level', LEVEL_OFF, LEVEL_OFF, [], nil, LEVEL_OFF, LEVEL_TRACE);
   log_enable := TBooleanCvar.Add('log_enable', 'Enables logging to file', False, False, [], nil);
-  log_filesupdate := TIntegerCvar.Add('log_filesupdate', 'How often the log files should be updated', 3600, 3600, [], nil, 0, MaxInt);
+  log_filesupdate := TIntegerCvar.Add('log_filesupdate', 'How often the log files should be updated in ticks (60 ticks = 1 second)', 3600, 3600, [], nil, 0, MaxInt);
   {$IFDEF SERVER}
   log_timestamp := TBooleanCvar.Add('log_timestamp', 'Enables/Disables timestamps in console', False, False, [CVAR_SERVER], nil);
   {$ENDIF}
@@ -748,12 +761,12 @@ begin
   {$ENDIF}
 
   fs_localmount := TBooleanCvar.Add('fs_localmount', 'Mount game directory as game mod', False, False, [CVAR_CLIENT, CVAR_INITONLY], nil);
-  fs_mod := TStringCvar.Add('fs_mod', 'File name of mod placed in mods directory (without .smod extension)', '', '', [CVAR_CLIENT, CVAR_INITONLY], nil, 0, 255);
-  fs_portable := TBooleanCvar.Add('fs_portable', 'Enables portable mode', True, True, [CVAR_CLIENT, CVAR_INITONLY], nil);
-  fs_basepath := TStringCvar.Add('fs_basepath', 'Path to base game directory', '', '', [CVAR_CLIENT, CVAR_INITONLY], @fs_basepathChange, 0, 255);
-  fs_userpath := TStringCvar.Add('fs_userpath', 'Path to user game directory', '', '', [CVAR_CLIENT, CVAR_INITONLY], @fs_userpathChange, 0, 255);
+  fs_mod := TStringCvar.Add('fs_mod', 'File name of mod placed in mods directory (without .smod extension)', '', '', [CVAR_INITONLY], nil, 0, 255);
+  fs_portable := TBooleanCvar.Add('fs_portable', 'Enables portable mode', False, False, [CVAR_CLIENT, CVAR_INITONLY], @fs_portableChange);
+  fs_basepath := TStringCvar.Add('fs_basepath', 'Path to base game directory', '', '', [CVAR_INITONLY], @fs_basepathChange, 0, 255);
+  fs_userpath := TStringCvar.Add('fs_userpath', 'Path to user game directory', '', '', [CVAR_INITONLY], @fs_userpathChange, 0, 255);
 
-  demo_autorecord := TBooleanCvar.Add('demo_autorecord', 'Auto record demos', False, False, [CVAR_CLIENT], nil);
+  demo_autorecord := TBooleanCvar.Add('demo_autorecord', 'Auto record demos', False, False, [], nil);
 
   {$IFNDEF SERVER}
   // Render Cvars
@@ -952,13 +965,13 @@ begin
   net_floodingpacketslan := TIntegerCvar.Add('net_floodingpacketslan', 'When running on a LAN, controls how many packets should be considered flooding', 80, 80, [CVAR_SERVER], nil, 0, 100);
   net_floodingpacketsinternet := TIntegerCvar.Add('net_floodingpacketsinternet', 'When running on the Internet, controls how many packets should be considered flooding', 42, 42, [CVAR_SERVER], nil, 0, 100);
 
-  net_t1_snapshot := TIntegerCvar.Add('net_t1_snapshot', 'Maximum number of simultaneous file transfer connections', 35, 35, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_majorsnapshot := TIntegerCvar.Add('net_t1_majorsnapshot', 'Maximum number of simultaneous file transfer connections', 19, 19, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_deadsnapshot := TIntegerCvar.Add('net_t1_deadsnapshot', 'Maximum number of simultaneous file transfer connections', 50, 50, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_heartbeat := TIntegerCvar.Add('net_t1_heartbeat', 'Maximum number of simultaneous file transfer connections', 135, 135, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_delta := TIntegerCvar.Add('net_t1_delta', 'Maximum number of simultaneous file transfer connections', 4, 4, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_ping := TIntegerCvar.Add('net_t1_ping', 'Maximum number of simultaneous file transfer connections', 21, 21, [CVAR_SERVER], nil, 1, 1000);
-  net_t1_thingsnapshot := TIntegerCvar.Add('net_t1_thingsnapshot', 'Maximum number of simultaneous file transfer connections', 31, 31, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_snapshot := TIntegerCvar.Add('net_t1_snapshot', 'How often to send sprite snapshot packets on the internet in ticks (60 ticks = 1 second)', 35, 35, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_majorsnapshot := TIntegerCvar.Add('net_t1_majorsnapshot', 'How often to send major sprite snapshot packets on the internet in ticks (60 ticks = 1 second)', 19, 19, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_deadsnapshot := TIntegerCvar.Add('net_t1_deadsnapshot', 'How often to send dead sprite snapshot packets on the internet in ticks (60 ticks = 1 second)', 50, 50, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_heartbeat := TIntegerCvar.Add('net_t1_heartbeat', 'How often to send heartbeat packets on the internet in ticks (60 ticks = 1 second)', 135, 135, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_delta := TIntegerCvar.Add('net_t1_delta', 'How often to send bot sprite deltas on the internet in ticks (60 ticks = 1 second)', 4, 4, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_ping := TIntegerCvar.Add('net_t1_ping', 'How often to send ping packets on the internet in ticks (60 ticks = 1 second)', 21, 21, [CVAR_SERVER], nil, 1, 1000);
+  net_t1_thingsnapshot := TIntegerCvar.Add('net_t1_thingsnapshot', 'How often to send thing snapshot packets on the internet in ticks (60 ticks = 1 second)', 31, 31, [CVAR_SERVER], nil, 1, 1000);
 
   // Bots cvars
   bots_random_noteam := TIntegerCvar.Add('bots_random_noteam', 'Number of bots in DM, PM and RM modes', 0, 0, [CVAR_SERVER], nil, 0, 32);
@@ -998,7 +1011,7 @@ begin
   sv_kits_collide := TBooleanCvar.Add('sv_kits_collide', 'Enables colliding kits', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_survivalmode := TBooleanCvar.Add('sv_survivalmode', 'Enables survival mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_survivalmode_antispy := TBooleanCvar.Add('sv_survivalmode_antispy', 'Enables anti spy chat in survival mode', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
-  sv_survivalmode_clearweapons := TBooleanCvar.Add('sv_survivalmode_clearweapons', 'Cluster Grenades bonus availability', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
+  sv_survivalmode_clearweapons := TBooleanCvar.Add('sv_survivalmode_clearweapons', 'Clear weapons in between survivalmode rounds', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_realisticmode := TBooleanCvar.Add('sv_realisticmode', 'Enables realistic mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_advancemode := TBooleanCvar.Add('sv_advancemode', 'Enables advance mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_advancemode_amount := TIntegerCvar.Add('sv_advancemode_amount', 'Number of kills required in Advance Mode to gain a weapon.', 2, 2, [CVAR_SERVER, CVAR_SYNC], nil, 1, 9999);
@@ -1012,9 +1025,20 @@ begin
 
   sv_killlimit := TIntegerCvar.Add('sv_killlimit', 'Game point limit', 10, 10, [CVAR_SERVER, CVAR_SYNC], nil, 0, 9999);
   sv_downloadurl := TStringCvar.Add('sv_downloadurl', 'URL from which clients can download missing assets', '', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 100);
-  sv_pure := TBooleanCvar.Add('sv_pure', 'Requires clients to use the same game files (.smod) as the server', True, True, [CVAR_SERVER, CVAR_SYNC], nil);
+  sv_pure := TBooleanCvar.Add('sv_pure', 'Requires clients to use the same game files (.smod) as the server', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
 
   CommandInit();
+end;
+
+procedure CvarCleanup();
+var
+  i: Integer;
+begin
+  FreeAndNil(CvarsSync);
+  if Cvars <> Nil then
+    for i := 0 to Cvars.Count - 1 do
+      TCvarBase(Cvars[i]).Free;
+  FreeAndNil(Cvars);
 end;
 
 end.

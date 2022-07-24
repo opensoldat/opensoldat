@@ -108,7 +108,7 @@ begin
   if Length(S) < 1 then
     Exit;
 
-  if log_level.Value = 0 then
+  if log_level.Value = LEVEL_OFF then
     Exit;
 
   S2 := FormatDateTime('yy/mm/dd', Date);
@@ -124,7 +124,7 @@ begin
     LogLock.Release;
   end;
 
-  if log_level.Value > 1 then
+  if log_level.Value >= LEVEL_TRACE then
     WriteLogFile(F, Name);
 end;
 
@@ -235,7 +235,7 @@ begin
     Inc(j);
     ConsoleLogFileName := Format('%slogs/consolelog-%s-%.2d.txt', [UserDirectory, S2, j]);
   end;
-  if log_level.Value = 0 then
+  if log_level.Value = LEVEL_OFF then
     ConsoleLogFileName := UserDirectory + 'logs/consolelog.txt';
 
   NewLogFile(GameLog, ConsoleLogFileName);

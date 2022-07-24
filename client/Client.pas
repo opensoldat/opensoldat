@@ -584,11 +584,11 @@ begin
   BasePathSDL := SDL_GetBasePath();
 
   CvarInit();
-
   InitClientCommands();
-
   ParseCommandLine();
 
+  // NOTE: fs_basepath, fs_userpath and fs_portable must be set from command
+  // line, not in client.cfg.
   if fs_portable.Value then
   begin
     UserDirectory := BasePathSDL;
@@ -606,7 +606,8 @@ begin
   Debug('[FS] UserDirectory: ' + UserDirectory);
   Debug('[FS] BaseDirectory: ' + BaseDirectory);
 
-  // Create the basic folder structure
+  // Now that we have UserDirectory and BaseDirectory set, we can create the
+  // basic directory structure and unpack the necessary config files.
   CreateDirIfMissing(UserDirectory + '/configs');
   CreateDirIfMissing(UserDirectory + '/screens');
   CreateDirIfMissing(UserDirectory + '/demos');
@@ -615,17 +616,15 @@ begin
   CreateDirIfMissing(UserDirectory + '/maps');
   CreateDirIfMissing(UserDirectory + '/mods');
 
+  PHYSFS_CopyFileFromArchive('configs/client.cfg', UserDirectory + '/configs/client.cfg');
+  PHYSFS_CopyFileFromArchive('configs/taunts.cfg', UserDirectory + '/configs/taunts.cfg');
+
+  LoadConfig('client.cfg');
+
+  // NOTE: Code depending on CVars should be run after this line if possible.
+  CvarsInitialized := True;
+
   NewLogFiles;
-
-  MainConsole.CountMax := Round(15 * _rscala.y);
-  MainConsole.ScrollTickMax := 150;
-  MainConsole.NewMessageWait := 150;
-  MainConsole.AlphaCount := 255;
-  MainConsole.Count := 0;
-  MainConsole.CountMax := Round(ui_console_length.Value * _rscala.y);
-
-  if MainConsole.CountMax > 254 then
-    MainConsole.CountMax := 254;
 
   // TODO remove HWIDs, replace by Fae auth tickets
   HWID := '00000000000';
@@ -710,13 +709,6 @@ begin
   {$ENDIF}
 
   LoadInterfaceArchives(UserDirectory + 'custom-interfaces/');
-
-  PHYSFS_CopyFileFromArchive('configs/client.cfg', UserDirectory + '/configs/client.cfg');
-  PHYSFS_CopyFileFromArchive('configs/taunts.cfg', UserDirectory + '/configs/taunts.cfg');
-
-  LoadConfig('client.cfg');
-
-  CvarsInitialized := True;
 
   // these might change so keep a backup to avoid changing the settings file
   ScreenWidth := r_screenwidth.Value;
@@ -971,6 +963,9 @@ begin
   AddLineToLogFile(GameLog, '   End of Log.', ConsoleLogFileName);
 
   WriteLogFile(GameLog, ConsoleLogFileName);
+
+  CommandCleanup();
+  CvarCleanup();
 
   Halt(0);
 end;
