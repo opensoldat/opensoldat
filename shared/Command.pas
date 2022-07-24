@@ -6,6 +6,7 @@ uses
   classes, contnrs, sysutils, variants, Constants;
 
 procedure CommandInit();
+procedure CommandCleanup();
 function ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
 function LoadConfig(ConfigName: AnsiString): Boolean;
 
@@ -642,6 +643,17 @@ begin
   CommandAdd('netconfig_loglevel', CommandNetLogLevel, 'Set GNS log level', []);
 
   {$ENDIF}
+end;
+
+procedure CommandCleanup();
+var
+  i: Integer;
+begin
+  FreeAndNil(DeferredCommands);
+  if Commands <> Nil then
+    for i := 0 to Commands.Count - 1 do
+      Dispose(PCommand(Commands[i]));
+  FreeAndNil(Commands);
 end;
 
 end.
