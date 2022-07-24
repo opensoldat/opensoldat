@@ -835,6 +835,8 @@ begin
   GameNetworkingSockets_Kill();
   {$ENDIF}
 
+  FreeAndNil(DummyPlayer);
+
   AddLineToLogFile(GameLog, 'PhysFS closing.', ConsoleLogFileName);
   PhysFS_deinit();
 
