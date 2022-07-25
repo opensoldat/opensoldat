@@ -641,8 +641,13 @@ begin
   CreateDirIfMissing(UserDirectory + '/maps');
   CreateDirIfMissing(UserDirectory + '/mods');
 
+  PHYSFS_CopyFileFromArchive('configs/bindings.cfg', UserDirectory + '/configs/bindings.cfg');
   PHYSFS_CopyFileFromArchive('configs/client.cfg', UserDirectory + '/configs/client.cfg');
-  PHYSFS_CopyFileFromArchive('configs/taunts.cfg', UserDirectory + '/configs/taunts.cfg');
+  PHYSFS_CopyFileFromArchive('configs/controls.cfg', UserDirectory + '/configs/controls.cfg');
+  PHYSFS_CopyFileFromArchive('configs/game.cfg', UserDirectory + '/configs/game.cfg');
+  PHYSFS_CopyFileFromArchive('configs/graphics.cfg', UserDirectory + '/configs/graphics.cfg');
+  PHYSFS_CopyFileFromArchive('configs/player.cfg', UserDirectory + '/configs/player.cfg');
+  PHYSFS_CopyFileFromArchive('configs/sound.cfg', UserDirectory + '/configs/sound.cfg');
 
   LoadConfig('client.cfg');
 
