@@ -5,9 +5,9 @@
 macro(download_assets)
   include(FetchContent)
 
-  set(BASE_REPOSITORY_URL "https://github.com/rzaba0/base"
+  set(BASE_REPOSITORY_URL "https://github.com/opensoldat/base"
       CACHE STRING "We pull soldat.smod and font from here")
-  set(BASE_GIT_TAG "v0.3.1"
+  set(BASE_GIT_TAG "v0.3"
       CACHE STRING "Git tag associated with release in base repository")
   set(SOLDAT_SMOD_SHA1 "d1f14a8dcf567a4a460dfde736a5963fee57ece0"
       CACHE STRING "Expected SHA1 of soldat.smod download")

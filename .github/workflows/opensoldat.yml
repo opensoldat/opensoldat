@@ -166,6 +166,7 @@ jobs:
 
   continuous:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
     needs: [linux, windows, macos]
     steps:
       - name: Checkout code
