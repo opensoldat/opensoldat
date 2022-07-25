@@ -4,8 +4,14 @@ jobs:
   linux:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
+      - name: Checkout opensoldat code
         uses: actions/checkout@v2
+
+      - name: Checkout launcher code
+        uses: actions/checkout@v2
+        with:
+          repository: rzaba0/soldat-launcher
+          path: launcher
 
       - name: Install dependencies
         run: |
@@ -15,6 +21,7 @@ jobs:
       - name: Compile opensoldat
         run: |
           export BUILD_ID=${GITHUB_SHA::8}
+
           mkdir build
           cd build
           cmake .. -DCMAKE_INSTALL_PREFIX=./opensoldat \
@@ -38,17 +45,23 @@ jobs:
           cd opensoldatserver
           ../../.github/workflows/copy-libs.sh . .
 
+      - name: Build launcher
+        run: |
+          cp -R build/opensoldat/ launcher/
+          cd launcher
+          npm ci
+          npm run make
+
       # We use .tar to preserve file permissions
       - name: Tar files
         run: |
-          tar -cvf opensoldat.tar -C build opensoldat
           tar -cvf opensoldatserver.tar -C build opensoldatserver
 
       - name: Upload game build
         uses: actions/upload-artifact@v2
         with:
           name: linux-build
-          path: opensoldat.tar
+          path: launcher/out/make/zip/linux/x64/
 
       - name: Upload server-only build
         uses: actions/upload-artifact@v2
@@ -141,8 +154,7 @@ jobs:
 
   continuous:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
-    needs: [windows, macos]
+    needs: [linux, windows, macos]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -154,7 +166,6 @@ jobs:
         run: |
           zip -r windows-build.zip windows-build
           zip -r macos-build.zip macos-build
-          zip -r linux-server-build.zip linux-server-build
 
       - name: Upload release
         uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
@@ -163,6 +174,7 @@ jobs:
           files: |
             windows-build.zip
             macos-build.zip
-            linux-server-build.zip
+            linux-build/*.zip
+            linux-server-build/*.tar
           body: OpenSoldat 1.8 alpha dev build
           name: OpenSoldat 1.8 alpha dev build
