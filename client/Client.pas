@@ -264,7 +264,6 @@ var
 
   BadMapIDCount: Byte;
 
-  ExeName: string;
   AbnormalTerminate: Boolean = False;
 
   HWID: string;
@@ -579,7 +578,6 @@ var
   UserPathSDL: PChar;
   i: Integer;
 begin
-  ExeName := ParamStr(0);
   UserPathSDL := SDL_GetPrefPath('OpenSoldat', 'OpenSoldat');
   BasePathSDL := SDL_GetBasePath();
 
