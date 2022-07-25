@@ -72,8 +72,14 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - name: Checkout code
+      - name: Checkout opensoldat code
         uses: actions/checkout@v2
+
+      - name: Checkout launcher code
+        uses: actions/checkout@v2
+        with:
+          repository: rzaba0/soldat-launcher
+          path: launcher
 
       - name: Cache fpc
         id: fpc
@@ -115,15 +121,21 @@ jobs:
           set BUILD_ID=%GITHUB_SHA:~0,8%
           mkdir build
           cd build
-          cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=.\opensoldat -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake"  -DSDL2_BUILDING_LIBRARY=1 ..
+          cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=..\launcher\opensoldat -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake"  -DSDL2_BUILDING_LIBRARY=1 ..
           nmake
           nmake install
         shell: cmd
 
+      - name: Build launcher
+        run: |
+          cd launcher
+          npm ci
+          npm run make
+
       - uses: actions/upload-artifact@v2
         with:
           name: windows-build
-          path: build/opensoldat/
+          path: launcher/out/make/zip/win32/x64/
 
   macos:
     runs-on: macos-latest
@@ -164,7 +176,6 @@ jobs:
 
       - name: Zip build dirs back together
         run: |
-          zip -r windows-build.zip windows-build
           zip -r macos-build.zip macos-build
 
       - name: Upload release
@@ -172,7 +183,7 @@ jobs:
         with:
           tag_name: continuous
           files: |
-            windows-build.zip
+            windows-build/*.zip
             macos-build.zip
             linux-build/*.zip
             linux-server-build/*.tar
