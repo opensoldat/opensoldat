@@ -578,6 +578,9 @@ var
   UserPathSDL: PChar;
   i: Integer;
 begin
+  DefaultFormatSettings.DecimalSeparator := '.';
+  DefaultFormatSettings.DateSeparator := '-';
+
   UserPathSDL := SDL_GetPrefPath('OpenSoldat', 'OpenSoldat');
   BasePathSDL := SDL_GetBasePath();
 
@@ -665,8 +668,6 @@ begin
   {$ENDIF}
 
   Initing := 0;
-  DefaultFormatSettings.DecimalSeparator := '.';
-  DefaultFormatSettings.DateSeparator := '-';
 
   {$IFDEF STEAM}
   Debug('[Steam] Initializing system');
