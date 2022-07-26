@@ -890,6 +890,7 @@ constructor TNetwork.Create();
 var
   ErrorMsg: SteamNetworkingErrMsg;
 {$ENDIF}
+  Zero: Int64 = 0;
 begin
   FInit := True;
 
@@ -919,6 +920,7 @@ begin
     raise Exception.Create('NetworkingUtils is null');
 
   NetworkingUtils.SetGlobalCallback_SteamNetConnectionStatusChanged(@ProcessEventsCallback);
+  NetworkingUtils.SetConfigValue(k_ESteamNetworkingConfig_ConnectionUserData, k_ESteamNetworkingConfig_Global, 0, k_ESteamNetworkingConfig_Int64, @Zero);
 
   NetworkingUtils.SetDebugOutputFunction(k_ESteamNetworkingSocketsDebugOutputType_Msg, DebugNet);
   //NetworkingUtils.SetDebugOutputFunction(k_ESteamNetworkingSocketsDebugOutputType_Everything, DebugNet);
@@ -1363,6 +1365,7 @@ var
   info: array[0..128] of Char;
   Player: TPlayer;
   TempIP: TIPString;
+  UserData: Int64;
 begin
   TempIP := Default(TIPString);
   {$IFDEF DEVELOPMENT}
@@ -1376,14 +1379,15 @@ begin
     end;
     k_ESteamNetworkingConnectionState_ClosedByPeer, k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
     begin
-      if pInfo.m_info.m_nUserData = 0 then
+      UserData := NetworkingSockets.GetConnectionUserData(pInfo.m_hConn);
+      if UserData = 0 then
       begin
         NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, '', False);
         Exit;
       end;
       // NOTE that this is not called for ordinary disconnects, where we use enet's disconnect_now,
       // which does not generate additional events. Cleanup of Player is still performed explicitly.
-      Player := TPlayer(pInfo.m_info.m_nUserData);
+      Player := TPlayer(UserData);
 
       if Player = nil then
       begin
@@ -1430,7 +1434,6 @@ begin
           end;
           NetworkingSockets.AcceptConnection(pInfo.m_hConn);
           pInfo.m_info.m_identityRemote.ToString(@info, 1024);
-          NetworkingSockets.SetConnectionUserData(pInfo.m_hConn, 0);
         end;
       end;
     end;
@@ -1467,7 +1470,7 @@ begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
     Exit; // truncated packet
 
-  if IncomingMsg^.m_nConnUserData = -1 then
+  if IncomingMsg^.m_nConnUserData = 0 then
     Exit;
 
   Player := TPlayer(IncomingMsg^.m_nConnUserData);
