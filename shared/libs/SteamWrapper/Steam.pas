@@ -51,8 +51,6 @@ const
   STEAM_APPID = 638490;
 
 type
-  TProcedure = Procedure;  // workaround for autocomplete error in lazarus
-
   PSteamServersConnected_t = ^SteamServersConnected_t;
   PSteamServerConnectFailure_t = ^SteamServerConnectFailure_t;
   PSteamServersDisconnected_t = ^SteamServersDisconnected_t;
@@ -87,6 +85,8 @@ type
   PSetPersonaNameResponse_t = ^SetPersonaNameResponse_t;
   PUnreadChatMessagesChanged_t = ^UnreadChatMessagesChanged_t;
   POverlayBrowserProtocolNavigation_t = ^OverlayBrowserProtocolNavigation_t;
+  PEquippedProfileItemsChanged_t = ^EquippedProfileItemsChanged_t;
+  PEquippedProfileItems_t = ^EquippedProfileItems_t;
   PIPCountry_t = ^IPCountry_t;
   PLowBatteryPower_t = ^LowBatteryPower_t;
   PSteamAPICallCompleted_t = ^SteamAPICallCompleted_t;
@@ -446,7 +446,10 @@ type
     k_EResultSteamRealmMismatch = 120,
     k_EResultInvalidSignature = 121,
     k_EResultParseFailure = 122,
-    k_EResultNoVerifiedPhone = 123
+    k_EResultNoVerifiedPhone = 123,
+    k_EResultInsufficientBattery = 124,
+    k_EResultChargerRequired = 125,
+    k_EResultCachedCredentialInvalid = 126
   );
 
   PEVoiceResult = ^EVoiceResult;
@@ -758,6 +761,31 @@ type
   EActivateGameOverlayToWebPageMode = (
     k_EActivateGameOverlayToWebPageMode_Default = 0,
     k_EActivateGameOverlayToWebPageMode_Modal = 1
+  );
+
+  PECommunityProfileItemType = ^ECommunityProfileItemType;
+  ECommunityProfileItemType = (
+    k_ECommunityProfileItemType_AnimatedAvatar = 0,
+    k_ECommunityProfileItemType_AvatarFrame = 1,
+    k_ECommunityProfileItemType_ProfileModifier = 2,
+    k_ECommunityProfileItemType_ProfileBackground = 3,
+    k_ECommunityProfileItemType_MiniProfileBackground = 4
+  );
+
+  PECommunityProfileItemProperty = ^ECommunityProfileItemProperty;
+  ECommunityProfileItemProperty = (
+    k_ECommunityProfileItemProperty_ImageSmall = 0,
+    k_ECommunityProfileItemProperty_ImageLarge = 1,
+    k_ECommunityProfileItemProperty_InternalName = 2,
+    k_ECommunityProfileItemProperty_Title = 3,
+    k_ECommunityProfileItemProperty_Description = 4,
+    k_ECommunityProfileItemProperty_AppID = 5,
+    k_ECommunityProfileItemProperty_TypeID = 6,
+    k_ECommunityProfileItemProperty_Class = 7,
+    k_ECommunityProfileItemProperty_MovieWebM = 8,
+    k_ECommunityProfileItemProperty_MovieMP4 = 9,
+    k_ECommunityProfileItemProperty_MovieWebMSmall = 10,
+    k_ECommunityProfileItemProperty_MovieMP4Small = 11
   );
 
   PEPersonaChange = ^EPersonaChange;
@@ -2372,6 +2400,10 @@ type
     k_ESteamNetworkingConfig_P2P_Transport_ICE_Enable = 104,
     k_ESteamNetworkingConfig_P2P_Transport_ICE_Penalty = 105,
     k_ESteamNetworkingConfig_P2P_Transport_SDR_Penalty = 106,
+    k_ESteamNetworkingConfig_P2P_TURN_ServerList = 107,
+    k_ESteamNetworkingConfig_P2P_TURN_UserList = 108,
+    k_ESteamNetworkingConfig_P2P_TURN_PassList = 109,
+    k_ESteamNetworkingConfig_P2P_Transport_ICE_Implementation = 110,
     k_ESteamNetworkingConfig_SDRClient_ConsecutitivePingTimeoutsFailInitial = 19,
     k_ESteamNetworkingConfig_SDRClient_ConsecutitivePingTimeoutsFail = 20,
     k_ESteamNetworkingConfig_SDRClient_MinPingsBeforePingAccurate = 21,
@@ -2611,6 +2643,7 @@ type
     m_nModID: 0..4294967295; // 32 bits
   end;
 
+  TProcedure = Procedure;  // workaround for autocomplete error in lazarus
   {$PACKRECORDS C}
   SteamNetworkingConfigValue_t = record
     m_eValue: ESteamNetworkingConfigValue;
@@ -3087,6 +3120,20 @@ type
 
   OverlayBrowserProtocolNavigation_t = record
     rgchURI: Array[0..1024 - 1] of AnsiChar;
+  end;
+
+  EquippedProfileItemsChanged_t = record
+    m_steamID: CSteamID;
+  end;
+
+  EquippedProfileItems_t = record
+    m_eResult: EResult;
+    m_steamID: CSteamID;
+    m_bHasAnimatedAvatar: Boolean;
+    m_bHasAvatarFrame: Boolean;
+    m_bHasProfileModifier: Boolean;
+    m_bHasProfileBackground: Boolean;
+    m_bHasMiniProfileBackground: Boolean;
   end;
 
   IPCountry_t = record
@@ -4234,6 +4281,8 @@ const
   CBID_SetPersonaNameResponse_t = 347;
   CBID_UnreadChatMessagesChanged_t = 348;
   CBID_OverlayBrowserProtocolNavigation_t = 349;
+  CBID_EquippedProfileItemsChanged_t = 350;
+  CBID_EquippedProfileItems_t = 351;
   CBID_IPCountry_t = 701;
   CBID_LowBatteryPower_t = 702;
   CBID_SteamAPICallCompleted_t = 703;
@@ -4859,6 +4908,10 @@ function SteamAPI_ISteamFriends_GetNumChatsWithUnreadPriorityMessages(AISteamFri
 procedure SteamAPI_ISteamFriends_ActivateGameOverlayRemotePlayTogetherInviteDialog(AISteamFriends: PISteamFriends; steamIDLobby: CSteamID); cdecl; external STEAMLIB;
 function SteamAPI_ISteamFriends_RegisterProtocolInOverlayBrowser(AISteamFriends: PISteamFriends; pchProtocol: PAnsiChar): Boolean; cdecl; external STEAMLIB;
 procedure SteamAPI_ISteamFriends_ActivateGameOverlayInviteDialogConnectString(AISteamFriends: PISteamFriends; pchConnectString: PAnsiChar); cdecl; external STEAMLIB;
+function SteamAPI_ISteamFriends_RequestEquippedProfileItems(AISteamFriends: PISteamFriends; steamID: CSteamID): SteamAPICall_t; cdecl; external STEAMLIB;
+function SteamAPI_ISteamFriends_BHasEquippedProfileItem(AISteamFriends: PISteamFriends; steamID: CSteamID; itemType: ECommunityProfileItemType): Boolean; cdecl; external STEAMLIB;
+function SteamAPI_ISteamFriends_GetProfileItemPropertyString(AISteamFriends: PISteamFriends; steamID: CSteamID; itemType: ECommunityProfileItemType; prop: ECommunityProfileItemProperty): PAnsiChar; cdecl; external STEAMLIB;
+function SteamAPI_ISteamFriends_GetProfileItemPropertyUint(AISteamFriends: PISteamFriends; steamID: CSteamID; itemType: ECommunityProfileItemType; prop: ECommunityProfileItemProperty): UInt32; cdecl; external STEAMLIB;
 
 function SteamAPI_ISteamUtils_GetSecondsSinceAppActive(AISteamUtils: PISteamUtils): UInt32; cdecl; external STEAMLIB;
 function SteamAPI_ISteamUtils_GetSecondsSinceComputerActive(AISteamUtils: PISteamUtils): UInt32; cdecl; external STEAMLIB;
@@ -6261,6 +6314,18 @@ type
     {$ENDIF}
     {$IFDEF STEAM}
     procedure ActivateGameOverlayInviteDialogConnectString(const pchConnectString: PAnsiChar);
+    {$ENDIF}
+    {$IFDEF STEAM}
+    function RequestEquippedProfileItems(steamID: CSteamID): SteamAPICall_t;
+    {$ENDIF}
+    {$IFDEF STEAM}
+    function BHasEquippedProfileItem(steamID: CSteamID; itemType: ECommunityProfileItemType): Boolean;
+    {$ENDIF}
+    {$IFDEF STEAM}
+    function GetProfileItemPropertyString(steamID: CSteamID; itemType: ECommunityProfileItemType; prop: ECommunityProfileItemProperty): PAnsiChar;
+    {$ENDIF}
+    {$IFDEF STEAM}
+    function GetProfileItemPropertyUint(steamID: CSteamID; itemType: ECommunityProfileItemType; prop: ECommunityProfileItemProperty): UInt32;
     {$ENDIF}
   end;
 
@@ -10050,6 +10115,34 @@ end;
 procedure ISteamFriendsHelper.ActivateGameOverlayInviteDialogConnectString(const pchConnectString: PAnsiChar);
 begin
   SteamAPI_ISteamFriends_ActivateGameOverlayInviteDialogConnectString(@Self, pchConnectString);
+end;
+{$ENDIF}
+
+{$IFDEF STEAM}
+function ISteamFriendsHelper.RequestEquippedProfileItems(steamID: CSteamID): SteamAPICall_t;
+begin
+  Result := SteamAPI_ISteamFriends_RequestEquippedProfileItems(@Self, steamID);
+end;
+{$ENDIF}
+
+{$IFDEF STEAM}
+function ISteamFriendsHelper.BHasEquippedProfileItem(steamID: CSteamID; itemType: ECommunityProfileItemType): Boolean;
+begin
+  Result := SteamAPI_ISteamFriends_BHasEquippedProfileItem(@Self, steamID, itemType);
+end;
+{$ENDIF}
+
+{$IFDEF STEAM}
+function ISteamFriendsHelper.GetProfileItemPropertyString(steamID: CSteamID; itemType: ECommunityProfileItemType; prop: ECommunityProfileItemProperty): PAnsiChar;
+begin
+  Result := SteamAPI_ISteamFriends_GetProfileItemPropertyString(@Self, steamID, itemType, prop);
+end;
+{$ENDIF}
+
+{$IFDEF STEAM}
+function ISteamFriendsHelper.GetProfileItemPropertyUint(steamID: CSteamID; itemType: ECommunityProfileItemType; prop: ECommunityProfileItemProperty): UInt32;
+begin
+  Result := SteamAPI_ISteamFriends_GetProfileItemPropertyUint(@Self, steamID, itemType, prop);
 end;
 {$ENDIF}
 
