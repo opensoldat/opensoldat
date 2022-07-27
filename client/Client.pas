@@ -583,12 +583,20 @@ begin
   UserPathSDL := SDL_GetPrefPath('OpenSoldat', 'OpenSoldat');
   BasePathSDL := SDL_GetBasePath();
 
+  Debug('[PhysFS] Initializing system');
+
+  if not PhysFS_Init(PChar(ParamStr(0))) then
+  begin
+    ShowMessage(_('Could not initialize PhysFS. Try to reinstall the game.'));
+    Exit;
+  end;
+
   CvarInit();
   InitClientCommands();
   ParseCommandLine();
 
-  // NOTE: fs_basepath, fs_userpath and fs_portable must be set from command
-  // line, not in client.cfg.
+  // NOTE: fs_basepath, fs_userpath, fs_portable and fs_localmount
+  // must be set from command line, not in client.cfg.
   if fs_portable.Value then
   begin
     UserDirectory := BasePathSDL;
@@ -606,8 +614,27 @@ begin
   Debug('[FS] UserDirectory: ' + UserDirectory);
   Debug('[FS] BaseDirectory: ' + BaseDirectory);
 
-  // Now that we have UserDirectory and BaseDirectory set, we can create the
-  // basic directory structure and unpack the necessary config files.
+  Debug('[PhysFS] Mounting game archive');
+
+  if fs_localmount.Value then
+  begin
+    if not PhysFS_mount(PChar(UserDirectory), '/', False) then
+    begin
+      ShowMessage(_('Could not load base game archive (game directory).'));
+      Exit;
+    end;
+  end else
+  begin
+    if not PhysFS_mount(PChar(BaseDirectory + '/soldat.smod'), '/', False) then
+    begin
+      ShowMessage(_('Could not load base game archive (soldat.smod). Try to reinstall the game.'));
+      Exit;
+    end;
+    GameModChecksum := Sha1File(BaseDirectory + '/soldat.smod', 4096);
+  end;
+
+  // Now that the game archive is mounted, and we have UserDirectory and BaseDirectory set,
+  // we can create the basic directory structure and unpack the necessary config files.
   CreateDirIfMissing(UserDirectory + '/configs');
   CreateDirIfMissing(UserDirectory + '/screens');
   CreateDirIfMissing(UserDirectory + '/demos');
@@ -656,33 +683,6 @@ begin
   //SteamCallbackDispatcher.Create(2301, @OnScreenshotReady, SizeOf(ScreenshotReady_t));
   //SteamCallbackDispatcher.Create(3406, @DownloadItemResult, SizeOf(DownloadItemResult_t));
   {$ENDIF}
-
-  Debug('[PhysFS] Initializing system');
-
-  if not PhysFS_Init(PChar(ParamStr(0))) then
-  begin
-    ShowMessage(_('Could not initialize PhysFS. Try to reinstall the game.'));
-    Exit;
-  end;
-
-  Debug('[PhysFS] Mounting game archive');
-
-  if fs_localmount.Value then
-  begin
-    if not PhysFS_mount(PChar(UserDirectory), '/', False) then
-    begin
-      ShowMessage(_('Could not load base game archive (game directory).'));
-      Exit;
-    end;
-  end else
-  begin
-    if not PhysFS_mount(PChar(BaseDirectory + '/soldat.smod'), '/', False) then
-    begin
-      ShowMessage(_('Could not load base game archive (soldat.smod). Try to reinstall the game.'));
-      Exit;
-    end;
-    GameModChecksum := Sha1File(BaseDirectory + '/soldat.smod', 4096);
-  end;
 
   ModDir := '';
 
