@@ -380,6 +380,7 @@ f.write('''  {$PACKRECORDS 1}
     m_nModID: 0..4294967295; // 32 bits
   end;
 
+  TProcedure = Procedure;  // workaround for autocomplete error in lazarus
   {$PACKRECORDS C}
   SteamNetworkingConfigValue_t = record
     m_eValue: ESteamNetworkingConfigValue;
@@ -389,7 +390,7 @@ f.write('''  {$PACKRECORDS 1}
       1: (m_int64: int64);
       2: (m_float: Single);
       3: (m_string: PAnsiChar);
-      4: (m_functionPtr: procedure);
+      4: (m_functionPtr: TProcedure);
   end;
   {$IFDEF UNIX}
   {$PACKRECORDS 4}
