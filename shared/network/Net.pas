@@ -886,8 +886,8 @@ end;
 {$POP}
 
 constructor TNetwork.Create();
-{$IFNDEF STEAM}
 var
+{$IFNDEF STEAM}
   ErrorMsg: SteamNetworkingErrMsg;
 {$ENDIF}
   Zero: Int64 = 0;
