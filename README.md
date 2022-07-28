@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://i.imgur.com/HrYPYjh.png" />
   <h2>OpenSoldat</h2>
-  <a href="https://discord.gg/a8BeCkue"><img src="https://img.shields.io/discord/109442485285052416.svg" /></a>
+  <a href="https://discord.gg/6TqqtVpRdV"><img src="https://img.shields.io/discord/109442485285052416.svg" /></a>
 </div>
 
 OpenSoldat is a unique 2D (side-view) multiplayer action game. It has been influenced by the best of games such as Liero, Worms, Quake, Counter-Strike, and provides a fast-paced gaming experience with tons of blood and flesh.
