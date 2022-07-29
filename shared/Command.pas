@@ -645,6 +645,7 @@ begin
   for i := Low(DeferredCommands) To High(DeferredCommands) do
   begin
     ParseInput(DeferredCommands[i].Command, DeferredCommands[i].Values);
+    DeferredCommands[i].Values.Free;
   end;
   SetLength(DeferredCommands, 0);
 end;
@@ -677,7 +678,7 @@ var
 begin
   for i := Low(DeferredCommands) to High(DeferredCommands) do
     DeferredCommands[i].Values.Free;
-  FreeAndNil(DeferredCommands);
+  SetLength(DeferredCommands, 0);
   if Commands <> Nil then
     for i := 0 to Commands.Count - 1 do
       Dispose(PCommand(Commands[i]));
