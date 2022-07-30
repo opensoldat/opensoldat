@@ -341,7 +341,7 @@ var
 begin
   if PHYSFS_Exists(PChar(ModDir + 'txt/weaponnames.txt')) then
     Prefix := ModDir
-  else 
+  else
     Prefix := '';
 
   MainConsole.Console(_('Loading Weapon Names from') + WideString(' ' + Prefix + 'txt/weaponnames.txt'), DEBUG_MESSAGE_COLOR);
@@ -578,6 +578,7 @@ var
   BasePathSDL: PChar;
   UserPathSDL: PChar;
   i: Integer;
+  s: String;
 begin
   ExeName := ParamStr(0);
   UserPathSDL := SDL_GetPrefPath('OpenSoldat', 'OpenSoldat');
@@ -605,10 +606,25 @@ begin
   end
   else
   begin
-    if fs_userpath.Value = '' then
-      UserDirectory := UserPathSDL;
-    if fs_basepath.Value = '' then
-      BaseDirectory := BasePathSDL;
+    UserDirectory := UserPathSDL;
+    if fs_userpath.Value <> '' then
+    begin
+      s := ExpandFileName(fs_userpath.Value);
+      if DirectoryExists(s) then
+        UserDirectory := IncludeTrailingPathDelimiter(s)
+      else
+        Debug('[FS] Warning: Specified fs_userpath directory ''' + fs_userpath.Value + ''' does not exist.');
+    end;
+
+    BaseDirectory := BasePathSDL;
+    if fs_basepath.Value <> '' then
+    begin
+      s := ExpandFileName(fs_basepath.Value);
+      if DirectoryExists(s) then
+        BaseDirectory := IncludeTrailingPathDelimiter(s)
+      else
+        Debug('[FS] Warning: Specified fs_basepath directory ''' + fs_basepath.Value + ''' does not exist.');
+    end;
   end;
 
   Debug('[FS] UserDirectory: ' + UserDirectory);
