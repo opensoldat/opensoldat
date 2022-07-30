@@ -514,6 +514,7 @@ end;
 procedure ActivateServer;
 var
   i, j: Integer;
+  s: String;
 begin
   MainThreadID := GetThreadID;
 
@@ -570,10 +571,25 @@ begin
 
   // NOTE: fs_basepath and fs_userpath must be set from command line, not in
   // server.cfg.
-  if fs_basepath.Value = '' then
-    BaseDirectory := ExtractFilePath(ParamStr(0));
-  if fs_userpath.Value = '' then
-    UserDirectory := ExtractFilePath(ParamStr(0));
+  UserDirectory := ExtractFilePath(ParamStr(0));
+  if fs_userpath.Value <> '' then
+  begin
+    s := ExpandFileName(fs_userpath.Value);
+    if DirectoryExists(s) then
+      UserDirectory := IncludeTrailingPathDelimiter(s)
+    else
+      Debug('[FS] Warning: Specified fs_userpath directory ''' + fs_userpath.Value + ''' does not exist.');
+  end;
+
+  BaseDirectory := ExtractFilePath(ParamStr(0));
+  if fs_basepath.Value <> '' then
+  begin
+    s := ExpandFileName(fs_basepath.Value);
+    if DirectoryExists(s) then
+      BaseDirectory := IncludeTrailingPathDelimiter(s)
+    else
+      Debug('[FS] Warning: Specified fs_basepath directory ''' + fs_basepath.Value + ''' does not exist.');
+  end;
 
   Debug('[FS] UserDirectory: ' + UserDirectory);
   Debug('[FS] BaseDirectory: ' + BaseDirectory);
