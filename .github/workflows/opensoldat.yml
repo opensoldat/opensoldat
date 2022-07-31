@@ -10,7 +10,7 @@ jobs:
       - name: Checkout launcher code
         uses: actions/checkout@v2
         with:
-          repository: rzaba0/soldat-launcher
+          repository: opensoldat/launcher
           path: launcher
 
       - name: Install dependencies
@@ -78,7 +78,7 @@ jobs:
       - name: Checkout launcher code
         uses: actions/checkout@v2
         with:
-          repository: rzaba0/soldat-launcher
+          repository: opensoldat/launcher
           path: launcher
 
       - name: Cache fpc
