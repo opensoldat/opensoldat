@@ -488,7 +488,7 @@ begin
   begin
     if (argv[i] <> '') and (argv[i][0] <> '-') then
     begin
-      CurrentCommand := CurrentCommand + ' ' + argv[i];
+      CurrentCommand := CurrentCommand + ' "' + argv[i] + '"';
       continue;
     end;
 
