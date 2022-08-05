@@ -117,6 +117,7 @@ type
     function GetBanLists: TScriptBanLists;
   public
     constructor Create;
+    destructor Destroy; override;
     procedure Shutdown;
     procedure StartVoteKick(ID: Byte; Reason: string);
     procedure StartVoteMap(Name: string);
@@ -180,6 +181,7 @@ type
     FGame: TScriptGame;
   public
     constructor Create(ScriptCore3: TScript);
+    destructor Destroy; override;
     procedure CompilerRegister(Compiler: TPascalCompiler); override;
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
@@ -519,6 +521,17 @@ begin
     Self.FTeams[i] := TScriptTeam.Create(i);
   Self.FMapsList := TScriptMapsList.Create;
   Self.FBanLists := TScriptBanLists.Create;
+end;
+
+destructor TScriptGame.Destroy;
+var
+  i: Integer;
+begin
+  for i := Low(Self.FTeams) to High(Self.FTeams) do
+    Self.FTeams[i].Free;
+  Self.FMapsList.Free;
+  Self.FBanLists.Free;
+  inherited;
 end;
 
 procedure TScriptGame.Shutdown;
@@ -907,6 +920,12 @@ end;
 constructor TScriptGameAPI.Create(ScriptCore3: TScript);
 begin
   inherited Create(ScriptCore3);
+end;
+
+destructor TScriptGameAPI.Destroy;
+begin
+  FreeAndNil(Self.FGame);
+  inherited;
 end;
 
 procedure TScriptGameAPI.CompilerRegister(Compiler: TPascalCompiler);
