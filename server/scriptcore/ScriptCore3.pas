@@ -85,7 +85,6 @@ type
     FDebug: Boolean;
     FGameMod: Boolean;
     FSpawnPoint: TScriptSpawnPointAPI;
-    FCore: TScriptCore3API;
     FFile: TScriptFileAPI;
 
     FOnWeaponChangeNewPrimary: TScriptWeaponChange;
@@ -337,7 +336,6 @@ begin
   Self.FUnit := TScriptUnitAPI.Create(Self);
   Self.FMap := TScriptMapAPI.Create(Self);
   Self.FSpawnPoint := TScriptSpawnPointAPI.Create(Self);
-  Self.FCore := TScriptCore3API.Create(Self);
   Self.FFile := TScriptFileAPI.Create(Self);
 
   // Workaround for OnWeaponChange: It needs 2 new objects,
