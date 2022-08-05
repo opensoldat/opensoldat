@@ -2399,7 +2399,7 @@ begin
     RegisterPropertyHelper(@ScriptPlayerGetDummy, @ScriptPlayerSetDummy, 'Dummy');
   end;
 
-  with Exec.AddClass(TScriptPlayer, 'TNewPlayer') do
+  with Exec.AddClass(TScriptNewPlayer, 'TNewPlayer') do
   begin
     RegisterConstructor(@TScriptNewPlayer.Create, 'Create');
     RegisterMethod(@TScriptNewPlayer.Free, 'Free');
@@ -2427,7 +2427,7 @@ begin
     RegisterPropertyHelper(@ScriptNewPlayerGetDummy, @ScriptNewPlayerSetDummy, 'Dummy');
   end;
 
-  with Exec.AddClass(TScriptPlayer, 'TActivePlayer') do
+  with Exec.AddClass(TScriptActivePlayer, 'TActivePlayer') do
   begin
     RegisterMethod(@TScriptActivePlayer.Ban, 'Ban');
     RegisterMethod(@TScriptActivePlayer.Say, 'Say');
