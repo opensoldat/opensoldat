@@ -297,9 +297,14 @@ begin
     FunctionName := Func.ExportName;
   if Assigned(Self.FUnit.ScriptUnit.OnException) then
   begin
-    try
-      TPascalDebugger(Sender).GetPosition(UnitName, Col, Row, ProcNo, Position);
-    except
+    if Self.Debug then
+    begin
+      try
+        TPascalDebugger(Sender).GetPosition(UnitName, Col, Row, ProcNo, Position);
+      except
+        on e: Exception do
+          Self.WriteInfo('Exception trying to get debug info: ' + e.Message);
+      end;
     end;
     try
       Self.CallEvent(Self.FUnit.ScriptUnit.OnException,
