@@ -67,14 +67,11 @@ end;
 // The linux server can be killed with
 // 'kill -TERM(15) <pid>' or 'kill -QUIT(3) <pid>' and
 // it will clean itself up, instead of forcing you to use 'KILL -KILL(9) <pid>'
-type
-  TSigActionType = PSigActionRec;
-
 var
-  FSIGTERM, FSIGTERMOLD: TSigActionType;  // Place holders for the SIG Actions
-  FSIGQUIT, FSIGQUITOLD: TSigActionType;
-  FSIGINT,  FSIGINTOLD:  TSigActionType;
-  FSIGPIPE, FSIGPIPEOLD: TSigActionType;
+  FSIGTERM, FSIGTERMOLD: SigActionRec; // Place holders for the SIG Actions
+  FSIGQUIT, FSIGQUITOLD: SigActionRec;
+  FSIGINT,  FSIGINTOLD:  SigActionRec;
+  FSIGPIPE, FSIGPIPEOLD: SigActionRec;
 
 procedure HandleSig(Signal: Longint); cdecl;
 begin
@@ -105,86 +102,74 @@ end;
 procedure SetSigHooks;
 begin
   // Get the SIGTERM signal
-  New(FSIGTERM);
-  New(FSIGTERMOLD);
+  FillChar(FSIGTERM.Sa_Mask, SizeOf(FSIGTERM.sa_mask), #0);
+  FillChar(FSIGTERMOLD.Sa_Mask, SizeOf(FSIGTERMOLD.sa_mask), #0);
 
-  FillChar(FSIGTERM^.Sa_Mask, SizeOf(FSIGTERM^.sa_mask), #0);
-  FillChar(FSIGTERMOLD^.Sa_Mask, SizeOf(FSIGTERMOLD^.sa_mask), #0);
-
-  FSIGTERM^.sa_Handler := SigActionHandler(@HandleSig);
-  FSIGTERM^.Sa_Flags := 0;
+  FSIGTERM.sa_Handler := SigActionHandler(@HandleSig);
+  FSIGTERM.Sa_Flags := 0;
 
   {$IFDEF Linux}  // Linux specific
-  FSIGTERM^.Sa_Restorer := nil;
+  FSIGTERM.Sa_Restorer := nil;
   {$ENDIF}
 
-  if fpSigAction(SIGTERM, FSIGTERM, FSIGTERMOLD) <> 0 then
+  if fpSigAction(SIGTERM, @FSIGTERM, @FSIGTERMOLD) <> 0 then
     raise Exception.Create('SIGAction failed');
 
   // Get the SIGINT signal
-  New(FSIGINT);
-  New(FSIGINTOLD);
+  FillChar(FSIGINT.Sa_Mask, SizeOf(FSIGINT.Sa_Mask), #0);
+  FillChar(FSIGINTOLD.Sa_Mask, SizeOf(FSIGINTOLD.Sa_Mask), #0);
 
-  FillChar(FSIGINT^.Sa_Mask, SizeOf(FSIGINT^.Sa_Mask), #0);
-  FillChar(FSIGINTOLD^.Sa_Mask, SizeOf(FSIGINTOLD^.Sa_Mask), #0);
-
-  FSIGINT^.sa_Handler := SigActionHandler(@HandleSig);
-  FSIGINT^.Sa_Flags := 0;
+  FSIGINT.sa_Handler := SigActionHandler(@HandleSig);
+  FSIGINT.Sa_Flags := 0;
 
   {$IFDEF Linux}  // Linux specific
-  FSIGINT^.Sa_Restorer := nil;
+  FSIGINT.Sa_Restorer := nil;
   {$ENDIF}
 
-  if fpSigAction(SIGINT, FSIGINT, FSIGINTOLD) <> 0 then
+  if fpSigAction(SIGINT, @FSIGINT, @FSIGINTOLD) <> 0 then
     raise Exception.Create('SIGAction failed');
 
   // Get the SIGQUIT signal
-  New(FSIGQUIT);
-  New(FSIGQUITOLD);
+  FillChar(FSIGQUIT.Sa_Mask, SizeOf(FSIGQUIT.sa_mask), #0);
+  FillChar(FSIGQUITOLD.Sa_Mask, SizeOf(FSIGQUITOLD.sa_mask), #0);
 
-  FillChar(FSIGQUIT^.Sa_Mask, SizeOf(FSIGQUIT^.sa_mask), #0);
-  FillChar(FSIGQUITOLD^.Sa_Mask, SizeOf(FSIGQUITOLD^.sa_mask), #0);
-
-  FSIGQUIT^.sa_Handler := SigActionHandler(@HandleSig);
-  FSIGQUIT^.Sa_Flags := 0;
+  FSIGQUIT.sa_Handler := SigActionHandler(@HandleSig);
+  FSIGQUIT.Sa_Flags := 0;
 
   {$IFDEF Linux}  // Linux specific
-  FSIGQUIT^.Sa_Restorer := nil;
+  FSIGQUIT.Sa_Restorer := nil;
   {$ENDIF}
 
-  if fpSigAction(SIGQUIT, FSIGQUIT, FSIGQUITOLD) <> 0 then
+  if fpSigAction(SIGQUIT, @FSIGQUIT, @FSIGQUITOLD) <> 0 then
     raise Exception.Create('SIGAction failed');
 
   // Get the SIGPIPE signal
-  New(FSIGPIPE);
-  New(FSIGPIPEOLD);
+  FillChar(FSIGPIPE.Sa_Mask, SizeOf(FSIGPIPE.sa_mask), #0);
+  FillChar(FSIGPIPEOLD.Sa_Mask, SizeOf(FSIGPIPEOLD.sa_mask), #0);
 
-  FillChar(FSIGPIPE^.Sa_Mask, SizeOf(FSIGPIPE^.sa_mask), #0);
-  FillChar(FSIGPIPEOLD^.Sa_Mask, SizeOf(FSIGPIPEOLD^.sa_mask), #0);
-
-  FSIGPIPE^.sa_Handler := SigActionHandler(@HandleSig);
-  FSIGPIPE^.Sa_Flags := 0;
+  FSIGPIPE.sa_Handler := SigActionHandler(@HandleSig);
+  FSIGPIPE.Sa_Flags := 0;
 
   {$IFDEF Linux}  // Linux specific
-  FSIGPIPEOLD^.Sa_Restorer := nil;
+  FSIGPIPEOLD.Sa_Restorer := nil;
   {$ENDIF}
 
-  if fpSigAction(SIGPIPE, FSIGPIPE, FSIGPIPEOLD) <> 0 then
+  if fpSigAction(SIGPIPE, @FSIGPIPE, @FSIGPIPEOLD) <> 0 then
     raise Exception.Create('SIGAction failed');
 end;
 
 procedure ClearSigHooks;
 begin
-  if fpSigAction(SIGTERM,  FSIGTERMOLD, nil) <> 0 then
+  if fpSigAction(SIGTERM, @FSIGTERMOLD, nil) <> 0 then
     raise Exception.Create('SIGAction failed');
 
-  if fpSigAction(SIGINT,  FSIGINTOLD, nil) <> 0 then
+  if fpSigAction(SIGINT, @FSIGINTOLD, nil) <> 0 then
     raise Exception.Create('SIGAction failed');
 
-  if fpSigAction(SIGQUIT,  FSIGQUITOLD, nil) <> 0 then
+  if fpSigAction(SIGQUIT, @FSIGQUITOLD, nil) <> 0 then
     raise Exception.Create('SIGAction failed');
 
-  if fpSigAction(SIGPIPE,  FSIGPIPEOLD, nil) <> 0 then
+  if fpSigAction(SIGPIPE, @FSIGPIPEOLD, nil) <> 0 then
     raise Exception.Create('SIGAction failed');
 end;
 {$ENDIF}
