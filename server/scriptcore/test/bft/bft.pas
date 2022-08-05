@@ -22,7 +22,7 @@
 //
 
 const
-  COMMANDS_COLOR = $FF9966;
+  COMMANDS_COLOR        = $FF9966;
   INFO_CONSOLE_COLOR    = $EEEEEE;
   TEST_CONSOLE_COLOR    = $AAAAFF;
   PASS_CONSOLE_COLOR    = $88FF88;
@@ -508,7 +508,6 @@ var
   VPos, VVel: TVector;
   NewPlayer: TNewPlayer;
   NewObject: TNewMapObject;
-  //Primary, Secondary: TNewWeapon;
   CheckPlayer, LastBot: TActivePlayer;
 begin
   SLog('==========================================================', INFO);

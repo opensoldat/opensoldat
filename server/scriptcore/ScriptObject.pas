@@ -104,7 +104,7 @@ end;
 
 destructor TScriptNewObject.Destroy;
 begin
-  Freemem(Self.FObj, SizeOf(TThing));
+  Dispose(Self.FObj);
 end;
 
 procedure TScriptNewObject.SetStyle(Style: Byte);

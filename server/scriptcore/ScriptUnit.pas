@@ -56,6 +56,7 @@ type
     FUnit: TScriptUnit;
   public
     constructor Create(Script: TScript);
+    destructor Destroy; override;
     procedure CompilerRegister(Compiler: TPascalCompiler); override;
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
@@ -119,6 +120,12 @@ constructor TScriptUnitAPI.Create(Script: TScript);
 begin
   inherited Create(Script);
   Self.FUnit := TScriptUnit.Create(Script);
+end;
+
+destructor TScriptUnitAPI.Destroy;
+begin
+  FreeAndNil(Self.FUnit);
+  inherited;
 end;
 
 procedure TScriptUnitAPI.CompilerRegister(Compiler: TPascalCompiler);

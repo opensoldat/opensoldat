@@ -53,6 +53,7 @@ type
     FPlayers: TScriptPlayers;
 
   public
+    destructor Destroy; override;
     procedure CompilerRegister(Compiler: TPascalCompiler); override;
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
@@ -83,10 +84,10 @@ end;
 
 destructor TScriptPlayers.Destroy;
 var
-  I: Byte;
+  i: Integer;
 begin
-  for I := 1 to MAX_SPRITES do
-    FPlayers[I].Free;
+  for i := Low(FPlayers) to High(FPlayers) do
+    FPlayers[i].Free;
   FActivePlayers.Free;
 end;
 
@@ -237,6 +238,12 @@ procedure ActivePlayerListCountHelper(Self: TFPGList<TScriptActivePlayer>;
   var Result: Integer);
 begin
   Result := Self.Count;
+end;
+
+destructor TScriptPlayersAPI.Destroy;
+begin
+  FreeAndNil(FPlayers);
+  inherited;
 end;
 
 procedure TScriptPlayersAPI.CompilerRegister(Compiler: TPascalCompiler);

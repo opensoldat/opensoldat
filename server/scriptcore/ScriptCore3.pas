@@ -85,7 +85,6 @@ type
     FDebug: Boolean;
     FGameMod: Boolean;
     FSpawnPoint: TScriptSpawnPointAPI;
-    FCore: TScriptCore3API;
     FFile: TScriptFileAPI;
 
     FOnWeaponChangeNewPrimary: TScriptWeaponChange;
@@ -298,9 +297,14 @@ begin
     FunctionName := Func.ExportName;
   if Assigned(Self.FUnit.ScriptUnit.OnException) then
   begin
-    try
-      TPascalDebugger(Sender).GetPosition(UnitName, Col, Row, ProcNo, Position);
-    except
+    if Self.Debug then
+    begin
+      try
+        TPascalDebugger(Sender).GetPosition(UnitName, Col, Row, ProcNo, Position);
+      except
+        on e: Exception do
+          Self.WriteInfo('Exception trying to get debug info: ' + e.Message);
+      end;
     end;
     try
       Self.CallEvent(Self.FUnit.ScriptUnit.OnException,
@@ -337,7 +341,6 @@ begin
   Self.FUnit := TScriptUnitAPI.Create(Self);
   Self.FMap := TScriptMapAPI.Create(Self);
   Self.FSpawnPoint := TScriptSpawnPointAPI.Create(Self);
-  Self.FCore := TScriptCore3API.Create(Self);
   Self.FFile := TScriptFileAPI.Create(Self);
 
   // Workaround for OnWeaponChange: It needs 2 new objects,
