@@ -12519,6 +12519,8 @@ begin
       FDataPtr := nil;
     end;
     FCapacity := 0;
+    // @SoldatPatch
+    Exit;
   end;
   GetMem(p, Value);
   if FDataPtr <> nil then

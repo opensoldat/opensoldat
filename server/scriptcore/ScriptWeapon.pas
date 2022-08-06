@@ -101,7 +101,7 @@ end;
 
 destructor TScriptNewWeapon.Destroy;
 begin
-  Freemem(Self.FWeapon, SizeOf(TGun));
+  Dispose(Self.FWeapon);
 end;
 
 constructor TScriptWeaponChange.Create;
@@ -113,7 +113,7 @@ end;
 
 destructor TScriptWeaponChange.Destroy;
 begin
-  Freemem(Self.FWeapon, SizeOf(TGun));
+  Dispose(Self.FWeapon);
 end;
 
 procedure TScriptWeaponChange.SetAmmo(Ammo: Byte);

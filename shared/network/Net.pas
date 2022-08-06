@@ -1551,7 +1551,7 @@ begin
   if FPollGroup <> k_HSteamNetPollGroup_Invalid then
     NetworkingSockets.DestroyPollGroup(FPollGroup);
 
-  Players.Clear;
+  Players.Free;
 
   Inherited;
 end;

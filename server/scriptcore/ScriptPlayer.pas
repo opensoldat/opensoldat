@@ -173,6 +173,7 @@ type
     function GetDummy: Boolean;
   public
     constructor Create;
+    destructor Destroy; override;
     property Name: string read GetName write SetName;
     property Team: Byte read GetTeam write SetTeam;
     property Health: Single read GetHealth write SetHealth;
@@ -378,13 +379,17 @@ begin
   Self.FSpritePtr^.Brain.WaypointTimeoutCounter := WAYPOINTTIMEOUT;
 end;
 
+destructor TScriptNewPlayer.Destroy;
+begin
+  Self.FSpritePtr^.Player.Free;
+  Dispose(Self.FSpritePtr);
+  Inherited;
+end;
+
 destructor TScriptPlayer.Destroy;
 begin
-  if Self.FSpritePtr <> nil then
-    Self.FSpritePtr^.Player.Free;
   Self.FPrimary.Free;
   Self.FSecondary.Free;
-  FreeMem(Self.FSpritePtr, SizeOf(TSprite));
 end;
 
 function TScriptPlayer.GetSprite: TSprite;
@@ -2399,7 +2404,7 @@ begin
     RegisterPropertyHelper(@ScriptPlayerGetDummy, @ScriptPlayerSetDummy, 'Dummy');
   end;
 
-  with Exec.AddClass(TScriptPlayer, 'TNewPlayer') do
+  with Exec.AddClass(TScriptNewPlayer, 'TNewPlayer') do
   begin
     RegisterConstructor(@TScriptNewPlayer.Create, 'Create');
     RegisterMethod(@TScriptNewPlayer.Free, 'Free');
@@ -2427,7 +2432,7 @@ begin
     RegisterPropertyHelper(@ScriptNewPlayerGetDummy, @ScriptNewPlayerSetDummy, 'Dummy');
   end;
 
-  with Exec.AddClass(TScriptPlayer, 'TActivePlayer') do
+  with Exec.AddClass(TScriptActivePlayer, 'TActivePlayer') do
   begin
     RegisterMethod(@TScriptActivePlayer.Ban, 'Ban');
     RegisterMethod(@TScriptActivePlayer.Say, 'Say');

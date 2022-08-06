@@ -456,4 +456,12 @@ begin
   {$ENDIF}
 end;
 
+finalization
+begin
+  DemoRecorder.Free;
+  {$IFNDEF SERVER}
+  DemoPlayer.Free;
+  {$ENDIF}
+end;
+
 end.
