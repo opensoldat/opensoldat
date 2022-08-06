@@ -20,6 +20,9 @@ uses
   NetworkServerGame, NetworkServerSprite, NetworkServerThing,
   NetworkServerConnection, NetworkServerHeartbeat;
 
+var
+  LastMinuteTick: QWord = 0;
+
 procedure AppOnIdle;
 var
   MainControl: Integer;
@@ -40,6 +43,14 @@ begin
   {$IFDEF STEAM}
   RunManualCallbacks();
   {$ENDIF}
+
+  // Run every 60 seconds
+  if (GetTickCount64 - LastMinuteTick) >= 60000 then
+  begin
+    LastMinuteTick := GetTickCount64;
+    if sv_lobby.Value then
+        LobbyThread := TLobbyThread.Create;
+  end;
 
   if sv_pauseonidle.Value and ((PlayersNum - BotsNum) <= 0) then
   begin
@@ -459,12 +470,6 @@ begin
 
     if MainTickCounter mod (SECOND * 30) = 0 then
       DropIP := '';  // Clear temporary firewall IP
-
-    if MainTickCounter mod MINUTE = 0 then
-    begin
-      if sv_lobby.Value then
-          LobbyThread := TLobbyThread.Create;
-    end;
 
     // *BAN*
     // Ban Timers v2
