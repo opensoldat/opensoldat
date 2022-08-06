@@ -37,6 +37,9 @@ begin
   if AdminServer <> nil then
     AdminServer.ProcessCommands();
   {$ENDIF}
+  {$IFDEF STEAM}
+  RunManualCallbacks();
+  {$ENDIF}
 
   if sv_pauseonidle.Value and ((PlayersNum - BotsNum) <= 0) then
   begin
@@ -58,14 +61,10 @@ begin
     ScrptDispatcher.OnClockTick();
     {$ENDIF}
 
-    {$IFDEF STEAM}
-    RunManualCallbacks();
-    {$ENDIF}
     // Flood Nums Cancel
     if MainTickCounter mod 1000 = 0 then
       for j := 1 to MAX_FLOODIPS do
         FloodNum[j] := 0;
-
 
     // Warnings Cancel
     if MainTickCounter mod (MINUTE * 5) = 0 then
