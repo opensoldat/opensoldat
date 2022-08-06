@@ -907,6 +907,7 @@ begin
   sv_antimassflag := TBooleanCvar.Add('sv_antimassflag', '', True, True, [CVAR_SERVER], nil);
   sv_healthcooldown := TIntegerCvar.Add('sv_healthcooldown', 'Amount of time (in seconds) a player needs to wait before he''s able to pick up a second medikit. Use 0 to disable', 2, 2, [CVAR_SERVER], nil, 0, 100);
   sv_teamcolors := TBooleanCvar.Add('sv_teamcolors', 'Overwrites shirt color in team games', True, True, [CVAR_SERVER], nil);
+  sv_pauseonidle := TBooleanCvar.Add('sv_pauseonidle', 'Pauses the server when no human players are connected', True, True, [CVAR_SERVER], nil);
 
   // Network cvars
   net_port := TIntegerCvar.Add('net_port', 'The port your server runs on, and player have to connect to', 23073, 23073, [CVAR_SERVER], nil, 0, 65535);

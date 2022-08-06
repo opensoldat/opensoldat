@@ -38,6 +38,12 @@ begin
     AdminServer.ProcessCommands();
   {$ENDIF}
 
+  if sv_pauseonidle.Value and ((PlayersNum - BotsNum) <= 0) then
+  begin
+    Sleep(100);
+    Exit;
+  end;
+
   for MainControl := 1 to (Ticktime - ticktimeLast) do
   begin  // frame rate independant code
     ticks := ticks + 1;
