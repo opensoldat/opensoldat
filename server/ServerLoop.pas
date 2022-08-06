@@ -49,7 +49,12 @@ begin
   begin
     LastMinuteTick := GetTickCount64;
     if sv_lobby.Value then
-        LobbyThread := TLobbyThread.Create;
+      LobbyThread := TLobbyThread.Create;
+
+    // *BAN*
+    // Ban Timers v2
+    UpdateIPBanList;
+    UpdateHWBanList;
   end;
 
   if sv_pauseonidle.Value and ((PlayersNum - BotsNum) <= 0) then
@@ -470,14 +475,6 @@ begin
 
     if MainTickCounter mod (SECOND * 30) = 0 then
       DropIP := '';  // Clear temporary firewall IP
-
-    // *BAN*
-    // Ban Timers v2
-    if MainTickCounter mod MINUTE = 0 then
-    begin
-      UpdateIPBanList;
-      UpdateHWBanList;
-    end;
 
     if MainTickCounter mod MINUTE = 0 then
       for j := 1 to MAX_SPRITES do
