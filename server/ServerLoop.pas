@@ -60,6 +60,10 @@ begin
     RunManualCallbacks();
     {$ENDIF}
 
+    {$IFDEF SCRIPT}
+    ScrptDispatcher.OnIdle();
+    {$ENDIF}
+
     Sleep(100);
     Exit;
   end;

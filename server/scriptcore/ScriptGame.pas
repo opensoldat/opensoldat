@@ -35,6 +35,7 @@ uses
 
 type
   TOnClockTick = procedure(Ticks: Integer) of object;
+  TOnIdle = procedure() of object;
   TOnJoin = procedure(Player: TScriptActivePlayer; Team: TScriptTeam) of object;
   TOnLeave = procedure(Player: TScriptActivePlayer; Kicked: Boolean) of object;
   TOnRequest = function(Ip, Hw: string; Port: Word; State: Byte;
@@ -51,6 +52,7 @@ type
     FMapsList: TScriptMapsList;
     FBanLists: TScriptBanLists;
     FOnClockTick: TOnClockTick;
+    FOnIdle: TOnIdle;
     FOnJoin: TOnJoin;
     FOnLeave: TOnLeave;
     FOnRequest: TOnRequest;
@@ -166,6 +168,7 @@ type
     property ScriptMapsList: TScriptMapsList read GetMapsList;
     property ScriptBanLists: TScriptBanLists read GetBanLists;
     property OnClockTick: TOnClockTick read FOnClockTick write FOnClockTick;
+    property OnIdle: TOnIdle read FOnIdle write FOnIdle;
     property OnJoin: TOnJoin read FOnJoin write FOnJoin;
     property OnLeave: TOnLeave read FOnLeave write FOnLeave;
     property OnRequest: TOnRequest read FOnRequest write FOnRequest;
@@ -837,6 +840,16 @@ begin
   Self.OnClockTick := Result;
 end;
 
+procedure OnIdleReadHelper(Self: TScriptGame; var Result: TOnIdle);
+begin
+  Result := Self.OnIdle;
+end;
+
+procedure OnIdleWriteHelper(Self: TScriptGame; const Result: TOnIdle);
+begin
+  Self.OnIdle := Result;
+end;
+
 procedure OnRequestReadHelper(Self: TScriptGame; var Result: TOnRequest);
 begin
   Result := Self.OnRequest;
@@ -933,6 +946,7 @@ var
   AClass: TPascalCompiletimeClass;
 begin
   Compiler.AddType('TOnClockTickEvent', 'procedure(Ticks: Integer)');
+  Compiler.AddType('TOnIdleEvent', 'procedure()');
   Compiler.AddType('TOnJoinGameEvent', 'procedure(Player: TActivePlayer; Team: TTeam)');
   Compiler.AddType('TOnLeaveGameEvent',
     'procedure(Player: TActivePlayer; Kicked: Boolean)');
@@ -992,6 +1006,7 @@ begin
     RegisterProperty('MapsList', 'TMapsList', iptR);
     RegisterProperty('BanLists', 'TBanLists', iptR);
     RegisterProperty('OnClockTick', 'TOnClockTickEvent', iptRW);
+    RegisterProperty('OnIdle', 'TOnIdleEvent', iptRW);
     RegisterProperty('OnJoin', 'TOnJoinGameEvent', iptRW);
     RegisterProperty('OnLeave', 'TOnLeaveGameEvent', iptRW);
     RegisterProperty('OnRequest', 'TOnRequestEvent', iptRW);
@@ -1072,6 +1087,8 @@ begin
     RegisterPropertyHelper(@BanListsReadHelper, nil, 'BanLists');
     RegisterEventPropertyHelper(@OnClockTickReadHelper, @OnClockTickWriteHelper,
       'OnClockTick');
+    RegisterEventPropertyHelper(@OnIdleReadHelper, @OnIdleWriteHelper,
+      'OnIdle');
     RegisterEventPropertyHelper(@OnRequestReadHelper, @OnRequestWriteHelper,
       'OnRequest');
     RegisterEventPropertyHelper(@OnJoinReadHelper, @OnJoinWriteHelper, 'OnJoin');

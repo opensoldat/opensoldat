@@ -58,6 +58,7 @@ type
     // EVENTS
     procedure OnActivateServer; virtual;
     procedure OnClockTick; virtual;
+    procedure OnIdle; virtual;
     // procedure OnScriptShutdown(ServerShutdown: Boolean); virtual;
 
     function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
@@ -125,6 +126,10 @@ begin
 end;
 
 procedure TScript.OnClockTick;
+begin
+end;
+
+procedure TScript.OnIdle;
 begin
 end;
 {$PUSH}

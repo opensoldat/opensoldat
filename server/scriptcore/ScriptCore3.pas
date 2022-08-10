@@ -113,6 +113,7 @@ type
       const Params: array of Variant): Variant; overload;
     // EVENTS
     procedure OnClockTick; override;
+    procedure OnIdle; override;
     function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer; override;
     function OnBeforeJoinTeam(Id, Team, OldTeam: Byte): ShortInt; override;
@@ -602,6 +603,24 @@ begin
         (Self.FGame.Game.TickThreshold <> 0) and (MainTickCounter mod
         Self.FGame.Game.TickThreshold = 0) then
         Self.CallEvent(Self.FGame.Game.OnClockTick, [MainTickCounter]);
+    except
+      on e: Exception do
+        Self.HandleException(e);
+    end;
+  finally
+    Self.Lock.Release;
+  end;
+end;
+
+procedure TScriptCore3.OnIdle;
+begin
+  try
+    Self.Lock.Acquire;
+    try
+      if Assigned(Self.FAdapter) then
+        Self.FAdapter.OnIdle;
+      if Assigned(Self.FGame.Game.OnIdle) then
+        Self.CallEvent(Self.FGame.Game.OnIdle, []);
     except
       on e: Exception do
         Self.HandleException(e);
