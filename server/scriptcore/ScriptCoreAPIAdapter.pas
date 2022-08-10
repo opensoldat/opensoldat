@@ -28,6 +28,7 @@ type
 
     // EVENTS
     procedure OnClockTick;
+    procedure OnIdle;
 
     function OnRequestGame(Ip: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer;
@@ -419,6 +420,12 @@ begin
   if not Self.Disabled and (Self.AppOnIdleTimer > 0) and
     (MainTickCounter mod Self.AppOnIdleTimer = 0) then
     Self.FScript.CallFunc([MainTickCounter], 'AppOnIdle', 0);
+end;
+
+procedure TScriptCoreAPIAdapter.OnIdle;
+begin
+  if not Self.Disabled then
+    Self.FScript.CallFunc([], 'OnIdle', 0);
 end;
 
 function TScriptCoreAPIAdapter.OnRequestGame(Ip: string; Port: Word;

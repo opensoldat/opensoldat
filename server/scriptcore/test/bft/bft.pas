@@ -243,6 +243,13 @@ begin
   SLog('==========================================================', INFO);
 end;
 
+procedure MyOnIdle();
+begin
+  SLog('==========================================================', INFO);
+  SLog('OnIdle', INFO);
+  SLog('==========================================================', INFO);
+end;
+
 procedure MyOnBeforeMapChange(Map: String);
 begin
   SLog('==========================================================', INFO);
@@ -800,6 +807,7 @@ begin
   Result := 'Unknown failure';
 
   Game.OnClockTick := @MyOnClockTick;
+  Game.OnIdle := @MyOnIdle;
   Map.OnBeforeMapChange := @MyOnBeforeMapChange;
   Map.OnAfterMapChange := @MyOnAfterMapChange;
   Game.OnRequest := @MyOnRequest;

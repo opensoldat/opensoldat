@@ -20,6 +20,9 @@ uses
   NetworkServerGame, NetworkServerSprite, NetworkServerThing,
   NetworkServerConnection, NetworkServerHeartbeat;
 
+var
+  LastMinuteTick: QWord = 0;
+
 procedure AppOnIdle;
 var
   MainControl: Integer;
@@ -38,6 +41,33 @@ begin
     AdminServer.ProcessCommands();
   {$ENDIF}
 
+  // Run every 60 seconds
+  if (GetTickCount64 - LastMinuteTick) >= 60000 then
+  begin
+    LastMinuteTick := GetTickCount64;
+    if sv_lobby.Value then
+      LobbyThread := TLobbyThread.Create;
+
+    // *BAN*
+    // Ban Timers v2
+    UpdateIPBanList;
+    UpdateHWBanList;
+  end;
+
+  if sv_pauseonidle.Value and ((PlayersNum - BotsNum) <= 0) then
+  begin
+    {$IFDEF STEAM}
+    RunManualCallbacks();
+    {$ENDIF}
+
+    {$IFDEF SCRIPT}
+    ScrptDispatcher.OnIdle();
+    {$ENDIF}
+
+    Sleep(100);
+    Exit;
+  end;
+
   for MainControl := 1 to (Ticktime - ticktimeLast) do
   begin  // frame rate independant code
     ticks := ticks + 1;
@@ -55,11 +85,11 @@ begin
     {$IFDEF STEAM}
     RunManualCallbacks();
     {$ENDIF}
+
     // Flood Nums Cancel
     if MainTickCounter mod 1000 = 0 then
       for j := 1 to MAX_FLOODIPS do
         FloodNum[j] := 0;
-
 
     // Warnings Cancel
     if MainTickCounter mod (MINUTE * 5) = 0 then
@@ -454,20 +484,6 @@ begin
 
     if MainTickCounter mod (SECOND * 30) = 0 then
       DropIP := '';  // Clear temporary firewall IP
-
-    if MainTickCounter mod MINUTE = 0 then
-    begin
-      if sv_lobby.Value then
-          LobbyThread := TLobbyThread.Create;
-    end;
-
-    // *BAN*
-    // Ban Timers v2
-    if MainTickCounter mod MINUTE = 0 then
-    begin
-      UpdateIPBanList;
-      UpdateHWBanList;
-    end;
 
     if MainTickCounter mod MINUTE = 0 then
       for j := 1 to MAX_SPRITES do

@@ -130,6 +130,7 @@ type
 
     procedure OnActivateServer; override;
     procedure OnClockTick; override;
+    procedure OnIdle; override;
     // procedure OnScriptShutdown(ServerShutdown: Boolean);
 
     function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
@@ -434,6 +435,20 @@ begin
     Self.DoLock;
     for I := Self.FScripts.Count - 1 downto 0 do
       TScript(Self.FScripts[I]).OnClockTick;
+  finally
+    Self.ProcessUnregisterQueue;
+    Self.DoUnlock;
+  end;
+end;
+
+procedure TScriptDispatcher.OnIdle;
+var
+  I: Integer;
+begin
+  try
+    Self.DoLock;
+    for I := Self.FScripts.Count - 1 downto 0 do
+      TScript(Self.FScripts[I]).OnIdle;
   finally
     Self.ProcessUnregisterQueue;
     Self.DoUnlock;

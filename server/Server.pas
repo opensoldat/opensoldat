@@ -153,6 +153,7 @@ var
   sv_antimassflag: TBooleanCvar;
   sv_healthcooldown: TIntegerCvar;
   sv_teamcolors: TBooleanCvar;
+  sv_pauseonidle: TBooleanCvar;
 
   net_port: TIntegerCvar;
   net_ip: TStringCvar;
