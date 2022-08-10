@@ -40,9 +40,6 @@ begin
   if AdminServer <> nil then
     AdminServer.ProcessCommands();
   {$ENDIF}
-  {$IFDEF STEAM}
-  RunManualCallbacks();
-  {$ENDIF}
 
   // Run every 60 seconds
   if (GetTickCount64 - LastMinuteTick) >= 60000 then
@@ -59,6 +56,10 @@ begin
 
   if sv_pauseonidle.Value and ((PlayersNum - BotsNum) <= 0) then
   begin
+    {$IFDEF STEAM}
+    RunManualCallbacks();
+    {$ENDIF}
+
     Sleep(100);
     Exit;
   end;
@@ -75,6 +76,10 @@ begin
 
     {$IFDEF SCRIPT}
     ScrptDispatcher.OnClockTick();
+    {$ENDIF}
+
+    {$IFDEF STEAM}
+    RunManualCallbacks();
     {$ENDIF}
 
     // Flood Nums Cancel
