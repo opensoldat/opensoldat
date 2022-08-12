@@ -10,7 +10,7 @@ This repository contains the source code of the so-called 1.8 version. Compared 
 
 ## Dependencies
 
-- FreePascal 3.0.4
+- FreePascal 3.2.2
 - SDL 2.0.12
 - OpenAL
 - FreeType 2.6.1
@@ -36,11 +36,11 @@ CMake 3.14+ is required.
 
 #### Build steps for Windows
 
-1. Install [freepascal 3.0.4](https://sourceforge.net/projects/freepascal/files/Win32/3.0.4/) (install `fpc-3.0.4.i386-win32.exe` first, and then `fpc-3.0.4.i386-win32.cross.x86_64-win64.exe`)
+1. Install [freepascal 3.2.2](https://sourceforge.net/projects/freepascal/files/Win32/3.2.2/fpc-3.2.2.win32.and.win64.exe/download)
 2. Install [Visual Studio with C++ compiler/build tools](https://visualstudio.microsoft.com/en) and [vcpkg](https://github.com/Microsoft/vcpkg)
 3. Open Developer command prompt for Visual Studio
 4. `vcpkg.exe --triplet x64-windows install sdl2 physfs openssl protobuf freetype openal-soft`
-5. `set PATH=%PATH%;C:\fpc\3.0.4\bin\i386-win32`
+5. `set PATH=%PATH%;C:\fpc\3.2.2\bin\i386-win32`
 6. `set OPENSSL_ROOT_DIR=C:\vcpkg\installed\x64-windows`
 7. `set PHYSFSDIR=C:\vcpkg\installed\x64-windows`
 8. `mkdir build`

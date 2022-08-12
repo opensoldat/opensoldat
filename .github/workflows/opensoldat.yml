@@ -16,7 +16,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install cmake git fpc libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6 patchelf
+          sudo apt-get install cmake git libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6 patchelf
+
+      - name: Install fpc
+        run: |
+          curl -L -o fpc.deb https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.2.2/fpc-laz_3.2.2-210709_amd64.deb/download
+          sudo apt-get install ./fpc.deb
 
       - name: Compile opensoldat
         run: |
@@ -86,7 +91,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: C:\fpc
-          key: freepascal
+          key: freepascal-3.2.2
 
       - name: Cache vcpkg
         id: vcpkg-cache
@@ -98,13 +103,12 @@ jobs:
       - name: Download freepascal
         if: steps.fpc.outputs.cache-hit != 'true'
         run: |
-          curl -o C:\fpc32.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.0.4/i386-win32/fpc-3.0.4.i386-win32.exe
-          curl -o C:\fpc64.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.0.4/i386-win32/fpc-3.0.4.i386-win32.cross.x86_64-win64.exe
+          curl -o C:\fpc64.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/i386-win32/fpc-3.2.2.win32.and.win64.exe
+
 
       - name: Install freepascal
         if: steps.fpc.outputs.cache-hit != 'true'
         run: |
-           C:\fpc32.exe /silent /nocancel /suppressmsgboxes=no
            C:\fpc64.exe /silent /nocancel /suppressmsgboxes=no
         shell: cmd
 
@@ -115,7 +119,7 @@ jobs:
       - name: Build opensoldat
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
-          set PATH=%PATH%;C:\fpc\3.0.4\bin\i386-win32
+          set PATH=%PATH%;C:\fpc\3.2.2\bin\i386-win32
           set OPENSSL_ROOT_DIR=C:\vcpkg\installed\x64-windows
           set PHYSFSDIR=C:\vcpkg\installed\x64-windows
           set BUILD_ID=%GITHUB_SHA:~0,8%
