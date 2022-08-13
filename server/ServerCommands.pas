@@ -914,6 +914,33 @@ begin
   DemoRecorder.StopRecord;
 end;
 
+procedure CommandListPlayers(Args: array of AnsiString; Sender: Byte);
+var
+  i: Integer;
+  PlayerType: AnsiString;
+begin
+  MainConsole.Console('[ TYPE] Player name (K/D) [Team]', SERVER_MESSAGE_COLOR, Sender);
+  MainConsole.Console('--------------------------------', SERVER_MESSAGE_COLOR, Sender);
+  for i := 1 to MAX_PLAYERS do
+    if SortedPlayers[i].PlayerNum > 0 then
+    begin
+      if Sprite[SortedPlayers[i].PlayerNum].Player.ControlMethod = HUMAN then
+        if Sprite[SortedPlayers[i].PlayerNum].Player.Team = 5 then
+          PlayerType := 'SPECT'
+        else
+          PlayerType := 'HUMAN'
+      else
+        PlayerType := ' BOT ';
+      MainConsole.Console(Format('[%5s] %s (%d/%d) [%d]', [
+                                                            PlayerType,
+                                                            Sprite[SortedPlayers[i].PlayerNum].Player.Name,
+                                                            Sprite[SortedPlayers[i].PlayerNum].Player.Kills,
+                                                            Sprite[SortedPlayers[i].PlayerNum].Player.Deaths,
+                                                            Sprite[SortedPlayers[i].PlayerNum].Player.Team
+                                                          ]), SERVER_MESSAGE_COLOR, Sender);
+    end;
+end;
+
 {$POP}
 
 procedure InitServerCommands();
@@ -973,6 +1000,7 @@ begin
   CommandAdd('votemap', CommandVotemap, 'votemap', [CMD_PLAYERONLY]);
   CommandAdd('record', CommandRecord, 'record demo', [CMD_ADMINONLY]);
   CommandAdd('stop', CommandStop, 'stop recording demo', [CMD_ADMINONLY]);
+  CommandAdd('listplayers', CommandListPlayers, 'list all current players', [CMD_ADMINONLY]);
 
   {$IFDEF SCRIPT}
   CommandAdd('recompile', CommandRecompile, 'Recompile all or specific script', [CMD_ADMINONLY]);
