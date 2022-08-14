@@ -107,7 +107,7 @@ begin
   if MsgType = MSGTYPE_CMD then
   begin
     {$IFDEF SCRIPT}
-    if ScrptDispatcher.OnPlayerCommand(Player.SpriteNum, AnsiString(cs)) then
+    if ScrptDispatcher.OnPlayerCommand(Player.SpriteNum, '/' + AnsiString(cs)) then
       Exit;
     {$ENDIF}
     MainConsole.Console(cs + '(' + WideString(Player.IP) +
