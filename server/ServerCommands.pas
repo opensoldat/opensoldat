@@ -315,17 +315,15 @@ end;
 
 procedure CommandSay(Args: array of AnsiString; Sender: Byte);
 var
-  Name: String;
+  i: Integer;
+  Msg: String = '';
 begin
-  if Length(Args) = 1 then
+  for i := 1 to High(Args) do
+    Msg := Msg + Args[i] + ' ';
+  if Length(Msg) < 1 then
     Exit;
 
-  Name := Args[1];
-
-  if Length(Name) < 1 then
-    Exit;
-
-  ServerSendStringMessage(WideString(Name), ALL_PLAYERS, 255, MSGTYPE_PUB);
+  ServerSendStringMessage(WideString(Msg), ALL_PLAYERS, 255, MSGTYPE_PUB);
 end;
 
 procedure CommandKill(Args: array of AnsiString; Sender: Byte);

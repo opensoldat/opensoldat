@@ -3565,11 +3565,28 @@ end;
 function PSGetAnsiChar(Src: Pointer; aType: TPSTypeRec): tbtchar;
 var Res : tbtString;
 begin
-  Res := PSGetAnsiString(Src,aType);
-  if Length(Res) > 0 then
-    Result := Res[{$IFDEF DELPHI2009UP}Low(Res){$ELSE}1{$ENDIF}]
+  // @OpenSoldatPatch
+  case aType.BaseType of
+    btU8: Result := tbtchar(tbtu8(Src^));
+    btS8: Result := tbtchar(tbts8(Src^));
+    btU16: Result := tbtchar(tbtu16(Src^));
+    btS16: Result := tbtchar(tbts16(Src^));
+    btU32: Result := tbtchar(tbtu32(Src^));
+    btS32: Result := tbtchar(tbts32(Src^));
+    {$IFNDEF PS_NOINT64}
+    btS64: Result := tbtchar(tbts64(Src^));
+    {$ENDIF}
+    btChar: Result := tbtchar(tbtchar(Src^));
+    {$IFNDEF PS_NOWIDESTRING}
+    btWideChar: Result := tbtchar(tbtwidechar(Src^));
+    {$ENDIF}
   else
-    Result := #0;
+    Res := PSGetAnsiString(Src,aType);
+    if Length(Res) > 0 then
+      Result := Res[{$IFDEF DELPHI2009UP}Low(Res){$ELSE}1{$ENDIF}]
+    else
+      Result := #0;
+  end;
 end;
 
 function PSGetAnsiString(Src: Pointer; aType: TPSTypeRec): tbtString;
@@ -12519,7 +12536,7 @@ begin
       FDataPtr := nil;
     end;
     FCapacity := 0;
-    // @SoldatPatch
+    // @OpenSoldatPatch
     Exit;
   end;
   GetMem(p, Value);

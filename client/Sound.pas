@@ -443,7 +443,7 @@ begin
 
   // decrease volume if grenade effect
   if (GrenadeEffectTimer > 0) and (SampleNum <> SFX_HUM) then
-    Dist := (Dist + 10) * (GrenadeEffectTimer div 7);
+    Dist := Dist + ((1.0 - Dist) * (Sqrt(GrenadeEffectTimer / 280)));
 
   if Dist > 1 then
     Exit;

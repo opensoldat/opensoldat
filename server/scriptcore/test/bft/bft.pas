@@ -948,7 +948,6 @@ var
 begin
   Result := 'Unknown failure';
 
-
   if StrToInt('420') <> 420 then
   begin
     Result := 'StrToInt';
@@ -1330,7 +1329,6 @@ begin
     Result := 'TStringList.Move';
     Exit;
   end;
-
 
   // 1: 'Uiop' 'Asdf'
   MyStringList.Delete(0);
@@ -1832,13 +1830,110 @@ begin
   Exit;
   {$ENDIF}
 
+  {$IFDEF NOT_DEFINED}
+  Result := 'Defines 3';
+  Exit;
+  {$ENDIF}
+
+  Result := '';
+end;
+
+//
+// CompilerAndRuntimeTest utils.
+//
+
+function ReturnsByte: Byte;
+begin
+  Result := 65;
+end;
+
+function ReturnsShortInt: ShortInt;
+begin
+  Result := 66;
+end;
+
+function ReturnsWord: Word;
+begin
+  Result := 67;
+end;
+
+function ReturnsSmallInt: SmallInt;
+begin
+  Result := 68;
+end;
+
+function ReturnsLongWord: LongWord;
+begin
+  Result := 69;
+end;
+
+function ReturnsInteger: Integer;
+begin
+  Result := 70;
+end;
+
+function ReturnsInt64: Int64;
+begin
+  Result := 71;
+end;
+
+function CompilerAndRuntimeTest: String;
+var
+  c: Char;
+begin
+  Result := 'Unknown failure';
+
+  // Issue #133: Implicit conversions to char.
+  c := Chr(ReturnsByte());
+  if c <> #65 then
+  begin
+    Result := 'Byte to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsShortInt());
+  if c <> #66 then
+  begin
+    Result := 'ShortInt to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsWord());
+  if c <> #67 then
+  begin
+    Result := 'Word to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsSmallInt());
+  if c <> #68 then
+  begin
+    Result := 'SmallInt to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsLongWord());
+  if c <> #69 then
+  begin
+    Result := 'LongWord to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsInteger());
+  if c <> #70 then
+  begin
+    Result := 'Integer to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsInt64());
+  if c <> #71 then
+  begin
+    Result := 'Int64 to Char implicit conversion';
+    Exit;
+  end;
+
   Result := '';
 end;
 
 procedure RunAllTests;
 var
   i, FailCount: Integer;
-  Tests: Array[0..6] of TTest;
+  Tests: Array[0..7] of TTest;
 begin
   // Register tests.
   Tests[0].Name := 'BanLists'; // ScriptBanLists.pas
@@ -1855,6 +1950,8 @@ begin
   Tests[5].Fn := @EventsTest;
   Tests[6].Name := 'Defines'; // Defines
   Tests[6].Fn := @DefinesTest;
+  Tests[7].Name := 'CompilerAndRuntime'; // PascalScript regression tests
+  Tests[7].Fn := @CompilerAndRuntimeTest;
 
   // Run tests.
   for i := Low(Tests) to High(Tests) do

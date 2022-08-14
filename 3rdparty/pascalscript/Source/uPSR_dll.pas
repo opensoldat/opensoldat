@@ -77,7 +77,7 @@ begin
   Dispose(p);
 end;
 
-// @SoldatPatch
+// @OpenSoldatPatch
 {$IFDEF UNIX}
 {$DEFINE UNIX_OR_KYLIX}
 {$ENDIF}
@@ -91,7 +91,7 @@ var
   h, i: Longint;
   ph: PLoadedDll;
   dllhandle: THandle;
-  // @SoldatPatch
+  // @OpenSoldatPatch
   {$IFNDEF UNIX_OR_KYLIX}
   loadwithalteredsearchpath: Boolean;
   {$ENDIF}
@@ -106,7 +106,7 @@ begin
   h := makehash(s2);
   s3 := copy(s, 1, pos(tbtchar(#0), s)-1);
   delete(s, 1, length(s3)+1);
-  // @SoldatPatch
+  // @OpenSoldatPatch
   {$IFNDEF UNIX_OR_KYLIX}
   loadwithalteredsearchpath := bytebool(s[3]);
   {$ENDIF}
@@ -130,7 +130,7 @@ begin
         exit;
       end;
 
-      // @SoldatPatch
+      // @OpenSoldatPatch
 
       {$IFDEF UNIX_OR_KYLIX}
       dllhandle := LoadLibrary(PChar(s2));
