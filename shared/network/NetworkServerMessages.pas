@@ -52,7 +52,6 @@ begin
       if Sprite[i].Active and (Sprite[i].Player.ControlMethod = HUMAN) then
         if (ToNum = 0) or (i = ToNum) then
         begin
-        if not ((From = 255) and (ToNum = 0)) then // TODO: Simplify it.
           if (not ((MsgType = MSGTYPE_TEAM) or (MsgType = MSGTYPE_RADIO)) or (From = 255)) or
             (((MsgType = MSGTYPE_TEAM) or (MsgType = MSGTYPE_RADIO)) and Sprite[From].IsInSameTeam(Sprite[i])) then
             UDP.SendData(PChatMessage^, Size, Sprite[i].Player.peer, k_nSteamNetworkingSend_Reliable)
