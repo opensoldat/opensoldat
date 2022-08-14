@@ -515,7 +515,8 @@ var
   VPos, VVel: TVector;
   NewPlayer: TNewPlayer;
   NewObject: TNewMapObject;
-  CheckPlayer, LastBot: TActivePlayer;
+  ActivePlayer, LastBot: TActivePlayer;
+  NewTeam: Integer;
 begin
   SLog('==========================================================', INFO);
   SLog('OnSpeak event called:', INFO);
@@ -599,14 +600,14 @@ begin
       Player.SetVelocity(10.0, -20.0);
     Player.GiveBonus(1);
 
-    CheckPlayer := Players.GetByName(Player.Name);
-    if CheckPlayer.ID = Player.ID then
+    ActivePlayer := Players.GetByName(Player.Name);
+    if ActivePlayer.ID = Player.ID then
       SLog('Found by name', PASS)
     else
       SLog('Not found by name.', FAILURE);
 
-    CheckPlayer := Players.GetByIP(Player.IP);
-    if CheckPlayer.ID = Player.ID then
+    ActivePlayer := Players.GetByIP(Player.IP);
+    if ActivePlayer.ID = Player.ID then
       SLog('Found by IP', PASS)
     else
       SLog('Not found by IP.', FAILURE);
@@ -624,8 +625,12 @@ begin
     NewPlayer.Chain := 0;
     NewPlayer.Dummy := False;
     NewPlayer.ChatFrequency := 3;
-    Players.Add(NewPlayer, TJoinNormal);
+    ActivePlayer := Players.Add(NewPlayer, TJoinNormal);
     NewPlayer.Free;
+
+    NewTeam := 1 + (TestCount mod 2)
+    ActivePlayer.ChangeTeam(NewTeam, TJoinSilent);
+    ActivePlayer.Team := NewTeam;
 
     LastBot := Players.GetByName('bot' + IntToStr(TestCount));
 
