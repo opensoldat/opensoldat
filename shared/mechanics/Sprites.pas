@@ -263,7 +263,7 @@ begin
   Result := i;
 
   // replace player object
-  if Sprite[i].Player <> nil then
+  if (Sprite[i].Player <> nil) and (Sprite[i].Player <> Player) then
   begin
     Sprite[i].Player.SpriteNum := 0;
     if Sprite[i].IsPlayerObjectOwner then

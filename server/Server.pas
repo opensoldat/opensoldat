@@ -1025,10 +1025,26 @@ begin
 
   a := Default(TVector2);
 
-  {$IFDEF SCRIPT}
-  if sc_enable.Value then
-    ScrptDispatcher.Launch();
-  {$ENDIF}
+  AddLineToLogFile(GameLog, 'Starting Game Server.', ConsoleLogFileName);
+
+  UDP := TServerNetwork.Create(net_ip.Value, net_port.Value);
+
+  if UDP.Active = True then
+  begin
+    WriteLn('[NET] Game networking initialized.');
+    WriteLn('[NET] Server is listening on ' + UDP.GetStringAddress(@UDP.Address, True));
+  end
+  else
+  begin
+    WriteLn('[NET] Failed to bind to ' + net_ip.Value + ':' + IntToStr(net_port.Value));
+    ProgReady := False;
+    Exit;
+  end;
+
+  ServerPort := UDP.Port;
+
+  if fileserver_enable.Value then
+    StartFileServer;
 
   if (not IsTeamGame) then
     k := bots_random_noteam.Value
@@ -1101,10 +1117,6 @@ begin
 
   MapCheckSum := GetMapChecksum(StartMap);
 
-  {$IFDEF SCRIPT}
-  ScrptDispatcher.OnAfterMapChange(Map.Name);
-  {$ENDIF}
-
   // Create Weapons
   AddLineToLogFile(GameLog, 'Creating Weapons.', ConsoleLogFileName);
 
@@ -1142,6 +1154,56 @@ begin
 
     MainConsole.Console('Advance Mode ON', MODE_MESSAGE_COLOR);
   end;
+
+  // sort the players frag list
+  SortPlayers;
+
+  MapChangeCounter := -60;
+
+  LastPlayer := 0;
+
+  TimeLimitCounter := sv_timelimit.Value;
+
+  // Wave respawn time
+  UpdateWaveRespawnTime;
+  WaveRespawnCounter := WaveRespawnTime;
+
+  {$IFDEF ENABLE_FAE}
+  if ac_enable.Value then
+  begin
+    WriteLn('[AC] Anti-Cheat enabled');
+  end;
+  {$ENDIF}
+
+  if sv_lobby.Value then
+    if not Assigned(LobbyThread) then
+      LobbyThread := TLobbyThread.Create();
+
+  case sv_gamemode.Value of
+    GAMESTYLE_DEATHMATCH: sv_killlimit.SetValue(sv_dm_limit.Value);
+    GAMESTYLE_POINTMATCH: sv_killlimit.SetValue(sv_pm_limit.Value);
+    GAMESTYLE_RAMBO:      sv_killlimit.SetValue(sv_rm_limit.Value);
+    GAMESTYLE_TEAMMATCH:  sv_killlimit.SetValue(sv_tm_limit.Value);
+    GAMESTYLE_CTF:        sv_killlimit.SetValue(sv_ctf_limit.Value);
+    GAMESTYLE_INF:        sv_killlimit.SetValue(sv_inf_limit.Value);
+    GAMESTYLE_HTF:        sv_killlimit.SetValue(sv_htf_limit.Value);
+  end;
+
+  // In general, as many systems as possible should be initialized before
+  // launching scripts, so they can access those systems through the SC3 APIs
+  // during their initialization. By the same token, code which dispatches
+  // events should be run after scripts have had a chance to set their event
+  // handlers if at all possible.
+  {$IFDEF SCRIPT}
+  if sc_enable.Value then
+    ScrptDispatcher.Launch();
+  {$ENDIF}
+
+  // Now that event handlers have been assigned, run `OnAftermapChange` from
+  // loading the initial map, and spawn stuff.
+  {$IFDEF SCRIPT}
+  ScrptDispatcher.OnAfterMapChange(Map.Name);
+  {$ENDIF}
 
   if sv_gamemode.Value = GAMESTYLE_DEATHMATCH then
   begin
@@ -1220,61 +1282,6 @@ begin
     end;
   end;
 
-  case sv_gamemode.Value of
-    GAMESTYLE_DEATHMATCH: sv_killlimit.SetValue(sv_dm_limit.Value);
-    GAMESTYLE_POINTMATCH: sv_killlimit.SetValue(sv_pm_limit.Value);
-    GAMESTYLE_RAMBO:      sv_killlimit.SetValue(sv_rm_limit.Value);
-    GAMESTYLE_TEAMMATCH:  sv_killlimit.SetValue(sv_tm_limit.Value);
-    GAMESTYLE_CTF:        sv_killlimit.SetValue(sv_ctf_limit.Value);
-    GAMESTYLE_INF:        sv_killlimit.SetValue(sv_inf_limit.Value);
-    GAMESTYLE_HTF:        sv_killlimit.SetValue(sv_htf_limit.Value);
-  end;
-
-  // sort the players frag list
-  SortPlayers;
-
-  MapChangeCounter := -60;
-
-  LastPlayer := 0;
-
-  TimeLimitCounter := sv_timelimit.Value;
-
-  // Wave respawn time
-  UpdateWaveRespawnTime;
-  WaveRespawnCounter := WaveRespawnTime;
-
-  AddLineToLogFile(GameLog, 'Starting Game Server.', ConsoleLogFileName);
-
-  UDP := TServerNetwork.Create(net_ip.Value, net_port.Value);
-
-  if UDP.Active = True then
-  begin
-    WriteLn('[NET] Game networking initialized.');
-    WriteLn('[NET] Server is listening on ' + UDP.GetStringAddress(@UDP.Address, True));
-  end
-  else
-  begin
-    WriteLn('[NET] Failed to bind to ' + net_ip.Value + ':' + IntToStr(net_port.Value));
-    ProgReady := False;
-    Exit;
-  end;
-
-  ServerPort := UDP.Port;
-
-  if fileserver_enable.Value then
-    StartFileServer;
-
-  {$IFDEF ENABLE_FAE}
-  if ac_enable.Value then
-  begin
-    WriteLn('[AC] Anti-Cheat enabled');
-  end;
-  {$ENDIF}
-
-  if sv_lobby.Value then
-    if not Assigned(LobbyThread) then
-      LobbyThread := TLobbyThread.Create();
-
   if bots_random_alpha.Value > 0 then
     for k := 1 to bots_random_alpha.Value do
       AddBotPlayer(RandomBot, 1);
@@ -1289,7 +1296,6 @@ begin
       AddBotPlayer(RandomBot, 4);
 
   UpdateGameStats;
-
 end;
 
 function PrepareMapChange(Name: String): Boolean;
