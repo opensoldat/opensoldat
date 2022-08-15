@@ -883,6 +883,35 @@ begin
   Result := '';
 end;
 
+// Currently this test exists just to check adding a bot at script launch time.
+function PlayerTest: String;
+var
+  NewPlayer: TNewPlayer;
+  ActivePlayer: TActivePlayer;
+begin
+  Result := 'Unknown failure';
+
+  NewPlayer := TNewPlayer.Create;
+  NewPlayer.Name := 'botlaunch';
+  NewPlayer.Team := 1;
+  NewPlayer.Health := 50.0;
+  NewPlayer.ShirtColor := $00FFFF;
+  NewPlayer.PantsColor := $FFFFFF;
+  NewPlayer.SkinColor := $DDAAAA;
+  NewPlayer.HairColor := $FFFF00;
+  NewPlayer.HairStyle := 1;
+  NewPlayer.Headgear := 20;
+  NewPlayer.Chain := 0;
+  NewPlayer.Dummy := False;
+  NewPlayer.ChatFrequency := 3;
+  ActivePlayer := Players.Add(NewPlayer, TJoinNormal);
+  NewPlayer.Free;
+
+  ActivePlayer.Team := 2;
+
+  Result := '';
+end;
+
 function BanListsTest: String;
 var
   i: Integer;
@@ -1938,7 +1967,7 @@ end;
 procedure RunAllTests;
 var
   i, FailCount: Integer;
-  Tests: Array[0..7] of TTest;
+  Tests: Array[0..8] of TTest;
 begin
   // Register tests.
   Tests[0].Name := 'BanLists'; // ScriptBanLists.pas
@@ -1951,12 +1980,14 @@ begin
   Tests[3].Fn := @FileAPITest;
   Tests[4].Name := 'Math'; // ScriptMath.pas
   Tests[4].Fn := @MathTest;
-  Tests[5].Name := 'Events'; // Events
-  Tests[5].Fn := @EventsTest;
-  Tests[6].Name := 'Defines'; // Defines
-  Tests[6].Fn := @DefinesTest;
-  Tests[7].Name := 'CompilerAndRuntime'; // PascalScript regression tests
-  Tests[7].Fn := @CompilerAndRuntimeTest;
+  Tests[6].Name := 'Events'; // Events
+  Tests[6].Fn := @EventsTest;
+  Tests[5].Name := 'Player'; // ScriptPlayer.pas
+  Tests[5].Fn := @PlayerTest;
+  Tests[7].Name := 'Defines'; // Defines
+  Tests[7].Fn := @DefinesTest;
+  Tests[8].Name := 'CompilerAndRuntime'; // PascalScript regression tests
+  Tests[8].Fn := @CompilerAndRuntimeTest;
 
   // Run tests.
   for i := Low(Tests) to High(Tests) do
