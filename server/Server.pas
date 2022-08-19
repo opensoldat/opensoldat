@@ -546,6 +546,8 @@ begin
   Set8087CW($133F);
   {$ENDIF}
 
+  Randomize;
+
   DefaultFormatSettings.DecimalSeparator := '.';
   DefaultFormatSettings.DateSeparator := '-';
 
@@ -1045,18 +1047,6 @@ begin
 
   if fileserver_enable.Value then
     StartFileServer;
-
-  if (not IsTeamGame) then
-    k := bots_random_noteam.Value
-  else if sv_gamemode.Value = GAMESTYLE_TEAMMATCH then
-    k := bots_random_alpha.Value + bots_random_bravo.Value + bots_random_charlie.Value + bots_random_delta.Value
-  else
-    k := bots_random_alpha.Value + bots_random_bravo.Value;
-
-  //if (k > (MAX_SPRITES - 1)) then
-  //  Exit;
-
-  Randomize;
 
   for i := 1 to MAX_SPRITES do
   begin

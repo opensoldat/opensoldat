@@ -579,6 +579,8 @@ var
   i: Integer;
   s: String;
 begin
+  Randomize;
+
   DefaultFormatSettings.DecimalSeparator := '.';
   DefaultFormatSettings.DateSeparator := '-';
 
