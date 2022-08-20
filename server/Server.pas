@@ -600,7 +600,7 @@ begin
 
   if not PhysFS_Init(PChar(ParamStr(0))) then
   begin
-    WriteLN('Could not initialize PhysFS.');
+    WriteLn('Could not initialize PhysFS.');
     ProgReady := False;
     sc_enable.SetValue(False);
     Exit;
