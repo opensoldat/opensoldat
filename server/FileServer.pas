@@ -20,6 +20,7 @@ type
     FServer: THTTPServer;
   public
     constructor Create(AAddress: AnsiString; APort: Word; const OnRequest: THTTPServerRequestHandler);
+    destructor Destroy; override;
     procedure Execute; override;
     procedure DoTerminate; override;
     property Server: THTTPServer read FServer;
@@ -33,14 +34,14 @@ type
 procedure StartFileServer;
 procedure StopFileServer;
 
-var
-  FServerThread: THTTPServerThread;
-  FFileServer: TFileServer;
-
 implementation
 
 uses
   Server{$IFDEF STEAM}, Steam{$ENDIF}, Version;
+
+var
+  FServerThread: THTTPServerThread;
+  FFileServer: TFileServer;
 
 {$PUSH}
 {$WARN 5024 OFF: Parameter "$1" not used}
@@ -70,8 +71,15 @@ begin
   FServer.Port := APort;
   FServer.OnRequest := OnRequest;
   FServer.AcceptIdleTimeout := 1000;
-  FServer.FreeOnRelease;
-  Self.FreeOnTerminate := False;
+  // NOTE: FreeOnRelease not implemented in FPC as of 3.2.2.
+  //FServer.FreeOnRelease;
+  Self.FreeOnTerminate := True;
+end;
+
+destructor THTTPServerThread.Destroy;
+begin
+  FServer.Free;
+  Inherited;
 end;
 
 procedure THTTPServerThread.Execute;
@@ -119,13 +127,16 @@ begin
   begin
     WriteLn('[FileServer] Stopping fileserver');
     try
-      FServerThread.DoTerminate;
-      FreeAndNil(FServerThread);
-    except
-      on e: Exception do
-      begin
-        WriteLn('[FileServer] Error while stopping: ' + E.Message);
+      try
+        FServerThread.DoTerminate;
+      except
+        on e: Exception do
+        begin
+          WriteLn('[FileServer] Error while stopping: ' + E.Message);
+        end;
       end;
+    finally
+      FServerThread := Nil;
     end;
   end;
 end;
