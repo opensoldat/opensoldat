@@ -149,7 +149,7 @@ begin
     if io <> 0 then
     begin
       {$IFDEF SERVER}
-      Writeln('File logging error (W1): ' + IntToStr(io));
+      WriteLn('File logging error (W1): ' + IntToStr(io));
       {$ELSE}
       MainConsole.Console('File logging error (W1): ' + IntToStr(io),
         DEBUG_MESSAGE_COLOR);
@@ -165,7 +165,7 @@ begin
     if io <> 0 then
     begin
       {$IFDEF SERVER}
-      Writeln('File logging error (W2 - wrong directory names?): ' +
+      WriteLn('File logging error (W2 - wrong directory names?): ' +
         IntToStr(io));
       {$ELSE}
       MainConsole.Console('File logging error (W2 - wrong directory names?): ' +
@@ -185,7 +185,7 @@ begin
   try
     for i := 0 to F.Count - 1 do
     begin
-      Writeln(LogFile, F.Strings[i]);
+      WriteLn(LogFile, F.Strings[i]);
     end;
   finally
     LogLock.Release;

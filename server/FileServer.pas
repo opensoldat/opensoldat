@@ -53,12 +53,10 @@ end;
 
 procedure THTTPServer.CheckConnect(Sender: TObject; ASocket: LongInt; var Allow: Boolean);
 begin
-  writeln('checkin...');
   if Self.ConnectionCount >= fileserver_maxconnections.Value then
     Allow := False
   else
     Allow := True;
-  writeln('allow=',allow);
 end;
 {$POP}
 
