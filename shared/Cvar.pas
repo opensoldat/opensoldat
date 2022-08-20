@@ -974,7 +974,7 @@ begin
   sv_realisticmode := TBooleanCvar.Add('sv_realisticmode', 'Enables realistic mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_advancemode := TBooleanCvar.Add('sv_advancemode', 'Enables advance mode', False, False, [CVAR_SERVER, CVAR_SYNC,CVAR_SERVER_INITONLY], nil); // Restart server
   sv_advancemode_amount := TIntegerCvar.Add('sv_advancemode_amount', 'Number of kills required in Advance Mode to gain a weapon.', 2, 2, [CVAR_SERVER, CVAR_SYNC], nil, 1, 9999);
-  sv_minimap := TBooleanCvar.Add('sv_minimap', 'Enables/disables minimap', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
+  sv_minimap_locations := TBooleanCvar.Add('sv_minimap_locations', 'Enables/disables drawing player and object location indicators on minimap', True, True, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_advancedspectator := TBooleanCvar.Add('sv_advancedspectator', 'Enables/disables advanced spectator mode', True, True, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_radio := TBooleanCvar.Add('sv_radio', 'Enables/disables radio chat', False, False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_info := TStringCvar.Add('sv_info', 'A website or e-mail address, or any other short text describing your server', '', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 60);
