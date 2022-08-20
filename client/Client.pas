@@ -190,13 +190,9 @@ var
   font_weaponmenusize: TIntegerCvar;
   font_killconsolenamespace: TIntegerCvar;
 
-  // Matchmaking cvars
-  mm_ranked: TBooleanCvar;
-
   sv_respawntime: TIntegerCvar; // TODO: Remove
   sv_inf_redaward: TIntegerCvar; // TODO: Remove
   net_contype: TIntegerCvar; // TODO: Remove
-  net_compression: TBooleanCvar; // TODO: Remove
   net_allowdownload: TBooleanCvar;
 
   // syncable cvars

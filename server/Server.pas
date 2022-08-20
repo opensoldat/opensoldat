@@ -159,7 +159,6 @@ var
   net_ip: TStringCvar;
   net_adminip: TStringCvar;
   net_lan: TIntegerCvar;
-  net_compression: TBooleanCvar;
   net_allowdownload: TBooleanCvar;
   net_maxadminconnections: TIntegerCvar;
   net_rcon_limit: TIntegerCvar;

@@ -816,13 +816,9 @@ begin
   snd_effects_battle := TBooleanCvar.Add('snd_effects_battle', 'Enables battle sound effects', False, False, [CVAR_CLIENT], nil);
   snd_effects_explosions := TBooleanCvar.Add('snd_effects_explosions', 'Enables sound explosions effects', False, False, [CVAR_CLIENT], nil);
 
-  // Matchmaking cvars
-  mm_ranked := TBooleanCvar.Add('mm_ranked', 'Disable certain menu items in ranked matchmaking', False, False, [CVAR_CLIENT], nil);
-
   // TODO: Remove
   sv_respawntime := TIntegerCvar.Add('sv_respawntime', 'Respawn time in ticks (60 ticks = 1 second)', 360, 60, [CVAR_SERVER], nil, 0, 9999);
   sv_inf_redaward := TIntegerCvar.Add('sv_inf_redaward', 'Infiltration: Points awarded for a flag capture', 30, 30, [CVAR_SERVER], nil, 0, 9999);
-  net_compression := TBooleanCvar.Add('net_compression', 'Enables/Disables compression of packets', True, True, [CVAR_SERVER], nil);
   net_allowdownload := TBooleanCvar.Add('net_allowdownload', 'Enables/Disables file transfers', True, True, [CVAR_SERVER], nil);
 
   font_1_name := TStringCvar.Add('font_1_name', 'First font name', 'Play', 'Play', [CVAR_CLIENT], nil, 0, 100);
@@ -914,7 +910,6 @@ begin
   net_ip := TStringCvar.Add('net_ip', 'Binds server ports to specific ip address', '0.0.0.0', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
   net_adminip := TStringCvar.Add('net_adminip', 'Binds admin port to specific ip address', '0.0.0.0', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
   net_lan := TIntegerCvar.Add('net_lan', 'Set to 1 to set server to LAN mode', 0, 0, [CVAR_SERVER], nil, 0, 1);
-  net_compression := TBooleanCvar.Add('net_compression', 'Enables/Disables compression of packets', True, True, [CVAR_SERVER], nil);
   net_allowdownload := TBooleanCvar.Add('net_allowdownload', 'Enables/Disables file transfers', True, True, [CVAR_SERVER], nil);
   net_maxadminconnections := TIntegerCvar.Add('net_maxadminconnections', 'Maximum number of admin connections', 20, 20, [CVAR_SERVER], nil, 0, MaxInt);
   net_rcon_limit := TIntegerCvar.Add('net_rcon_limit', 'Limits the rate of admin connection attempts per second', 5, 5, [CVAR_SERVER], nil, 0, MaxInt);
