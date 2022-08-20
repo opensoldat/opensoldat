@@ -866,7 +866,7 @@ begin
   sv_stationaryguns := TBooleanCvar.Add('sv_stationaryguns', 'Enables/disables Stationary Guns ingame.', False, [CVAR_SERVER], nil);
 
   sv_password := TStringCvar.Add('sv_password', 'Sets game password', '', [CVAR_SERVER], nil, 0, 32);
-  sv_adminpassword := TStringCvar.Add('sv_adminpassword', 'Sets admin password', '', [CVAR_SERVER], nil, 0, 32);
+  sv_adminpassword := TStringCvar.Add('sv_adminpassword', 'Sets admin password', '', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 32);
   sv_maxplayers := TIntegerCvar.Add('sv_maxplayers', 'Max number of players that can play on server', 24, [CVAR_SERVER], nil, 1, 32);
   sv_maxspectators := TIntegerCvar.Add('sv_maxspectators', 'Sets the limit of spectators', 10, [CVAR_SERVER], nil, 0, 32);
   sv_spectatorchat := TBooleanCvar.Add('sv_spectatorchat', 'Enables/disables spectators chat', True, [CVAR_SERVER], nil);
