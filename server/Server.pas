@@ -161,7 +161,6 @@ var
   net_lan: TIntegerCvar;
   net_compression: TBooleanCvar;
   net_allowdownload: TBooleanCvar;
-  net_maxconnections: TIntegerCvar;
   net_maxadminconnections: TIntegerCvar;
   net_rcon_limit: TIntegerCvar;
   net_rcon_burst: TIntegerCvar;
@@ -196,6 +195,7 @@ var
   fileserver_enable: TBooleanCvar;
   fileserver_port: TIntegerCvar;
   fileserver_ip: TStringCvar;
+  fileserver_maxconnections: TIntegerCvar;
 
   // syncable cvars
   sv_gamemode: TIntegerCvar;

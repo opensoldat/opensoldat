@@ -7,7 +7,10 @@ uses
 
 type
   THTTPServer = class(TFPHTTPServer)
+  private
+    procedure CheckConnect(Sender: TObject; ASocket: LongInt; var Allow: Boolean);
   public
+    constructor Create(AOwner: TComponent); override;
     property Address;
     property ConnectionCount;
   end;
@@ -38,6 +41,25 @@ implementation
 
 uses
   Server{$IFDEF STEAM}, Steam{$ENDIF}, Version;
+
+{$PUSH}
+{$WARN 5024 OFF: Parameter "$1" not used}
+constructor THTTPServer.Create(AOwner: TComponent);
+begin
+  Inherited;
+  Self.OnAllowConnect := Self.CheckConnect;
+end;
+
+procedure THTTPServer.CheckConnect(Sender: TObject; ASocket: LongInt; var Allow: Boolean);
+begin
+  writeln('checkin...');
+  if Self.ConnectionCount >= fileserver_maxconnections.Value then
+    Allow := False
+  else
+    Allow := True;
+  writeln('allow=',allow);
+end;
+{$POP}
 
 constructor THTTPServerThread.Create(AAddress: AnsiString; APort: Word; const OnRequest: THTTPServerRequestHandler);
 begin

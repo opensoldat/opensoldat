@@ -916,7 +916,6 @@ begin
   net_lan := TIntegerCvar.Add('net_lan', 'Set to 1 to set server to LAN mode', 0, 0, [CVAR_SERVER], nil, 0, 1);
   net_compression := TBooleanCvar.Add('net_compression', 'Enables/Disables compression of packets', True, True, [CVAR_SERVER], nil);
   net_allowdownload := TBooleanCvar.Add('net_allowdownload', 'Enables/Disables file transfers', True, True, [CVAR_SERVER], nil);
-  net_maxconnections := TIntegerCvar.Add('net_maxconnections', 'Maximum number of simultaneous file transfer connections', 10, 10, [CVAR_SERVER], nil, 0, 100);
   net_maxadminconnections := TIntegerCvar.Add('net_maxadminconnections', 'Maximum number of admin connections', 20, 20, [CVAR_SERVER], nil, 0, MaxInt);
   net_rcon_limit := TIntegerCvar.Add('net_rcon_limit', 'Limits the rate of admin connection attempts per second', 5, 5, [CVAR_SERVER], nil, 0, MaxInt);
   net_rcon_burst := TIntegerCvar.Add('net_rcon_burst', 'Limits the burst rate of admin connection attempts per second', 10, 10, [CVAR_SERVER], nil, 0, MaxInt);
@@ -954,6 +953,7 @@ begin
   fileserver_enable := TBooleanCvar.Add('fileserver_enable', 'Enables/Disables built-in fileserver', True, True, [CVAR_SERVER, CVAR_INITONLY], nil);
   fileserver_port := TIntegerCvar.Add('fileserver_port', 'Binds fileserver to specific port', 0, 0, [CVAR_SERVER, CVAR_INITONLY], nil, 0, 65535);
   fileserver_ip := TStringCvar.Add('fileserver_ip', 'Binds fileserver to specific ip address', '0.0.0.0', '0.0.0.0', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 15);
+  fileserver_maxconnections := TIntegerCvar.Add('fileserver_maxconnections', 'Maximum number of simultaneous file transfer connections', 10, 10, [CVAR_SERVER], nil, 0, 100);
 
   {$ENDIF}
 
