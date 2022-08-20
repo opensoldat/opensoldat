@@ -213,7 +213,7 @@ var
   sv_advancemode_amount: TIntegerCvar;
   sv_guns_collide: TBooleanCvar;
   sv_kits_collide: TBooleanCvar;
-  sv_minimap: TBooleanCvar;
+  sv_minimap_locations: TBooleanCvar;
   sv_advancedspectator: TBooleanCvar;
   sv_radio: TBooleanCvar;
   sv_gravity: TSingleCvar;

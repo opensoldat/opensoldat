@@ -2376,7 +2376,7 @@ begin
     RenderMinimap(PixelAlignX(ui_minimap_posx.Value * _rscala.x),
       PixelAlignY(ui_minimap_posy.Value), Round(ui_status_transparency.Value * 0.85));
 
-  if MiniMapShow and (not sv_minimap.Value) then
+  if MiniMapShow and sv_minimap_locations.Value then
   begin
     Alfa := ui_minimap_transparency.Value;
 

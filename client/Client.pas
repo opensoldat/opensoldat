@@ -215,7 +215,7 @@ var
   sv_realisticmode: TBooleanCvar;
   sv_advancemode: TBooleanCvar;
   sv_advancemode_amount: TIntegerCvar;
-  sv_minimap: TBooleanCvar;
+  sv_minimap_locations: TBooleanCvar;
   sv_advancedspectator: TBooleanCvar;
   sv_radio: TBooleanCvar;
   sv_info: TStringCvar;
