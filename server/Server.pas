@@ -1395,7 +1395,7 @@ begin
   if (not Sprite[i].Active) then
     Exit;
 
-  if ((why = KICK_CHEAT)) and (sv_anticheatkick.Value) then
+  if ((why = KICK_CHEAT)) and (not sv_anticheatkick.Value) then
     Exit;
 
   // check if admin should be kicked
