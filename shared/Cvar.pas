@@ -938,7 +938,7 @@ begin
   // ScriptCore cvars
   sc_enable := TBooleanCvar.Add('sc_enable', 'Enables/Disables scripting', True, [CVAR_SERVER, CVAR_INITONLY], nil);
   sc_onscriptcrash := TStringCvar.Add('sc_onscriptcrash', 'What action to take when a script crashes. Available parameters are recompile, shutdown, ignore and disable', 'ignore', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 10);
-  sc_safemode := TBooleanCvar.Add('sc_safemode', 'Enables/Disables Safe Mode for Scripts', False, [CVAR_SERVER, CVAR_INITONLY], nil);
+  sc_safemode := TBooleanCvar.Add('sc_safemode', 'Enables/Disables Safe Mode for Scripts', True, [CVAR_SERVER, CVAR_INITONLY], nil);
   sc_allowdlls := TBooleanCvar.Add('sc_allowdlls', 'Enables/Disables loading external dlls', False, [CVAR_SERVER, CVAR_INITONLY], nil);
   sc_sandboxed := TIntegerCvar.Add('sc_sandboxed', 'ScriptCore global sandbox level ', 2, [CVAR_SERVER, CVAR_INITONLY], nil, 0, 2);
   sc_defines := TStringCvar.Add('sc_defines', 'ScriptCore global defines (comma separated)', '', [CVAR_SERVER, CVAR_INITONLY], nil, 0, 255);
