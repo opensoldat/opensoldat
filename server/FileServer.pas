@@ -15,20 +15,18 @@ type
     property ConnectionCount;
   end;
 
-  THTTPServerThread = class(TThread)
+  THTTPFileServerThread = class(TThread)
   private
     FServer: THTTPServer;
+  private
+    procedure DoHandleRequest(Sender: TObject;
+      var ARequest: TFPHTTPConnectionRequest; var AResponse: TFPHTTPConnectionResponse);
   public
-    constructor Create(AAddress: AnsiString; APort: Word; const OnRequest: THTTPServerRequestHandler);
+    constructor Create(AAddress: AnsiString; APort: Word);
     destructor Destroy; override;
     procedure Execute; override;
     procedure DoTerminate; override;
     property Server: THTTPServer read FServer;
-  end;
-
-  TFileServer = class(TDataModule)
-  public
-    procedure DoHandleRequest(Sender: TObject; var ARequest: TFPHTTPConnectionRequest; var AResponse: TFPHTTPConnectionResponse);
   end;
 
 procedure StartFileServer;
@@ -40,8 +38,7 @@ uses
   Server{$IFDEF STEAM}, Steam{$ENDIF}, Version;
 
 var
-  FServerThread: THTTPServerThread;
-  FFileServer: TFileServer;
+  FServerThread: THTTPFileServerThread;
 
 {$PUSH}
 {$WARN 5024 OFF: Parameter "$1" not used}
@@ -60,27 +57,27 @@ begin
 end;
 {$POP}
 
-constructor THTTPServerThread.Create(AAddress: AnsiString; APort: Word; const OnRequest: THTTPServerRequestHandler);
+constructor THTTPFileServerThread.Create(AAddress: AnsiString; APort: Word);
 begin
   inherited Create(False);
   FServer := THTTPServer.Create(nil);
   FServer.Threaded := True;
   FServer.Address := AAddress;
   FServer.Port := APort;
-  FServer.OnRequest := OnRequest;
+  FServer.OnRequest := Self.DoHandleRequest;
   FServer.AcceptIdleTimeout := 1000;
   // NOTE: FreeOnRelease not implemented in FPC as of 3.2.2.
   //FServer.FreeOnRelease;
   Self.FreeOnTerminate := True;
 end;
 
-destructor THTTPServerThread.Destroy;
+destructor THTTPFileServerThread.Destroy;
 begin
   FServer.Free;
   Inherited;
 end;
 
-procedure THTTPServerThread.Execute;
+procedure THTTPFileServerThread.Execute;
 begin
   try
     try
@@ -96,7 +93,7 @@ begin
   end;
 end;
 
-procedure THTTPServerThread.DoTerminate;
+procedure THTTPFileServerThread.DoTerminate;
 begin
   if Assigned(FServer) then
     FServer.Active := False;
@@ -114,7 +111,7 @@ begin
     else
       Port := fileserver_port.Value;
 
-    FServerThread := THTTPServerThread.Create(fileserver_ip.Value, Port, FFileServer.DoHandleRequest);
+    FServerThread := THTTPFileServerThread.Create(fileserver_ip.Value, Port);
     WriteLn('[FileServer] Starting fileserver on ' + fileserver_ip.Value + ':' + IntToStr(Port));
   end;
 end;
@@ -140,7 +137,7 @@ begin
 end;
 
 {$push}{$warn 5024 off}
-procedure TFileServer.DoHandleRequest(Sender: TObject;
+procedure THTTPFileServerThread.DoHandleRequest(Sender: TObject;
   var ARequest: TFPHTTPConnectionRequest; var AResponse: TFPHTTPConnectionResponse);
 var
   F: TFileStream;
