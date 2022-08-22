@@ -1028,7 +1028,8 @@ begin
 
   AddLineToLogFile(GameLog, 'Starting Game Server.', ConsoleLogFileName);
 
-  UDP := TServerNetwork.Create(net_ip.Value, net_port.Value);
+  if not Assigned(UDP) then
+    UDP := TServerNetwork.Create(net_ip.Value, net_port.Value);
 
   if UDP.Active = True then
   begin
@@ -1456,22 +1457,8 @@ begin
 
   if not Sprite[i].Active then
     Exit;
-  {$IFDEF SCRIPT}
-  if why in [KICK_AC, KICK_CHEAT, KICK_CONSOLE, KICK_PING, KICK_NORESPONSE,
-      KICK_NOCHEATRESPONSE, KICK_FLOODING, KICK_VOTED, KICK_SILENT] then
-    ScrptDispatcher.OnLeaveGame(i, true);
-  {$ENDIF}
 
-  ServerPlayerDisconnect(i, why);
-
-  if ((why <> KICK_AC) and (why <> KICK_CHEAT) and (why <> KICK_CONSOLE) and
-    (why <> KICK_VOTED)) then
-  begin
-    Sprite[i].DropWeapon();
-  end;
-
-  Sprite[i].Kill;
-
+  ServerPlayerDisconnect(Sprite[i].Player, Why);
   Result := True;
 end;
 
