@@ -237,14 +237,9 @@ begin
           NoClientupdateTime[j] := NoClientupdateTime[j] + 1;
         if NoClientupdateTime[j] > DISCONNECTION_TIME then
         begin
-          ServerPlayerDisconnect(j, KICK_NORESPONSE);
           MainConsole.Console(Sprite[j].Player.Name + ' could not respond',
             WARNING_MESSAGE_COLOR);
-          {$IFDEF SCRIPT}
-          ScrptDispatcher.OnLeaveGame(j, False);
-          {$ENDIF}
-          Sprite[j].Kill;
-          DoBalanceBots(1, Sprite[j].Player.Team);
+          ServerPlayerDisconnect(Sprite[j].Player, KICK_NORESPONSE, True);
           Continue;
         end;
         if NoClientupdateTime[j] < 0 then

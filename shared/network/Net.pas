@@ -131,7 +131,7 @@ const
   // Kick/Ban Why's
   KICK_UNKNOWN = 0;
   KICK_NORESPONSE = 1;
-  KICK_NOCHEATRESPONSE = 2; // TOOD remove?
+  KICK_NOCHEATRESPONSE = 2; // TODO remove?
   KICK_CHANGETEAM = 3; // TODO remove?
   KICK_PING = 4;
   KICK_FLOODING = 5;
@@ -868,7 +868,6 @@ uses
   NetworkServerSprite, NetworkServerThing, NetworkServerMessages,
   NetworkServerBullet, NetworkServerConnection, NetworkServerGame,
   NetworkServerFunctions
-  {$IFDEF SCRIPT}, ScriptDispatcher{$ENDIF}
   {$ENDIF}
   ;
 
@@ -1082,11 +1081,11 @@ begin
       k_ESteamNetworkingConnectionState_ClosedByPeer, k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
       begin
         if pInfo.m_eOldState = k_ESteamNetworkingConnectionState_Connecting then
-          WriteLn('[NET] Connection error #1', pInfo.m_info.m_szEndDebug)
+          WriteLn('[NET] Connection error #1: ', pInfo.m_info.m_szEndDebug)
         else if pInfo.m_info.m_eState = k_ESteamNetworkingConnectionState_ProblemDetectedLocally then
-          WriteLn('[NET] Connection error #2', pInfo.m_info.m_szEndDebug)
+          WriteLn('[NET] Connection error #2: ', pInfo.m_info.m_szEndDebug)
         else
-          WriteLn('[NET] Connection error #3', pInfo.m_info.m_szEndDebug);
+          WriteLn('[NET] Connection error #3: ', pInfo.m_info.m_szEndDebug);
 
         // No need to inform players about closed connection when
         // they already received the UnAccepted packet.
@@ -1375,7 +1374,7 @@ begin
     k_ESteamNetworkingConnectionState_None:
     begin
       FPeer := k_HSteamNetConnection_Invalid;
-      WriteLn('[Net] Destroying peer handle');
+      WriteLn('[NET] Destroying peer handle');
     end;
     k_ESteamNetworkingConnectionState_ClosedByPeer, k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
     begin
@@ -1397,23 +1396,11 @@ begin
 
       // the sprite may be zero if we're still in the setup phase
       if Player.SpriteNum <> 0 then
-      begin
         MainConsole.Console(Player.Name + ' could not respond', WARNING_MESSAGE_COLOR);
-        ServerPlayerDisconnect(Player.SpriteNum, KICK_NORESPONSE);
-        {$IFDEF SCRIPT}
-        ScrptDispatcher.OnLeaveGame(Player.SpriteNum, False);
-        {$ENDIF}
-        Sprite[Player.SpriteNum].Kill;
-        Sprite[Player.SpriteNum].Player := DummyPlayer;
-      end;
+
+      ServerPlayerDisconnect(Player, KICK_NORESPONSE, True);
 
       WriteLn('[NET] Connection lost: ' + IntToStr(pInfo.m_info.m_eEndReason)  + PChar(pInfo.m_info.m_szConnectionDescription));
-
-      // call destructor; this releases any additional resources managed for the connection, such
-      // as anti-cheat handles etc.
-      Players.Remove(Player);
-
-      NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, '', false);
     end;
     k_ESteamNetworkingConnectionState_Connecting:
     begin
