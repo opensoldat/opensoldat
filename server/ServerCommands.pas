@@ -373,13 +373,13 @@ end;
 
 procedure CommandLoadcon(Args: array of AnsiString; Sender: Byte);
 var
-  Name: String;
+  ConfigFilename: String;
   i: Integer;
 begin
   if Length(Args) = 1 then
-    Exit;
-
-  Name := Args[1];
+    ConfigFilename := 'server.cfg'
+  else
+    ConfigFilename := Args[1];
 
   if sv_lockedmode.Value then
   begin
@@ -413,8 +413,8 @@ begin
     end;
   end;
 
-  LoadConfig(Name);
-  MainConsole.Console('Config reloaded ' + Name, CLIENT_MESSAGE_COLOR, Sender);
+  LoadConfig(ConfigFilename);
+  MainConsole.Console('Config reloaded ' + ConfigFilename, CLIENT_MESSAGE_COLOR, Sender);
   StartServer;
 end;
 
