@@ -2361,6 +2361,7 @@ begin
         (Weapon.Num = Guns[BOW2].Num) then
     begin
       Result := CreateThing(Skeleton.Pos[16], Num, OBJECT_RAMBO_BOW, 255);
+      // FIXME: This is in an IFDEF SERVER block so its never true... What does `GameThingTarget` do exactly?
       {$IFNDEF SERVER}
       GameThingTarget := Result;
       {$ENDIF}
