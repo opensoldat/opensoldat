@@ -103,7 +103,7 @@ end;
 
 function FixTeam(Team: Byte): Byte;
 begin
-  Result := TEAM_SPECTATOR;
+  Result := Team;
 
   case sv_gamemode.Value of
     GAMESTYLE_DEATHMATCH, GAMESTYLE_POINTMATCH, GAMESTYLE_RAMBO:
