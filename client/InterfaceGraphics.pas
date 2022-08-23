@@ -1790,8 +1790,8 @@ begin
     x := Max(0, Min(Width - w, x - w / 2));
     y := Max(0, Min(Height - h, y - Integer(not OnlyOffscreen) * h / 2));
 
-    dx := Abs(Sprite[MySprite].Skeleton.Pos[7].x - Sprite[i].Skeleton.Pos[7].x);
-    dy := Abs(Sprite[MySprite].Skeleton.Pos[7].y - Sprite[i].Skeleton.Pos[7].y);
+    dx := Max(Abs(Sprite[MySprite].Skeleton.Pos[7].x - Sprite[i].Skeleton.Pos[7].x), 1);
+    dy := Max(Abs(Sprite[MySprite].Skeleton.Pos[7].y - Sprite[i].Skeleton.Pos[7].y), 1);
 
     Alpha := Min(255, 50 + Round(100000 / (dx + dy / 2)));
 
