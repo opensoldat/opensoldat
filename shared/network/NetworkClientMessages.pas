@@ -10,7 +10,7 @@ uses
   // helper units
   Vector, Util,
 
-  // opensoldat units
+  // OpenSoldat units
   Steam, Net, Sprites, Constants, GameStrings;
 
 procedure ClientSendStringMessage(Text: WideString; MsgType: Byte);

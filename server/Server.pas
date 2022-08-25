@@ -38,7 +38,7 @@ uses
 
   FileServer, LobbyClient,
 
-  // opensoldat units
+  // OpenSoldat units
   Steam, Net, NetworkUtils,
   NetworkServerSprite, NetworkServerConnection, NetworkServerGame,
   ServerCommands, PhysFS, Console, ServerHelper,
@@ -700,7 +700,7 @@ begin
   begin
     SteamAPI.Utils.SetWarningMessageHook(@SteamWarning);
 
-    // TODO: opensoldat on steam
+    // TODO: OpenSoldat on steam
     SteamAPI.GameServer.SetModDir(PChar('Soldat'));
     SteamAPI.GameServer.SetProduct(PChar('Soldat'));
     SteamAPI.GameServer.SetGameDescription(PChar('Soldat'));
@@ -1189,7 +1189,7 @@ begin
     ScrptDispatcher.Launch();
   {$ENDIF}
 
-  // Now that event handlers have been assigned, run `OnAftermapChange` from
+  // Now that event handlers have been assigned, run `OnAfterMapChange` from
   // loading the initial map, and spawn stuff.
   {$IFDEF SCRIPT}
   ScrptDispatcher.OnAfterMapChange(Map.Name);

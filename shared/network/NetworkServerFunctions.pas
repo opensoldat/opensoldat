@@ -9,7 +9,7 @@ uses
   // helper units
   Vector, Util,
 
-  // opensoldat units
+  // OpenSoldat units
   Steam, Net, Sprites, Weapons, Constants;
 
 procedure SetWeaponActive(ID, WeaponNum: Byte; State: Boolean);

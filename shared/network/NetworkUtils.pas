@@ -11,7 +11,7 @@ uses
   // helper units
   Version, StrUtils,
 
-  // opensoldat units
+  // OpenSoldat units
   {$IFNDEF SERVER}
   Sound,
   {$ENDIF}

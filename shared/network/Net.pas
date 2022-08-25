@@ -27,7 +27,7 @@ uses
 
   Steam,
 
-  // opensoldat units
+  // OpenSoldat units
   Weapons, Constants;
 
 const

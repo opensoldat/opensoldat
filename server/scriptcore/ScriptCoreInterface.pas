@@ -24,7 +24,7 @@ uses
   Vector,
   // pascal script
   uPSComponent, uPSRuntime,
-  // opensoldat
+  // OpenSoldat
   PascalCore;
 
 // Scriptcore functions
