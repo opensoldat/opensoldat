@@ -11,7 +11,7 @@ uses
 
   {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
 
-  // opensoldat units
+  // OpenSoldat units
   PolyMap, {$IFDEF SERVER}Steam,{$ENDIF} Net, Sprites, Weapons, Constants;
 
   {$IFDEF SERVER}

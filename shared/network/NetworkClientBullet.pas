@@ -9,7 +9,7 @@ uses
   // helper units
   Vector,
 
-  // opensoldat units
+  // OpenSoldat units
   Steam, Net, Sprites, Weapons, Constants, NetworkServerBullet, Demo;
 
 procedure ClientSendBullet(i: Byte);

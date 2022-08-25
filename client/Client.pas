@@ -40,7 +40,7 @@ uses
   // anti-cheat units
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
-  // opensoldat units
+  // OpenSoldat units
   Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
   NetworkClientConnection, GameMenus, Demo, Console,
   Weapons, Constants, Game, GameRendering;

@@ -12,7 +12,7 @@ uses
   // Sound unit
   Sound,
 
-  // opensoldat units
+  // OpenSoldat units
   LogFile, Steam, Net, Sprites, Weapons, Constants;
 
 procedure ClientHandleVoteOn(NetMessage: PSteamNetworkingMessage_t);

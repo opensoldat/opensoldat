@@ -12,7 +12,7 @@ uses
   // anti-cheat units
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
-  // opensoldat units
+  // OpenSoldat units
   LogFile, Steam, Net, Sprites, Weapons, Constants, GameStrings,
   Cvar, PhysFS;
 

@@ -29,7 +29,7 @@ var
   CtrlCHit: Boolean = False;
 
 {$IFDEF MSWINDOWS}
-// The windows server needs a hook to make opensoldatserver exit normally
+// The windows server needs a hook to make OpenSoldatServer exit normally
 function ConsoleHandlerRoutine(CtrlType: DWORD): BOOL; stdcall;
 begin
   Result := False;
@@ -187,7 +187,7 @@ procedure RunServer;
 begin
   if IsRoot then
   begin
-    WriteLn('You are running opensoldatserver as root! Don''t do that! ' +
+    WriteLn('You are running OpenSoldatServer as root! Don''t do that! ' +
       'There are not many valid' + #10 +
       'reasons for this and it can, in theory, cause great damage!');
     Exit;
@@ -197,7 +197,7 @@ begin
       Exit;
 
     WriteLn('You have been warned.' + #10 +
-      'Hit CTRL+C now if you don''t want to run opensoldatserver as root.' + #10 +
+      'Hit CTRL+C now if you don''t want to run OpenSoldatServer as root.' + #10 +
       'OpenSoldatServer will start in 30 seconds.');
     Sleep(30000);}
   end;

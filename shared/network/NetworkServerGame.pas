@@ -10,7 +10,7 @@ uses
   ScriptDispatcher,
   {$ENDIF}
 
-  // opensoldat units
+  // OpenSoldat units
   Steam, Net, Sprites, Constants;
 
 procedure ServerHandlePlayerDisconnect(NetMessage: PSteamNetworkingMessage_t);

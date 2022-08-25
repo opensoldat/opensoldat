@@ -13,7 +13,7 @@ uses
   ScriptDispatcher,
   {$ENDIF}
 
-  // opensoldat units
+  // OpenSoldat units
   Net, Steam, Sprites, Command, Constants;
 
   procedure ServerSendStringMessage(Text: WideString; ToNum: Byte; From: Byte; MsgType: Byte);
