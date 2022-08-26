@@ -48,7 +48,7 @@ uses
 procedure ActivateServer;
 function AddBotPlayer(Name: string; team: Integer): Byte;
 procedure StartServer;
-function LoadMapsList(filename: string = ''): Boolean;
+function LoadMapsList(Filename: string = ''): Boolean;
 procedure LoadWeapons(filename: string);
 procedure ShutDown;
 procedure NextMap;
@@ -879,21 +879,23 @@ begin
   CvarCleanup();
 end;
 
-function LoadMapsList(Filename: string = ''): Boolean;
+function LoadMapsList(Filename: String = ''): Boolean;
 var
   i: Integer;
   MapsListPath: String;
 begin
-  if Filename.IsEmpty then
+  if Filename.IsEmpty() then
     Filename := sv_maplist.Value;
   if not Filename.EndsWith('.txt') then
     Filename := Filename + '.txt';
+
   MapsListPath := UserDirectory + 'configs/' + Filename;
 
   if FileExists(MapsListPath) then
   begin
     Result := True;
     MapsList.LoadFromFile(MapsListPath);
+
     i := 1;
     while i < MapsList.Count do
     begin
@@ -904,8 +906,10 @@ begin
       end;
       Inc(i);
     end;
-    sv_maplist.SetValue(Filename);
-  end else
+
+    MainConsole.Console('Loaded maps list: ' + Filename, CLIENT_MESSAGE_COLOR)
+  end
+  else
   begin
     Result := False;
     MainConsole.Console('Maps list file not found: configs/' + Filename, WARNING_MESSAGE_COLOR);

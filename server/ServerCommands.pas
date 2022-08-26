@@ -423,13 +423,9 @@ var
   Name: String;
 begin
   if Length(Args) > 1 then
-    Name := Args[1]
+    sv_maplist.SetValue(Args[1])
   else
-    Name := sv_maplist.Value; // We only set it for better feedback in console.
-  if LoadMapsList(Name) then
-    MainConsole.Console('Loaded maps list: ' + Name, CLIENT_MESSAGE_COLOR, Sender)
-  else
-    MainConsole.Console('Could not find maps list: ' + Name, DEBUG_MESSAGE_COLOR, Sender);
+    sv_maplist.SetValue(sv_maplist.Value);
 end;
 
 procedure CommandPm(Args: array of AnsiString; Sender: Byte);
