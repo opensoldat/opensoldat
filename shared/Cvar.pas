@@ -194,6 +194,22 @@ begin
   Cvar.FErrorMessage := '';
   Result := True;
 end;
+
+function sv_maplistChange(Cvar: TCvarBase; NewValue: String): Boolean;
+begin
+  Result := False;
+
+  if MapsList = Nil then
+  begin
+    Result := True;
+    Exit;
+  end;
+
+  if LoadMapsList(NewValue) then
+    Result := True
+  else
+    Cvar.FErrorMessage := 'Maps list file not found';
+end;
 {$ENDIF}
 
 {$PUSH}
@@ -878,7 +894,7 @@ begin
   sv_votepercent := TIntegerCvar.Add('sv_votepercent', 'Percentage of players in favor of a map/kick vote to let it pass', 60, [CVAR_SERVER], nil, 0, 200);
   sv_lockedmode := TBooleanCvar.Add('sv_lockedmode', 'When Locked Mode is enabled, admins will not be able to type /loadcon, /password or /maxplayers', False, [CVAR_SERVER], nil);
   sv_pidfilename := TStringCvar.Add('sv_pidfilename', 'Sets the Process ID file name', 'opensoldatserver.pid', [CVAR_SERVER], nil, 1, 256);
-  sv_maplist := TStringCvar.Add('sv_maplist', 'Sets the name of maplist file', 'mapslist.txt', [CVAR_SERVER], nil, 1, 256); // TODO: OnChange load new maplist
+  sv_maplist := TStringCvar.Add('sv_maplist', 'Sets the name of maplist file', 'mapslist.txt', [CVAR_SERVER], @sv_maplistChange, 1, 256);
   sv_lobby := TBooleanCvar.Add('sv_lobby', 'Enables/Disables registering in lobby', False, [CVAR_SERVER], nil);
   sv_lobbyurl := TStringCvar.Add('sv_lobbyurl', 'URL of the lobby server', 'http://api.soldat.pl:443', [CVAR_SERVER], nil, 1, 256);
 

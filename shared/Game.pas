@@ -524,7 +524,6 @@ begin
   a := Default(TVector2);
   try
     Debug('ChangeMap');
-    LoadMapsList();
 
     for i := 1 to MAX_WAYPOINTS do
     begin
