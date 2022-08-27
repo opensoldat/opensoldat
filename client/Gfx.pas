@@ -418,6 +418,7 @@ type
 
 var
   GfxContext: record
+    GameGLContext: TSDL_GLContext;
     MajorVersion: Integer;
     ShaderProgram: GLuint;
     MatrixLoc: GLint;
@@ -667,11 +668,11 @@ var
 begin
   Result := True;
 
-  GameGLContext := SDL_GL_CreateContext(Wnd);
+  GfxContext.GameGLContext := SDL_GL_CreateContext(Wnd);
   InitOpenGL();
   ReadImplementationProperties();
   ReadExtensions();
-  SDL_GL_MakeCurrent(GameWindow, GameGLContext);
+  SDL_GL_MakeCurrent(GameWindow, GfxContext.GameGLContext);
   Version := glGetString(GL_VERSION);
   i := Pos('.', Version);
   //FIXME: Not compatible with opengl ES
