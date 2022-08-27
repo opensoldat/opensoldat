@@ -43,7 +43,6 @@ var
   KeyStatus: array [0..512] of Boolean;
   Binds: array of TBind;
   GameWindow : PSDL_Window;
-  GameGLContext: TSDL_GLContext;
 
 implementation
 
