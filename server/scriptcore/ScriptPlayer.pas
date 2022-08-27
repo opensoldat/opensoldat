@@ -469,6 +469,8 @@ end;
 
 procedure TScriptPlayer.SetFavouriteWeapon(Weapon: string);
 begin
+  if WeaponNameToNum(Weapon) = -1 then
+    Weapon := 'Hands';
   Self.FSpritePtr^.Brain.FavWeapon := WeaponNameToNum(Weapon);
 end;
 
