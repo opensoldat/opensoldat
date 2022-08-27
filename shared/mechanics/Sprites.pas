@@ -1483,6 +1483,10 @@ begin
   end;
   {$ENDIF}
 
+  if IsPlayerObjectOwner then
+    FreeAndNil(Player);
+  IsPlayerObjectOwner := False;
+
   // sort the players frag list
   SortPlayers;
 end;
