@@ -419,8 +419,6 @@ begin
 end;
 
 procedure CommandLoadlist(Args: array of AnsiString; Sender: Byte);
-var
-  Name: String;
 begin
   if Length(Args) > 1 then
     sv_maplist.SetValue(Args[1])
