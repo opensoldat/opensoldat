@@ -919,8 +919,8 @@ var
   i: Integer;
   PlayerType: AnsiString;
 begin
-  MainConsole.Console('[ TYPE] Player name (K/D) [Team]', SERVER_MESSAGE_COLOR, Sender);
-  MainConsole.Console('--------------------------------', SERVER_MESSAGE_COLOR, Sender);
+  MainConsole.Console('[ TYPE] Player name              (K/D) [Team]', SERVER_MESSAGE_COLOR, Sender);
+  MainConsole.Console('---------------------------------------------', SERVER_MESSAGE_COLOR, Sender);
   for i := 1 to MAX_PLAYERS do
     if SortedPlayers[i].PlayerNum > 0 then
     begin
@@ -931,7 +931,7 @@ begin
           PlayerType := 'HUMAN'
       else
         PlayerType := ' BOT ';
-      MainConsole.Console(Format('[%5s] %s (%d/%d) [%d]', [
+      MainConsole.Console(Format('[%-5s] %-24s (%d/%d) [%d]', [
                                                             PlayerType,
                                                             Sprite[SortedPlayers[i].PlayerNum].Player.Name,
                                                             Sprite[SortedPlayers[i].PlayerNum].Player.Kills,
