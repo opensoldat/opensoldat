@@ -81,7 +81,7 @@ end;
 
 procedure TScriptMapsList.SetCurrentMapId(NewNum: Integer);
 begin
-  if NewNum < MapsList.Count then
+  if (NewNum >= 0) and (NewNum < MapsList.Count) then
     MapIndex := NewNum;
 end;
 
