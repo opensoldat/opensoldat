@@ -14,6 +14,7 @@ type
     FThreadAlive: Boolean;
     procedure HandleTerminate(Sender: TObject);
   protected
+    procedure HandleCommand(Message: String);
     procedure HandleMessage(Message: String); virtual; abstract;
   public
     procedure Connect(Port: Integer);
@@ -24,7 +25,7 @@ type
 implementation
 
 uses
-  TraceLog;
+  Command, TraceLog;
 
 procedure TLauncherIPC.Connect(Port: Integer);
 begin
@@ -35,6 +36,11 @@ begin
   FConnectionThread.FreeOnTerminate := True;
   FConnectionThread.Start;
   FThreadAlive := True;
+end;
+
+procedure TLauncherIPC.HandleCommand(Message: String);
+begin
+  ParseInput(Message, 255);
 end;
 
 procedure TLauncherIPC.HandleTerminate(Sender: TObject);
