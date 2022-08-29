@@ -28,6 +28,7 @@ uses
 
 procedure TLauncherIPC.Connect(Port: Integer);
 begin
+  Debug('[LauncherIPC] Connecting to launcher...');
   FConnectionThread := TLauncherConnection.Create(Port);
   FConnectionThread.OnMessage := HandleMessage;
   FConnectionThread.OnTerminate := HandleTerminate;

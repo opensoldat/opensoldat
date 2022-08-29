@@ -378,6 +378,10 @@ begin
       ForceClientSpriteSnapshotMov := False;
     end;  // playing
 
+    // Launcher connection
+    if not LauncherIPC.ThreadAlive and (MainTickCounter mod 300 = 0) then
+      LauncherIPC.Connect(23093);
+
     //UDP.FlushMsg;
   end;  // Client
 
