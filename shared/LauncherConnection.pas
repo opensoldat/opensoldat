@@ -61,6 +61,9 @@ begin
     if ReadLength > 0 then begin
       FReceivedMessage := ReadBuffer;
       Synchronize(HandleMessage);
+    end else if ReadLength = 0 then begin
+      Debug('[LauncherConnection] Launcher closed the connection');
+      Terminate;
     end;
 
     ProcessSendQueue;
