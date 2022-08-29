@@ -15,7 +15,7 @@ implementation
 
 procedure TClientLauncherIPC.HandleMessage(Message: String);
 begin
-
+  HandleCommand(Message);
 end;
 
 end.
