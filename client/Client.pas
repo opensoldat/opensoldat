@@ -43,7 +43,7 @@ uses
   // OpenSoldat units
   Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
   NetworkClientConnection, GameMenus, Demo, Console,
-  Weapons, Constants, Game, GameRendering;
+  Weapons, Constants, Game, GameRendering, ClientLauncherIPC;
 
 procedure JoinServer;
 procedure StartGame;
@@ -243,6 +243,7 @@ var
 
   // Network
   UDP: TClientNetwork;
+  LauncherIPC: TClientLauncherIPC;
 
   // Consoles
   MainConsole: TConsole;
@@ -670,6 +671,9 @@ begin
 
   // NOTE: Code depending on CVars should be run after this line if possible.
   CvarsInitialized := True;
+
+  LauncherIPC := TClientLauncherIPC.Create;
+  LauncherIPC.Connect(23093);
 
   NewLogFiles;
 
