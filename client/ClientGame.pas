@@ -379,8 +379,9 @@ begin
     end;  // playing
 
     // Launcher connection
-    if not LauncherIPC.ThreadAlive and (MainTickCounter mod 300 = 0) then
-      LauncherIPC.Connect(23093);
+    if launcher_ipc_enable.Value then
+      if not LauncherIPC.ThreadAlive and (MainTickCounter mod launcher_ipc_reconnect_rate.Value = 0) then
+        LauncherIPC.Connect(launcher_ipc_port.Value);
 
     //UDP.FlushMsg;
   end;  // Client

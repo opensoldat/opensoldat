@@ -190,6 +190,10 @@ var
   font_weaponmenusize: TIntegerCvar;
   font_killconsolenamespace: TIntegerCvar;
 
+  launcher_ipc_enable: TBooleanCvar;
+  launcher_ipc_port: TIntegerCvar;
+  launcher_ipc_reconnect_rate: TIntegerCvar;
+
   sv_respawntime: TIntegerCvar; // TODO: Remove
   sv_inf_redaward: TIntegerCvar; // TODO: Remove
   net_contype: TIntegerCvar; // TODO: Remove
@@ -672,8 +676,10 @@ begin
   // NOTE: Code depending on CVars should be run after this line if possible.
   CvarsInitialized := True;
 
-  LauncherIPC := TClientLauncherIPC.Create;
-  LauncherIPC.Connect(23093);
+  if launcher_ipc_enable.Value then begin
+    LauncherIPC := TClientLauncherIPC.Create;
+    LauncherIPC.Connect(launcher_ipc_port.Value);
+  end;
 
   NewLogFiles;
 
