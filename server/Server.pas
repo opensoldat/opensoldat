@@ -196,6 +196,10 @@ var
   fileserver_ip: TStringCvar;
   fileserver_maxconnections: TIntegerCvar;
 
+  launcher_ipc_enable: TBooleanCvar;
+  launcher_ipc_port: TIntegerCvar;
+  launcher_ipc_reconnect_rate: TIntegerCvar;
+
   // syncable cvars
   sv_gamemode: TIntegerCvar;
   sv_friendlyfire: TBooleanCvar;

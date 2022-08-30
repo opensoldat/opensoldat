@@ -742,6 +742,11 @@ begin
 
   demo_autorecord := TBooleanCvar.Add('demo_autorecord', 'Auto record demos', False, [], nil);
 
+  // Launcher cvars
+  launcher_ipc_enable := TBooleanCvar.Add('launcher_ipc_enable', 'Enables inter-process communication with launcher', False, [CVAR_INITONLY], nil);
+  launcher_ipc_port := TIntegerCvar.Add('launcher_ipc_port', 'Port of TCP server used for inter-process communication with launcher', 23093, [CVAR_INITONLY], nil, 0, 65535);
+  launcher_ipc_reconnect_rate := TIntegerCvar.Add('launcher_ipc_reconnect_rate', 'How often (in ticks) the game tries to reconnect to launcher', 300, [], nil, 60, 54000);
+
   {$IFNDEF SERVER}
   // Render Cvars
   r_fullscreen := TIntegerCvar.Add('r_fullscreen', 'Set mode of fullscreen', 0, [CVAR_CLIENT], nil, 0, 2);
