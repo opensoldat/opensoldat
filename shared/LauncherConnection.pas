@@ -32,10 +32,21 @@ type
 implementation
 
 uses
-  TraceLog;
+  TraceLog, SysUtils,
+  // These 2 give us a convenient way to access socket/system error codes
+  Sockets, {$IFDEF UNIX}BaseUnix{$ENDIF};
 
 const
   MAX_MESSAGE_LENGTH = 4096;
+
+function IsRealSocketError(ErrCode: Integer): Boolean;
+begin
+  {$IFDEF UNIX}
+  Result := (ErrCode <> ESockEINTR) and (ErrCode <> ESysEAGAIN);
+  {$ELSE}
+  Result := ErrCode <> ESockEINTR;
+  {$ENDIF}
+end;
 
 constructor TLauncherConnection.Create(Port: Integer);
 begin
@@ -52,7 +63,14 @@ var
   ReadBuffer: TBuffer;
   ReadLength: LongInt;
 begin
-  FSocket := TInetSocket.Create('127.0.0.1', FPort, 5000);
+  try
+    FSocket := TInetSocket.Create('127.0.0.1', FPort, 5000);
+  except
+    on SocketError: ESocketError do begin
+      Debug('[LauncherConnection] ' + SocketError.Message);
+      Exit;
+    end;
+  end;
   FSocket.IOTimeout := 1000;
   ReadBuffer := Default(TBuffer);
 
@@ -63,7 +81,13 @@ begin
       Synchronize(HandleMessage);
     end else if ReadLength = 0 then begin
       Debug('[LauncherConnection] Launcher closed the connection');
-      Terminate;
+      Exit;
+    end else begin
+      if IsRealSocketError(FSocket.LastError) then begin
+        Debug('[LauncherConnection] Failed to read from socket. Error code: ' +
+          IntToStr(FSocket.LastError));
+        Exit;
+      end;
     end;
 
     ProcessSendQueue;
@@ -89,7 +113,9 @@ begin
   end;
 
   Message := Queue.First;
-  FSocket.Write(Message[1], Length(Message));
+  if FSocket.Write(Message[1], Length(Message)) < 0 then
+    Debug('[LauncherConnection] Failed to write to socket. Error code: ' +
+      IntToStr(FSocket.LastError));
   Queue.Remove(Message);
   FSendQueue.UnlockList;
 end;
