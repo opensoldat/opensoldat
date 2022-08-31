@@ -22,6 +22,7 @@ type
     procedure ProcessSendQueue;
   public
     constructor Create(Port: Integer);
+    destructor Destroy; override;
     procedure Execute; override;
 
     // This callback will be run in main thread through Synchronize.
@@ -129,6 +130,14 @@ begin
   Queue := FSendQueue.LockList;
   Queue.Add(Message);
   FSendQueue.UnlockList;
+end;
+
+destructor TLauncherConnection.Destroy;
+begin
+  if Assigned(FSocket) then
+    FSocket.Free;
+  FSendQueue.Free;
+  inherited Destroy;
 end;
 
 end.
