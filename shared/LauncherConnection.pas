@@ -35,7 +35,7 @@ implementation
 uses
   TraceLog, SysUtils,
   // These 2 give us a convenient way to access socket/system error codes
-  Sockets, {$IFDEF UNIX}BaseUnix{$ENDIF};
+  {$IFDEF UNIX}BaseUnix,{$ENDIF} Sockets;
 
 const
   MAX_MESSAGE_LENGTH = 4096;
