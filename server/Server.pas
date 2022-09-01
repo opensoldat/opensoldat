@@ -36,7 +36,7 @@ uses
   Rcon,
   {$ENDIF}
 
-  FileServer, LobbyClient,
+  FileServer, LobbyClient, ServerLauncherIPC,
 
   // OpenSoldat units
   Steam, Net, NetworkUtils,
@@ -291,6 +291,8 @@ var
   ModDir: string = '';
 
   UDP: TServerNetwork;
+
+  LauncherIPC: TServerLauncherIPC;
 
   LobbyThread: TLobbyThread;
 
@@ -656,6 +658,11 @@ begin
 
   // NOTE: Code depending on CVars should be run after this line if possible.
   CvarsInitialized := True;
+
+  if launcher_ipc_enable.Value then begin
+    LauncherIPC := TServerLauncherIPC.Create;
+    LauncherIPC.Connect(launcher_ipc_port.Value);
+  end;
 
   ModDir := '';
 

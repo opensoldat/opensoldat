@@ -41,6 +41,9 @@ begin
     AdminServer.ProcessCommands();
   {$ENDIF}
 
+  // Run methods Synchronized from threads
+  CheckSynchronize;
+
   // Run every 60 seconds
   if (GetTickCount64 - LastMinuteTick) >= 60000 then
   begin
@@ -287,6 +290,11 @@ begin
             ServerThingSnapshot(j);
         end;
       end;
+
+    // Launcher connection
+    if launcher_ipc_enable.Value then
+      if not LauncherIPC.ThreadAlive and (MainTickCounter mod launcher_ipc_reconnect_rate.Value = 0) then
+         LauncherIPC.Connect(launcher_ipc_port.Value);
 
       //UDP.FlushMsg;
   end;
