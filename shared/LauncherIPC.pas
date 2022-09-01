@@ -29,7 +29,7 @@ uses
 
 procedure TLauncherIPC.Connect(Port: Integer);
 begin
-  Debug('[LauncherIPC] Connecting to launcher...');
+  Debug('[LauncherIPC] Starting launcher connection thread');
   FConnectionThread := TLauncherConnection.Create(Port);
   FConnectionThread.OnMessage := HandleMessage;
   FConnectionThread.OnTerminate := HandleTerminate;
@@ -45,7 +45,7 @@ end;
 
 procedure TLauncherIPC.HandleTerminate(Sender: TObject);
 begin
-  Debug('[LauncherIPC] Connection terminated');
+  Debug('[LauncherIPC] Thread terminated');
   FThreadAlive := False;
 end;
 
