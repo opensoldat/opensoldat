@@ -72,6 +72,7 @@ begin
       Exit;
     end;
   end;
+  Debug('[LauncherConnection] Connected');
   FSocket.IOTimeout := 1000;
   ReadBuffer := Default(TBuffer);
 
