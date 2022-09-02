@@ -847,6 +847,9 @@ begin
 
   StopFileServer;
 
+  if launcher_ipc_enable.Value then
+    FreeAndNil(LauncherIPC);
+
   FreeAndNil(MapsList);
   FreeAndNil(RemoteIPs);
   FreeAndNil(AdminIPs);

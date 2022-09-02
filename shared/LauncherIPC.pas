@@ -18,6 +18,7 @@ type
     procedure HandleMessage(Message: String); virtual; abstract;
   public
     procedure Connect(Port: Integer);
+    destructor Destroy; override;
     procedure SendMessage(Message: String);
     property ThreadAlive: Boolean read FThreadAlive;
   end;
@@ -53,6 +54,17 @@ procedure TLauncherIPC.SendMessage(Message: String);
 begin
   if FThreadAlive then
     FConnectionThread.SendMessage(Message);
+end;
+
+destructor TLauncherIPC.Destroy;
+begin
+  if FThreadAlive then begin
+    Debug('[LauncherIPC] Killing thread...');
+    FConnectionThread.Terminate;
+    FConnectionThread.WaitFor;
+  end;
+
+  inherited;
 end;
 
 end.

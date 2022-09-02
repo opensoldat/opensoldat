@@ -983,6 +983,11 @@ begin
 
   PhysFS_deinit();
 
+  if launcher_ipc_enable.Value then begin
+    AddLineToLogFile(GameLog, 'Launcher connection closing.', ConsoleLogFileName);
+    FreeAndNil(LauncherIPC);
+  end;
+
   {$IFDEF STEAM}
   AddLineToLogFile(GameLog, 'Steam API closing.', ConsoleLogFileName);
   SteamAPI_Shutdown();
