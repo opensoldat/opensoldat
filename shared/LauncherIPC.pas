@@ -30,11 +30,13 @@ uses
 
 procedure TLauncherIPC.Connect(Port: Integer);
 begin
+  FConnectionThread.Free;
+
   Debug('[LauncherIPC] Starting launcher connection thread');
   FConnectionThread := TLauncherConnection.Create(Port);
   FConnectionThread.OnMessage := HandleMessage;
   FConnectionThread.OnTerminate := HandleTerminate;
-  FConnectionThread.FreeOnTerminate := True;
+  FConnectionThread.FreeOnTerminate := False;
   FConnectionThread.Start;
   FThreadAlive := True;
 end;
@@ -64,6 +66,7 @@ begin
     FConnectionThread.WaitFor;
   end;
 
+  FConnectionThread.Free;
   inherited;
 end;
 
