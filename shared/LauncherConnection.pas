@@ -2,6 +2,8 @@ unit LauncherConnection;
 
 interface
 
+{$WARN 5071 OFF : Private type "$1.$2" never used}
+
 uses
   Classes, Generics.Collections, ssockets;
 

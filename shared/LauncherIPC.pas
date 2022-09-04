@@ -46,11 +46,14 @@ begin
   ParseInput(Message, 255);
 end;
 
+{$PUSH}
+{$WARN 5024 OFF : Parameter "$1" not used}
 procedure TLauncherIPC.HandleTerminate(Sender: TObject);
 begin
   Debug('[LauncherIPC] Thread terminated');
   FThreadAlive := False;
 end;
+{$POP}
 
 procedure TLauncherIPC.SendMessage(Message: String);
 begin
