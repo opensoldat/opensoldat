@@ -1141,6 +1141,7 @@ end;
 procedure TClientNetwork.HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
 var
   PacketHeader: PMsgHeader;
+  ShouldRelease: Boolean;
 begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
     Exit; // truncated packet
@@ -1149,6 +1150,8 @@ begin
 
   if DemoRecorder.Active then
     DemoRecorder.SaveRecord(IncomingMsg^.m_pData^, IncomingMsg^.m_cbSize);
+
+  ShouldRelease := not DemoPlayer.Active;
 
   case PacketHeader.ID of
     MsgID_PlayersList:
@@ -1278,7 +1281,7 @@ begin
     {$ENDIF}
   end;
 
-  if not DemoPlayer.Active then
+  if ShouldRelease then
     IncomingMsg.Release();
 end;
 
