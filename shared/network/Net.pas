@@ -179,7 +179,9 @@ type
       FActive: Boolean;
       FAddress: SteamNetworkingIPAddr;
 
+      {$IFNDEF SERVER}
       FPeer: HSteamNetConnection;
+      {$ENDIF}
       FHost: HSteamListenSocket;
       {$IFDEF SERVER}
       FPollGroup: HSteamNetPollGroup;
@@ -192,7 +194,6 @@ type
       destructor Destroy(); override;
 
       function Disconnect(Now: Boolean): Boolean;
-      procedure FlushMsg();
       procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); virtual; abstract;
 
       function GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
@@ -210,7 +211,9 @@ type
       procedure SetDebugLevel(Level: ESteamNetworkingSocketsDebugOutputType);
 
       property Host: HSteamListenSocket read FHost;
+      {$IFNDEF SERVER}
       property Peer: HSteamNetConnection read FPeer;
+      {$ENDIF}
       property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
       property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
 
@@ -239,6 +242,7 @@ type
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
     function SendData(var Data; Size: Integer; Flags: Integer): Boolean;
+    procedure FlushMsg();
   end;
   {$ENDIF}
 
@@ -944,7 +948,7 @@ begin
   begin
     for DstPlayer in Players do
     begin
-      if FPeer <> 0 then
+      if DstPlayer.Peer <> 0 then
         NetworkingSockets.CloseConnection(DstPlayer.Peer, 0, '', not Now)
     end;
   Result := True;
@@ -952,12 +956,6 @@ begin
   {$ELSE}
   NetworkingSockets.CloseConnection(FPeer, 0, '', not Now)
   {$ENDIF}
-end;
-
-procedure TNetwork.FlushMsg();
-begin
-  if FPeer <> k_HSteamNetConnection_Invalid then
-    NetworkingSockets.FlushMessagesOnConnection(FPeer);
 end;
 
 function TNetwork.GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
@@ -1299,6 +1297,11 @@ begin
   Result := True;
 end;
 
+procedure TClientNetwork.FlushMsg();
+begin
+  if FPeer <> k_HSteamNetConnection_Invalid then
+    NetworkingSockets.FlushMessagesOnConnection(FPeer);
+end;
 {$ELSE}
 constructor TServerNetwork.Create(Host: String; Port: Word);
 var
@@ -1376,7 +1379,7 @@ begin
   case pInfo.m_info.m_eState of
     k_ESteamNetworkingConnectionState_None:
     begin
-      FPeer := k_HSteamNetConnection_Invalid;
+      //FPeer := k_HSteamNetConnection_Invalid;
       WriteLn('[NET] Destroying peer handle');
     end;
     k_ESteamNetworkingConnectionState_ClosedByPeer, k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
