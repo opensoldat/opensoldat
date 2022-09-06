@@ -174,43 +174,43 @@ const
 
 type
   TNetwork = class
-    private
-      FInit: Boolean;
-      FActive: Boolean;
-      FAddress: SteamNetworkingIPAddr;
+  private
+    FInit: Boolean;
+    FActive: Boolean;
+    FAddress: SteamNetworkingIPAddr;
 
-      {$IFDEF SERVER}
-      FPollGroup: HSteamNetPollGroup;
-      {$ENDIF}
-      NetworkingSockets: PISteamNetworkingSockets;
-      NetworkingUtils: PISteamNetworkingUtils;
-    public
-      property Active: Boolean read FActive write FActive;
-      constructor Create();
-      destructor Destroy(); override;
+    {$IFDEF SERVER}
+    FPollGroup: HSteamNetPollGroup;
+    {$ENDIF}
+    NetworkingSockets: PISteamNetworkingSockets;
+    NetworkingUtils: PISteamNetworkingUtils;
+  public
+    property Active: Boolean read FActive write FActive;
+    constructor Create();
+    destructor Destroy(); override;
 
-      function Disconnect(Now: Boolean): Boolean; virtual; abstract;
-      procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); virtual; abstract;
+    function Disconnect(Now: Boolean): Boolean; virtual; abstract;
+    procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); virtual; abstract;
 
-      function GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
-      function GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
-      procedure SetConnectionName(hConn: HSteamNetConnection; Name: AnsiString);
-      function GetStringAddress(pAddress: PSteamNetworkingIPAddr; Port: Boolean): AnsiString;
+    function GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
+    function GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
+    procedure SetConnectionName(hConn: HSteamNetConnection; Name: AnsiString);
+    function GetStringAddress(pAddress: PSteamNetworkingIPAddr; Port: Boolean): AnsiString;
 
-      function SetGlobalConfigValueInt32(eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-      function SetGlobalConfigValueFloat(eValue: ESteamNetworkingConfigValue; val: Single): Boolean;
-      function SetGlobalConfigValueString(eValue: ESteamNetworkingConfigValue; val: PChar): Boolean;
-      function SetConnectionConfigValueInt32(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-      function SetConnectionConfigValueFloat(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-      function SetConnectionConfigValueString(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function SetGlobalConfigValueInt32(eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function SetGlobalConfigValueFloat(eValue: ESteamNetworkingConfigValue; val: Single): Boolean;
+    function SetGlobalConfigValueString(eValue: ESteamNetworkingConfigValue; val: PChar): Boolean;
+    function SetConnectionConfigValueInt32(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function SetConnectionConfigValueFloat(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function SetConnectionConfigValueString(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
 
-      procedure SetDebugLevel(Level: ESteamNetworkingSocketsDebugOutputType);
+    procedure SetDebugLevel(Level: ESteamNetworkingSocketsDebugOutputType);
 
-      property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
-      property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
+    property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
+    property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
 
-      property Port: Word read FAddress.m_port write FAddress.m_port;
-      property Address: SteamNetworkingIPAddr read FAddress;
+    property Port: Word read FAddress.m_port write FAddress.m_port;
+    property Address: SteamNetworkingIPAddr read FAddress;
   end;
 
   {$IFDEF SERVER}
