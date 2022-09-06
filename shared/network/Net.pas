@@ -179,7 +179,6 @@ type
       FActive: Boolean;
       FAddress: SteamNetworkingIPAddr;
 
-      FHost: HSteamListenSocket;
       {$IFDEF SERVER}
       FPollGroup: HSteamNetPollGroup;
       {$ENDIF}
@@ -207,7 +206,6 @@ type
 
       procedure SetDebugLevel(Level: ESteamNetworkingSocketsDebugOutputType);
 
-      property Host: HSteamListenSocket read FHost;
       property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
       property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
 
@@ -217,6 +215,8 @@ type
 
   {$IFDEF SERVER}
   TServerNetwork = class(TNetwork)
+  private
+    FHost: HSteamListenSocket;
   public
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); override;
     constructor Create(Host: String; Port: Word);
@@ -226,6 +226,7 @@ type
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
     function SendData(var Data; Size: Integer; peer: HSteamNetConnection; Flags: Integer): Boolean;
     procedure UpdateNetworkStats(Player: Byte);
+    property Host: HSteamListenSocket read FHost;
   end;
   {$ELSE}
   TClientNetwork = class(TNetwork)
