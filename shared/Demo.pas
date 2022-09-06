@@ -357,7 +357,7 @@ begin
       Exit;
     end;
 
-    if (FSkipTo > 0) and (MainTickCounter >= FSkipTo) then
+    if (FSkipTo >= 0) and (MainTickCounter >= FSkipTo) then
     begin
       FSkipTo := -1;
       ShouldRenderFrames := True;
