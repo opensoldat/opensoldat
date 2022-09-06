@@ -386,7 +386,7 @@ begin
   ClientPlayerReceivedCounter := CLIENTPLAYERRECIEVED_TIME;
 
   // Begin rendering so that the team menu selection is visible
-  if not (DemoPlayer.Active and (DemoPlayer.SkipTo = -1)) then
+  if not (DemoPlayer.Active and (DemoPlayer.SkipTo >= 0)) then
     ShouldRenderFrames := True;
 
   if cl_player_team.Value > 0 then
