@@ -179,9 +179,6 @@ type
       FActive: Boolean;
       FAddress: SteamNetworkingIPAddr;
 
-      {$IFNDEF SERVER}
-      FPeer: HSteamNetConnection;
-      {$ENDIF}
       FHost: HSteamListenSocket;
       {$IFDEF SERVER}
       FPollGroup: HSteamNetPollGroup;
@@ -193,7 +190,7 @@ type
       constructor Create();
       destructor Destroy(); override;
 
-      function Disconnect(Now: Boolean): Boolean;
+      function Disconnect(Now: Boolean): Boolean; virtual; abstract;
       procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); virtual; abstract;
 
       function GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
@@ -211,9 +208,6 @@ type
       procedure SetDebugLevel(Level: ESteamNetworkingSocketsDebugOutputType);
 
       property Host: HSteamListenSocket read FHost;
-      {$IFNDEF SERVER}
-      property Peer: HSteamNetConnection read FPeer;
-      {$ENDIF}
       property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
       property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
 
@@ -227,6 +221,7 @@ type
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); override;
     constructor Create(Host: String; Port: Word);
     destructor Destroy; override;
+    function Disconnect(Now: Boolean): Boolean; override;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
     function SendData(var Data; Size: Integer; peer: HSteamNetConnection; Flags: Integer): Boolean;
@@ -234,15 +229,19 @@ type
   end;
   {$ELSE}
   TClientNetwork = class(TNetwork)
+  private
+    FPeer: HSteamNetConnection;
   public
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); override;
     constructor Create();
     destructor Destroy; override;
+    function Disconnect(Now: Boolean): Boolean; override;
     function Connect(Host: String; Port: Word): Boolean;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
     function SendData(var Data; Size: Integer; Flags: Integer): Boolean;
     procedure FlushMsg();
+    property Peer: HSteamNetConnection read FPeer;
   end;
   {$ENDIF}
 
@@ -935,29 +934,6 @@ begin
   inherited Destroy();
 end;
 
-
-function TNetwork.Disconnect(Now: Boolean): Boolean;
-{$IFDEF SERVER}
-var
-  DstPlayer: TPlayer;
-{$ENDIF}
-begin
-  Result := False;
-  {$IFDEF SERVER}
-  if (FHost <> k_HSteamNetPollGroup_Invalid) then
-  begin
-    for DstPlayer in Players do
-    begin
-      if DstPlayer.Peer <> 0 then
-        NetworkingSockets.CloseConnection(DstPlayer.Peer, 0, '', not Now)
-    end;
-  Result := True;
-  end;
-  {$ELSE}
-  NetworkingSockets.CloseConnection(FPeer, 0, '', not Now)
-  {$ENDIF}
-end;
-
 function TNetwork.GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
 var
   StatsText: TStatsString;
@@ -1032,6 +1008,13 @@ destructor TClientNetwork.Destroy;
 begin
   Inherited;
   //Self.Free;
+end;
+
+function TClientNetwork.Disconnect(Now: Boolean): Boolean;
+begin
+  Result := False;
+  NetworkingSockets.CloseConnection(FPeer, 0, '', not Now);
+  Result := True;
 end;
 
 procedure TClientNetwork.ProcessLoop;
@@ -1547,6 +1530,21 @@ begin
   Players.Free;
 
   Inherited;
+end;
+
+function TServerNetwork.Disconnect(Now: Boolean): Boolean;
+var
+  DstPlayer: TPlayer;
+begin
+  Result := False;
+  if (FHost <> k_HSteamNetPollGroup_Invalid) then
+  begin
+    for DstPlayer in Players do
+      if DstPlayer.Peer <> k_HSteamNetConnection_Invalid then
+        NetworkingSockets.CloseConnection(DstPlayer.Peer, 0, '', not Now);
+
+    Result := True;
+  end;
 end;
 
 function TServerNetwork.SendData(var Data; Size: Integer; Peer: HSteamNetConnection; Flags: Integer): Boolean;
