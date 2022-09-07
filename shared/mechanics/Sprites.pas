@@ -228,14 +228,16 @@ implementation
 
 uses
   {$IFDEF SERVER}
-    {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
-    ServerHelper, LogFile,
-    NetworkServerSprite, NetworkServerMessages, NetworkServerConnection, NetworkServerGame, NetworkServerThing,
+  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
+  ServerHelper, LogFile,
+  NetworkServerSprite, NetworkServerMessages, NetworkServerConnection, NetworkServerGame, NetworkServerThing,
+  Server,
   {$ELSE}
-    Sound, Demo, GameStrings, ClientGame, GameMenus, Sparks,
-    NetworkClientSprite,
+  Sound, Demo, GameStrings, ClientGame, GameMenus, Sparks,
+  NetworkClientSprite,
+  Client,
   {$ENDIF}
-  Bullets, {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Util, SysUtils, Calc, Math, TraceLog, Game, Control, Things, Cvar;
+  Bullets, Util, SysUtils, Calc, Math, TraceLog, Game, Control, Things, Cvar;
 
 function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
 var
