@@ -778,7 +778,6 @@ begin
       Sprite[Num].DropWeapon();
 
     Sprite[Num].Kill;
-    Sprite[Num].Player := DummyPlayer;
 
     for j := 1 to MAX_PLAYERS do
       if (Trim(TKList[j]) = '') or (TKList[j] = Player.IP) then
