@@ -237,7 +237,7 @@ uses
   NetworkClientSprite,
   Client,
   {$ENDIF}
-  Bullets, Util, SysUtils, Calc, Math, TraceLog, Game, Control, Things, Cvar, Net;
+  Bullets, Util, SysUtils, Calc, Math, TraceLog, Game, Control, Things, Cvar;
 
 function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
 var
@@ -1488,7 +1488,9 @@ begin
   if IsPlayerObjectOwner then
     FreeAndNil(Player);
   IsPlayerObjectOwner := False;
+  {$IFDEF SERVER}
   Player := DummyPlayer;
+  {$ENDIF}
 
   // sort the players frag list
   SortPlayers;
