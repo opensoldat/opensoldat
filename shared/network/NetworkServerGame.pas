@@ -153,6 +153,9 @@ begin
   Player := TPlayer(NetMessage^.m_nConnUserData);
   i := Player.SpriteNum;
 
+  if not Sprite[Player.SpriteNum].Active then
+    Exit;
+
   if VoteActive then
   begin
     // if a vote against a player is in progress,
@@ -220,6 +223,9 @@ begin
   VoteMapMsg := PMsg_VoteMap(NetMessage^.m_pData)^;
   Player := TPlayer(NetMessage^.m_nConnUserData);
   i := Player.SpriteNum;
+
+  if not Sprite[i].Active then
+    Exit;
 
   if VoteMapMsg.MapID > MapsList.Count - 1 then
     Exit;

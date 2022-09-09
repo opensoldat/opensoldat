@@ -13,7 +13,7 @@ unit Sprites;
 interface
 
 uses
-  Parts, Anims, MapFile, PolyMap, Net, Weapons, Constants, Vector;
+  Parts, Anims, MapFile, PolyMap, Weapons, Constants, Vector;
 
 const
   MAX_SPRITES = MAX_PLAYERS;

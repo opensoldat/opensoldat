@@ -997,6 +997,7 @@ begin
   a := Default(TVector2);
   b := Default(TVector2);
   RandomizeStart(a, team);
+  // TODO: Probably smarter to check `CreateSprite` return value than rely on `PlayersNum` check alone...
   p := CreateSprite(a, b, 1, 255, NewPlayer, True);
   Result := p;
 

@@ -107,9 +107,8 @@ begin
 
     if MainTickCounter mod 1000 = 0 then
       for j := 1 to MAX_PLAYERS do
-      begin
-        Sprite[j].Player.KnifeWarnings := 0;
-      end;
+        if Sprite[j].Active then
+          Sprite[j].Player.KnifeWarnings := 0;
 
     // sync changed cvars to all players
     if CvarsNeedSyncing then
@@ -450,9 +449,13 @@ begin
             MainConsole.Console('** Detected possible Mass-Flag cheating from ' +
               Sprite[j].Player.Name, WARNING_MESSAGE_COLOR);
           end;
-          Sprite[j].Player.GrabsPerSecond := 0;
-          Sprite[j].Player.ScoresPerSecond := 0;
-          Sprite[j].Player.GrabbedInBase := False;
+
+          if Sprite[j].Active then
+          begin
+            Sprite[j].Player.GrabsPerSecond := 0;
+            Sprite[j].Player.ScoresPerSecond := 0;
+            Sprite[j].Player.GrabbedInBase := False;
+          end;
         end;
 
     if sv_healthcooldown.Value > 0 then
