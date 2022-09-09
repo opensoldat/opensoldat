@@ -1747,7 +1747,8 @@ begin
       i := StrToInt(VoteTarget);
 
       if (i > 0) and (i <= MAX_SPRITES) then
-        Str[1] := WideString(Sprite[i].Player.Name);
+        if Sprite[i].Active then
+          Str[1] := WideString(Sprite[i].Player.Name);
     end;
 
     GfxTextColor(RGBA(254, 104, 104, 225));

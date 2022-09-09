@@ -70,8 +70,9 @@ var
 begin
   Result := 0;
   for i := 1 to MAX_SPRITES do
-    if Sprite[i].Player.Name = Name then
-      Result := i;
+    if Sprite[i].Active then
+      if Sprite[i].Player.Name = Name then
+        Result := i;
 end;
 
 function NameToHW(Name: String): String;
@@ -80,8 +81,9 @@ var
 begin
   Result := '0';
   for i := 1 to MAX_SPRITES do
-    if Sprite[i].Player.Name = Name then
-      Result := Sprite[i].Player.hwid;
+    if Sprite[i].Active then
+      if Sprite[i].Player.Name = Name then
+        Result := Sprite[i].Player.hwid;
 end;
 
 function RGB(r, g, b: Byte): Cardinal;
@@ -299,7 +301,7 @@ begin
   begin
     // Player Left Game
     for i := 1 to MAX_SPRITES do
-      if (Sprite[i].Player.ControlMethod = BOT) and Sprite[i].Active then
+      if Sprite[i].Active and (Sprite[i].Player.ControlMethod = BOT) then
       begin
         if (Teams[1] > Teams[2]) and (Sprite[i].Player.Team = TEAM_ALPHA) then
         begin
