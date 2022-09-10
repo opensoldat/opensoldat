@@ -39,7 +39,7 @@ project(GameNetworkingSockets)
 #ENDIF()
 # download settings
 SET(GNS_SOURCE_DIR "${PROJECT_ROOT}/gns_download" )
-SET(GNS_TAG "v1.4.0" )
+SET(GNS_TAG "v1.4.1" )
 SET(GNS_URL "https://github.com/ValveSoftware/GameNetworkingSockets/archive/refs/tags/${GNS_TAG}.tar.gz" )
 
 #############################################################
@@ -49,7 +49,7 @@ SET(GNS_URL "https://github.com/ValveSoftware/GameNetworkingSockets/archive/refs
 FetchContent_Declare(
     gamenetworkingsockets
     URL ${GNS_URL}
-    URL_HASH SHA1=9c28ea4fdf279dca05258ca89716d66ef7a5e5d4
+    URL_HASH SHA1=06d71f742b97d997c2d41ade21a3e9c4537acf23
     USES_TERMINAL_DOWNLOAD TRUE
     SOURCE_DIR     ${GNS_SOURCE_DIR}
 )

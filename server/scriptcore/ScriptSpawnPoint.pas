@@ -102,7 +102,7 @@ end;
 
 destructor TScriptNewSpawnPoint.Destroy;
 begin
-  Freemem(Self.FSpawnPoint, SizeOf(TMapSpawnPoint));
+  Dispose(Self.FSpawnPoint);
 end;
 
 constructor TScriptActiveSpawnPoint.CreateActive(ID: Byte; var Spawn: TMapSpawnPoint);

@@ -315,17 +315,15 @@ end;
 
 procedure CommandSay(Args: array of AnsiString; Sender: Byte);
 var
-  Name: String;
+  i: Integer;
+  Msg: String = '';
 begin
-  if Length(Args) = 1 then
+  for i := 1 to High(Args) do
+    Msg := Msg + Args[i] + ' ';
+  if Length(Msg) < 1 then
     Exit;
 
-  Name := Args[1];
-
-  if Length(Name) < 1 then
-    Exit;
-
-  ServerSendStringMessage(WideString(Name), ALL_PLAYERS, 255, MSGTYPE_PUB);
+  ServerSendStringMessage(WideString(Msg), ALL_PLAYERS, 255, MSGTYPE_PUB);
 end;
 
 procedure CommandKill(Args: array of AnsiString; Sender: Byte);
@@ -375,13 +373,13 @@ end;
 
 procedure CommandLoadcon(Args: array of AnsiString; Sender: Byte);
 var
-  Name: String;
+  ConfigFilename: String;
   i: Integer;
 begin
   if Length(Args) = 1 then
-    Exit;
-
-  Name := Args[1];
+    ConfigFilename := 'server.cfg'
+  else
+    ConfigFilename := Args[1];
 
   if sv_lockedmode.Value then
   begin
@@ -415,23 +413,17 @@ begin
     end;
   end;
 
-  LoadConfig(Name);
-  MainConsole.Console('Config reloaded ' + Name, CLIENT_MESSAGE_COLOR, Sender);
+  LoadConfig(ConfigFilename);
+  MainConsole.Console('Config reloaded ' + ConfigFilename, CLIENT_MESSAGE_COLOR, Sender);
   StartServer;
 end;
 
 procedure CommandLoadlist(Args: array of AnsiString; Sender: Byte);
-var
-  Name: String;
 begin
   if Length(Args) > 1 then
-    Name := Args[1]
+    sv_maplist.SetValue(Args[1])
   else
-    Name := sv_maplist.Value; // We only set it for better feedback in console.
-  if LoadMapsList(Name) then
-    MainConsole.Console('Loaded maps list: ' + Name, CLIENT_MESSAGE_COLOR, Sender)
-  else
-    MainConsole.Console('Could not find maps list: ' + Name, DEBUG_MESSAGE_COLOR, Sender);
+    sv_maplist.SetValue(sv_maplist.Value);
 end;
 
 procedure CommandPm(Args: array of AnsiString; Sender: Byte);
@@ -922,6 +914,33 @@ begin
   DemoRecorder.StopRecord;
 end;
 
+procedure CommandListPlayers(Args: array of AnsiString; Sender: Byte);
+var
+  i: Integer;
+  PlayerType: AnsiString;
+begin
+  MainConsole.Console('[ TYPE] Player name              (K/D) [Team]', SERVER_MESSAGE_COLOR, Sender);
+  MainConsole.Console('---------------------------------------------', SERVER_MESSAGE_COLOR, Sender);
+  for i := 1 to MAX_PLAYERS do
+    if SortedPlayers[i].PlayerNum > 0 then
+    begin
+      if Sprite[SortedPlayers[i].PlayerNum].Player.ControlMethod = HUMAN then
+        if Sprite[SortedPlayers[i].PlayerNum].Player.Team = 5 then
+          PlayerType := 'SPECT'
+        else
+          PlayerType := 'HUMAN'
+      else
+        PlayerType := ' BOT ';
+      MainConsole.Console(Format('[%-5s] %-24s (%d/%d) [%d]', [
+                                                            PlayerType,
+                                                            Sprite[SortedPlayers[i].PlayerNum].Player.Name,
+                                                            Sprite[SortedPlayers[i].PlayerNum].Player.Kills,
+                                                            Sprite[SortedPlayers[i].PlayerNum].Player.Deaths,
+                                                            Sprite[SortedPlayers[i].PlayerNum].Player.Team
+                                                          ]), SERVER_MESSAGE_COLOR, Sender);
+    end;
+end;
+
 {$POP}
 
 procedure InitServerCommands();
@@ -981,6 +1000,7 @@ begin
   CommandAdd('votemap', CommandVotemap, 'votemap', [CMD_PLAYERONLY]);
   CommandAdd('record', CommandRecord, 'record demo', [CMD_ADMINONLY]);
   CommandAdd('stop', CommandStop, 'stop recording demo', [CMD_ADMINONLY]);
+  CommandAdd('listplayers', CommandListPlayers, 'list all current players', [CMD_ADMINONLY]);
 
   {$IFDEF SCRIPT}
   CommandAdd('recompile', CommandRecompile, 'Recompile all or specific script', [CMD_ADMINONLY]);

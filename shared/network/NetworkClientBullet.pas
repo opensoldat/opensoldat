@@ -9,7 +9,7 @@ uses
   // helper units
   Vector,
 
-  // opensoldat units
+  // OpenSoldat units
   Steam, Net, Sprites, Weapons, Constants, NetworkServerBullet, Demo;
 
 procedure ClientSendBullet(i: Byte);
@@ -51,6 +51,7 @@ var
   WeaponIndex: SmallInt;
   Style: Byte;
   BulletSpread: Single;
+  RandSeedSave: Cardinal;
 begin
   if not VerifyPacket(sizeof(BulletSnap), NetMessage^.m_cbSize, MsgID_BulletSnapshot) then
     Exit;
@@ -98,12 +99,16 @@ begin
       begin
         // Undo the bullet spread used on the first pellet that was sent in order to
         // get the "straight" bullet vector. Then re-apply the the same randomness
+        RandSeedSave := RandSeed;
         RandSeed := BulletSnap.Seed;
+
         BStraight.x := b.x - (Random * 2 - 1) * BulletSpread;
         BStraight.y := b.y - (Random * 2 - 1) * BulletSpread;
 
         bx.x := BStraight.x + (Random * 2 - 1) * BulletSpread;
         bx.y := BStraight.y + (Random * 2 - 1) * BulletSpread;
+
+        RandSeed := RandSeedSave;
 
         Vec2Normalize(BNorm, BStraight);
         a.x := a.x - Sign(BStraight.x) * Abs(BNorm.y) * 3.0;
@@ -125,7 +130,9 @@ begin
       begin
         // Undo the bullet spread used on the first pellet that was sent in order to
         // get the "straight" bullet vector. Then re-apply the the same randomness
+        RandSeedSave := RandSeed;
         RandSeed := BulletSnap.Seed;
+
         BStraight.x := b.x - (Random * 2 - 1) * BulletSpread;
         BStraight.y := b.y - (Random * 2 - 1) * BulletSpread;
 
@@ -145,6 +152,8 @@ begin
                   break;
               end;
         end;
+
+        RandSeed := RandSeedSave;
       end;
 
     if (Style <> BULLET_STYLE_FRAGNADE) and (Style <> BULLET_STYLE_CLUSTERNADE) and

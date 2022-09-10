@@ -566,7 +566,7 @@
         </Mode0>
       </Modes>
     </RunParams>
-    <Units Count="62">
+    <Units Count="65">
       <Unit0>
         <Filename Value="opensoldat.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -815,6 +815,18 @@
         <Filename Value="..\shared\VersionLong.txt"/>
         <IsPartOfProject Value="True"/>
       </Unit61>
+      <Unit62>
+        <Filename Value="..\shared\LauncherIPC.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit62>
+      <Unit63>
+        <Filename Value="..\shared\LauncherConnection.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit63>
+      <Unit64>
+        <Filename Value="ClientLauncherIPC.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit64>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

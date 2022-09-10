@@ -263,7 +263,7 @@ begin
   Result := i;
 
   // replace player object
-  if Sprite[i].Player <> nil then
+  if (Sprite[i].Player <> nil) and (Sprite[i].Player <> Player) then
   begin
     Sprite[i].Player.SpriteNum := 0;
     if Sprite[i].IsPlayerObjectOwner then
@@ -1483,6 +1483,10 @@ begin
   end;
   {$ENDIF}
 
+  if IsPlayerObjectOwner then
+    FreeAndNil(Player);
+  IsPlayerObjectOwner := False;
+
   // sort the players frag list
   SortPlayers;
 end;
@@ -1941,7 +1945,6 @@ begin
              ((Bullet[What].OwnerWeapon = Guns[BARRETT].Num) or
               (Bullet[What].OwnerWeapon = Guns[RUGER77].Num)) then
           begin
-            Randomize;
             if Random(100) > 50 then
             begin
               Skeleton.Constraints[20].Active := True; // Keep head attached to corpse
@@ -1949,7 +1952,6 @@ begin
               begin
                 a.x := Skeleton.Pos[9].x + (cos(deg2rad(360 / 50 * i)) * 2);
                 a.y := Skeleton.Pos[9].y + (sin(deg2rad(360 / 50 * i)) * 2);
-                Randomize;
                 //FIXME: Causes range check error
                 //RandSeed := RandSeed * i;
                 b.x := (cos(deg2rad(360 / 50 * i)) * RandomRange(1, 3));
@@ -2363,6 +2365,7 @@ begin
         (Weapon.Num = Guns[BOW2].Num) then
     begin
       Result := CreateThing(Skeleton.Pos[16], Num, OBJECT_RAMBO_BOW, 255);
+      // FIXME: This is in an IFDEF SERVER block so its never true... What does `GameThingTarget` do exactly?
       {$IFNDEF SERVER}
       GameThingTarget := Result;
       {$ENDIF}
@@ -3986,6 +3989,7 @@ var
   rc: Single;
   col: Boolean;
   {$ENDIF}
+  RandSeedSave: Cardinal;
 begin
   bn := 0;
   Inaccuracy := 0;
@@ -4100,6 +4104,7 @@ begin
   if Weapon.Num = Guns[EAGLE].Num then  // Eagles
   begin
     Inc(BulletCount);
+    RandSeedSave := RandSeed;
     RandSeed := BulletCount;
 
     d.x := b.x + (Random * 2 - 1) * Weapon.BulletSpread;
@@ -4109,6 +4114,8 @@ begin
 
     d.x := b.x + (Random * 2 - 1) * Weapon.BulletSpread;
     d.y := b.y + (Random * 2 - 1) * Weapon.BulletSpread;
+
+    RandSeed := RandSeedSave;
 
     Vec2Normalize(BNorm, b);
     a.x := a.x - Sign(b.x) * Abs(BNorm.y) * 3.0;
@@ -4120,10 +4127,13 @@ begin
   if Weapon.BulletStyle = BULLET_STYLE_SHOTGUN then  // Shotgun
   begin
     Inc(BulletCount);
+    RandSeedSave := RandSeed;
     RandSeed := BulletCount;
 
     d.x := b.x + (Random * 2 - 1) * Weapon.BulletSpread;
     d.y := b.y + (Random * 2 - 1) * Weapon.BulletSpread;
+
+    RandSeed := RandSeedSave;
 
     bn := CreateBullet(a, d, Weapon.Num, Num, 255, Weapon.HitMultiply, True, False, BulletCount);
 

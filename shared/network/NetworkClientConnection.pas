@@ -12,7 +12,7 @@ uses
   // anti-cheat units
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
-  // opensoldat units
+  // OpenSoldat units
   LogFile, Steam, Net, Sprites, Weapons, Constants, GameStrings,
   Cvar, PhysFS;
 
@@ -516,12 +516,15 @@ begin
   if not VerifyPacket(sizeof(TMsg_ServerDisconnect), NetMessage^.m_cbSize, MsgID_ServerDisconnect) then
     Exit;
 
-  ShowMapChangeScoreboard();
-
   if not DemoPlayer.Active then
-    MainConsole.Console(_('Server disconnected'), SERVER_MESSAGE_COLOR)
+  begin
+    RenderGameInfo(_('Server disconnected'));
+    ExitToMenu;
+  end
   else
+  begin
     DemoPlayer.StopDemo;
+  end;
 end;
 
 procedure ClientHandlePing(NetMessage: PSteamNetworkingMessage_t);

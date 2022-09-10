@@ -85,7 +85,6 @@ type
     FDebug: Boolean;
     FGameMod: Boolean;
     FSpawnPoint: TScriptSpawnPointAPI;
-    FCore: TScriptCore3API;
     FFile: TScriptFileAPI;
 
     FOnWeaponChangeNewPrimary: TScriptWeaponChange;
@@ -114,6 +113,7 @@ type
       const Params: array of Variant): Variant; overload;
     // EVENTS
     procedure OnClockTick; override;
+    procedure OnIdle; override;
     function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer; override;
     function OnBeforeJoinTeam(Id, Team, OldTeam: Byte): ShortInt; override;
@@ -298,9 +298,14 @@ begin
     FunctionName := Func.ExportName;
   if Assigned(Self.FUnit.ScriptUnit.OnException) then
   begin
-    try
-      TPascalDebugger(Sender).GetPosition(UnitName, Col, Row, ProcNo, Position);
-    except
+    if Self.Debug then
+    begin
+      try
+        TPascalDebugger(Sender).GetPosition(UnitName, Col, Row, ProcNo, Position);
+      except
+        on e: Exception do
+          Self.WriteInfo('Exception trying to get debug info: ' + e.Message);
+      end;
     end;
     try
       Self.CallEvent(Self.FUnit.ScriptUnit.OnException,
@@ -337,7 +342,6 @@ begin
   Self.FUnit := TScriptUnitAPI.Create(Self);
   Self.FMap := TScriptMapAPI.Create(Self);
   Self.FSpawnPoint := TScriptSpawnPointAPI.Create(Self);
-  Self.FCore := TScriptCore3API.Create(Self);
   Self.FFile := TScriptFileAPI.Create(Self);
 
   // Workaround for OnWeaponChange: It needs 2 new objects,
@@ -599,6 +603,24 @@ begin
         (Self.FGame.Game.TickThreshold <> 0) and (MainTickCounter mod
         Self.FGame.Game.TickThreshold = 0) then
         Self.CallEvent(Self.FGame.Game.OnClockTick, [MainTickCounter]);
+    except
+      on e: Exception do
+        Self.HandleException(e);
+    end;
+  finally
+    Self.Lock.Release;
+  end;
+end;
+
+procedure TScriptCore3.OnIdle;
+begin
+  try
+    Self.Lock.Acquire;
+    try
+      if Assigned(Self.FAdapter) then
+        Self.FAdapter.OnIdle;
+      if Assigned(Self.FGame.Game.OnIdle) then
+        Self.CallEvent(Self.FGame.Game.OnIdle, []);
     except
       on e: Exception do
         Self.HandleException(e);

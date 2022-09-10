@@ -68,7 +68,10 @@ end;
 
 function TScriptMapsList.GetMap(Num: Integer): string;
 begin
-  Result := MapsList[Num];
+  if Num >= MapsList.Count then
+    Result := ''
+  else
+    Result := MapsList[Num];
 end;
 
 function TScriptMapsList.GetCurrentMapId: Integer;
@@ -78,7 +81,8 @@ end;
 
 procedure TScriptMapsList.SetCurrentMapId(NewNum: Integer);
 begin
-  MapIndex := NewNum;
+  if (NewNum >= 0) and (NewNum < MapsList.Count) then
+    MapIndex := NewNum;
 end;
 
 function TScriptMapsList.GetMapsCount: Integer;

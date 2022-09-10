@@ -28,6 +28,7 @@ type
 
     // EVENTS
     procedure OnClockTick;
+    procedure OnIdle;
 
     function OnRequestGame(Ip: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer;
@@ -400,7 +401,7 @@ begin
     Exec.SetValue('ServerVersion', DEDVERSION);
     Exec.SetValue('ServerPort', net_port.Value);
     Exec.SetValue('ServerIP', ServerIP);
-    // FScripts.Dir holds full path from opensoldatserver folder, so scripts/Name/,
+    // FScripts.Dir holds full path from OpenSoldatServer folder, so scripts/Name/,
     // not just Name, hence Copy(9, Length - 9), where 9 = Length('scripts/') + 1
     // and Max - 9 because we need to substract Length('scripts/')
     // and 1 to remove '/' at the end
@@ -419,6 +420,12 @@ begin
   if not Self.Disabled and (Self.AppOnIdleTimer > 0) and
     (MainTickCounter mod Self.AppOnIdleTimer = 0) then
     Self.FScript.CallFunc([MainTickCounter], 'AppOnIdle', 0);
+end;
+
+procedure TScriptCoreAPIAdapter.OnIdle;
+begin
+  if not Self.Disabled then
+    Self.FScript.CallFunc([], 'OnIdle', 0);
 end;
 
 function TScriptCoreAPIAdapter.OnRequestGame(Ip: string; Port: Word;

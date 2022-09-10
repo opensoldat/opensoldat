@@ -24,7 +24,7 @@ uses
   Vector,
   // pascal script
   uPSComponent, uPSRuntime,
-  // opensoldat
+  // OpenSoldat
   PascalCore;
 
 // Scriptcore functions
@@ -247,10 +247,10 @@ begin
         begin
           FoundKey := Decrypt(Copy(GetPiece(TempBuff, '@', 1), 2,
             Length(GetPiece(TempBuff, '@', 1)) - 1), 54931);
-          // writeln('Key: ' + FoundKey);
+          // WriteLn('Key: ' + FoundKey);
           NumLines := StrToInt(Decrypt(Copy(GetPiece(TempBuff, '@', 2),
             1, Length(GetPiece(TempBuff, '@', 2))), StrToInt(FoundKey)));
-          // writeln('Num: ' + inttostr(NumLines));
+          // WriteLn('Num: ' + inttostr(NumLines));
           TempBuff := '';
         end;
       end;

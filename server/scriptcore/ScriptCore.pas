@@ -54,6 +54,7 @@ type
     function CallFunc(const Params: array of Variant; FuncName: string;
       DefaultReturn: Variant): Variant; override;
     procedure OnClockTick; override;
+    procedure OnIdle; override;
     //procedure OnScriptShutdown(ServerShutdown: Boolean);
 
     function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
@@ -286,6 +287,12 @@ begin
       if Self.FErrorCount > 0 then
         Self.FErrorCount := Self.FErrorCount - 1;
   end;
+end;
+
+procedure TScriptCore.OnIdle;
+begin
+  if not Self.FDisabled then
+    Self.CallFunc([], 'OnIdle', 0);
 end;
 
 //procedure OnScriptShutdown(ServerShutdown: Boolean);

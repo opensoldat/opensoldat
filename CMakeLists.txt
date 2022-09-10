@@ -212,7 +212,7 @@ install(
 if(ADD_ASSETS)
   install(
     DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/
-    # FIXME: should be target_data_install_dir, but unsupported by opensoldat
+    # FIXME: should be target_data_install_dir, but unsupported by OpenSoldat
     # (needs wrapper script or some equivalent global config)
     DESTINATION "${target_binary_install_dir}"
     FILES_MATCHING

@@ -20,6 +20,9 @@ uses
   NetworkServerGame, NetworkServerSprite, NetworkServerThing,
   NetworkServerConnection, NetworkServerHeartbeat;
 
+var
+  LastMinuteTick: QWord = 0;
+
 procedure AppOnIdle;
 var
   MainControl: Integer;
@@ -38,6 +41,36 @@ begin
     AdminServer.ProcessCommands();
   {$ENDIF}
 
+  // Run methods Synchronized from threads
+  CheckSynchronize;
+
+  // Run every 60 seconds
+  if (GetTickCount64 - LastMinuteTick) >= 60000 then
+  begin
+    LastMinuteTick := GetTickCount64;
+    if sv_lobby.Value then
+      LobbyThread := TLobbyThread.Create;
+
+    // *BAN*
+    // Ban Timers v2
+    UpdateIPBanList;
+    UpdateHWBanList;
+  end;
+
+  if sv_pauseonidle.Value and ((PlayersNum - BotsNum) <= 0) then
+  begin
+    {$IFDEF STEAM}
+    RunManualCallbacks();
+    {$ENDIF}
+
+    {$IFDEF SCRIPT}
+    ScrptDispatcher.OnIdle();
+    {$ENDIF}
+
+    Sleep(100);
+    Exit;
+  end;
+
   for MainControl := 1 to (Ticktime - ticktimeLast) do
   begin  // frame rate independant code
     ticks := ticks + 1;
@@ -55,11 +88,11 @@ begin
     {$IFDEF STEAM}
     RunManualCallbacks();
     {$ENDIF}
+
     // Flood Nums Cancel
     if MainTickCounter mod 1000 = 0 then
       for j := 1 to MAX_FLOODIPS do
         FloodNum[j] := 0;
-
 
     // Warnings Cancel
     if MainTickCounter mod (MINUTE * 5) = 0 then
@@ -207,14 +240,9 @@ begin
           NoClientupdateTime[j] := NoClientupdateTime[j] + 1;
         if NoClientupdateTime[j] > DISCONNECTION_TIME then
         begin
-          ServerPlayerDisconnect(j, KICK_NORESPONSE);
           MainConsole.Console(Sprite[j].Player.Name + ' could not respond',
             WARNING_MESSAGE_COLOR);
-          {$IFDEF SCRIPT}
-          ScrptDispatcher.OnLeaveGame(j, False);
-          {$ENDIF}
-          Sprite[j].Kill;
-          DoBalanceBots(1, Sprite[j].Player.Team);
+          ServerPlayerDisconnect(Sprite[j].Player, KICK_NORESPONSE, True);
           Continue;
         end;
         if NoClientupdateTime[j] < 0 then
@@ -262,6 +290,11 @@ begin
             ServerThingSnapshot(j);
         end;
       end;
+
+    // Launcher connection
+    if launcher_ipc_enable.Value then
+      if not LauncherIPC.ThreadAlive and (MainTickCounter mod launcher_ipc_reconnect_rate.Value = 0) then
+         LauncherIPC.Connect(launcher_ipc_port.Value);
 
       //UDP.FlushMsg;
   end;
@@ -454,20 +487,6 @@ begin
 
     if MainTickCounter mod (SECOND * 30) = 0 then
       DropIP := '';  // Clear temporary firewall IP
-
-    if MainTickCounter mod MINUTE = 0 then
-    begin
-      if sv_lobby.Value then
-          LobbyThread := TLobbyThread.Create;
-    end;
-
-    // *BAN*
-    // Ban Timers v2
-    if MainTickCounter mod MINUTE = 0 then
-    begin
-      UpdateIPBanList;
-      UpdateHWBanList;
-    end;
 
     if MainTickCounter mod MINUTE = 0 then
       for j := 1 to MAX_SPRITES do

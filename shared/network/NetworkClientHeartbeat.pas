@@ -6,7 +6,7 @@ uses
   // delphi and system units
   SysUtils, Classes,
 
-  // opensoldat units
+  // OpenSoldat units
   LogFile, Steam, Net, Sprites, Sound, Constants, GameStrings;
 
 procedure ClientHandleHeartBeat(NetMessage: PSteamNetworkingMessage_t);

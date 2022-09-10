@@ -1790,8 +1790,8 @@ begin
     x := Max(0, Min(Width - w, x - w / 2));
     y := Max(0, Min(Height - h, y - Integer(not OnlyOffscreen) * h / 2));
 
-    dx := Abs(Sprite[MySprite].Skeleton.Pos[7].x - Sprite[i].Skeleton.Pos[7].x);
-    dy := Abs(Sprite[MySprite].Skeleton.Pos[7].y - Sprite[i].Skeleton.Pos[7].y);
+    dx := Max(Abs(Sprite[MySprite].Skeleton.Pos[7].x - Sprite[i].Skeleton.Pos[7].x), 1);
+    dy := Max(Abs(Sprite[MySprite].Skeleton.Pos[7].y - Sprite[i].Skeleton.Pos[7].y), 1);
 
     Alpha := Min(255, 50 + Round(100000 / (dx + dy / 2)));
 
@@ -1875,7 +1875,6 @@ var
   CursorScale: Single;
   CursorScaledOffset: TVector2;
   CursorBinkScale: Single;
-  //CursorBinkOffset: TVector2;
   CursorColor: Integer;
   Alfa: Integer;
   CharacterOffset: TVector2;
@@ -2179,22 +2178,19 @@ begin
       CursorSize.x := T^[GFX_INTERFACE_CURSOR].Width * T^[GFX_INTERFACE_CURSOR].Scale;
       CursorSize.y := T^[GFX_INTERFACE_CURSOR].Height * T^[GFX_INTERFACE_CURSOR].Scale;
 
-      // Base crosshair offset. Larger offset if interface scaling is enabled
-      CursorScaledOffset.x := CursorSize.x / 2 * CursorScale / _rscala.x;
-      CursorScaledOffset.y := CursorSize.y / 2 * CursorScale / _rscala.y;
-
       Moveacc := SpriteMe.GetMoveacc;
       Inaccuracy := HitSprayCounter + Moveacc * 100;
 
-      // Embiggen the crosshair when binked, keeping it centered
+      // Embiggen the crosshair when binked
       if Inaccuracy > 0 then
       begin
         CursorBinkScale := Power(Inaccuracy, 0.6) / 20 * CursorScale;
-        //CursorBinkOffset.x := CursorSize.x / 2 * CursorBinkScale / _rscala.x;
-        //CursorBinkOffset.y := CursorSize.y / 2 * CursorBinkScale / _rscala.y;
-        // TODO: Finish
         CursorScale := CursorScale + CursorBinkScale;
       end;
+
+      // Scale crosshair from its center
+      CursorScaledOffset.x := CursorSize.x / 2 * CursorScale / _rscala.x;
+      CursorScaledOffset.y := CursorSize.y / 2 * CursorScale / _rscala.y;
 
       // Color and alpha for crosshair
       if CursorTextLength > 0 then
@@ -2380,7 +2376,7 @@ begin
     RenderMinimap(PixelAlignX(ui_minimap_posx.Value * _rscala.x),
       PixelAlignY(ui_minimap_posy.Value), Round(ui_status_transparency.Value * 0.85));
 
-  if MiniMapShow and (not sv_minimap.Value) then
+  if MiniMapShow and sv_minimap_locations.Value then
   begin
     Alfa := ui_minimap_transparency.Value;
 

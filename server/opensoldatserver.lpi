@@ -535,7 +535,7 @@
         </Mode0>
       </Modes>
     </RunParams>
-    <Units Count="87">
+    <Units Count="90">
       <Unit0>
         <Filename Value="opensoldatserver.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -885,6 +885,18 @@
         <Filename Value="..\shared\gfx.inc.in"/>
         <IsPartOfProject Value="True"/>
       </Unit86>
+      <Unit87>
+        <Filename Value="..\shared\LauncherConnection.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit87>
+      <Unit88>
+        <Filename Value="..\shared\LauncherIPC.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit88>
+      <Unit89>
+        <Filename Value="ServerLauncherIPC.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit89>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

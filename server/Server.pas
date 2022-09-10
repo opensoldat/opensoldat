@@ -36,9 +36,9 @@ uses
   Rcon,
   {$ENDIF}
 
-  FileServer, LobbyClient,
+  FileServer, LobbyClient, ServerLauncherIPC,
 
-  // opensoldat units
+  // OpenSoldat units
   Steam, Net, NetworkUtils,
   NetworkServerSprite, NetworkServerConnection, NetworkServerGame,
   ServerCommands, PhysFS, Console, ServerHelper,
@@ -48,7 +48,7 @@ uses
 procedure ActivateServer;
 function AddBotPlayer(Name: string; team: Integer): Byte;
 procedure StartServer;
-function LoadMapsList(filename: string = ''): Boolean;
+function LoadMapsList(Filename: string = ''): Boolean;
 procedure LoadWeapons(filename: string);
 procedure ShutDown;
 procedure NextMap;
@@ -153,14 +153,13 @@ var
   sv_antimassflag: TBooleanCvar;
   sv_healthcooldown: TIntegerCvar;
   sv_teamcolors: TBooleanCvar;
+  sv_pauseonidle: TBooleanCvar;
 
   net_port: TIntegerCvar;
   net_ip: TStringCvar;
   net_adminip: TStringCvar;
   net_lan: TIntegerCvar;
-  net_compression: TBooleanCvar;
   net_allowdownload: TBooleanCvar;
-  net_maxconnections: TIntegerCvar;
   net_maxadminconnections: TIntegerCvar;
   net_rcon_limit: TIntegerCvar;
   net_rcon_burst: TIntegerCvar;
@@ -195,6 +194,11 @@ var
   fileserver_enable: TBooleanCvar;
   fileserver_port: TIntegerCvar;
   fileserver_ip: TStringCvar;
+  fileserver_maxconnections: TIntegerCvar;
+
+  launcher_ipc_enable: TBooleanCvar;
+  launcher_ipc_port: TIntegerCvar;
+  launcher_ipc_reconnect_rate: TIntegerCvar;
 
   // syncable cvars
   sv_gamemode: TIntegerCvar;
@@ -212,7 +216,7 @@ var
   sv_advancemode_amount: TIntegerCvar;
   sv_guns_collide: TBooleanCvar;
   sv_kits_collide: TBooleanCvar;
-  sv_minimap: TBooleanCvar;
+  sv_minimap_locations: TBooleanCvar;
   sv_advancedspectator: TBooleanCvar;
   sv_radio: TBooleanCvar;
   sv_gravity: TSingleCvar;
@@ -287,6 +291,8 @@ var
   ModDir: string = '';
 
   UDP: TServerNetwork;
+
+  LauncherIPC: TServerLauncherIPC;
 
   LobbyThread: TLobbyThread;
 
@@ -514,6 +520,7 @@ end;
 procedure ActivateServer;
 var
   i, j: Integer;
+  s: String;
 begin
   MainThreadID := GetThreadID;
 
@@ -544,6 +551,8 @@ begin
   Set8087CW($133F);
   {$ENDIF}
 
+  Randomize;
+
   DefaultFormatSettings.DecimalSeparator := '.';
   DefaultFormatSettings.DateSeparator := '-';
 
@@ -570,10 +579,25 @@ begin
 
   // NOTE: fs_basepath and fs_userpath must be set from command line, not in
   // server.cfg.
-  if fs_basepath.Value = '' then
-    BaseDirectory := ExtractFilePath(ParamStr(0));
-  if fs_userpath.Value = '' then
-    UserDirectory := ExtractFilePath(ParamStr(0));
+  UserDirectory := ExtractFilePath(ParamStr(0));
+  if fs_userpath.Value <> '' then
+  begin
+    s := ExpandFileName(fs_userpath.Value);
+    if DirectoryExists(s) then
+      UserDirectory := IncludeTrailingPathDelimiter(s)
+    else
+      Debug('[FS] Warning: Specified fs_userpath directory ''' + fs_userpath.Value + ''' does not exist.');
+  end;
+
+  BaseDirectory := ExtractFilePath(ParamStr(0));
+  if fs_basepath.Value <> '' then
+  begin
+    s := ExpandFileName(fs_basepath.Value);
+    if DirectoryExists(s) then
+      BaseDirectory := IncludeTrailingPathDelimiter(s)
+    else
+      Debug('[FS] Warning: Specified fs_basepath directory ''' + fs_basepath.Value + ''' does not exist.');
+  end;
 
   Debug('[FS] UserDirectory: ' + UserDirectory);
   Debug('[FS] BaseDirectory: ' + BaseDirectory);
@@ -582,7 +606,7 @@ begin
 
   if not PhysFS_Init(PChar(ParamStr(0))) then
   begin
-    WriteLN('Could not initialize PhysFS.');
+    WriteLn('Could not initialize PhysFS.');
     ProgReady := False;
     sc_enable.SetValue(False);
     Exit;
@@ -635,6 +659,11 @@ begin
   // NOTE: Code depending on CVars should be run after this line if possible.
   CvarsInitialized := True;
 
+  if launcher_ipc_enable.Value then begin
+    LauncherIPC := TServerLauncherIPC.Create;
+    LauncherIPC.Connect(launcher_ipc_port.Value);
+  end;
+
   ModDir := '';
 
   if fs_mod.Value <> '' then
@@ -682,7 +711,7 @@ begin
   begin
     SteamAPI.Utils.SetWarningMessageHook(@SteamWarning);
 
-    // TODO: opensoldat on steam
+    // TODO: OpenSoldat on steam
     SteamAPI.GameServer.SetModDir(PChar('Soldat'));
     SteamAPI.GameServer.SetProduct(PChar('Soldat'));
     SteamAPI.GameServer.SetGameDescription(PChar('Soldat'));
@@ -818,6 +847,9 @@ begin
 
   StopFileServer;
 
+  if launcher_ipc_enable.Value then
+    FreeAndNil(LauncherIPC);
+
   FreeAndNil(MapsList);
   FreeAndNil(RemoteIPs);
   FreeAndNil(AdminIPs);
@@ -861,21 +893,23 @@ begin
   CvarCleanup();
 end;
 
-function LoadMapsList(Filename: string = ''): Boolean;
+function LoadMapsList(Filename: String = ''): Boolean;
 var
   i: Integer;
   MapsListPath: String;
 begin
-  if Filename.IsEmpty then
+  if Filename.IsEmpty() then
     Filename := sv_maplist.Value;
   if not Filename.EndsWith('.txt') then
     Filename := Filename + '.txt';
+
   MapsListPath := UserDirectory + 'configs/' + Filename;
 
   if FileExists(MapsListPath) then
   begin
     Result := True;
     MapsList.LoadFromFile(MapsListPath);
+
     i := 1;
     while i < MapsList.Count do
     begin
@@ -886,8 +920,10 @@ begin
       end;
       Inc(i);
     end;
-    sv_maplist.SetValue(Filename);
-  end else
+
+    MainConsole.Console('Loaded maps list: ' + Filename, CLIENT_MESSAGE_COLOR)
+  end
+  else
   begin
     Result := False;
     MainConsole.Console('Maps list file not found: configs/' + Filename, WARNING_MESSAGE_COLOR);
@@ -1008,22 +1044,27 @@ begin
 
   a := Default(TVector2);
 
-  {$IFDEF SCRIPT}
-  if sc_enable.Value then
-    ScrptDispatcher.Launch();
-  {$ENDIF}
+  AddLineToLogFile(GameLog, 'Starting Game Server.', ConsoleLogFileName);
 
-  if (not IsTeamGame) then
-    k := bots_random_noteam.Value
-  else if sv_gamemode.Value = GAMESTYLE_TEAMMATCH then
-    k := bots_random_alpha.Value + bots_random_bravo.Value + bots_random_charlie.Value + bots_random_delta.Value
+  if not Assigned(UDP) then
+    UDP := TServerNetwork.Create(net_ip.Value, net_port.Value);
+
+  if UDP.Active = True then
+  begin
+    WriteLn('[NET] Game networking initialized.');
+    WriteLn('[NET] Server is listening on ' + UDP.GetStringAddress(@UDP.Address, True));
+  end
   else
-    k := bots_random_alpha.Value + bots_random_bravo.Value;
+  begin
+    WriteLn('[NET] Failed to bind to ' + net_ip.Value + ':' + IntToStr(net_port.Value));
+    ProgReady := False;
+    Exit;
+  end;
 
-  //if (k > (MAX_SPRITES - 1)) then
-  //  Exit;
+  ServerPort := UDP.Port;
 
-  Randomize;
+  if fileserver_enable.Value then
+    StartFileServer;
 
   for i := 1 to MAX_SPRITES do
   begin
@@ -1084,10 +1125,6 @@ begin
 
   MapCheckSum := GetMapChecksum(StartMap);
 
-  {$IFDEF SCRIPT}
-  ScrptDispatcher.OnAfterMapChange(Map.Name);
-  {$ENDIF}
-
   // Create Weapons
   AddLineToLogFile(GameLog, 'Creating Weapons.', ConsoleLogFileName);
 
@@ -1125,6 +1162,56 @@ begin
 
     MainConsole.Console('Advance Mode ON', MODE_MESSAGE_COLOR);
   end;
+
+  // sort the players frag list
+  SortPlayers;
+
+  MapChangeCounter := -60;
+
+  LastPlayer := 0;
+
+  TimeLimitCounter := sv_timelimit.Value;
+
+  // Wave respawn time
+  UpdateWaveRespawnTime;
+  WaveRespawnCounter := WaveRespawnTime;
+
+  {$IFDEF ENABLE_FAE}
+  if ac_enable.Value then
+  begin
+    WriteLn('[AC] Anti-Cheat enabled');
+  end;
+  {$ENDIF}
+
+  if sv_lobby.Value then
+    if not Assigned(LobbyThread) then
+      LobbyThread := TLobbyThread.Create();
+
+  case sv_gamemode.Value of
+    GAMESTYLE_DEATHMATCH: sv_killlimit.SetValue(sv_dm_limit.Value);
+    GAMESTYLE_POINTMATCH: sv_killlimit.SetValue(sv_pm_limit.Value);
+    GAMESTYLE_RAMBO:      sv_killlimit.SetValue(sv_rm_limit.Value);
+    GAMESTYLE_TEAMMATCH:  sv_killlimit.SetValue(sv_tm_limit.Value);
+    GAMESTYLE_CTF:        sv_killlimit.SetValue(sv_ctf_limit.Value);
+    GAMESTYLE_INF:        sv_killlimit.SetValue(sv_inf_limit.Value);
+    GAMESTYLE_HTF:        sv_killlimit.SetValue(sv_htf_limit.Value);
+  end;
+
+  // In general, as many systems as possible should be initialized before
+  // launching scripts, so they can access those systems through the SC3 APIs
+  // during their initialization. By the same token, code which dispatches
+  // events should be run after scripts have had a chance to set their event
+  // handlers if at all possible.
+  {$IFDEF SCRIPT}
+  if sc_enable.Value then
+    ScrptDispatcher.Launch();
+  {$ENDIF}
+
+  // Now that event handlers have been assigned, run `OnAfterMapChange` from
+  // loading the initial map, and spawn stuff.
+  {$IFDEF SCRIPT}
+  ScrptDispatcher.OnAfterMapChange(Map.Name);
+  {$ENDIF}
 
   if sv_gamemode.Value = GAMESTYLE_DEATHMATCH then
   begin
@@ -1203,61 +1290,6 @@ begin
     end;
   end;
 
-  case sv_gamemode.Value of
-    GAMESTYLE_DEATHMATCH: sv_killlimit.SetValue(sv_dm_limit.Value);
-    GAMESTYLE_POINTMATCH: sv_killlimit.SetValue(sv_pm_limit.Value);
-    GAMESTYLE_RAMBO:      sv_killlimit.SetValue(sv_rm_limit.Value);
-    GAMESTYLE_TEAMMATCH:  sv_killlimit.SetValue(sv_tm_limit.Value);
-    GAMESTYLE_CTF:        sv_killlimit.SetValue(sv_ctf_limit.Value);
-    GAMESTYLE_INF:        sv_killlimit.SetValue(sv_inf_limit.Value);
-    GAMESTYLE_HTF:        sv_killlimit.SetValue(sv_htf_limit.Value);
-  end;
-
-  // sort the players frag list
-  SortPlayers;
-
-  MapChangeCounter := -60;
-
-  LastPlayer := 0;
-
-  TimeLimitCounter := sv_timelimit.Value;
-
-  // Wave respawn time
-  UpdateWaveRespawnTime;
-  WaveRespawnCounter := WaveRespawnTime;
-
-  AddLineToLogFile(GameLog, 'Starting Game Server.', ConsoleLogFileName);
-
-  UDP := TServerNetwork.Create(net_ip.Value, net_port.Value);
-
-  if UDP.Active = True then
-  begin
-    WriteLn('[NET] Game networking initialized.');
-    WriteLn('[NET] Server is listening on ' + UDP.GetStringAddress(@UDP.Address, True));
-  end
-  else
-  begin
-    WriteLn('[NET] Failed to bind to ' + net_ip.Value + ':' + IntToStr(net_port.Value));
-    ProgReady := False;
-    Exit;
-  end;
-
-  ServerPort := UDP.Port;
-
-  if fileserver_enable.Value then
-    StartFileServer;
-
-  {$IFDEF ENABLE_FAE}
-  if ac_enable.Value then
-  begin
-    WriteLn('[AC] Anti-Cheat enabled');
-  end;
-  {$ENDIF}
-
-  if sv_lobby.Value then
-    if not Assigned(LobbyThread) then
-      LobbyThread := TLobbyThread.Create();
-
   if bots_random_alpha.Value > 0 then
     for k := 1 to bots_random_alpha.Value do
       AddBotPlayer(RandomBot, 1);
@@ -1272,7 +1304,6 @@ begin
       AddBotPlayer(RandomBot, 4);
 
   UpdateGameStats;
-
 end;
 
 function PrepareMapChange(Name: String): Boolean;
@@ -1383,7 +1414,7 @@ begin
   if (not Sprite[i].Active) then
     Exit;
 
-  if ((why = KICK_CHEAT)) and (sv_anticheatkick.Value) then
+  if ((why = KICK_CHEAT)) and (not sv_anticheatkick.Value) then
     Exit;
 
   // check if admin should be kicked
@@ -1444,22 +1475,8 @@ begin
 
   if not Sprite[i].Active then
     Exit;
-  {$IFDEF SCRIPT}
-  if why in [KICK_AC, KICK_CHEAT, KICK_CONSOLE, KICK_PING, KICK_NORESPONSE,
-      KICK_NOCHEATRESPONSE, KICK_FLOODING, KICK_VOTED, KICK_SILENT] then
-    ScrptDispatcher.OnLeaveGame(i, true);
-  {$ENDIF}
 
-  ServerPlayerDisconnect(i, why);
-
-  if ((why <> KICK_AC) and (why <> KICK_CHEAT) and (why <> KICK_CONSOLE) and
-    (why <> KICK_VOTED)) then
-  begin
-    Sprite[i].DropWeapon();
-  end;
-
-  Sprite[i].Kill;
-
+  ServerPlayerDisconnect(Sprite[i].Player, Why);
   Result := True;
 end;
 

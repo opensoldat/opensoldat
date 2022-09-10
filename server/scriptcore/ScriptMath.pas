@@ -48,6 +48,7 @@ type
   private
     FMath: TScriptMath;
   public
+    destructor Destroy; override;
     procedure CompilerRegister(Compiler: TPascalCompiler); override;
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
@@ -208,6 +209,11 @@ end;
 procedure ScriptMathGetPiHelper(Self: TScriptMath; var Result: Extended);
 begin
   Result := Self.Pi;
+end;
+
+destructor TScriptMathAPI.Destroy;
+begin
+  FreeAndNil(Self.FMath);
 end;
 
 procedure TScriptMathAPI.CompilerRegister(Compiler: TPascalCompiler);

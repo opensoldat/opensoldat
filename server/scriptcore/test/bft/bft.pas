@@ -22,7 +22,7 @@
 //
 
 const
-  COMMANDS_COLOR = $FF9966;
+  COMMANDS_COLOR        = $FF9966;
   INFO_CONSOLE_COLOR    = $EEEEEE;
   TEST_CONSOLE_COLOR    = $AAAAFF;
   PASS_CONSOLE_COLOR    = $88FF88;
@@ -240,6 +240,13 @@ procedure MyOnClockTick(Ticks: Integer);
 begin
   SLog('==========================================================', INFO);
   SLog('OnClockTick: ' + IntToStr(Ticks), INFO);
+  SLog('==========================================================', INFO);
+end;
+
+procedure MyOnIdle();
+begin
+  SLog('==========================================================', INFO);
+  SLog('OnIdle', INFO);
   SLog('==========================================================', INFO);
 end;
 
@@ -508,8 +515,8 @@ var
   VPos, VVel: TVector;
   NewPlayer: TNewPlayer;
   NewObject: TNewMapObject;
-  //Primary, Secondary: TNewWeapon;
-  CheckPlayer, LastBot: TActivePlayer;
+  ActivePlayer, LastBot: TActivePlayer;
+  NewTeam: Integer;
 begin
   SLog('==========================================================', INFO);
   SLog('OnSpeak event called:', INFO);
@@ -593,14 +600,14 @@ begin
       Player.SetVelocity(10.0, -20.0);
     Player.GiveBonus(1);
 
-    CheckPlayer := Players.GetByName(Player.Name);
-    if CheckPlayer.ID = Player.ID then
+    ActivePlayer := Players.GetByName(Player.Name);
+    if ActivePlayer.ID = Player.ID then
       SLog('Found by name', PASS)
     else
       SLog('Not found by name.', FAILURE);
 
-    CheckPlayer := Players.GetByIP(Player.IP);
-    if CheckPlayer.ID = Player.ID then
+    ActivePlayer := Players.GetByIP(Player.IP);
+    if ActivePlayer.ID = Player.ID then
       SLog('Found by IP', PASS)
     else
       SLog('Not found by IP.', FAILURE);
@@ -618,8 +625,12 @@ begin
     NewPlayer.Chain := 0;
     NewPlayer.Dummy := False;
     NewPlayer.ChatFrequency := 3;
-    Players.Add(NewPlayer, TJoinNormal);
+    ActivePlayer := Players.Add(NewPlayer, TJoinNormal);
     NewPlayer.Free;
+
+    NewTeam := 1 + (TestCount mod 2)
+    ActivePlayer.ChangeTeam(NewTeam, TJoinSilent);
+    ActivePlayer.Team := NewTeam;
 
     LastBot := Players.GetByName('bot' + IntToStr(TestCount));
 
@@ -801,6 +812,7 @@ begin
   Result := 'Unknown failure';
 
   Game.OnClockTick := @MyOnClockTick;
+  Game.OnIdle := @MyOnIdle;
   Map.OnBeforeMapChange := @MyOnBeforeMapChange;
   Map.OnAfterMapChange := @MyOnAfterMapChange;
   Game.OnRequest := @MyOnRequest;
@@ -867,6 +879,35 @@ begin
     Players[i].OnSpeak := @MyOnSpeak;
     Players[i].OnCommand := @MyOnCommand;
   end;
+
+  Result := '';
+end;
+
+// Currently this test exists just to check adding a bot at script launch time.
+function PlayerTest: String;
+var
+  NewPlayer: TNewPlayer;
+  ActivePlayer: TActivePlayer;
+begin
+  Result := 'Unknown failure';
+
+  NewPlayer := TNewPlayer.Create;
+  NewPlayer.Name := 'botlaunch';
+  NewPlayer.Team := 1;
+  NewPlayer.Health := 50.0;
+  NewPlayer.ShirtColor := $00FFFF;
+  NewPlayer.PantsColor := $FFFFFF;
+  NewPlayer.SkinColor := $DDAAAA;
+  NewPlayer.HairColor := $FFFF00;
+  NewPlayer.HairStyle := 1;
+  NewPlayer.Headgear := 20;
+  NewPlayer.Chain := 0;
+  NewPlayer.Dummy := False;
+  NewPlayer.ChatFrequency := 3;
+  ActivePlayer := Players.Add(NewPlayer, TJoinNormal);
+  NewPlayer.Free;
+
+  ActivePlayer.Team := 2;
 
   Result := '';
 end;
@@ -940,7 +981,6 @@ var
   MyStrings: TStringList;
 begin
   Result := 'Unknown failure';
-
 
   if StrToInt('420') <> 420 then
   begin
@@ -1323,7 +1363,6 @@ begin
     Result := 'TStringList.Move';
     Exit;
   end;
-
 
   // 1: 'Uiop' 'Asdf'
   MyStringList.Delete(0);
@@ -1825,13 +1864,110 @@ begin
   Exit;
   {$ENDIF}
 
+  {$IFDEF NOT_DEFINED}
+  Result := 'Defines 3';
+  Exit;
+  {$ENDIF}
+
+  Result := '';
+end;
+
+//
+// CompilerAndRuntimeTest utils.
+//
+
+function ReturnsByte: Byte;
+begin
+  Result := 65;
+end;
+
+function ReturnsShortInt: ShortInt;
+begin
+  Result := 66;
+end;
+
+function ReturnsWord: Word;
+begin
+  Result := 67;
+end;
+
+function ReturnsSmallInt: SmallInt;
+begin
+  Result := 68;
+end;
+
+function ReturnsLongWord: LongWord;
+begin
+  Result := 69;
+end;
+
+function ReturnsInteger: Integer;
+begin
+  Result := 70;
+end;
+
+function ReturnsInt64: Int64;
+begin
+  Result := 71;
+end;
+
+function CompilerAndRuntimeTest: String;
+var
+  c: Char;
+begin
+  Result := 'Unknown failure';
+
+  // Issue #133: Implicit conversions to char.
+  c := Chr(ReturnsByte());
+  if c <> #65 then
+  begin
+    Result := 'Byte to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsShortInt());
+  if c <> #66 then
+  begin
+    Result := 'ShortInt to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsWord());
+  if c <> #67 then
+  begin
+    Result := 'Word to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsSmallInt());
+  if c <> #68 then
+  begin
+    Result := 'SmallInt to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsLongWord());
+  if c <> #69 then
+  begin
+    Result := 'LongWord to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsInteger());
+  if c <> #70 then
+  begin
+    Result := 'Integer to Char implicit conversion';
+    Exit;
+  end;
+  c := Chr(ReturnsInt64());
+  if c <> #71 then
+  begin
+    Result := 'Int64 to Char implicit conversion';
+    Exit;
+  end;
+
   Result := '';
 end;
 
 procedure RunAllTests;
 var
   i, FailCount: Integer;
-  Tests: Array[0..6] of TTest;
+  Tests: Array[0..8] of TTest;
 begin
   // Register tests.
   Tests[0].Name := 'BanLists'; // ScriptBanLists.pas
@@ -1844,10 +1980,14 @@ begin
   Tests[3].Fn := @FileAPITest;
   Tests[4].Name := 'Math'; // ScriptMath.pas
   Tests[4].Fn := @MathTest;
-  Tests[5].Name := 'Events'; // Events
-  Tests[5].Fn := @EventsTest;
-  Tests[6].Name := 'Defines'; // Defines
-  Tests[6].Fn := @DefinesTest;
+  Tests[6].Name := 'Events'; // Events
+  Tests[6].Fn := @EventsTest;
+  Tests[5].Name := 'Player'; // ScriptPlayer.pas
+  Tests[5].Fn := @PlayerTest;
+  Tests[7].Name := 'Defines'; // Defines
+  Tests[7].Fn := @DefinesTest;
+  Tests[8].Name := 'CompilerAndRuntime'; // PascalScript regression tests
+  Tests[8].Fn := @CompilerAndRuntimeTest;
 
   // Run tests.
   for i := Low(Tests) to High(Tests) do

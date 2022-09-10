@@ -31,9 +31,9 @@ uses
 procedure WriteLn(S: Variant); overload;
 begin
   if CvarsInitialized and log_timestamp.Value then
-    System.Writeln(FormatDateTime('[hh:nn:ss] ', Now) + S)
+    System.WriteLn(FormatDateTime('[hh:nn:ss] ', Now) + S)
   else
-    System.Writeln(S);
+    System.WriteLn(S);
 end;
 
 function IDtoName(ID: Integer): String;
@@ -103,7 +103,7 @@ end;
 
 function FixTeam(Team: Byte): Byte;
 begin
-  Result := TEAM_SPECTATOR;
+  Result := Team;
 
   case sv_gamemode.Value of
     GAMESTYLE_DEATHMATCH, GAMESTYLE_POINTMATCH, GAMESTYLE_RAMBO:
@@ -216,7 +216,7 @@ begin
     WriteLn(' Server PID: ' + IntToStr(PID));
     CloseFile(PIDFile);
   except
-    writeln('Error writing PID file');
+    WriteLn('Error writing PID file');
   end;
 end;
 

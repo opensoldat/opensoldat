@@ -6,7 +6,7 @@ uses
   // helper units
   Vector,
 
-  // opensoldat units
+  // OpenSoldat units
   {$IFDEF SERVER}Steam,{$ENDIF}
   Net, Sprites, Constants;
 

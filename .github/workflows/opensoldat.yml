@@ -1,20 +1,32 @@
 on: [push, pull_request, workflow_dispatch]
-name: opensoldat
+name: OpenSoldat
 jobs:
   linux:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
+      - name: Checkout OpenSoldat code
         uses: actions/checkout@v2
+
+      - name: Checkout launcher code
+        uses: actions/checkout@v2
+        with:
+          repository: opensoldat/launcher
+          path: launcher
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install cmake git fpc libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6 patchelf
+          sudo apt-get install cmake git libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6 patchelf
 
-      - name: Compile opensoldat
+      - name: Install fpc
+        run: |
+          curl -L -o ./fpc.deb https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.2.2/fpc-laz_3.2.2-210709_amd64.deb/download
+          sudo apt-get install ./fpc.deb
+
+      - name: Compile OpenSoldat
         run: |
           export BUILD_ID=${GITHUB_SHA::8}
+
           mkdir build
           cd build
           cmake .. -DCMAKE_INSTALL_PREFIX=./opensoldat \
@@ -29,45 +41,57 @@ jobs:
           cd ..
 
           cmake .. -DBUILD_CLIENT=0 \
-                   -DCMAKE_INSTALL_PREFIX=./opensoldatserver \
+                   -DCMAKE_INSTALL_PREFIX=./OpenSoldatServer \
                    -DCMAKE_BUILD_TYPE=Release \
                    -DCMAKE_INSTALL_LIBDIR="." \
                    -DCMAKE_INSTALL_BINDIR="." \
                    -DCMAKE_INSTALL_DATADIR="."
           make install
-          cd opensoldatserver
+          cd OpenSoldatServer
           ../../.github/workflows/copy-libs.sh . .
+
+      - name: Build launcher
+        run: |
+          cp -R build/opensoldat/ launcher/
+          cd launcher
+          npm ci
+          npm run make
 
       # We use .tar to preserve file permissions
       - name: Tar files
         run: |
-          tar -cvf opensoldat.tar -C build opensoldat
-          tar -cvf opensoldatserver.tar -C build opensoldatserver
+          tar -cvf OpenSoldatServer-linux-x64.tar -C build OpenSoldatServer
 
       - name: Upload game build
         uses: actions/upload-artifact@v2
         with:
           name: linux-build
-          path: opensoldat.tar
+          path: launcher/out/make/zip/linux/x64/
 
       - name: Upload server-only build
         uses: actions/upload-artifact@v2
         with:
           name: linux-server-build
-          path: opensoldatserver.tar
+          path: OpenSoldatServer-linux-x64.tar
 
   windows:
     runs-on: windows-latest
     steps:
-      - name: Checkout code
+      - name: Checkout OpenSoldat code
         uses: actions/checkout@v2
+
+      - name: Checkout launcher code
+        uses: actions/checkout@v2
+        with:
+          repository: opensoldat/launcher
+          path: launcher
 
       - name: Cache fpc
         id: fpc
         uses: actions/cache@v2
         with:
           path: C:\fpc
-          key: freepascal
+          key: freepascal-3.2.2
 
       - name: Cache vcpkg
         id: vcpkg-cache
@@ -79,13 +103,11 @@ jobs:
       - name: Download freepascal
         if: steps.fpc.outputs.cache-hit != 'true'
         run: |
-          curl -o C:\fpc32.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.0.4/i386-win32/fpc-3.0.4.i386-win32.exe
-          curl -o C:\fpc64.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.0.4/i386-win32/fpc-3.0.4.i386-win32.cross.x86_64-win64.exe
+          curl -o C:\fpc64.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/i386-win32/fpc-3.2.2.win32.and.win64.exe
 
       - name: Install freepascal
         if: steps.fpc.outputs.cache-hit != 'true'
         run: |
-           C:\fpc32.exe /silent /nocancel /suppressmsgboxes=no
            C:\fpc64.exe /silent /nocancel /suppressmsgboxes=no
         shell: cmd
 
@@ -93,24 +115,40 @@ jobs:
         run: |
           vcpkg.exe --triplet x64-windows install sdl2 physfs openssl protobuf freetype openal-soft
 
-      - name: Build opensoldat
+      - name: Build OpenSoldat
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
-          set PATH=%PATH%;C:\fpc\3.0.4\bin\i386-win32
+          set PATH=%PATH%;C:\fpc\3.2.2\bin\i386-win32
           set OPENSSL_ROOT_DIR=C:\vcpkg\installed\x64-windows
           set PHYSFSDIR=C:\vcpkg\installed\x64-windows
           set BUILD_ID=%GITHUB_SHA:~0,8%
           mkdir build
           cd build
-          cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=.\opensoldat -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake"  -DSDL2_BUILDING_LIBRARY=1 ..
+          cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=..\launcher\opensoldat -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake" -DSDL2_BUILDING_LIBRARY=1 ..
           nmake
           nmake install
+
+          cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=.\OpenSoldatServer-win32-x64 -DCROSS_WINDOWS_64=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake" -DSDL2_BUILDING_LIBRARY=1 -DBUILD_CLIENT=0 ..
+          nmake
+          nmake install
+
         shell: cmd
+
+      - name: Build launcher
+        run: |
+          cd launcher
+          npm ci
+          npm run make
 
       - uses: actions/upload-artifact@v2
         with:
           name: windows-build
-          path: build/opensoldat/
+          path: launcher/out/make/zip/win32/x64/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: OpenSoldatServer-win32-x64
+          path: build/OpenSoldatServer-win32-x64
 
   macos:
     runs-on: macos-latest
@@ -124,13 +162,13 @@ jobs:
         run: |
           brew install openssl@1.1 protobuf fpc cmake sdl2 physfs freetype2
 
-      - name: Compile opensoldat
+      - name: Compile OpenSoldat
         run: |
           export BUILD_ID=${GITHUB_SHA::8}
           mkdir build
           cd build
           export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@1.1/lib/pkgconfig
-          cmake -DCMAKE_INSTALL_PREFIX=./opensoldat -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@1.1) .. -DCMAKE_BUILD_TYPE="Release"
+          cmake -DCMAKE_INSTALL_PREFIX=./OpenSoldat-macos-x64 -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@1.1) .. -DCMAKE_BUILD_TYPE="Release"
           make
           make install
 
@@ -139,13 +177,13 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: macos-build
-          path: build/opensoldat
+          name: OpenSoldat-macos-x64
+          path: build/OpenSoldat-macos-x64
 
   continuous:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
-    needs: [windows, macos]
+    needs: [linux, windows, macos]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -155,19 +193,22 @@ jobs:
 
       - name: Zip build dirs back together
         run: |
-          zip -r windows-build.zip windows-build
-          chmod +x macos-build/opensoldat
-          chmod +x macos-build/opensoldatserver
-          zip -r macos-build.zip macos-build
-          zip -r linux-server-build.zip linux-server-build
+          chmod +x OpenSoldat-macos-x64/opensoldat
+          chmod +x OpenSoldat-macos-x64/opensoldatserver
+          zip -r OpenSoldat-macos-x64.zip OpenSoldat-macos-x64
+          zip -r OpenSoldatServer-win32-x64.zip OpenSoldatServer-win32-x64
 
       - name: Upload release
-        uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
-        with:
-          tag_name: continuous
-          files: |
-            windows-build.zip
-            macos-build.zip
-            linux-server-build.zip
-          body: OpenSoldat 1.8 alpha dev build
-          name: OpenSoldat 1.8 alpha dev build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch --tags
+          if git rev-parse continuous &>/dev/null; then
+            gh release delete continuous --yes
+            git tag --delete continuous
+            git push --delete origin continuous
+          fi
+
+          git tag continuous
+          git push --tags origin continuous
+          gh release create continuous windows-build/*.zip OpenSoldatServer-win32-x64.zip OpenSoldat-macos-x64.zip linux-build/*.zip linux-server-build/*.tar --notes "OpenSoldat 1.8 alpha dev build" --title "OpenSoldat 1.8 alpha dev build"

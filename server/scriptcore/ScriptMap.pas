@@ -49,6 +49,7 @@ type
     function GetName: string;
   public
     constructor Create;
+    destructor Destroy; override;
     function GetFlag(ID: Integer): TScriptActiveFlag;
     function RayCast(x1, y1, x2, y2: Single; Player: Boolean = False;
       Flag: Boolean = False; Bullet: Boolean = True; CheckCollider: Boolean = False;
@@ -80,6 +81,7 @@ type
     FMap: TScriptMap;
   public
     //constructor Create(ScriptCore3: TScript);
+    destructor Destroy; override;
     procedure CompilerRegister(Compiler: TPascalCompiler); override;
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
@@ -103,6 +105,20 @@ begin
   for I := 1 to MAX_SPAWNPOINTS do
     Self.FSpawnpoints[I] :=
       TScriptActiveSpawnPoint.CreateActive(I, Map.SpawnPoints[I]);
+end;
+
+destructor TScriptMap.Destroy;
+var
+  i: Integer;
+begin
+  for i := Low(Self.FObjects) to High(Self.FObjects) do
+    Self.FObjects[i].Free;
+  for i := Low(Self.FBullets) to High(Self.FBullets) do
+    Self.FBullets[i].Free;
+  for i := Low(Self.FSpawnpoints) to High(Self.FSpawnpoints) do
+    Self.FSpawnpoints[i].Free;
+  for i := Low(Self.FLastFlagObjs) to High(Self.FLastFlagObjs) do
+    Self.FLastFlagObjs[i].Free;
 end;
 
 function TScriptMap.GetObject(ID: Byte): TScriptActiveObject;
@@ -364,6 +380,12 @@ end;
 procedure OnAfterMapWriteHelper(Self: TScriptMap; const Result: TOnAfterMapChange);
 begin
   Self.OnAfterMapChange := Result;
+end;
+
+destructor TScriptMapAPI.Destroy;
+begin
+  FreeAndNil(FMap);
+  inherited;
 end;
 
 procedure TScriptMapAPI.CompilerRegister(Compiler: TPascalCompiler);

@@ -27,7 +27,7 @@ uses
 
   Steam,
 
-  // opensoldat units
+  // OpenSoldat units
   Weapons, Constants;
 
 const
@@ -131,7 +131,7 @@ const
   // Kick/Ban Why's
   KICK_UNKNOWN = 0;
   KICK_NORESPONSE = 1;
-  KICK_NOCHEATRESPONSE = 2; // TOOD remove?
+  KICK_NOCHEATRESPONSE = 2; // TODO remove?
   KICK_CHANGETEAM = 3; // TODO remove?
   KICK_PING = 4;
   KICK_FLOODING = 5;
@@ -868,7 +868,6 @@ uses
   NetworkServerSprite, NetworkServerThing, NetworkServerMessages,
   NetworkServerBullet, NetworkServerConnection, NetworkServerGame,
   NetworkServerFunctions
-  {$IFDEF SCRIPT}, ScriptDispatcher{$ENDIF}
   {$ENDIF}
   ;
 
@@ -886,10 +885,11 @@ end;
 {$POP}
 
 constructor TNetwork.Create();
-{$IFNDEF STEAM}
 var
+{$IFNDEF STEAM}
   ErrorMsg: SteamNetworkingErrMsg;
 {$ENDIF}
+  Zero: Int64 = 0;
 begin
   FInit := True;
 
@@ -919,6 +919,7 @@ begin
     raise Exception.Create('NetworkingUtils is null');
 
   NetworkingUtils.SetGlobalCallback_SteamNetConnectionStatusChanged(@ProcessEventsCallback);
+  NetworkingUtils.SetConfigValue(k_ESteamNetworkingConfig_ConnectionUserData, k_ESteamNetworkingConfig_Global, 0, k_ESteamNetworkingConfig_Int64, @Zero);
 
   NetworkingUtils.SetDebugOutputFunction(k_ESteamNetworkingSocketsDebugOutputType_Msg, DebugNet);
   //NetworkingUtils.SetDebugOutputFunction(k_ESteamNetworkingSocketsDebugOutputType_Everything, DebugNet);
@@ -1080,11 +1081,11 @@ begin
       k_ESteamNetworkingConnectionState_ClosedByPeer, k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
       begin
         if pInfo.m_eOldState = k_ESteamNetworkingConnectionState_Connecting then
-          WriteLn('[NET] Connection error #1', pInfo.m_info.m_szEndDebug)
+          WriteLn('[NET] Connection error #1: ', pInfo.m_info.m_szEndDebug)
         else if pInfo.m_info.m_eState = k_ESteamNetworkingConnectionState_ProblemDetectedLocally then
-          WriteLn('[NET] Connection error #2', pInfo.m_info.m_szEndDebug)
+          WriteLn('[NET] Connection error #2: ', pInfo.m_info.m_szEndDebug)
         else
-          WriteLn('[NET] Connection error #3', pInfo.m_info.m_szEndDebug);
+          WriteLn('[NET] Connection error #3: ', pInfo.m_info.m_szEndDebug);
 
         // No need to inform players about closed connection when
         // they already received the UnAccepted packet.
@@ -1363,6 +1364,7 @@ var
   info: array[0..128] of Char;
   Player: TPlayer;
   TempIP: TIPString;
+  UserData: Int64;
 begin
   TempIP := Default(TIPString);
   {$IFDEF DEVELOPMENT}
@@ -1372,18 +1374,19 @@ begin
     k_ESteamNetworkingConnectionState_None:
     begin
       FPeer := k_HSteamNetConnection_Invalid;
-      WriteLn('[Net] Destroying peer handle');
+      WriteLn('[NET] Destroying peer handle');
     end;
     k_ESteamNetworkingConnectionState_ClosedByPeer, k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
     begin
-      if pInfo.m_info.m_nUserData = 0 then
+      UserData := NetworkingSockets.GetConnectionUserData(pInfo.m_hConn);
+      if UserData = 0 then
       begin
         NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, '', False);
         Exit;
       end;
       // NOTE that this is not called for ordinary disconnects, where we use enet's disconnect_now,
       // which does not generate additional events. Cleanup of Player is still performed explicitly.
-      Player := TPlayer(pInfo.m_info.m_nUserData);
+      Player := TPlayer(UserData);
 
       if Player = nil then
       begin
@@ -1393,23 +1396,11 @@ begin
 
       // the sprite may be zero if we're still in the setup phase
       if Player.SpriteNum <> 0 then
-      begin
         MainConsole.Console(Player.Name + ' could not respond', WARNING_MESSAGE_COLOR);
-        ServerPlayerDisconnect(Player.SpriteNum, KICK_NORESPONSE);
-        {$IFDEF SCRIPT}
-        ScrptDispatcher.OnLeaveGame(Player.SpriteNum, False);
-        {$ENDIF}
-        Sprite[Player.SpriteNum].Kill;
-        Sprite[Player.SpriteNum].Player := DummyPlayer;
-      end;
+
+      ServerPlayerDisconnect(Player, KICK_NORESPONSE, True);
 
       WriteLn('[NET] Connection lost: ' + IntToStr(pInfo.m_info.m_eEndReason)  + PChar(pInfo.m_info.m_szConnectionDescription));
-
-      // call destructor; this releases any additional resources managed for the connection, such
-      // as anti-cheat handles etc.
-      Players.Remove(Player);
-
-      NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, '', false);
     end;
     k_ESteamNetworkingConnectionState_Connecting:
     begin
@@ -1430,7 +1421,6 @@ begin
           end;
           NetworkingSockets.AcceptConnection(pInfo.m_hConn);
           pInfo.m_info.m_identityRemote.ToString(@info, 1024);
-          NetworkingSockets.SetConnectionUserData(pInfo.m_hConn, 0);
         end;
       end;
     end;
@@ -1467,7 +1457,7 @@ begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
     Exit; // truncated packet
 
-  if IncomingMsg^.m_nConnUserData = -1 then
+  if IncomingMsg^.m_nConnUserData = 0 then
     Exit;
 
   Player := TPlayer(IncomingMsg^.m_nConnUserData);
@@ -1548,7 +1538,7 @@ begin
   if FPollGroup <> k_HSteamNetPollGroup_Invalid then
     NetworkingSockets.DestroyPollGroup(FPollGroup);
 
-  Players.Clear;
+  Players.Free;
 
   Inherited;
 end;

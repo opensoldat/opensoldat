@@ -11,7 +11,7 @@ uses
 
   {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
 
-  // opensoldat units
+  // OpenSoldat units
   PolyMap, {$IFDEF SERVER}Steam,{$ENDIF} Net, Sprites, Weapons, Constants;
 
   {$IFDEF SERVER}
@@ -24,7 +24,7 @@ uses
   function GetBanStrForIndex(BanIndex: Integer; BanHW: Boolean = False): string; // TODO move?
   procedure ServerSendUnAccepted(Peer: HSteamNetConnection; State: Byte; Message: string = '');
   procedure ServerDisconnect;
-  procedure ServerPlayerDisconnect(Num, Why: Byte);
+  procedure ServerPlayerDisconnect(Player: TPlayer; Why: Byte; Now: Boolean = False);
   procedure ServerPing(ToNum: Byte);
   {$ENDIF}
   procedure ServerSyncCvars({$IFDEF SERVER}ToNum: Byte; peer: HSteamNetConnection;{$ENDIF} FullSync: Boolean = False);
@@ -687,37 +687,115 @@ end;
 procedure ServerDisconnect;
 var
   ServerMsg: TMsg_ServerDisconnect;
-  i: Integer;
   DstPlayer: TPlayer;
+  i: Integer;
 begin
   ServerMsg.Header.ID := MsgID_ServerDisconnect;
 
   // NOTE send to pending like above
   for DstPlayer in Players do
-    UDP.SendData(ServerMsg, sizeof(ServerMsg), DstPlayer.peer, k_nSteamNetworkingSend_Reliable);
+    UDP.SendData(ServerMsg, SizeOf(ServerMsg), DstPlayer.peer, k_nSteamNetworkingSend_Reliable);
+
+  while Players.Count > 0 do
+    ServerPlayerDisconnect(Players[0], KICK_LEFTGAME);
 
   for i := 1 to MAX_PLAYERS do
-    if (Sprite[i].Active) and (Sprite[i].Player.ControlMethod = HUMAN) then
-    begin
+    if Sprite[i].Active and (Sprite[i].Player.ControlMethod = HUMAN) then
       Sprite[i].Kill;
-    end;
 end;
 
-procedure ServerPlayerDisconnect(Num, Why: Byte);
+procedure ServerPlayerDisconnect(Player: TPlayer; Why: Byte; Now: Boolean = False);
 var
-  PlayerMsg: TMsg_PlayerDisconnect;
+  PlayerDisconnectMsg: TMsg_PlayerDisconnect;
   DstPlayer: TPlayer;
+  j: Integer;
+  Num: Integer;
+  {$IFDEF SCRIPT}
+  Kicked: Boolean;
+  {$ENDIF}
 begin
-  PlayerMsg.Header.ID := MsgID_PlayerDisconnect;
-  PlayerMsg.Num := Num;
-  PlayerMsg.Why := Why;
+  Num := Player.SpriteNum;
+  if Num <> 0 then
+  begin
+    for j := 0 to Sprite[Num].BulletCheckAmount do
+      Sprite[Num].BulletCheck[j] := 0;
 
-  // NOTE send to pending like above
-  for DstPlayer in Players do
-    UDP.SendData(PlayerMsg, sizeof(PlayerMsg), DstPlayer.peer, k_nSteamNetworkingSend_Reliable);
+    Sprite[Num].BulletCheckIndex := 0;
+    Sprite[Num].BulletCheckAmount := 0;
 
-  AddLineToLogFile(GameLog, ' Net - ' + Sprite[Num].Player.Name +
-    ' disconnected ' + DateToStr(Date) + ' ' + TimeToStr(Time), ConsoleLogFileName);
+    Inc(MessagesASecNum[Num]);
+
+    if (VoteActive) and (VoteType = VOTE_KICK) then
+      if StrToInt(VoteTarget) = Num then
+      begin
+        KickPlayer(Num, True, KICK_VOTED, FIVE_MINUTES,
+          'Vote Kicked (Left game)');
+        StopVote;
+        Exit;
+      end;
+
+    if Why <> KICK_SILENT then
+    begin
+      case Player.Team of
+        TEAM_NONE: MainConsole.Console(
+            Player.Name + ' has left the game.',
+            ENTER_MESSAGE_COLOR);
+        TEAM_ALPHA: MainConsole.Console(
+            Player.Name + ' has left alpha team.',
+            ALPHAJ_MESSAGE_COLOR);
+        TEAM_BRAVO: MainConsole.Console(
+            Player.Name + ' has left bravo team.',
+            BRAVOJ_MESSAGE_COLOR);
+        TEAM_CHARLIE: MainConsole.Console(
+            Player.Name + ' has left charlie team.',
+            CHARLIEJ_MESSAGE_COLOR);
+        TEAM_DELTA: MainConsole.Console(
+            Player.Name + ' has left delta team.',
+            DELTAJ_MESSAGE_COLOR);
+        TEAM_SPECTATOR: MainConsole.Console(
+            Player.Name + ' has left spectators', DELTAJ_MESSAGE_COLOR);
+      end;
+    end;
+
+    PlayerDisconnectMsg.Header.ID := MsgID_PlayerDisconnect;
+    PlayerDisconnectMsg.Num := Num;
+    PlayerDisconnectMsg.Why := Why;
+
+    // NOTE send to pending like above
+    for DstPlayer in Players do
+      UDP.SendData(PlayerDisconnectMsg,
+                   SizeOf(PlayerDisconnectMsg),
+                   DstPlayer.Peer,
+                   k_nSteamNetworkingSend_Reliable);
+
+    {$IFDEF SCRIPT}
+    Kicked := Why in [KICK_AC, KICK_CHEAT, KICK_CONSOLE, KICK_PING, KICK_NORESPONSE,
+        KICK_NOCHEATRESPONSE, KICK_FLOODING, KICK_VOTED, KICK_SILENT];
+    ScrptDispatcher.OnLeaveGame(Num, Kicked);
+    {$ENDIF}
+
+    if Sprite[Num].IsNotSpectator() and (Why <> KICK_AC) and (Why <> KICK_CHEAT) and (Why <> KICK_CONSOLE) and (Why <> KICK_VOTED) then
+      Sprite[Num].DropWeapon();
+
+    Sprite[Num].Kill;
+    Sprite[Num].Player := DummyPlayer;
+
+    for j := 1 to MAX_PLAYERS do
+      if (Trim(TKList[j]) = '') or (TKList[j] = Player.IP) then
+      begin
+        TKListKills[j] := Player.TKWarnings;
+        TKList[j] := Player.IP;
+        Break;
+      end;
+
+    DoBalanceBots(1, Player.Team);
+
+    AddLineToLogFile(GameLog, ' Net - ' + Player.Name +
+      ' disconnected ' + DateToStr(Date) + ' ' + TimeToStr(Time), ConsoleLogFileName);
+  end;
+
+  UDP.NetworkingSocket.CloseConnection(Player.Peer, 0, '', not Now);
+  Players.Remove(Player);
 end;
 
 procedure ServerPing(ToNum: Byte);

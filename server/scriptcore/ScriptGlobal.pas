@@ -41,6 +41,7 @@ type
     FGlobal: TScriptGlobal;
   public
     constructor Create(Script: TScript);
+    destructor Destroy; override;
     procedure CompilerRegister(Compiler: TPascalCompiler); override;
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
@@ -73,6 +74,12 @@ constructor TScriptGlobalAPI.Create(Script: TScript);
 begin
   inherited Create(Script);
   Self.FGlobal := TScriptGlobal.Create;
+end;
+
+destructor TScriptGlobalAPI.Destroy;
+begin
+  FreeAndNil(Self.FGlobal);
+  inherited;
 end;
 
 procedure TScriptGlobalAPI.CompilerRegister(Compiler: TPascalCompiler);

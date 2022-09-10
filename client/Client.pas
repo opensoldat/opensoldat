@@ -40,10 +40,10 @@ uses
   // anti-cheat units
   {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
 
-  // opensoldat units
+  // OpenSoldat units
   Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
   NetworkClientConnection, GameMenus, Demo, Console,
-  Weapons, Constants, Game, GameRendering;
+  Weapons, Constants, Game, GameRendering, ClientLauncherIPC;
 
 procedure JoinServer;
 procedure StartGame;
@@ -190,13 +190,13 @@ var
   font_weaponmenusize: TIntegerCvar;
   font_killconsolenamespace: TIntegerCvar;
 
-  // Matchmaking cvars
-  mm_ranked: TBooleanCvar;
+  launcher_ipc_enable: TBooleanCvar;
+  launcher_ipc_port: TIntegerCvar;
+  launcher_ipc_reconnect_rate: TIntegerCvar;
 
   sv_respawntime: TIntegerCvar; // TODO: Remove
   sv_inf_redaward: TIntegerCvar; // TODO: Remove
   net_contype: TIntegerCvar; // TODO: Remove
-  net_compression: TBooleanCvar; // TODO: Remove
   net_allowdownload: TBooleanCvar;
 
   // syncable cvars
@@ -215,7 +215,7 @@ var
   sv_realisticmode: TBooleanCvar;
   sv_advancemode: TBooleanCvar;
   sv_advancemode_amount: TIntegerCvar;
-  sv_minimap: TBooleanCvar;
+  sv_minimap_locations: TBooleanCvar;
   sv_advancedspectator: TBooleanCvar;
   sv_radio: TBooleanCvar;
   sv_info: TStringCvar;
@@ -247,6 +247,7 @@ var
 
   // Network
   UDP: TClientNetwork;
+  LauncherIPC: TClientLauncherIPC;
 
   // Consoles
   MainConsole: TConsole;
@@ -264,7 +265,6 @@ var
 
   BadMapIDCount: Byte;
 
-  ExeName: string;
   AbnormalTerminate: Boolean = False;
 
   HWID: string;
@@ -341,7 +341,7 @@ var
 begin
   if PHYSFS_Exists(PChar(ModDir + 'txt/weaponnames.txt')) then
     Prefix := ModDir
-  else 
+  else
     Prefix := '';
 
   MainConsole.Console(_('Loading Weapon Names from') + WideString(' ' + Prefix + 'txt/weaponnames.txt'), DEBUG_MESSAGE_COLOR);
@@ -578,84 +578,15 @@ var
   BasePathSDL: PChar;
   UserPathSDL: PChar;
   i: Integer;
+  s: String;
 begin
-  ExeName := ParamStr(0);
-  UserPathSDL := SDL_GetPrefPath('OpenSoldat', 'OpenSoldat');
-  BasePathSDL := SDL_GetBasePath();
+  Randomize;
 
-  CvarInit();
-  InitClientCommands();
-  ParseCommandLine();
-
-  // NOTE: fs_basepath, fs_userpath and fs_portable must be set from command
-  // line, not in client.cfg.
-  if fs_portable.Value then
-  begin
-    UserDirectory := BasePathSDL;
-    BaseDirectory := BasePathSDL;
-    Debug('[FS] Portable mode enabled.');
-  end
-  else
-  begin
-    if fs_userpath.Value = '' then
-      UserDirectory := UserPathSDL;
-    if fs_basepath.Value = '' then
-      BaseDirectory := BasePathSDL;
-  end;
-
-  Debug('[FS] UserDirectory: ' + UserDirectory);
-  Debug('[FS] BaseDirectory: ' + BaseDirectory);
-
-  // Now that we have UserDirectory and BaseDirectory set, we can create the
-  // basic directory structure and unpack the necessary config files.
-  CreateDirIfMissing(UserDirectory + '/configs');
-  CreateDirIfMissing(UserDirectory + '/screens');
-  CreateDirIfMissing(UserDirectory + '/demos');
-  CreateDirIfMissing(UserDirectory + '/logs');
-  CreateDirIfMissing(UserDirectory + '/logs/kills');
-  CreateDirIfMissing(UserDirectory + '/maps');
-  CreateDirIfMissing(UserDirectory + '/mods');
-
-  PHYSFS_CopyFileFromArchive('configs/client.cfg', UserDirectory + '/configs/client.cfg');
-  PHYSFS_CopyFileFromArchive('configs/taunts.cfg', UserDirectory + '/configs/taunts.cfg');
-
-  LoadConfig('client.cfg');
-
-  // NOTE: Code depending on CVars should be run after this line if possible.
-  CvarsInitialized := True;
-
-  NewLogFiles;
-
-  // TODO remove HWIDs, replace by Fae auth tickets
-  HWID := '00000000000';
-
-  {$IFDEF MSWINDOWS}
-  if r_sleeptime.Value > 0 then
-    timeBeginPeriod(r_sleeptime.Value);
-  {$ENDIF}
-
-  Initing := 0;
   DefaultFormatSettings.DecimalSeparator := '.';
   DefaultFormatSettings.DateSeparator := '-';
 
-  {$IFDEF STEAM}
-  Debug('[Steam] Initializing system');
-  // Initialize steam
-  try
-    SteamAPI := TSteam.Init;
-  except
-    on e: Exception do
-    begin
-      ShowMessage(_('Could not initialize Steam API. Try to run the game directly through Steam'));
-      Exit;
-    end;
-  end;
-
-  //SteamAPI.Utils.SetWarningMessageHook(SteamWarning);
-  //SteamCallbackDispatcher.Create(1221, @SteamNetConnectionStatusChangedCallback, SizeOf(SteamNetConnectionStatusChangedCallback_t));
-  //SteamCallbackDispatcher.Create(2301, @OnScreenshotReady, SizeOf(ScreenshotReady_t));
-  //SteamCallbackDispatcher.Create(3406, @DownloadItemResult, SizeOf(DownloadItemResult_t));
-  {$ENDIF}
+  UserPathSDL := SDL_GetPrefPath('OpenSoldat', 'OpenSoldat');
+  BasePathSDL := SDL_GetBasePath();
 
   Debug('[PhysFS] Initializing system');
 
@@ -664,6 +595,44 @@ begin
     ShowMessage(_('Could not initialize PhysFS. Try to reinstall the game.'));
     Exit;
   end;
+
+  CvarInit();
+  InitClientCommands();
+  ParseCommandLine();
+
+  // NOTE: fs_basepath, fs_userpath, fs_portable and fs_localmount
+  // must be set from command line, not in client.cfg.
+  if fs_portable.Value then
+  begin
+    UserDirectory := BasePathSDL;
+    BaseDirectory := BasePathSDL;
+    Debug('[FS] Portable mode enabled.');
+  end
+  else
+  begin
+    UserDirectory := UserPathSDL;
+    if fs_userpath.Value <> '' then
+    begin
+      s := ExpandFileName(fs_userpath.Value);
+      if DirectoryExists(s) then
+        UserDirectory := IncludeTrailingPathDelimiter(s)
+      else
+        Debug('[FS] Warning: Specified fs_userpath directory ''' + fs_userpath.Value + ''' does not exist.');
+    end;
+
+    BaseDirectory := BasePathSDL;
+    if fs_basepath.Value <> '' then
+    begin
+      s := ExpandFileName(fs_basepath.Value);
+      if DirectoryExists(s) then
+        BaseDirectory := IncludeTrailingPathDelimiter(s)
+      else
+        Debug('[FS] Warning: Specified fs_basepath directory ''' + fs_basepath.Value + ''' does not exist.');
+    end;
+  end;
+
+  Debug('[FS] UserDirectory: ' + UserDirectory);
+  Debug('[FS] BaseDirectory: ' + BaseDirectory);
 
   Debug('[PhysFS] Mounting game archive');
 
@@ -683,6 +652,65 @@ begin
     end;
     GameModChecksum := Sha1File(BaseDirectory + '/soldat.smod', 4096);
   end;
+
+  // Now that the game archive is mounted, and we have UserDirectory and BaseDirectory set,
+  // we can create the basic directory structure and unpack the necessary config files.
+  CreateDirIfMissing(UserDirectory + '/configs');
+  CreateDirIfMissing(UserDirectory + '/screens');
+  CreateDirIfMissing(UserDirectory + '/demos');
+  CreateDirIfMissing(UserDirectory + '/logs');
+  CreateDirIfMissing(UserDirectory + '/logs/kills');
+  CreateDirIfMissing(UserDirectory + '/maps');
+  CreateDirIfMissing(UserDirectory + '/mods');
+
+  PHYSFS_CopyFileFromArchive('configs/bindings.cfg', UserDirectory + '/configs/bindings.cfg');
+  PHYSFS_CopyFileFromArchive('configs/client.cfg', UserDirectory + '/configs/client.cfg');
+  PHYSFS_CopyFileFromArchive('configs/controls.cfg', UserDirectory + '/configs/controls.cfg');
+  PHYSFS_CopyFileFromArchive('configs/game.cfg', UserDirectory + '/configs/game.cfg');
+  PHYSFS_CopyFileFromArchive('configs/graphics.cfg', UserDirectory + '/configs/graphics.cfg');
+  PHYSFS_CopyFileFromArchive('configs/player.cfg', UserDirectory + '/configs/player.cfg');
+  PHYSFS_CopyFileFromArchive('configs/sound.cfg', UserDirectory + '/configs/sound.cfg');
+
+  LoadConfig('client.cfg');
+
+  // NOTE: Code depending on CVars should be run after this line if possible.
+  CvarsInitialized := True;
+
+  if launcher_ipc_enable.Value then begin
+    LauncherIPC := TClientLauncherIPC.Create;
+    LauncherIPC.Connect(launcher_ipc_port.Value);
+  end;
+
+  NewLogFiles;
+
+  // TODO remove HWIDs, replace by Fae auth tickets
+  HWID := '00000000000';
+
+  {$IFDEF MSWINDOWS}
+  if r_sleeptime.Value > 0 then
+    timeBeginPeriod(r_sleeptime.Value);
+  {$ENDIF}
+
+  Initing := 0;
+
+  {$IFDEF STEAM}
+  Debug('[Steam] Initializing system');
+  // Initialize steam
+  try
+    SteamAPI := TSteam.Init;
+  except
+    on e: Exception do
+    begin
+      ShowMessage(_('Could not initialize Steam API. Try to run the game directly through Steam'));
+      Exit;
+    end;
+  end;
+
+  //SteamAPI.Utils.SetWarningMessageHook(SteamWarning);
+  //SteamCallbackDispatcher.Create(1221, @SteamNetConnectionStatusChangedCallback, SizeOf(SteamNetConnectionStatusChangedCallback_t));
+  //SteamCallbackDispatcher.Create(2301, @OnScreenshotReady, SizeOf(ScreenshotReady_t));
+  //SteamCallbackDispatcher.Create(3406, @DownloadItemResult, SizeOf(DownloadItemResult_t));
+  {$ENDIF}
 
   ModDir := '';
 
@@ -954,6 +982,11 @@ begin
   AddLineToLogFile(GameLog, 'PhysFS closing.', ConsoleLogFileName);
 
   PhysFS_deinit();
+
+  if launcher_ipc_enable.Value then begin
+    AddLineToLogFile(GameLog, 'Launcher connection closing.', ConsoleLogFileName);
+    FreeAndNil(LauncherIPC);
+  end;
 
   {$IFDEF STEAM}
   AddLineToLogFile(GameLog, 'Steam API closing.', ConsoleLogFileName);
