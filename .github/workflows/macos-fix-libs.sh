@@ -9,9 +9,13 @@ getpngversion()
   version=$(otool -L ${1} | grep "libpng" | sed s/".*png[0-9]*\."// | sed s/"\.dylib.*"//)
 }
 
-echo "Starting from $(pwd)"
-
 cd build
+
+echo "Starting from $(pwd)"
+echo "This is here:"
+ls
+
+echo "Fixing libs"
 
 getversion "freetype" "opensoldat/opensoldat"
 freetypeversion=${version}
