@@ -202,7 +202,7 @@ var
   U, X, Y: Single;
 begin
   U := ((P3.X - P1.X) * (P2.X - P1.X) + (P3.Y - P1.Y) *
-    (P2.Y - P1.Y)) / (Sqr(P2.X - P1.X) + Sqr(P2.Y - P1.Y));
+    (P2.Y - P1.Y)) / Max(MinSingle, (Sqr(P2.X - P1.X) + Sqr(P2.Y - P1.Y)));
 
   X := P1.X + U * (P2.X - P1.X);
   Y := P1.Y + U * (P2.Y - P1.Y);
