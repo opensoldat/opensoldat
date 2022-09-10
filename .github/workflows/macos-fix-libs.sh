@@ -14,8 +14,6 @@ opensoldatdir="OpenSoldat-macos-x64"
 cd build
 
 echo "Starting from $(pwd)"
-echo "This is here:"
-ls
 
 echo "Fixing libs"
 
