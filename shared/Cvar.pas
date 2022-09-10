@@ -994,7 +994,7 @@ begin
   sv_advancedspectator := TBooleanCvar.Add('sv_advancedspectator', 'Enables/disables advanced spectator mode', True, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_radio := TBooleanCvar.Add('sv_radio', 'Enables/disables radio chat', False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_info := TStringCvar.Add('sv_info', 'A website or e-mail address, or any other short text describing your server', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 60);
-  sv_gravity := TSingleCvar.Add('sv_gravity', 'Gravity', 0.06, [CVAR_SERVER, CVAR_SYNC], @sv_gravityChange, MinSingle, MaxSingle);
+  sv_gravity := TSingleCvar.Add('sv_gravity', 'Gravity', 0.06, [CVAR_SERVER, CVAR_SYNC], @sv_gravityChange, -MaxSingle, MaxSingle);
   sv_hostname := TStringCvar.Add('sv_hostname', 'Name of the server', 'OpenSoldat Server', [CVAR_SERVER, CVAR_SYNC], nil, 0, 24);
   sv_website := TStringCvar.Add('sv_website', 'Server website', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 255);
 
