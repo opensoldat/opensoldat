@@ -1445,10 +1445,16 @@ var
   PacketHeader: PMsgHeader;
 begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
+  begin
+    IncomingMsg.Release();
     Exit; // truncated packet
+  end;
 
   if IncomingMsg^.m_nConnUserData = 0 then
+  begin
+    IncomingMsg.Release();
     Exit;
+  end;
 
   Player := TPlayer(IncomingMsg^.m_nConnUserData);
   PacketHeader := PMsgHeader(IncomingMsg^.m_pData);
@@ -1472,7 +1478,10 @@ begin
 
   // all the following commands can only be issued after the player has joined the game.
   if (Player.SpriteNum = 0) or (Sprite[Player.SpriteNum].Player <> Player) then
+  begin
+    IncomingMsg.Release();
     Exit;
+  end;
 
   case PacketHeader.ID of
     MsgID_ClientSpriteSnapshot:
