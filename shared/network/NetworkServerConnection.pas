@@ -335,8 +335,8 @@ begin
     Player.Team := NewTeam
   else
   begin
-    Sprite[Player.SpriteNum].Kill;
     ServerSendUnAccepted(Player.Peer, SERVER_FULL);
+    Sprite[Player.SpriteNum].Kill;
     Exit;
   end;
   {$ENDIF}
@@ -777,8 +777,6 @@ begin
     if Sprite[Num].IsNotSpectator() and (Why <> KICK_AC) and (Why <> KICK_CHEAT) and (Why <> KICK_CONSOLE) and (Why <> KICK_VOTED) then
       Sprite[Num].DropWeapon();
 
-    Sprite[Num].Kill;
-
     for j := 1 to MAX_PLAYERS do
       if (Trim(TKList[j]) = '') or (TKList[j] = Player.IP) then
       begin
@@ -791,6 +789,8 @@ begin
 
     AddLineToLogFile(GameLog, ' Net - ' + Player.Name +
       ' disconnected ' + DateToStr(Date) + ' ' + TimeToStr(Time), ConsoleLogFileName);
+
+    Sprite[Num].Kill;
   end;
 
   UDP.NetworkingSocket.CloseConnection(Player.Peer, 0, '', not Now);
