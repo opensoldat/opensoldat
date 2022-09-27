@@ -492,7 +492,20 @@ begin
   Result := False;
 
   if HoveredButton <> nil then
+  begin
     Result := GameMenuAction(HoveredMenu, HoveredButtonIndex);
+  end
+  else
+  begin
+    // Clicking off of the Limbo menu hides it. Allows players who leave the
+    // weapons menu active to begin moving quickly without having to press the
+    // right weapon button, or worse yet click on it.
+    if (MySprite > 0) and (Sprite[MySprite].SelWeapon <> 0) and (LimboMenu <> nil) and (LimboMenu.Active) then
+    begin
+      GameMenuShow(LimboMenu, False);
+      Result := True;
+    end;
+  end;
 end;
 
 end.
