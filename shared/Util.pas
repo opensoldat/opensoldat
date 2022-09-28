@@ -241,7 +241,8 @@ end;
 function GetMapChecksum(Map: TMapInfo): TSHA1Digest;
 begin
   Result := Default(TSHA1Digest);
-  if PHYSFS_exists(PChar('maps/' + Map.MapName + '.pms')) then
+  if PHYSFS_exists(PChar('maps/' + Map.MapName + '.pms')) or
+     PHYSFS_exists(PChar('maps/' + Map.MapName + '.PMS')) then
     Result := GameModChecksum
   else if FileExists(Map.Path) then
     Result := Sha1File(Map.Path, 4096);
@@ -300,7 +301,8 @@ begin
     end;
   end else
   begin
-    if PHYSFS_exists(PChar('maps/' + MapName + '.pms')) then
+    if PHYSFS_exists(PChar('maps/' + MapName + '.pms')) or
+       PHYSFS_exists(PChar('maps/' + MapName + '.PMS')) then
     begin
       MapInfo.Name := MapName;
       MapInfo.MapName := MapName;
