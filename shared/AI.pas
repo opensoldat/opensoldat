@@ -729,7 +729,7 @@ begin
               end;
           end;
 
-          if (SpriteC.Brain.CurrentWaypoint = 0) and (k > 0) then
+          if k > 0 then
             if (SpriteC.Brain.PathNum = BotPath.Waypoint[k].PathNum) or
                 (SpriteC.Brain.CurrentWaypoint = 0) then
             begin
