@@ -2765,7 +2765,7 @@ begin
   end;
 
   // Team Box
-  if Int.Team and not DemoPlayer.Active and IsTeamGame then
+  if Int.Team and IsTeamGame then
   begin
     x := Int.TeamBox_X * _iscala.x;
     y := Int.TeamBox_Y * _iscala.y;
