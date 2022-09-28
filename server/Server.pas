@@ -1120,6 +1120,7 @@ begin
     begin
       MainConsole.Console('Error: Could not load map ' +
         StartMap.Name, DEBUG_MESSAGE_COLOR);
+      ProgReady := False;
       Exit;
     end;
   end;
