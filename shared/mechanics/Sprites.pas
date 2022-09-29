@@ -4890,12 +4890,12 @@ end;
 
 function TSprite.IsSolo(): Boolean;
 begin
-  Result := Player.Team = TEAM_NONE;
+  Result := (sv_gamemode.Value = GAMESTYLE_DEATHMATCH) or (Player.Team = TEAM_NONE);
 end;
 
 function TSprite.IsNotSolo(): Boolean;
 begin
-  Result := Player.Team <> TEAM_NONE;
+  Result := not IsSolo();
 end;
 
 function TSprite.IsInTeam(): Boolean;
