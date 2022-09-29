@@ -1747,7 +1747,7 @@ begin
   Self.Muted := Result;
 end;
 
-procedure ScriptActivePlayerGetJets(Self: TScriptActivePlayer; var Result: Byte);
+procedure ScriptActivePlayerGetJets(Self: TScriptActivePlayer; var Result: Integer);
 begin
   Result := Self.Jets;
 end;
