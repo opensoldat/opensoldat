@@ -2133,6 +2133,7 @@ begin
           if not SurvivalEndRound then
             if sv_gamemode.Value = GAMESTYLE_INF then
             begin
+              {$IFDEF SERVER}
               if TeamAliveNum[1] > 0 then
                 Inc(TeamScore[1], sv_inf_redaward.Value);
 
@@ -2141,6 +2142,7 @@ begin
                 Dec(TeamScore[1], 5 * (PlayersTeamNum[1] - PlayersTeamNum[2]));
               if (TeamScore[1] < 0) then
                 TeamScore[1] := 0;
+              {$ENDIF}
             end;
 
           SurvivalEndRound := True;

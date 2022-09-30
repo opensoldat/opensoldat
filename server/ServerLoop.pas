@@ -567,7 +567,8 @@ begin
 
   if sv_gamemode.Value = GAMESTYLE_INF then
     if MapChangeCounter < 0 then
-      if Thing[TeamFlag[2]].InBase then
+      if (TeamFlag[2] > 0) and
+         (Thing[TeamFlag[2]].InBase) then
         if (PlayersTeamNum[1] > 0) and (PlayersTeamNum[2] > 0)
           {and(PlayersTeamNum[1] >= PlayersTeamNum[2])} then
           if MainTickCounter mod j = 0 then

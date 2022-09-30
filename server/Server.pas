@@ -96,9 +96,9 @@ var
   sv_tm_limit: TIntegerCvar;
   sv_rm_limit: TIntegerCvar;
 
+  sv_inf_redaward: TIntegerCvar;
   sv_inf_limit: TIntegerCvar;
   sv_inf_bluelimit: TIntegerCvar;
-  sv_inf_redaward: TIntegerCvar;
 
   sv_htf_limit: TIntegerCvar;
   sv_htf_pointstime: TIntegerCvar;

@@ -836,11 +836,13 @@ begin
                   b.y := 0;
                   if sv_gamemode.Value = GAMESTYLE_INF then
                   begin
+                    {$IFDEF SERVER}
                     Inc(TeamScore[1], sv_inf_redaward.Value - 1);
                     // penalty
                     if (PlayersTeamNum[1] > PlayersTeamNum[2]) then
                       Dec(TeamScore[1], 5 * (PlayersTeamNum[1] - PlayersTeamNum[2]));
                     if (TeamScore[1] < 0) then TeamScore[1] := 0;
+                    {$ENDIF}
 
                     {$IFNDEF SERVER}
                     // flame it
