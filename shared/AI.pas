@@ -713,7 +713,8 @@ begin
             if SpriteC.Player.Team = TEAM_BRAVO then
               SpriteC.Brain.PathNum := 2;
 
-            if not Thing[TeamFlag[2]].InBase then
+            if (TeamFlag[2] > 0) and
+               (not Thing[TeamFlag[2]].InBase) then
               if SpriteC.Player.Team = TEAM_BRAVO then
                 SpriteC.Brain.PathNum := 2;
 
