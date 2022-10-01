@@ -15,7 +15,7 @@ uses
   SysUtils, Classes, fgl, {$IFDEF DEVELOPMENT}Util,{$ENDIF}
 
   // helper units
-  Vector, Version, Sha1,
+  Vector, Sha1,
 
   // anti-cheat
   {$IFDEF SERVER}
@@ -102,6 +102,8 @@ const
   MsgID_VoiceData = MsgID_Custom + 72;
 
   MAX_PLAYERS = 32;
+
+  VERSION_PACKET_CHARS = 24;
 
   // ControlMethod
   HUMAN = 1;
@@ -542,7 +544,7 @@ type
   PMsg_RequestGame = ^TMsg_RequestGame;
   TMsg_RequestGame = packed record
     Header: TMsgHeader;
-    Version: array[0..OPENSOLDAT_VERSION_CHARS - 1] of char;
+    Version: array[0..VERSION_PACKET_CHARS - 1] of char;
     Forwarded: Byte;
     HaveAntiCheat: Byte;
     HardwareID: string[PLAYERHWID_CHARS];
@@ -589,7 +591,7 @@ type
   TMsg_UnAccepted = packed record
     Header: TMsgHeader;
     State: Byte;
-    Version: array[0..OPENSOLDAT_VERSION_CHARS - 1] of char;
+    Version: array[0..VERSION_PACKET_CHARS - 1] of char;
     Text: array[0..0] of char;
   end;
 

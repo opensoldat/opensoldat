@@ -227,7 +227,10 @@ end;
 // Checks if the Requested and the current OpenSoldat version are the same
 function IsWrongGameVersion(RequestVersion: string): Boolean;
 begin
-  Result := RequestVersion <> OPENSOLDAT_VERSION;
+  if OPENSOLDAT_VERSION_LONG <> '' then
+    Result := RequestVersion <> OPENSOLDAT_VERSION_LONG
+  else
+    Result := RequestVersion <> OPENSOLDAT_VERSION;
 end;
 
 {$IFNDEF SERVER}
