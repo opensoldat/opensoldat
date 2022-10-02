@@ -264,6 +264,7 @@ var
   cbResult: csize_t = 0;
   SetResult: Boolean = False;
   ConfigID: Integer;
+  NetworkingUtil: PISteamNetworkingUtils;
 begin
   if Length(Args) < 3 then
   begin
@@ -271,22 +272,27 @@ begin
     Exit;
   end;
 
+  if UDP <> Nil then
+    NetworkingUtil := UDP.NetworkingUtil
+  else
+    NetworkingUtil := SteamAPI_SteamNetworkingUtils_v003();
+
   ConfigID := StrToIntDef(Args[1], -1);
-  ConfigName := UDP.NetworkingUtil.GetConfigValueInfo(ESteamNetworkingConfigValue(ConfigID), @OutDataType, @OutScope);
+  ConfigName := NetworkingUtil.GetConfigValueInfo(ESteamNetworkingConfigValue(ConfigID), @OutDataType, @OutScope);
   if ConfigName <> Nil then
   begin
     if OutDataType = k_ESteamNetworkingConfig_Int32 then
     begin
       cbResult := SizeOf(Integer);
       IntegerValue := StrToIntDef(Args[2], 0);
-      SetResult := UDP.NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @IntegerValue);
+      SetResult := NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @IntegerValue);
       MainConsole.Console(Format('[NET] NetConfig: Set %S to %D, result: %S', [AnsiString(ConfigName), IntegerValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end
     else if OutDataType = k_ESteamNetworkingConfig_Float then
     begin
       cbResult := SizeOf(Single);
       FloatValue := StrToFloatDef(Args[2], 0.0);
-      SetResult := UDP.NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @FloatValue);
+      SetResult := NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @FloatValue);
       MainConsole.Console(Format('[NET] NetConfig: Set %S to %F, result: %S', [AnsiString(ConfigName), FloatValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end;
   end
