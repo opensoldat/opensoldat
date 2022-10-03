@@ -2721,10 +2721,14 @@ begin
 
       while (j > 1) and (RoughDistance < Distances[j - 1]) do
         j := j - 1;
-      Move(Distances[j], Distances[j + 1], (SpriteCount - j) * SizeOf(Single));
-      Distances[j] := RoughDistance;
 
-      Move(SpriteIndexes[j], SpriteIndexes[j + 1], (SpriteCount - j) * SizeOf(Integer));
+      if (SpriteCount - j) > 0 then
+      begin
+        Move(Distances[j], Distances[j + 1], (SpriteCount - j) * SizeOf(Single));
+        Move(SpriteIndexes[j], SpriteIndexes[j + 1], (SpriteCount - j) * SizeOf(Integer));
+      end;
+
+      Distances[j] := RoughDistance;
       SpriteIndexes[j] := i;
     end;
   end;
