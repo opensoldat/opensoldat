@@ -3,19 +3,33 @@ unit ServerLauncherIPC;
 interface
 
 uses
-  LauncherIPC;
+  LauncherIPC, fpjson;
 
 type
   TServerLauncherIPC = class(TLauncherIPC)
   protected
-    procedure HandleMessage(Message: String); override;
+    procedure HandleParsedMessage(MessageId: String; JSON: TJSONObject); override;
+    procedure SendIdentityMessage; override;
   end;
 
 implementation
 
-procedure TServerLauncherIPC.HandleMessage(Message: String);
+uses
+  LauncherMessages;
+
+procedure TServerLauncherIPC.HandleParsedMessage(MessageId: String; JSON: TJSONObject);
 begin
-  HandleCommand(Message);
+  if MessageId = LauncherMessageIds.Commands then
+    HandleCommandsMessage(JSON);
+end;
+
+procedure TServerLauncherIPC.SendIdentityMessage;
+var
+  Message: TServerIdentityMessage;
+begin
+  Message := TServerIdentityMessage.Create;
+  SendObjectAsJSON(Message);
+  Message.Free;
 end;
 
 end.
