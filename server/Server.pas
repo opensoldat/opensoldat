@@ -96,9 +96,9 @@ var
   sv_tm_limit: TIntegerCvar;
   sv_rm_limit: TIntegerCvar;
 
+  sv_inf_redaward: TIntegerCvar;
   sv_inf_limit: TIntegerCvar;
   sv_inf_bluelimit: TIntegerCvar;
-  sv_inf_redaward: TIntegerCvar;
 
   sv_htf_limit: TIntegerCvar;
   sv_htf_pointstime: TIntegerCvar;
@@ -997,6 +997,7 @@ begin
   a := Default(TVector2);
   b := Default(TVector2);
   RandomizeStart(a, team);
+  // TODO: Probably smarter to check `CreateSprite` return value than rely on `PlayersNum` check alone...
   p := CreateSprite(a, b, 1, 255, NewPlayer, True);
   Result := p;
 
@@ -1119,6 +1120,7 @@ begin
     begin
       MainConsole.Console('Error: Could not load map ' +
         StartMap.Name, DEBUG_MESSAGE_COLOR);
+      ProgReady := False;
       Exit;
     end;
   end;

@@ -335,8 +335,8 @@ begin
     Player.Team := NewTeam
   else
   begin
-    Sprite[Player.SpriteNum].Kill;
     ServerSendUnAccepted(Player.Peer, SERVER_FULL);
+    Sprite[Player.SpriteNum].Kill;
     Exit;
   end;
   {$ENDIF}
@@ -606,7 +606,10 @@ begin
   // fill memory
   UnAccepted.Header.ID := MsgID_UnAccepted;
   UnAccepted.State := State;
-  UnAccepted.Version := OPENSOLDAT_VERSION;
+  if OPENSOLDAT_VERSION_LONG <> '' then
+    UnAccepted.Version := OPENSOLDAT_VERSION_LONG
+  else
+    UnAccepted.Version := OPENSOLDAT_VERSION;
   StrPCopy(UnAccepted.Text, Message);
 
   UDP.SendData(UnAccepted^, Size, Peer, k_nSteamNetworkingSend_Reliable);
@@ -777,9 +780,6 @@ begin
     if Sprite[Num].IsNotSpectator() and (Why <> KICK_AC) and (Why <> KICK_CHEAT) and (Why <> KICK_CONSOLE) and (Why <> KICK_VOTED) then
       Sprite[Num].DropWeapon();
 
-    Sprite[Num].Kill;
-    Sprite[Num].Player := DummyPlayer;
-
     for j := 1 to MAX_PLAYERS do
       if (Trim(TKList[j]) = '') or (TKList[j] = Player.IP) then
       begin
@@ -792,6 +792,8 @@ begin
 
     AddLineToLogFile(GameLog, ' Net - ' + Player.Name +
       ' disconnected ' + DateToStr(Date) + ' ' + TimeToStr(Time), ConsoleLogFileName);
+
+    Sprite[Num].Kill;
   end;
 
   UDP.NetworkingSocket.CloseConnection(Player.Peer, 0, '', not Now);

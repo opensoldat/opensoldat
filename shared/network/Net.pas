@@ -15,7 +15,7 @@ uses
   SysUtils, Classes, fgl, {$IFDEF DEVELOPMENT}Util,{$ENDIF}
 
   // helper units
-  Vector, Version, Sha1,
+  Vector, Sha1,
 
   // anti-cheat
   {$IFDEF SERVER}
@@ -103,6 +103,8 @@ const
 
   MAX_PLAYERS = 32;
 
+  VERSION_PACKET_CHARS = 24;
+
   // ControlMethod
   HUMAN = 1;
   BOT = 2;
@@ -174,71 +176,75 @@ const
 
 type
   TNetwork = class
-    private
-      FInit: Boolean;
-      FActive: Boolean;
-      FAddress: SteamNetworkingIPAddr;
+  private
+    FInit: Boolean;
+    FActive: Boolean;
+    FAddress: SteamNetworkingIPAddr;
 
-      FPeer: HSteamNetConnection;
-      FHost: HSteamListenSocket;
-      {$IFDEF SERVER}
-      FPollGroup: HSteamNetPollGroup;
-      {$ENDIF}
-      NetworkingSockets: PISteamNetworkingSockets;
-      NetworkingUtils: PISteamNetworkingUtils;
-    public
-      property Active: Boolean read FActive write FActive;
-      constructor Create();
-      destructor Destroy(); override;
+    {$IFDEF SERVER}
+    FPollGroup: HSteamNetPollGroup;
+    {$ENDIF}
+    NetworkingSockets: PISteamNetworkingSockets;
+    NetworkingUtils: PISteamNetworkingUtils;
+  public
+    property Active: Boolean read FActive write FActive;
+    constructor Create();
+    destructor Destroy(); override;
 
-      function Disconnect(Now: Boolean): Boolean;
-      procedure FlushMsg();
-      procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); virtual; abstract;
+    function Disconnect(Now: Boolean): Boolean; virtual; abstract;
+    procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); virtual; abstract;
 
-      function GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
-      function GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
-      procedure SetConnectionName(hConn: HSteamNetConnection; Name: AnsiString);
-      function GetStringAddress(pAddress: PSteamNetworkingIPAddr; Port: Boolean): AnsiString;
+    function GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
+    function GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
+    procedure SetConnectionName(hConn: HSteamNetConnection; Name: AnsiString);
+    function GetStringAddress(pAddress: PSteamNetworkingIPAddr; Port: Boolean): AnsiString;
 
-      function SetGlobalConfigValueInt32(eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-      function SetGlobalConfigValueFloat(eValue: ESteamNetworkingConfigValue; val: Single): Boolean;
-      function SetGlobalConfigValueString(eValue: ESteamNetworkingConfigValue; val: PChar): Boolean;
-      function SetConnectionConfigValueInt32(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-      function SetConnectionConfigValueFloat(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-      function SetConnectionConfigValueString(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function SetGlobalConfigValueInt32(eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function SetGlobalConfigValueFloat(eValue: ESteamNetworkingConfigValue; val: Single): Boolean;
+    function SetGlobalConfigValueString(eValue: ESteamNetworkingConfigValue; val: PChar): Boolean;
+    function SetConnectionConfigValueInt32(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function SetConnectionConfigValueFloat(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function SetConnectionConfigValueString(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
 
-      procedure SetDebugLevel(Level: ESteamNetworkingSocketsDebugOutputType);
+    procedure SetDebugLevel(Level: ESteamNetworkingSocketsDebugOutputType);
 
-      property Host: HSteamListenSocket read FHost;
-      property Peer: HSteamNetConnection read FPeer;
-      property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
-      property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
+    property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
+    property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
 
-      property Port: Word read FAddress.m_port write FAddress.m_port;
-      property Address: SteamNetworkingIPAddr read FAddress;
+    property Port: Word read FAddress.m_port write FAddress.m_port;
+    property Address: SteamNetworkingIPAddr read FAddress;
   end;
 
   {$IFDEF SERVER}
   TServerNetwork = class(TNetwork)
+  private
+    FHost: HSteamListenSocket;
   public
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); override;
     constructor Create(Host: String; Port: Word);
     destructor Destroy; override;
+    function Disconnect(Now: Boolean): Boolean; override;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
     function SendData(var Data; Size: Integer; peer: HSteamNetConnection; Flags: Integer): Boolean;
     procedure UpdateNetworkStats(Player: Byte);
+    property Host: HSteamListenSocket read FHost;
   end;
   {$ELSE}
   TClientNetwork = class(TNetwork)
+  private
+    FPeer: HSteamNetConnection;
   public
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); override;
     constructor Create();
     destructor Destroy; override;
+    function Disconnect(Now: Boolean): Boolean; override;
     function Connect(Host: String; Port: Word): Boolean;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
     function SendData(var Data; Size: Integer; Flags: Integer): Boolean;
+    procedure FlushMsg();
+    property Peer: HSteamNetConnection read FPeer;
   end;
   {$ENDIF}
 
@@ -538,7 +544,7 @@ type
   PMsg_RequestGame = ^TMsg_RequestGame;
   TMsg_RequestGame = packed record
     Header: TMsgHeader;
-    Version: array[0..OPENSOLDAT_VERSION_CHARS - 1] of char;
+    Version: array[0..VERSION_PACKET_CHARS - 1] of char;
     Forwarded: Byte;
     HaveAntiCheat: Byte;
     HardwareID: string[PLAYERHWID_CHARS];
@@ -585,7 +591,7 @@ type
   TMsg_UnAccepted = packed record
     Header: TMsgHeader;
     State: Byte;
-    Version: array[0..OPENSOLDAT_VERSION_CHARS - 1] of char;
+    Version: array[0..VERSION_PACKET_CHARS - 1] of char;
     Text: array[0..0] of char;
   end;
 
@@ -931,35 +937,6 @@ begin
   inherited Destroy();
 end;
 
-
-function TNetwork.Disconnect(Now: Boolean): Boolean;
-{$IFDEF SERVER}
-var
-  DstPlayer: TPlayer;
-{$ENDIF}
-begin
-  Result := False;
-  {$IFDEF SERVER}
-  if (FHost <> k_HSteamNetPollGroup_Invalid) then
-  begin
-    for DstPlayer in Players do
-    begin
-      if FPeer <> 0 then
-        NetworkingSockets.CloseConnection(DstPlayer.Peer, 0, '', not Now)
-    end;
-  Result := True;
-  end;
-  {$ELSE}
-  NetworkingSockets.CloseConnection(FPeer, 0, '', not Now)
-  {$ENDIF}
-end;
-
-procedure TNetwork.FlushMsg();
-begin
-  if FPeer <> k_HSteamNetConnection_Invalid then
-    NetworkingSockets.FlushMessagesOnConnection(FPeer);
-end;
-
 function TNetwork.GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
 var
   StatsText: TStatsString;
@@ -1034,6 +1011,13 @@ destructor TClientNetwork.Destroy;
 begin
   Inherited;
   //Self.Free;
+end;
+
+function TClientNetwork.Disconnect(Now: Boolean): Boolean;
+begin
+  Result := False;
+  NetworkingSockets.CloseConnection(FPeer, 0, '', not Now);
+  Result := True;
 end;
 
 procedure TClientNetwork.ProcessLoop;
@@ -1141,6 +1125,7 @@ end;
 procedure TClientNetwork.HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
 var
   PacketHeader: PMsgHeader;
+  ShouldRelease: Boolean;
 begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
     Exit; // truncated packet
@@ -1149,6 +1134,8 @@ begin
 
   if DemoRecorder.Active then
     DemoRecorder.SaveRecord(IncomingMsg^.m_pData^, IncomingMsg^.m_cbSize);
+
+  ShouldRelease := not DemoPlayer.Active;
 
   case PacketHeader.ID of
     MsgID_PlayersList:
@@ -1278,7 +1265,7 @@ begin
     {$ENDIF}
   end;
 
-  if not DemoPlayer.Active then
+  if ShouldRelease then
     IncomingMsg.Release();
 end;
 
@@ -1296,6 +1283,11 @@ begin
   Result := True;
 end;
 
+procedure TClientNetwork.FlushMsg();
+begin
+  if FPeer <> k_HSteamNetConnection_Invalid then
+    NetworkingSockets.FlushMessagesOnConnection(FPeer);
+end;
 {$ELSE}
 constructor TServerNetwork.Create(Host: String; Port: Word);
 var
@@ -1373,7 +1365,7 @@ begin
   case pInfo.m_info.m_eState of
     k_ESteamNetworkingConnectionState_None:
     begin
-      FPeer := k_HSteamNetConnection_Invalid;
+      //FPeer := k_HSteamNetConnection_Invalid;
       WriteLn('[NET] Destroying peer handle');
     end;
     k_ESteamNetworkingConnectionState_ClosedByPeer, k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
@@ -1455,10 +1447,16 @@ var
   PacketHeader: PMsgHeader;
 begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
+  begin
+    IncomingMsg.Release();
     Exit; // truncated packet
+  end;
 
   if IncomingMsg^.m_nConnUserData = 0 then
+  begin
+    IncomingMsg.Release();
     Exit;
+  end;
 
   Player := TPlayer(IncomingMsg^.m_nConnUserData);
   PacketHeader := PMsgHeader(IncomingMsg^.m_pData);
@@ -1482,7 +1480,10 @@ begin
 
   // all the following commands can only be issued after the player has joined the game.
   if (Player.SpriteNum = 0) or (Sprite[Player.SpriteNum].Player <> Player) then
+  begin
+    IncomingMsg.Release();
     Exit;
+  end;
 
   case PacketHeader.ID of
     MsgID_ClientSpriteSnapshot:
@@ -1541,6 +1542,21 @@ begin
   Players.Free;
 
   Inherited;
+end;
+
+function TServerNetwork.Disconnect(Now: Boolean): Boolean;
+var
+  DstPlayer: TPlayer;
+begin
+  Result := False;
+  if (FHost <> k_HSteamNetPollGroup_Invalid) then
+  begin
+    for DstPlayer in Players do
+      if DstPlayer.Peer <> k_HSteamNetConnection_Invalid then
+        NetworkingSockets.CloseConnection(DstPlayer.Peer, 0, '', not Now);
+
+    Result := True;
+  end;
 end;
 
 function TServerNetwork.SendData(var Data; Size: Integer; Peer: HSteamNetConnection; Flags: Integer): Boolean;

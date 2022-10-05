@@ -164,6 +164,9 @@ begin
   if PHYSFS_exists(PChar('maps/' + Map.Name + '.pms')) then
   begin
     Buffer.Data := PHYSFS_readBuffer(PChar('maps/' + Map.Name + '.pms'));
+  end else if PHYSFS_exists(PChar('maps/' + Map.Name + '.PMS')) then
+  begin
+    Buffer.Data := PHYSFS_readBuffer(PChar('maps/' + Map.Name + '.PMS'));
   end else
   begin
     // Unmount previous map
@@ -173,6 +176,8 @@ begin
       Exit;
     // Read PMS file
     Buffer.Data := PHYSFS_readBuffer(PChar('current_map/maps/' + Map.MapName + '.pms'));
+    if Buffer.Data = nil then
+      Buffer.Data := PHYSFS_readBuffer(PChar('current_map/maps/' + Map.MapName + '.PMS'));
   end;
 
   if Buffer.Data = nil then

@@ -839,7 +839,6 @@ begin
 
   // TODO: Remove
   sv_respawntime := TIntegerCvar.Add('sv_respawntime', 'Respawn time in ticks (60 ticks = 1 second)', 180, [CVAR_SERVER], nil, 0, 9999);
-  sv_inf_redaward := TIntegerCvar.Add('sv_inf_redaward', 'Infiltration: Points awarded for a flag capture', 30, [CVAR_SERVER], nil, 0, 9999);
   net_allowdownload := TBooleanCvar.Add('net_allowdownload', 'Enables/Disables file transfers', True, [CVAR_SERVER], nil);
 
   font_1_name := TStringCvar.Add('font_1_name', 'First font name', 'Play', [CVAR_CLIENT], nil, 0, 100);
@@ -869,6 +868,7 @@ begin
   sv_tm_limit := TIntegerCvar.Add('sv_tm_limit', 'Teammatch point limit', 60, [CVAR_SERVER], @killlimitChange, 0, 9999);
   sv_rm_limit := TIntegerCvar.Add('sv_rm_limit', 'Rambomatch point limit', 30, [CVAR_SERVER], @killlimitChange, 0, 9999);
 
+  sv_inf_redaward := TIntegerCvar.Add('sv_inf_redaward', 'Infiltration: Points awarded for a flag capture', 30, [CVAR_SERVER], nil, 0, 9999);
   sv_inf_limit := TIntegerCvar.Add('sv_inf_limit', 'Infiltration point limit', 90, [CVAR_SERVER], @killlimitChange, 0, 9999);
   sv_inf_bluelimit := TIntegerCvar.Add('sv_inf_bluelimit', 'Infiltration: Time for blue team to get points in seconds', 5, [CVAR_SERVER], nil, 0, 9999);
 
@@ -994,7 +994,7 @@ begin
   sv_advancedspectator := TBooleanCvar.Add('sv_advancedspectator', 'Enables/disables advanced spectator mode', True, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_radio := TBooleanCvar.Add('sv_radio', 'Enables/disables radio chat', False, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_info := TStringCvar.Add('sv_info', 'A website or e-mail address, or any other short text describing your server', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 60);
-  sv_gravity := TSingleCvar.Add('sv_gravity', 'Gravity', 0.06, [CVAR_SERVER, CVAR_SYNC], @sv_gravityChange, MinSingle, MaxSingle);
+  sv_gravity := TSingleCvar.Add('sv_gravity', 'Gravity', 0.06, [CVAR_SERVER, CVAR_SYNC], @sv_gravityChange, -MaxSingle, MaxSingle);
   sv_hostname := TStringCvar.Add('sv_hostname', 'Name of the server', 'OpenSoldat Server', [CVAR_SERVER, CVAR_SYNC], nil, 0, 24);
   sv_website := TStringCvar.Add('sv_website', 'Server website', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 255);
 

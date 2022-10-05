@@ -1747,7 +1747,8 @@ begin
       i := StrToInt(VoteTarget);
 
       if (i > 0) and (i <= MAX_SPRITES) then
-        Str[1] := WideString(Sprite[i].Player.Name);
+        if Sprite[i].Active then
+          Str[1] := WideString(Sprite[i].Player.Name);
     end;
 
     GfxTextColor(RGBA(254, 104, 104, 225));
@@ -2764,7 +2765,7 @@ begin
   end;
 
   // Team Box
-  if Int.Team and not DemoPlayer.Active and IsTeamGame then
+  if Int.Team and IsTeamGame then
   begin
     x := Int.TeamBox_X * _iscala.x;
     y := Int.TeamBox_Y * _iscala.y;

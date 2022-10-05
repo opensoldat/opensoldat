@@ -713,7 +713,8 @@ begin
             if SpriteC.Player.Team = TEAM_BRAVO then
               SpriteC.Brain.PathNum := 2;
 
-            if not Thing[TeamFlag[2]].InBase then
+            if (TeamFlag[2] > 0) and
+               (not Thing[TeamFlag[2]].InBase) then
               if SpriteC.Player.Team = TEAM_BRAVO then
                 SpriteC.Brain.PathNum := 2;
 
@@ -729,7 +730,7 @@ begin
               end;
           end;
 
-          if (SpriteC.Brain.CurrentWaypoint = 0) or (k > 0) then
+          if k > 0 then
             if (SpriteC.Brain.PathNum = BotPath.Waypoint[k].PathNum) or
                 (SpriteC.Brain.CurrentWaypoint = 0) then
             begin
@@ -938,6 +939,7 @@ begin
             // dont follow this flag if my flag is not inbase
             if ((sv_gamemode.Value = GAMESTYLE_CTF) or (sv_gamemode.Value = GAMESTYLE_INF)) and
                 (Thing[i].Style <> SpriteC.Player.Team) and
+                (TeamFlag[SpriteC.Player.Team] > 0) and
                 not Thing[TeamFlag[SpriteC.Player.Team]].InBase then
               SeeThing := False;
             // dont take it if is flag in base

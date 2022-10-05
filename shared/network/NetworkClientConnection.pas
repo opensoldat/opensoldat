@@ -48,7 +48,10 @@ begin
   RequestMsg := PMsg_RequestGame(SendBuffer);
 
   RequestMsg.Header.ID := MsgID_RequestGame;
-  RequestMsg.Version := OPENSOLDAT_VERSION;
+  if OPENSOLDAT_VERSION_LONG <> '' then
+    RequestMsg.Version := OPENSOLDAT_VERSION_LONG
+  else
+    RequestMsg.Version := OPENSOLDAT_VERSION;
 
   RequestMsg.HaveAntiCheat := ACTYPE_NONE;
 
@@ -386,7 +389,7 @@ begin
   ClientPlayerReceivedCounter := CLIENTPLAYERRECIEVED_TIME;
 
   // Begin rendering so that the team menu selection is visible
-  if not (DemoPlayer.Active and (DemoPlayer.SkipTo = -1)) then
+  if not (DemoPlayer.Active and (DemoPlayer.SkipTo >= 0)) then
     ShouldRenderFrames := True;
 
   if cl_player_team.Value > 0 then

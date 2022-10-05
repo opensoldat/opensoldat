@@ -65,12 +65,22 @@ begin
     MainConsole.Console('Usage: toggle "cvarname" "value" "value2"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   ACvar := TCvarBase.Find(Args[1]);
   if not Assigned(ACvar) then
   begin
     MainConsole.Console('Toggle: Cvar ' + Args[1] + ' not found', DEBUG_MESSAGE_COLOR);
     Exit;
   end;
+
+  {$IFNDEF SERVER}
+  if (CVAR_SYNC in ACvar.Flags) or (CVAR_SERVER in ACvar.Flags) then
+  begin
+    MainConsole.Console('Toggle: Cvar ' + Args[1] + ' cannot be set by client', DEBUG_MESSAGE_COLOR);
+    Exit;
+  end;
+  {$ENDIF}
+
   if ACvar.ValueAsString = Args[2] then
     ACvar.ParseAndSetValue(Args[3])
   else
@@ -137,6 +147,7 @@ begin
     MainConsole.Console('Usage: reset "cvarname"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   CvarName := Args[1];
   ACvar := TCvarBase.Find(CvarName);
   if not Assigned(ACvar) then
@@ -144,7 +155,17 @@ begin
     MainConsole.Console('Reset: Cvar ' + CvarName + ' not found', DEBUG_MESSAGE_COLOR);
     Exit;
   end;
+
+  {$IFNDEF SERVER}
+  if (CVAR_SYNC in ACvar.Flags) or (CVAR_SERVER in ACvar.Flags) then
+  begin
+    MainConsole.Console('Reset: Cvar ' + CvarName + ' cannot be set by client', DEBUG_MESSAGE_COLOR);
+    Exit;
+  end;
+  {$ENDIF}
+
   ACvar.Reset();
+
   MainConsole.Console('Reset: ' + CvarName + ' set to: ' + ACvar.ValueAsString, DEBUG_MESSAGE_COLOR);
 end;
 
@@ -204,6 +225,14 @@ begin
     MainConsole.Console('Inc: Cvar ' + CvarName + ' not found', DEBUG_MESSAGE_COLOR);
     Exit;
   end;
+
+  {$IFNDEF SERVER}
+  if (CVAR_SYNC in ACvar.Flags) or (CVAR_SERVER in ACvar.Flags) then
+  begin
+    MainConsole.Console('Inc: Cvar ' + CvarName + ' cannot be set by client', DEBUG_MESSAGE_COLOR);
+    Exit;
+  end;
+  {$ENDIF}
 
   if ACvar is TSingleCvar then
   begin

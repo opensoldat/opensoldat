@@ -245,6 +245,9 @@ procedure TDemoRecorder.SavePosition;
 var
   MovementMsg: TMsg_ServerSpriteDelta_Movement;
 begin
+  if MySprite = 0 then
+    Exit;
+
   MovementMsg.Header.ID := MsgID_Delta_Movement;
 
   MovementMsg.Num := MySprite;
@@ -354,7 +357,7 @@ begin
       Exit;
     end;
 
-    if (FSkipTo > 0) and (MainTickCounter >= FSkipTo) then
+    if (FSkipTo >= 0) and (MainTickCounter >= FSkipTo) then
     begin
       FSkipTo := -1;
       ShouldRenderFrames := True;

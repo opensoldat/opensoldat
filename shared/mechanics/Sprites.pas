@@ -13,7 +13,7 @@ unit Sprites;
 interface
 
 uses
-  Parts, Anims, MapFile, PolyMap, Net, Weapons, Constants, Vector;
+  Parts, Anims, MapFile, PolyMap, Weapons, Constants, Vector, Net;
 
 const
   MAX_SPRITES = MAX_PLAYERS;
@@ -228,14 +228,16 @@ implementation
 
 uses
   {$IFDEF SERVER}
-    {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
-    ServerHelper, LogFile,
-    NetworkServerSprite, NetworkServerMessages, NetworkServerConnection, NetworkServerGame, NetworkServerThing,
+  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
+  ServerHelper, LogFile,
+  NetworkServerSprite, NetworkServerMessages, NetworkServerConnection, NetworkServerGame, NetworkServerThing,
+  Server,
   {$ELSE}
-    Sound, Demo, GameStrings, ClientGame, GameMenus, Sparks,
-    NetworkClientSprite,
+  Sound, Demo, GameStrings, ClientGame, GameMenus, Sparks,
+  NetworkClientSprite,
+  Client,
   {$ENDIF}
-  Bullets, {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Util, SysUtils, Calc, Math, TraceLog, Game, Control, Things, Cvar;
+  Bullets, Util, SysUtils, Calc, Math, TraceLog, Game, Control, Things, Cvar;
 
 function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
 var
@@ -1486,6 +1488,9 @@ begin
   if IsPlayerObjectOwner then
     FreeAndNil(Player);
   IsPlayerObjectOwner := False;
+  {$IFDEF SERVER}
+  Player := DummyPlayer;
+  {$ENDIF}
 
   // sort the players frag list
   SortPlayers;
@@ -2128,6 +2133,7 @@ begin
           if not SurvivalEndRound then
             if sv_gamemode.Value = GAMESTYLE_INF then
             begin
+              {$IFDEF SERVER}
               if TeamAliveNum[1] > 0 then
                 Inc(TeamScore[1], sv_inf_redaward.Value);
 
@@ -2136,6 +2142,7 @@ begin
                 Dec(TeamScore[1], 5 * (PlayersTeamNum[1] - PlayersTeamNum[2]));
               if (TeamScore[1] < 0) then
                 TeamScore[1] := 0;
+              {$ENDIF}
             end;
 
           SurvivalEndRound := True;
@@ -4885,12 +4892,12 @@ end;
 
 function TSprite.IsSolo(): Boolean;
 begin
-  Result := Player.Team = TEAM_NONE;
+  Result := (sv_gamemode.Value = GAMESTYLE_DEATHMATCH) or (Player.Team = TEAM_NONE);
 end;
 
 function TSprite.IsNotSolo(): Boolean;
 begin
-  Result := Player.Team <> TEAM_NONE;
+  Result := not IsSolo();
 end;
 
 function TSprite.IsInTeam(): Boolean;

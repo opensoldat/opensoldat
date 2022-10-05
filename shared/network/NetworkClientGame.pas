@@ -104,7 +104,8 @@ begin
   if (NewPlayerMsg.AdoptSpriteID = 1) then
   begin
     d := 1;
-    MySprite := i;
+    if (not DemoPlayer.Active) or (i = MAX_PLAYERS) then
+      MySprite := i;
 
     if DemoPlayer.Active then
       Sprite[MySprite].Player.DemoPlayer := True;
