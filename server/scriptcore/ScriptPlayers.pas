@@ -168,7 +168,7 @@ end;
 procedure TScriptPlayers.BigText(Layer: Byte; Text: string; Delay: Integer;
   Color: Longint; Scale: Single; X, Y: Integer);
 begin
-  NetworkServerMessages.ServerSendSpecialMessage(Text, 1, Layer, Delay, Scale, Color, X, Y, 0);
+  NetworkServerMessages.ServerSendSpecialMessage(Text, 1, Layer, Delay, Scale, Longword(Color), X, Y, 0);
 end;
 
 procedure TScriptPlayers.WorldText(Layer: Byte; Text: string; Delay: Integer;
