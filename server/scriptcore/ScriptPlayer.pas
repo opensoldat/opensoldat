@@ -955,7 +955,7 @@ procedure TScriptActivePlayer.BigText(Layer: Byte; Text: string;
 begin
   if not Self.Active then
     Exit;
-  ServerSendSpecialMessage(Text, 1, Layer, Delay, Scale, Color, X, Y, Self.ID);
+  ServerSendSpecialMessage(Text, 1, Layer, Delay, Scale, Longword(Color), X, Y, Self.ID);
 end;
 
 procedure TScriptActivePlayer.WorldText(Layer: Byte; Text: string;
