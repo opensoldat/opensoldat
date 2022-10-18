@@ -79,7 +79,6 @@ var
   log_filesupdate: TIntegerCvar;
   log_timestamp: TBooleanCvar;
 
-  fs_localmount: TBooleanCvar;
   fs_mod: TStringCvar;
   fs_portable: TBooleanCvar;
   fs_basepath: TStringCvar;
