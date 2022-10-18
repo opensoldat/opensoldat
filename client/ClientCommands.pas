@@ -12,7 +12,7 @@ uses
   {$IFDEF STEAM}Steam,{$ENDIF}
   Client, Command, Util, strutils, Game, ClientGame, Sound,
   GameRendering, NetworkClientMessages, Demo, GameStrings, Net,
-  Sprites, Constants, classes, sysutils, Input;
+  Sprites, Constants, classes, sysutils, Types, Input;
 
 var
   ScreenShotsInARow: Byte = 0;
@@ -21,7 +21,9 @@ procedure CommandBind(Args: array of AnsiString; Sender: Byte);
 var
   BindKeyName: AnsiString;
   CommandString: AnsiString;
-  Modifier: Word;
+  Keys: TStringDynArray;
+  i: Integer;
+  Modifier: TKeyMods;
 begin
   if Length(Args) < 3 then
   begin
@@ -29,19 +31,38 @@ begin
     Exit;
   end;
 
-  BindKeyName := LowerCase(Args[1]);
+  Keys := SplitString(LowerCase(Args[1]), '+');
   CommandString := Args[2];
   Modifier := KM_NONE;
 
-  if AnsiContainsStr(BindKeyName, '+') then
+  BindKeyName := '';
+  for i := Low(Keys) to High(Keys) do
   begin
-    if AnsiContainsText(BindKeyName, 'ctrl') then
-      Modifier := Modifier or KM_CTRL;
-    if AnsiContainsText(BindKeyName, 'shift') then
-      Modifier := Modifier or KM_SHIFT;
-    if AnsiContainsText(BindKeyName, 'alt') then
-      Modifier := Modifier or KM_ALT;
-    BindKeyName := StringsReplace(BindKeyName, ['ctrl', 'shift', 'alt', '+'], ['', '', '', ''], [rfReplaceAll]);
+    if Keys[i] = 'shift' then
+      Modifier := Modifier or KM_SHIFT
+    else if Keys[i] = 'ctrl' then
+      Modifier := Modifier or KM_CTRL
+    else if Keys[i] = 'alt' then
+      Modifier := Modifier or KM_ALT
+    else if BindKeyName = '' then
+      BindKeyName := Keys[i]; // First specific key (can be a specific modifier, like 'left shift') is allowed to be trigger key.
+
+    if Keys[i] = 'left shift' then
+      Modifier := Modifier or KM_LSHIFT
+    else if Keys[i] = 'right shift' then
+      Modifier := Modifier or KM_RSHIFT
+    else if Keys[i] = 'left ctrl' then
+      Modifier := Modifier or KM_LCTRL
+    else if Keys[i] = 'right ctrl' then
+      Modifier := Modifier or KM_RCTRL
+    else if Keys[i] = 'left alt' then
+      Modifier := Modifier or KM_LALT
+    else if Keys[i] = 'right alt' then
+      Modifier := Modifier or KM_RALT
+    else if Keys[i] = 'alt gr' then
+      Modifier := Modifier or KM_RALT
+    else
+      BindKeyName := Keys[i]; // Last non-modifier key is the trigger key.
   end;
 
   if Args[2][1] = '+' then
