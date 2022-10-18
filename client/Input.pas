@@ -146,11 +146,6 @@ begin
     Binds[i + 1] := Binds[i];
   Binds[id] := b;
 
-  writeln('======');
-  for i := Low(Binds) to High(Binds) do
-    writeln(inttostr(binds[i].specificity));
-  writeln('======');
-
   Debug('[INPUT] BindKey: Key: ' + key + ' (' +
         IntToStr(Binds[id].keyId) + '), Mod: ' + IntToStr(Binds[id].keyMod) +
         ' Command: ' + command);
