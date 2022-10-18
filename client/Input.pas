@@ -32,7 +32,7 @@ type
   end;
 
 const
-  // Following modifiers, up to KM_RGUI, are compatible with SDL_Keymod.
+  // Following modifiers, up to KM_RALT, are compatible with SDL_Keymod.
   KM_NONE   = $00000;
   KM_LSHIFT = $00001;
   KM_RSHIFT = $00002;
@@ -40,19 +40,19 @@ const
   KM_RCTRL  = $00080;
   KM_LALT   = $00100;
   KM_RALT   = $00200;
-  KM_LGUI   = $00400;
-  KM_RGUI   = $00800;
   // These are our own custom keymod flags, to support either left or right
   // ctrl/shift/alt.
   KM_CTRL   = $10000;
   KM_ALT    = $20000;
   KM_SHIFT  = $40000;
 
+  KM_ALL    = KM_LSHIFT or KM_RSHIFT or KM_LCTRL or KM_RCTRL or KM_LALT or KM_RALT or KM_CTRL or KM_ALT or KM_SHIFT;
+
   // Custom "KeyIDs" to allow for mousewheel controls.
   KEYID_MOUSEWHEEL_UP   = 513;
   KEYID_MOUSEWHEEL_DOWN = 514;
 
-function BindKey(key, action, command: string; Modifier: TKeyMods): Boolean;
+function BindKey(key, action, command: string; KeyMods: TKeyMods): Boolean;
 function FindKeyBind(KeyMods: TKeyMods; KeyCode: TSDL_ScanCode; Exact: Boolean = False): PBind;
 function KeyModsMatch(BindKeyMods, KeyMods: TKeyMods; Exclusive: Boolean = False): Boolean;
 procedure StartInput;
@@ -88,7 +88,7 @@ begin
   Result := Result or ((KeyMods and not (KM_CTRL or KM_ALT or KM_SHIFT)) shl 4);
 end;
 
-function BindKey(key, action, command: string; Modifier: TKeyMods): Boolean;
+function BindKey(key, action, command: string; KeyMods: TKeyMods): Boolean;
 var
   b: TBind;
   id: Integer;
@@ -96,11 +96,8 @@ var
 begin
   Result := False;
 
-  // Passing through of key modifiers for the GUI modifier (AKA "Windows key",
-  // "Meta", "Hyper") is spotty on some operating system + window manager
-  // combos, so rather than introducing config options which will only work on
-  // certain systems, we just don't support that modifier key.
-  Modifier := Modifier and not (KM_LGUI or KM_RGUI);
+  // Clear unused modifier bits...
+  KeyMods := KeyMods and KM_ALL;
 
   if key = 'mousewheel up' then
     b.keyId := KEYID_MOUSEWHEEL_UP
@@ -117,7 +114,7 @@ begin
     Exit;
   end;
 
-  if Assigned(FindKeyBind(Modifier, b.keyId, True)) then
+  if Assigned(FindKeyBind(KeyMods, b.keyId, True)) then
   begin
     Debug('[INPUT] Key ' + key + ' is already binded');
     Exit;
@@ -130,7 +127,7 @@ begin
   end;
 
   b.Command := WideString(Command);
-  b.keyMod := Modifier;
+  b.keyMod := KeyMods;
   b.Specificity := SpecificityScore(b.keyMod);
 
   SetLength(Binds, Length(Binds) + 1);
@@ -158,6 +155,9 @@ var
 begin
   Result := nil;
 
+  // Clear unused modifier bits...
+  KeyMods := KeyMods and KM_ALL;
+
   for i := Low(Binds) to High(Binds) do
   begin
     if (Binds[i].KeyId = KeyCode) and Exact and (Binds[i].keymod = KeyMods) then
@@ -166,7 +166,7 @@ begin
       Exit;
     end;
 
-    if (not Exact) and (Binds[i].KeyId = KeyCode) and KeyModsMatch(Binds[i].keymod, KeyMods, Exact) then
+    if (not Exact) and (Binds[i].KeyId = KeyCode) and KeyModsMatch(Binds[i].keymod, KeyMods, False) then
     begin
       Result := @Binds[i];
       Exit;
@@ -177,6 +177,10 @@ end;
 function KeyModsMatch(BindKeyMods, KeyMods: TKeyMods; Exclusive: Boolean = False): Boolean;
 begin
   Result := True;
+
+  // Clear unused modifier bits...
+  BindKeyMods := BindKeyMods and KM_ALL;
+  KeyMods := KeyMods and KM_ALL;
 
   if (BindKeyMods and KM_SHIFT) = KM_SHIFT then
   begin
