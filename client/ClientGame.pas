@@ -64,7 +64,7 @@ uses
   Net, NetworkClientSprite, NetworkClientConnection,
   {$IFDEF ENABLE_FAE}FaeBase, FaeClient, NetworkClientFae,{$ENDIF}
   {$IFDEF STEAM}Steam, NetworkClientGame,{$ENDIF}
-  GameRendering, Gfx, UpdateFrame, GameMenus, Util, InterfaceGraphics;
+  GameRendering, Gfx, UpdateFrame, GameMenus, Util, InterfaceGraphics, Input;
 
 type
   TFrameTiming = record
@@ -286,6 +286,23 @@ begin
         DemoRecorder.SaveNextFrame;
       if DemoPlayer.Active then
         DemoPlayer.ProcessDemo;
+    end;
+
+    // Mousewheel events do not have a guaranteed inverse (like keyup/keydown). So
+    // instead, mousewheel "pressed" state lasts 1 frame. This must happen
+    // after `UpdateFrame()` is called.
+    if MouseWheelUpCounter > 0 then
+    begin
+      Dec(MouseWheelUpCounter);
+      if MouseWheelUpCounter = 0 then
+        KeyStatus[KEYID_MOUSEWHEEL_UP] := False;
+    end;
+
+    if MouseWheelDownCounter > 0 then
+    begin
+      Dec(MouseWheelDownCounter);
+      if MouseWheelDownCounter = 0 then
+        KeyStatus[KEYID_MOUSEWHEEL_DOWN] := False;
     end;
 
     // Radio Cooldown

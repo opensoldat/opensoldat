@@ -51,391 +51,19 @@ begin
   end;
 end;
 
-function ChatKeyDown(KeyMods: Byte; KeyCode: TSDL_KeyCode): Boolean;
-var
-  Len: Integer;
-  Str: WideString;
-  ConsoleStr: String;
-begin
-  Result := False;
-
-  if Length(ChatText) > 0 then
-  begin
-    if ((KeyMods = KM_CTRL) and (KeyCode = SDLK_v))
-      or ((KeyMods = KM_SHIFT) and (KeyCode = SDLK_INSERT)) then
-    begin
-      Str := FilterChatText(WideString(UTF8String(SDL_GetClipboardText)));
-      Len := Length(ChatText);
-      Insert(Str, ChatText, CursorPosition + 1);
-      Inc(CursorPosition, Length(ChatText) - Len);
-
-      Len := iif(VoteKickReasonType, REASON_CHARS - 1, MAXCHATTEXT);
-
-      if Length(ChatText) > Len then
-      begin
-        ChatText := Copy(ChatText, 1, Len);
-        CursorPosition := Min(CursorPosition, Len);
-      end;
-
-      CurrentTabCompletePlayer := 0;
-      ChatChanged := True;
-      Result := True;
-    end
-    else if ((KeyMods = KM_CTRL) and (KeyCode = SDLK_c)) then
-    begin
-      if SDL_SetClipboardText(PChar(UTF8String(BigConsole.GetContentsAsPlainText))) = 0 then
-        MainConsole.Console(_('Copied chat contents to clipboard'), GAME_MESSAGE_COLOR)
-      else
-        MainConsole.Console(WideFormat(_('Failed copying chat to clipboard: %s'), [SDL_GetError()]), DEBUG_MESSAGE_COLOR);
-    end
-    else if (KeyMods = KM_CTRL) then
-    begin
-      Result := True;
-
-      case KeyCode of
-        SDLK_HOME: begin
-          ChatChanged := True;
-          CursorPosition := 1;
-        end;
-
-        SDLK_END: begin
-          ChatChanged := True;
-          CursorPosition := Length(ChatText);
-        end;
-
-        SDLK_RIGHT: begin
-          ChatChanged := True;
-          Len := Length(ChatText);
-          while (CursorPosition < Len) do
-          begin
-            Inc(CursorPosition);
-            if (CursorPosition = Len) then
-              break;
-            if (ChatText[CursorPosition] = ' ')
-              and (ChatText[CursorPosition + 1] <> ' ') then
-              break;
-          end;
-        end;
-
-        SDLK_LEFT: begin
-          ChatChanged := True;
-          while (CursorPosition > 1) do
-          begin
-            Dec(CursorPosition);
-            if (CursorPosition = 0) then
-              break;
-            if (ChatText[CursorPosition] = ' ')
-              and (ChatText[CursorPosition + 1] <> ' ') then
-              break;
-          end;
-        end;
-      else
-        Result := False;
-      end;
-    end
-    else if KeyMods = KM_NONE then
-    begin
-      Result := True;
-
-      case KeyCode of
-        SDLK_ESCAPE: begin
-          ClearChatText;
-        end;
-
-        SDLK_BACKSPACE:
-        begin
-          ChatChanged := True;
-          if (CursorPosition > 1) or (Length(ChatText) = 1) then
-          begin
-            CurrentTabCompletePlayer := 0;
-            Delete(ChatText, CursorPosition, 1);
-            Dec(CursorPosition);
-            if Length(ChatText) = 0 then
-            begin
-              ClearChatText;
-            end;
-          end;
-        end;
-
-        SDLK_DELETE:
-        begin
-          ChatChanged := True;
-          if Length(ChatText) > CursorPosition then
-          begin
-            Delete(ChatText, CursorPosition + 1, 1);
-            CurrentTabCompletePlayer := 0;
-          end;
-        end;
-
-        SDLK_HOME: begin
-          ChatChanged := True;
-          CursorPosition := 1;
-        end;
-
-        SDLK_END: begin
-          ChatChanged := True;
-          CursorPosition := Length(ChatText);
-        end;
-
-        SDLK_RIGHT: begin
-          ChatChanged := True;
-          if Length(ChatText) > CursorPosition then
-            Inc(CursorPosition);
-        end;
-
-        SDLK_LEFT: begin
-          ChatChanged := True;
-          if CursorPosition > 1 then
-            Dec(CursorPosition);
-        end;
-
-        SDLK_TAB:
-          TabComplete;
-
-        SDLK_RETURN, SDLK_KP_ENTER:
-        begin
-          if ChatText[1] = '/' then
-          begin
-              ChatType := MSGTYPE_CMD;
-              ConsoleStr := Copy(String(ChatText), 2, Length(ChatText));
-              if ParseInput(ConsoleStr) then
-              begin
-                LastChatType := ChatType;
-                LastChatText := ChatText;
-                ClearChatText;
-                Exit;
-              end;
-          end;
-          if MySprite > 0 then
-          begin
-            if VoteKickReasonType then
-            begin
-              if Length(ChatText) > 3 then
-              begin
-                ClientVoteKick(KickMenuIndex, False, String(ChatText));
-                VoteKickReasonType := False;
-              end;
-            end
-            else
-            begin
-              ClientSendStringMessage(Copy(ChatText, 2, Length(ChatText)), ChatType);
-            end;
-          end;
-
-          LastChatType := ChatType;
-          LastChatText := ChatText;
-          ClearChatText;
-        end;
-      else
-        Result := False;
-      end;
-    end;
-  end;
-end;
-
-function MenuKeyDown(KeyMods: Byte; KeyCode: TSDL_ScanCode): Boolean;
-begin
-  Result := False;
-
-  if (KeyMods = KM_NONE) and (KeyCode = SDL_SCANCODE_ESCAPE) then
-  begin
-    Result := True;
-
-    if ShowRadioMenu then
-    begin
-      ShowRadioMenu := False;
-      RMenuState := '  ';
-    end
-    else if KickMenu.Active or MapMenu.Active then
-      GameMenuShow(EscMenu)
-    else
-      GameMenuShow(EscMenu, not EscMenu.Active);
-  end
-  else if (KeyCode >= SDL_SCANCODE_1) and (KeyCode <= SDL_SCANCODE_0) then
-  begin
-    if TeamMenu.Active then
-    begin
-      if KeyMods = KM_NONE then
-        Result := GameMenuAction(TeamMenu, ((KeyCode - SDL_SCANCODE_1) + 1) mod 10);
-    end
-    else if EscMenu.Active then
-    begin
-      if KeyMods = KM_NONE then
-        Result := GameMenuAction(EscMenu, KeyCode - SDL_SCANCODE_1);
-    end
-    else if LimboMenu.Active then
-    begin
-      case KeyMods of
-        KM_NONE: Result := GameMenuAction(LimboMenu, KeyCode - SDL_SCANCODE_1);
-        KM_CTRL: Result := GameMenuAction(LimboMenu, KeyCode - SDL_SCANCODE_1 + 10);
-      end;
-    end;
-  end;
-end;
-
-function KeyDown(var KeyEvent: TSDL_KeyboardEvent): Boolean;
+// Perform actions for binds which are triggered on key press.
+function PerformKeyDownBindAction(Bind: PBind): Boolean;
 var
   i: Integer;
-  KeyMods: Byte;
-  KeyCode: TSDL_ScanCode;
-  Bind: PBind;
   Action: TAction;
   PriCount, SecCount, PriNum, SecNum: Integer;
 begin
   Result := True;
-  KeyCode := KeyEvent.keysym.scancode;
-
-  KeyMods :=
-    (Ord(0 <> (KeyEvent.keysym._mod and KMOD_ALT)) shl 0) or
-    (Ord(0 <> (KeyEvent.keysym._mod and KMOD_CTRL)) shl 1) or
-    (Ord(0 <> (KeyEvent.keysym._mod and KMOD_SHIFT)) shl 2);
-  if ShouldRenderFrames and ChatKeyDown(KeyMods, KeyEvent.keysym.sym) then
-    Exit;
-
-  if KeyEvent._repeat <> 0 then
+  if Bind = Nil then
   begin
     Result := False;
     Exit;
   end;
-
-  if ShouldRenderFrames and MenuKeyDown(KeyMods, KeyCode) then
-    Exit;
-
-  // other hard coded key bindings
-
-  if KeyMods = KM_NONE then case KeyCode of
-    SDL_SCANCODE_ESCAPE: begin
-      if not ShouldRenderFrames then
-        GameLoopRun := False;
-    end;
-    SDL_SCANCODE_PAGEDOWN: begin
-      if FragsMenuShow then
-        Inc(FragsScrollLev, Ord(FragsScrollLev < FragsScrollMax));
-    end;
-
-    SDL_SCANCODE_PAGEUP: begin
-      if FragsMenuShow then
-        Dec(FragsScrollLev, Ord(FragsScrollLev > 0));
-    end;
-
-    SDL_SCANCODE_F11: begin
-      Result := VoteActive;
-      VoteActive := False;
-    end;
-
-    SDL_SCANCODE_F12:
-    begin
-      Result := VoteActive;
-
-      if VoteActive then
-      begin
-        VoteActive := False;
-
-        if VoteType = VOTE_MAP then
-        begin
-          ClientSendStringMessage('votemap ' + WideString(VoteTarget), MSGTYPE_CMD);
-          MainConsole.Console(WideFormat(_('You have voted on %s'), [VoteTarget]), VOTE_MESSAGE_COLOR);
-        end
-        else if VoteType = VOTE_KICK then
-        begin
-          i := StrToInt(VoteTarget);
-          ClientVoteKick(i, True, '');
-          MainConsole.Console(WideFormat(_('You have voted to kick %s'), [Sprite[i].Player.Name]), VOTE_MESSAGE_COLOR);
-        end;
-      end;
-    end;
-
-    SDL_SCANCODE_F9: begin
-      SDL_MinimizeWindow(GameWindow);
-      Result := True;
-    end;
-
-    SDL_SCANCODE_F8: begin
-      Result := False;
-
-      if DemoPlayer.Active then
-      begin
-        Result := True;
-        demo_speed.SetValue(iif(GoalTicks = DEFAULT_GOALTICKS, 8.0, 1.0))
-      end;
-    end;
-
-    SDL_SCANCODE_F10: begin
-      Result := False;
-
-      if DemoPlayer.Active then
-      begin
-        Result := True;
-        if (MapChangeCounter < 0) or (MapChangeCounter > 99999999) then
-        begin
-          if MapChangeCounter < 0 then
-            MapChangeCounter := 999999999
-          else
-            MapChangeCounter := -60;
-        end;
-      end;
-    end;
-
-    SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3:
-    begin
-      Result := False;
-
-      if (ChatText = '') and (sv_radio.Value) and ShowRadioMenu then
-      begin
-        Result := True;
-        i := Ord(RMenuState[0] <> ' ');
-
-        case KeyCode of
-          SDL_SCANCODE_1: RMenuState[i] := '1';
-          SDL_SCANCODE_2: RMenuState[i] := '2';
-          SDL_SCANCODE_3: RMenuState[i] := '3';
-        end;
-
-        if i = 1 then
-        begin
-          ChatText := WideString(
-            RadioMenu.Values['Menu1' +
-              choose(StrToInt(RMenuState[0]) - 1, ['EFC', 'FFC', 'ES'])
-            ] + ' ' +
-            RadioMenu.Values['Menu2' +
-              choose(StrToInt(RMenuState[0]) - 1, ['EFC', 'FFC', 'ES']) +
-              choose(StrToInt(RMenuState[1]) - 1, ['U', 'M', 'D'])
-            ]);
-
-          ChatText := '*' + WideString(RMenuState[0]) + WideString(RMenuState[1]) + ChatText;
-          ClientSendStringMessage(ChatText, MSGTYPE_RADIO);
-          ChatText := '';
-          // RadioCooldown := 3;
-          ShowRadioMenu := False;
-          RMenuState := '  ';
-        end;
-      end;
-    end;
-
-    else
-      Result := False;
-  end
-  else if KeyMods = KM_ALT then case KeyCode of
-    SDL_SCANCODE_F4:
-      ExitToMenu;
-
-    SDL_SCANCODE_F9:
-      ExitToMenu;
-    else
-      Result := False;
-  end
-  else if (KeyMods = KM_CTRL) or (KeyMods = KM_SHIFT) then
-    Result := False;
-
-  if Result then
-    Exit;
-
-  // bindings
-  Bind := FindKeyBind(KeyMods, KeyCode);
-  Result := Bind <> nil;
-
-  if not Result then
-    Exit;
 
   Action := Bind.Action;
 
@@ -622,13 +250,9 @@ begin
   else if action = TAction.Bind then
   begin
     if (ChatTimeCounter = 0) and (Bind.Command <> '') then
-    begin
       if (ChatText = '') and not EscMenu.Active then
-      begin
         if not ParseInput(String(Bind.Command)) then
           ClientSendStringMessage(Bind.Command, MSGTYPE_CMD);
-      end;
-    end;
   end
   else if action = TAction.VoiceChat then
   begin
@@ -646,9 +270,386 @@ begin
   end;
 end;
 
+function ChatKeyDown(KeyMods: TKeyMods; KeyCode: TSDL_KeyCode): Boolean;
+var
+  Len: Integer;
+  Str: WideString;
+  ConsoleStr: String;
+begin
+  Result := False;
+
+  if Length(ChatText) > 0 then
+  begin
+    if (KeyModsMatch(KM_CTRL, KeyMods, True) and (KeyCode = SDLK_v))
+      or (KeyModsMatch(KM_SHIFT, KeyMods, True) and (KeyCode = SDLK_INSERT)) then
+    begin
+      Str := FilterChatText(WideString(UTF8String(SDL_GetClipboardText)));
+      Len := Length(ChatText);
+      Insert(Str, ChatText, CursorPosition + 1);
+      Inc(CursorPosition, Length(ChatText) - Len);
+
+      Len := iif(VoteKickReasonType, REASON_CHARS - 1, MAXCHATTEXT);
+
+      if Length(ChatText) > Len then
+      begin
+        ChatText := Copy(ChatText, 1, Len);
+        CursorPosition := Min(CursorPosition, Len);
+      end;
+
+      CurrentTabCompletePlayer := 0;
+      ChatChanged := True;
+      Result := True;
+    end
+    else if (KeyModsMatch(KM_CTRL, KeyMods, True) and (KeyCode = SDLK_c)) then
+    begin
+      if SDL_SetClipboardText(PChar(UTF8String(BigConsole.GetContentsAsPlainText))) = 0 then
+        MainConsole.Console(_('Copied chat contents to clipboard'), GAME_MESSAGE_COLOR)
+      else
+        MainConsole.Console(WideFormat(_('Failed copying chat to clipboard: %s'), [SDL_GetError()]), DEBUG_MESSAGE_COLOR);
+    end
+    else if KeyModsMatch(KM_CTRL, KeyMods, True) then
+    begin
+      Result := True;
+
+      case KeyCode of
+        SDLK_HOME: begin
+          ChatChanged := True;
+          CursorPosition := 1;
+        end;
+
+        SDLK_END: begin
+          ChatChanged := True;
+          CursorPosition := Length(ChatText);
+        end;
+
+        SDLK_RIGHT: begin
+          ChatChanged := True;
+          Len := Length(ChatText);
+          while (CursorPosition < Len) do
+          begin
+            Inc(CursorPosition);
+            if (CursorPosition = Len) then
+              break;
+            if (ChatText[CursorPosition] = ' ')
+              and (ChatText[CursorPosition + 1] <> ' ') then
+              break;
+          end;
+        end;
+
+        SDLK_LEFT: begin
+          ChatChanged := True;
+          while (CursorPosition > 1) do
+          begin
+            Dec(CursorPosition);
+            if (CursorPosition = 0) then
+              break;
+            if (ChatText[CursorPosition] = ' ')
+              and (ChatText[CursorPosition + 1] <> ' ') then
+              break;
+          end;
+        end;
+      else
+        Result := False;
+      end;
+    end
+    else if KeyMods = KM_NONE then
+    begin
+      Result := True;
+
+      case KeyCode of
+        SDLK_ESCAPE: begin
+          ClearChatText;
+        end;
+
+        SDLK_BACKSPACE:
+        begin
+          ChatChanged := True;
+          if (CursorPosition > 1) or (Length(ChatText) = 1) then
+          begin
+            CurrentTabCompletePlayer := 0;
+            Delete(ChatText, CursorPosition, 1);
+            Dec(CursorPosition);
+            if Length(ChatText) = 0 then
+            begin
+              ClearChatText;
+            end;
+          end;
+        end;
+
+        SDLK_DELETE:
+        begin
+          ChatChanged := True;
+          if Length(ChatText) > CursorPosition then
+          begin
+            Delete(ChatText, CursorPosition + 1, 1);
+            CurrentTabCompletePlayer := 0;
+          end;
+        end;
+
+        SDLK_HOME: begin
+          ChatChanged := True;
+          CursorPosition := 1;
+        end;
+
+        SDLK_END: begin
+          ChatChanged := True;
+          CursorPosition := Length(ChatText);
+        end;
+
+        SDLK_RIGHT: begin
+          ChatChanged := True;
+          if Length(ChatText) > CursorPosition then
+            Inc(CursorPosition);
+        end;
+
+        SDLK_LEFT: begin
+          ChatChanged := True;
+          if CursorPosition > 1 then
+            Dec(CursorPosition);
+        end;
+
+        SDLK_TAB:
+          TabComplete;
+
+        SDLK_RETURN, SDLK_KP_ENTER:
+        begin
+          if ChatText[1] = '/' then
+          begin
+              ChatType := MSGTYPE_CMD;
+              ConsoleStr := Copy(String(ChatText), 2, Length(ChatText));
+              if ParseInput(ConsoleStr) then
+              begin
+                LastChatType := ChatType;
+                LastChatText := ChatText;
+                ClearChatText;
+                Exit;
+              end;
+          end;
+          if MySprite > 0 then
+          begin
+            if VoteKickReasonType then
+            begin
+              if Length(ChatText) > 3 then
+              begin
+                ClientVoteKick(KickMenuIndex, False, String(ChatText));
+                VoteKickReasonType := False;
+              end;
+            end
+            else
+            begin
+              ClientSendStringMessage(Copy(ChatText, 2, Length(ChatText)), ChatType);
+            end;
+          end;
+
+          LastChatType := ChatType;
+          LastChatText := ChatText;
+          ClearChatText;
+        end;
+      else
+        Result := False;
+      end;
+    end;
+  end;
+end;
+
+function MenuKeyDown(KeyMods: TKeyMods; KeyCode: TSDL_ScanCode): Boolean;
+begin
+  Result := False;
+
+  if (KeyMods = KM_NONE) and (KeyCode = SDL_SCANCODE_ESCAPE) then
+  begin
+    Result := True;
+
+    if ShowRadioMenu then
+    begin
+      ShowRadioMenu := False;
+      RMenuState := '  ';
+    end
+    else if KickMenu.Active or MapMenu.Active then
+      GameMenuShow(EscMenu)
+    else
+      GameMenuShow(EscMenu, not EscMenu.Active);
+  end
+  else if (KeyCode >= SDL_SCANCODE_1) and (KeyCode <= SDL_SCANCODE_0) then
+  begin
+    if TeamMenu.Active then
+    begin
+      if KeyMods = KM_NONE then
+        Result := GameMenuAction(TeamMenu, ((KeyCode - SDL_SCANCODE_1) + 1) mod 10);
+    end
+    else if EscMenu.Active then
+    begin
+      if KeyMods = KM_NONE then
+        Result := GameMenuAction(EscMenu, KeyCode - SDL_SCANCODE_1);
+    end
+    else if LimboMenu.Active then
+    begin
+      if KeyMods = KM_NONE then
+        Result := GameMenuAction(LimboMenu, KeyCode - SDL_SCANCODE_1)
+      else if KeyModsMatch(KM_CTRL, KeyMods, True) then
+        Result := GameMenuAction(LimboMenu, KeyCode - SDL_SCANCODE_1 + 10);
+    end;
+  end;
+end;
+
+function KeyDown(var KeyEvent: TSDL_KeyboardEvent): Boolean;
+var
+  i: Integer;
+  KeyMods: TKeyMods;
+  KeyCode: TSDL_ScanCode;
+begin
+  Result := True;
+  KeyCode := KeyEvent.keysym.scancode;
+
+  KeyMods := KeyEvent.keysym._mod;
+  if ShouldRenderFrames and ChatKeyDown(KeyMods, KeyEvent.keysym.sym) then
+    Exit;
+
+  if KeyEvent._repeat <> 0 then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  if ShouldRenderFrames and MenuKeyDown(KeyMods, KeyCode) then
+    Exit;
+
+  // other hard coded key bindings
+
+  if KeyMods = KM_NONE then case KeyCode of
+    SDL_SCANCODE_ESCAPE: begin
+      if not ShouldRenderFrames then
+        GameLoopRun := False;
+    end;
+    SDL_SCANCODE_PAGEDOWN: begin
+      if FragsMenuShow then
+        Inc(FragsScrollLev, Ord(FragsScrollLev < FragsScrollMax));
+    end;
+
+    SDL_SCANCODE_PAGEUP: begin
+      if FragsMenuShow then
+        Dec(FragsScrollLev, Ord(FragsScrollLev > 0));
+    end;
+
+    SDL_SCANCODE_F11: begin
+      Result := VoteActive;
+      VoteActive := False;
+    end;
+
+    SDL_SCANCODE_F12:
+    begin
+      Result := VoteActive;
+
+      if VoteActive then
+      begin
+        VoteActive := False;
+
+        if VoteType = VOTE_MAP then
+        begin
+          ClientSendStringMessage('votemap ' + WideString(VoteTarget), MSGTYPE_CMD);
+          MainConsole.Console(WideFormat(_('You have voted on %s'), [VoteTarget]), VOTE_MESSAGE_COLOR);
+        end
+        else if VoteType = VOTE_KICK then
+        begin
+          i := StrToInt(VoteTarget);
+          ClientVoteKick(i, True, '');
+          MainConsole.Console(WideFormat(_('You have voted to kick %s'), [Sprite[i].Player.Name]), VOTE_MESSAGE_COLOR);
+        end;
+      end;
+    end;
+
+    SDL_SCANCODE_F9: begin
+      SDL_MinimizeWindow(GameWindow);
+      Result := True;
+    end;
+
+    SDL_SCANCODE_F8: begin
+      Result := False;
+
+      if DemoPlayer.Active then
+      begin
+        Result := True;
+        demo_speed.SetValue(iif(GoalTicks = DEFAULT_GOALTICKS, 8.0, 1.0))
+      end;
+    end;
+
+    SDL_SCANCODE_F10: begin
+      Result := False;
+
+      if DemoPlayer.Active then
+      begin
+        Result := True;
+        if (MapChangeCounter < 0) or (MapChangeCounter > 99999999) then
+        begin
+          if MapChangeCounter < 0 then
+            MapChangeCounter := 999999999
+          else
+            MapChangeCounter := -60;
+        end;
+      end;
+    end;
+
+    SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3:
+    begin
+      Result := False;
+
+      if (ChatText = '') and (sv_radio.Value) and ShowRadioMenu then
+      begin
+        Result := True;
+        i := Ord(RMenuState[0] <> ' ');
+
+        case KeyCode of
+          SDL_SCANCODE_1: RMenuState[i] := '1';
+          SDL_SCANCODE_2: RMenuState[i] := '2';
+          SDL_SCANCODE_3: RMenuState[i] := '3';
+        end;
+
+        if i = 1 then
+        begin
+          ChatText := WideString(
+            RadioMenu.Values['Menu1' +
+              choose(StrToInt(RMenuState[0]) - 1, ['EFC', 'FFC', 'ES'])
+            ] + ' ' +
+            RadioMenu.Values['Menu2' +
+              choose(StrToInt(RMenuState[0]) - 1, ['EFC', 'FFC', 'ES']) +
+              choose(StrToInt(RMenuState[1]) - 1, ['U', 'M', 'D'])
+            ]);
+
+          ChatText := '*' + WideString(RMenuState[0]) + WideString(RMenuState[1]) + ChatText;
+          ClientSendStringMessage(ChatText, MSGTYPE_RADIO);
+          ChatText := '';
+          // RadioCooldown := 3;
+          ShowRadioMenu := False;
+          RMenuState := '  ';
+        end;
+      end;
+    end;
+
+    else
+      Result := False;
+  end
+  else if KeyModsMatch(KM_ALT, KeyMods, True) then case KeyCode of
+    SDL_SCANCODE_F4:
+      ExitToMenu;
+
+    SDL_SCANCODE_F9:
+      ExitToMenu;
+    else
+      Result := False;
+  end
+  else
+    Result := False;
+
+  if Result then
+    Exit;
+
+  // bindings
+  Result := PerformKeyDownBindAction(FindKeyBind(KeyMods, KeyCode));
+end;
+
 function KeyUp(var KeyEvent: TSDL_KeyboardEvent): Boolean;
 var
-  KeyMods: Byte;
+  KeyMods: TKeyMods;
   KeyCode: TSDL_ScanCode;
   Bind: PBind;
   Action: TAction;
@@ -656,10 +657,7 @@ begin
   Result := True;
   KeyCode := KeyEvent.keysym.scancode;
 
-  KeyMods :=
-    (Ord(0 <> (KeyEvent.keysym._mod and KMOD_ALT)) shl 0) or
-    (Ord(0 <> (KeyEvent.keysym._mod and KMOD_CTRL)) shl 1) or
-    (Ord(0 <> (KeyEvent.keysym._mod and KMOD_SHIFT)) shl 2);
+  KeyMods := KeyEvent.keysym._mod;
 
   if KeyEvent._repeat <> 0 then
   begin
@@ -696,6 +694,7 @@ var
   Event: TSDL_Event;
   Str: WideString;
   ChatEnabled: Boolean;
+  Bind: PBind;
 begin
   Event := Default(TSDL_Event);
   ChatEnabled := Length(ChatText) > 0;
@@ -725,6 +724,27 @@ begin
 
       SDL_MOUSEBUTTONUP:
         KeyStatus[Event.button.button + 300] := False;
+
+      SDL_MOUSEWHEEL: begin
+        // SDL_MOUSEWHEEL_FLIPPED = 1
+        if Event.wheel.direction = 1 then
+          Event.wheel.y := Event.wheel.y * -1;
+
+        Bind := Nil;
+        if Event.wheel.y > 0 then
+          Bind := FindKeyBind(SDL_GetModState(), KEYID_MOUSEWHEEL_UP)
+        else if Event.wheel.y < 0 then
+          Bind := FindKeyBind(SDL_GetModState(), KEYID_MOUSEWHEEL_DOWN);
+
+        if not PerformKeyDownBindAction(Bind) then
+        begin
+          if Bind.keyid = KEYID_MOUSEWHEEL_UP then
+            MouseWheelUpCounter := 1
+          else if Bind.keyid = KEYID_MOUSEWHEEL_DOWN then
+            MouseWheelDownCounter := 1;
+          KeyStatus[Bind.keyid] := True;
+        end;
+      end;
 
       SDL_TEXTINPUT:
       begin

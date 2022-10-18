@@ -110,9 +110,9 @@ begin
             begin
               if ChatText = '' then
               begin
-                for i := Low(Binds) to High(Binds) - 1 do
+                for i := Low(Binds) to High(Binds) do
                 begin
-                  if KeyStatus[Binds[i].keyId] and ((Binds[i].keymod = 0) or (Binds[i].keyMod and SDL_GetModState() <> 0)) then
+                  if KeyStatus[Binds[i].keyId] and KeyModsMatch(Binds[i].keymod, SDL_GetModState()) then
                   begin
                     if Binds[i].action = TAction.Left then SpriteC.Control.Left := True;
                     if Binds[i].action = TAction.Right then SpriteC.Control.Right := True;
