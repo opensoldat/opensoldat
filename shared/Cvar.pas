@@ -734,7 +734,9 @@ begin
     {$ENDIF}
   {$ENDIF}
 
+  {$IFNDEF SERVER}
   fs_localmount := TBooleanCvar.Add('fs_localmount', 'Mount game directory as game mod', False, [CVAR_CLIENT, CVAR_INITONLY], @CommandLineOnlyChange);
+  {$ENDIF}
   fs_mod := TStringCvar.Add('fs_mod', 'File name of mod placed in mods directory (without .smod extension)', '', [CVAR_INITONLY], nil, 0, 255);
   fs_portable := TBooleanCvar.Add('fs_portable', 'Enables portable mode', True, [CVAR_CLIENT, CVAR_INITONLY], @CommandLineOnlyChange);
   fs_basepath := TStringCvar.Add('fs_basepath', 'Path to base game directory', '', [CVAR_INITONLY], @CommandLineOnlyChange, 0, 255);
