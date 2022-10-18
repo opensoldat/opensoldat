@@ -537,6 +537,7 @@ begin
       MainConsole.Console('Error: Could not load map (' + MapChange.Name + ')',
         DEBUG_MESSAGE_COLOR);
       NextMap;
+      ChangeMap;
       Exit;
     end;
   {$ENDIF}
