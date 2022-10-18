@@ -352,7 +352,7 @@ begin
         Result := False;
       end;
     end
-    else if KeyMods = KM_NONE then
+    else if KeyModsMatch(KM_NONE, KeyMods, True) then
     begin
       Result := True;
 
@@ -456,7 +456,7 @@ function MenuKeyDown(KeyMods: TKeyMods; KeyCode: TSDL_ScanCode): Boolean;
 begin
   Result := False;
 
-  if (KeyMods = KM_NONE) and (KeyCode = SDL_SCANCODE_ESCAPE) then
+  if KeyModsMatch(KM_NONE, KeyMods, True) and (KeyCode = SDL_SCANCODE_ESCAPE) then
   begin
     Result := True;
 
@@ -474,17 +474,17 @@ begin
   begin
     if TeamMenu.Active then
     begin
-      if KeyMods = KM_NONE then
+      if KeyModsMatch(KM_NONE, KeyMods, True) then
         Result := GameMenuAction(TeamMenu, ((KeyCode - SDL_SCANCODE_1) + 1) mod 10);
     end
     else if EscMenu.Active then
     begin
-      if KeyMods = KM_NONE then
+      if KeyModsMatch(KM_NONE, KeyMods, True) then
         Result := GameMenuAction(EscMenu, KeyCode - SDL_SCANCODE_1);
     end
     else if LimboMenu.Active then
     begin
-      if KeyMods = KM_NONE then
+      if KeyModsMatch(KM_NONE, KeyMods, True) then
         Result := GameMenuAction(LimboMenu, KeyCode - SDL_SCANCODE_1)
       else if KeyModsMatch(KM_CTRL, KeyMods, True) then
         Result := GameMenuAction(LimboMenu, KeyCode - SDL_SCANCODE_1 + 10);
@@ -516,7 +516,7 @@ begin
 
   // other hard coded key bindings
 
-  if KeyMods = KM_NONE then case KeyCode of
+  if KeyModsMatch(KM_NONE, KeyMods, True) then case KeyCode of
     SDL_SCANCODE_ESCAPE: begin
       if not ShouldRenderFrames then
         GameLoopRun := False;
