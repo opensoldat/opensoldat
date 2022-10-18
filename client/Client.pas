@@ -662,6 +662,7 @@ begin
   CreateDirIfMissing(UserDirectory + '/logs/kills');
   CreateDirIfMissing(UserDirectory + '/maps');
   CreateDirIfMissing(UserDirectory + '/mods');
+  CreateDirIfMissing(UserDirectory + '/custom-interfaces');
 
   PHYSFS_CopyFileFromArchive('configs/bindings.cfg', UserDirectory + '/configs/bindings.cfg');
   PHYSFS_CopyFileFromArchive('configs/client.cfg', UserDirectory + '/configs/client.cfg');
