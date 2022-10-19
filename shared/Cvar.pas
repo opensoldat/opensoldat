@@ -288,6 +288,8 @@ begin
     CvarFlags := CvarFlags + ' SC';
   if CVAR_INITONLY in Cvar.FFlags then
     CvarFlags := CvarFlags + ' INITONLY';
+  if CVAR_SERVER_INITONLY in Cvar.FFlags then
+    CvarFlags := CvarFlags + ' SERVER_INITONLY';
 
   Result := CvarFlags;
 end;
