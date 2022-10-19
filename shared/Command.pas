@@ -177,6 +177,10 @@ begin
   for i:=0 to Commands.Count-1 do
   begin
     CommandPtr := Commands.Items[i];
+    if Length(Args) = 2 then
+      if not AnsiContainsStr(CommandPtr.Name, Args[1]) then
+        Continue;
+
     MainConsole.Console(CommandPtr.Name + ' - ' + CommandPtr.Description, GAME_MESSAGE_COLOR);
   end;
 end;
