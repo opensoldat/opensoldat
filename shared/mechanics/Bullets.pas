@@ -1214,12 +1214,12 @@ begin
                     BulletParts.Pos[Num] :=
                       Vec2Subtract(Pos, BulletParts.Velocity[Num]);
                     BulletParts.Forces[Num].Y :=
-                      BulletParts.Forces[Num].Y - BulletParts.Gravity;
+                      BulletParts.Forces[Num].Y - (BulletParts.GravityMultiplier * Grav);
                     if TimeOut > ARROW_RESIST then
                       TimeOut := ARROW_RESIST;
                     if TimeOut < 20 then
                       BulletParts.Forces[Num].Y :=
-                        BulletParts.Forces[Num].Y + BulletParts.Gravity;
+                        BulletParts.Forces[Num].Y + (BulletParts.GravityMultiplier * Grav);
                   end;
                 BULLET_STYLE_FRAGNADE, BULLET_STYLE_FLAME:
                   begin
@@ -1691,7 +1691,7 @@ begin
                 if TimeOut > ARROW_RESIST then
                 begin
                   BulletParts.Pos[Num] := Vec2Subtract(Pos, BulletParts.Velocity[Num]);
-                  BulletParts.Forces[Num].Y := BulletParts.Forces[Num].Y - BulletParts.Gravity;
+                  BulletParts.Forces[Num].Y := BulletParts.Forces[Num].Y - (BulletParts.GravityMultiplier * Grav);
                   if ((not sv_friendlyfire.Value) and
                     Sprite[Owner].IsNotSolo() and
                     Sprite[Owner].IsInSameTeam(Sprite[j])
@@ -2088,7 +2088,7 @@ begin
             if TimeOut > ARROW_RESIST then
             begin
               BulletParts.Forces[Num].Y :=
-                BulletParts.Forces[Num].Y - BulletParts.Gravity;
+                BulletParts.Forces[Num].Y - (BulletParts.GravityMultiplier * Grav);
               Hit(HIT_TYPE_WALL);
 
               Kill;

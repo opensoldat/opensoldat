@@ -217,7 +217,7 @@ const
 
   WAVERESPAWN_TIME_MULITPLIER = 1;
 
-  PARA_SPEED    = -0.5 * 0.06; // GRAV
+  PARA_SPEED    = -0.5 * 0.06; // Grav
   PARA_DISTANCE = 500;
 
   MAX_OLDPOS = 125;

@@ -285,8 +285,6 @@ var
   WMName, WMVersion: string;
   LastWepMod: string;
 
-  Grav: Single = 0.06;
-
   ModDir: string = '';
 
   UDP: TServerNetwork;

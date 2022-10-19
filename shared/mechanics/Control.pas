@@ -325,16 +325,16 @@ begin
           begin
             if SpriteC.OnGround then
               Spriteparts.Forces[SpriteC.Num].Y :=
-                -2.5 * iif(GRAV > 0.05, JETSPEED, Grav * 2);
+                -2.5 * iif(Grav > 0.05, JETSPEED, Grav * 2);
 
             if not SpriteC.OnGround then
             begin
               if SpriteC.Position <> POS_PRONE then
                 Spriteparts.Forces[SpriteC.Num].Y :=
-                  Spriteparts.Forces[SpriteC.Num].Y - iif(GRAV > 0.05, JETSPEED, Grav * 2)
+                  Spriteparts.Forces[SpriteC.Num].Y - iif(Grav > 0.05, JETSPEED, Grav * 2)
               else
                 Spriteparts.Forces[SpriteC.Num].X := Spriteparts.Forces[SpriteC.Num].X +
-                  (SpriteC.Direction * iif(GRAV > 0.05, JETSPEED, Grav * 2) / 2);
+                  (SpriteC.Direction * iif(Grav > 0.05, JETSPEED, Grav * 2) / 2);
             end;
 
             if (SpriteC.LegsAnimation.ID <> GetUp.ID) and

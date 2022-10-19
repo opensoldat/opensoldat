@@ -46,7 +46,7 @@ type
     Forces: array[1..NUM_PARTICLES] of TVector2;
     OneOverMass: array[1..NUM_PARTICLES] of Single;
     TimeStep: Single;
-    Gravity, VDamping, EDamping: Single;
+    GravityMultiplier, VDamping, EDamping: Single;
     ConstraintCount: Integer;
     PartCount: Integer;
     Constraints: array[1..NUM_PARTICLES] of Constraint;
@@ -71,7 +71,7 @@ type
 implementation
 
 uses
-  SysUtils, PhysFS;
+  Game, SysUtils, PhysFS;
 
 procedure ParticleSystem.DoVerletTimeStep;
 var
@@ -108,7 +108,7 @@ var
   TempPos, S: TVector2;
 begin
   // Accumulate Forces
-  Forces[I].Y := Forces[I].Y + Gravity;
+  Forces[I].Y := Forces[I].Y + (GravityMultiplier * Grav);
   TempPos := Pos[I];
 
   Vec2Scale(S, Forces[I], OneOverMass[I]);
@@ -128,7 +128,7 @@ var
   TempPos, S1, S2, D: TVector2;
 begin
   // Accumulate Forces
-  Forces[I].Y := Forces[I].Y + Gravity;
+  Forces[I].Y := Forces[I].Y + (GravityMultiplier * Grav);
   TempPos := Pos[I];
 
   // Pos[I]:= 2 * Pos[I] - OldPos[I] + Forces[I]{ / Mass} * TimeStep * TimeStep;  {Verlet integration}

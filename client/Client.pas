@@ -229,7 +229,6 @@ var
   ServerIP: string = '127.0.0.1';
   ServerPort: Integer = 23073;
 
-  Grav: Single = 0.06;
   Connection: Byte = INTERNET;
 
   WeaponActive: array[1..MAIN_WEAPONS] of Byte; // sync
