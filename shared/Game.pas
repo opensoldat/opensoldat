@@ -35,6 +35,8 @@ var
 
   BulletTimeTimer: Integer;
 
+  Grav: Single = 0.06;
+
   SpriteParts, BulletParts, SparkParts,
   GostekSkeleton, BoxSkeleton, FlagSkeleton, ParaSkeleton, StatSkeleton,
   RifleSkeleton10, RifleSkeleton11, RifleSkeleton18, RifleSkeleton22,

@@ -230,11 +230,7 @@ end;
 function sv_gravityChange(Cvar: TCvarBase; NewValue: Single): Boolean;
 begin
   Cvar := Cvar;
-  GRAV := NewValue;
-  SpriteParts.Gravity := GRAV;
-  GostekSkeleton.Gravity := 1.06 * GRAV;
-  BulletParts.Gravity := GRAV * 2.25;
-  SparkParts.Gravity := GRAV / 1.4;
+  Grav := NewValue;
   Result := True;
 end;
 

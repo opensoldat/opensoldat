@@ -148,7 +148,7 @@ begin
     OBJECT_ALPHA_FLAG, OBJECT_BRAVO_FLAG, OBJECT_POINTMATCH_FLAG:  // Flag
       begin
         Thing[i].Skeleton.VDamping := 0.991;
-        Thing[i].Skeleton.Gravity := 1.0 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.0;
         Thing[i].Skeleton.Clone(FlagSkeleton);
         // A and B flags face eachother.
         if sStyle = OBJECT_ALPHA_FLAG then
@@ -181,7 +181,7 @@ begin
     OBJECT_USSOCOM:  // Socom
       begin
         Thing[i].Skeleton.VDamping := 0.994;
-        Thing[i].Skeleton.Gravity := 1.05 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.05;
         Thing[i].Skeleton.Clone(RifleSkeleton10);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := GFX_WEAPONS_N_SOCOM + k;
@@ -194,7 +194,7 @@ begin
     OBJECT_DESERT_EAGLE:  // Deagle
       begin
         Thing[i].Skeleton.VDamping := 0.996;
-        Thing[i].Skeleton.Gravity := 1.09 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.09;
         Thing[i].Skeleton.Clone(RifleSkeleton11);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := GFX_WEAPONS_N_DEAGLES + k;
@@ -207,7 +207,7 @@ begin
     OBJECT_HK_MP5:  // Mp5
       begin
         Thing[i].Skeleton.VDamping := 0.995;
-        Thing[i].Skeleton.Gravity := 1.11 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.11;
         Thing[i].Skeleton.Clone(RifleSkeleton22);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[MP5].TextureNum + k;
@@ -221,7 +221,7 @@ begin
     OBJECT_AK74:  // Ak74
       begin
         Thing[i].Skeleton.VDamping := 0.994;
-        Thing[i].Skeleton.Gravity := 1.16 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.16;
         Thing[i].Skeleton.Clone(RifleSkeleton37);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[AK74].TextureNum + k;
@@ -235,7 +235,7 @@ begin
     OBJECT_STEYR_AUG:  // SteyrAug
       begin
         Thing[i].Skeleton.VDamping := 0.994;
-        Thing[i].Skeleton.Gravity := 1.16 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.16;
         Thing[i].Skeleton.Clone(RifleSkeleton37);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[STEYRAUG].TextureNum + k;
@@ -249,7 +249,7 @@ begin
     OBJECT_SPAS12:  // Spas
       begin
         Thing[i].Skeleton.VDamping := 0.993;
-        Thing[i].Skeleton.Gravity := 1.15 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.15;
         Thing[i].Skeleton.Clone(RifleSkeleton36);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[SPAS12].TextureNum + k;
@@ -262,7 +262,7 @@ begin
     OBJECT_RUGER77:  // Ruger
       begin
         Thing[i].Skeleton.VDamping := 0.993;
-        Thing[i].Skeleton.Gravity := 1.13 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.13;
         Thing[i].Skeleton.Clone(RifleSkeleton36);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[RUGER77].TextureNum + k;
@@ -275,7 +275,7 @@ begin
     OBJECT_M79:  // M79
       begin
         Thing[i].Skeleton.VDamping := 0.994;
-        Thing[i].Skeleton.Gravity := 1.15 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.15;
         Thing[i].Skeleton.Clone(RifleSkeleton28);
         //FIXME (helloer): Check why Tex1 is different
         {$IFNDEF SERVER}
@@ -289,7 +289,7 @@ begin
     OBJECT_BARRET_M82A1:  // Barrett
       begin
         Thing[i].Skeleton.VDamping := 0.993;
-        Thing[i].Skeleton.Gravity := 1.18 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.18;
         Thing[i].Skeleton.Clone(RifleSkeleton43);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[BARRETT].TextureNum + k;
@@ -303,7 +303,7 @@ begin
     OBJECT_MINIMI:  // M249
       begin
         Thing[i].Skeleton.VDamping := 0.993;
-        Thing[i].Skeleton.Gravity := 1.2 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.2;
         Thing[i].Skeleton.Clone(RifleSkeleton39);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[M249].TextureNum + k;
@@ -317,7 +317,7 @@ begin
     OBJECT_MINIGUN:  // Minigun
       begin
         Thing[i].Skeleton.VDamping := 0.991;
-        Thing[i].Skeleton.Gravity := 1.4 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.4;
         Thing[i].Skeleton.Clone(RifleSkeleton55);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[MINIGUN].TextureNum + k;
@@ -330,7 +330,7 @@ begin
     OBJECT_RAMBO_BOW:  // Bow
       begin
         Thing[i].Skeleton.VDamping := 0.996;
-        Thing[i].Skeleton.Gravity := 0.65 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 0.65;
         Thing[i].Skeleton.Clone(RifleSkeleton50);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := GFX_WEAPONS_N_BOW + k;
@@ -344,7 +344,7 @@ begin
       begin
         Thing[i].Skeleton := BoxSkeleton;
         Thing[i].Skeleton.VDamping := 0.989;
-        Thing[i].Skeleton.Gravity := 1.05 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.05;
         Thing[i].Radius := KIT_RADIUS;
         Thing[i].TimeOut := sv_respawntime.Value * GUNRESISTTIME;
         Thing[i].Interest := DEFAULT_INTEREST_TIME;
@@ -357,7 +357,7 @@ begin
       begin
         Thing[i].Skeleton := BoxSkeleton;
         Thing[i].Skeleton.VDamping := 0.989;
-        Thing[i].Skeleton.Gravity := 1.07 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.07;
         Thing[i].Radius := KIT_RADIUS;
         Thing[i].TimeOut := FLAG_TIMEOUT;
         Thing[i].Interest := DEFAULT_INTEREST_TIME;
@@ -370,7 +370,7 @@ begin
       begin
         Thing[i].Skeleton := BoxSkeleton;
         Thing[i].Skeleton.VDamping := 0.989;
-        Thing[i].Skeleton.Gravity := 1.17 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.17;
         Thing[i].Radius := KIT_RADIUS;
         Thing[i].TimeOut := FLAG_TIMEOUT;
         Thing[i].Interest := DEFAULT_INTEREST_TIME;
@@ -383,7 +383,7 @@ begin
       begin
         Thing[i].Skeleton := BoxSkeleton;
         Thing[i].Skeleton.VDamping := 0.989;
-        Thing[i].Skeleton.Gravity := 1.17 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.17;
         Thing[i].Radius := KIT_RADIUS;
         Thing[i].TimeOut := FLAG_TIMEOUT;
         Thing[i].Interest := DEFAULT_INTEREST_TIME;
@@ -396,7 +396,7 @@ begin
       begin
         Thing[i].Skeleton := BoxSkeleton;
         Thing[i].Skeleton.VDamping := 0.989;
-        Thing[i].Skeleton.Gravity := 1.17 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.17;
         Thing[i].Radius := KIT_RADIUS;
         Thing[i].TimeOut := FLAG_TIMEOUT;
         Thing[i].Interest := DEFAULT_INTEREST_TIME;
@@ -409,7 +409,7 @@ begin
       begin
         Thing[i].Skeleton := BoxSkeleton;
         Thing[i].Skeleton.VDamping := 0.989;
-        Thing[i].Skeleton.Gravity := 1.17 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.17;
         Thing[i].Radius := KIT_RADIUS;
         Thing[i].TimeOut := FLAG_TIMEOUT;
         Thing[i].Interest := DEFAULT_INTEREST_TIME;
@@ -422,7 +422,7 @@ begin
       begin
         Thing[i].Skeleton := BoxSkeleton;
         Thing[i].Skeleton.VDamping := 0.989;
-        Thing[i].Skeleton.Gravity := 1.07 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.07;
         Thing[i].Radius := KIT_RADIUS;
         Thing[i].TimeOut := FLAG_TIMEOUT;
         Thing[i].Interest := DEFAULT_INTEREST_TIME;
@@ -434,7 +434,7 @@ begin
     OBJECT_PARACHUTE:  // para
       begin
         Thing[i].Skeleton.VDamping := 0.993;
-        Thing[i].Skeleton.Gravity := 1.15 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.15;
         Thing[i].Skeleton.Clone(ParaSkeleton);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := GFX_GOSTEK_PARA_ROPE;
@@ -445,7 +445,7 @@ begin
     OBJECT_COMBAT_KNIFE:  // Knife
       begin
         Thing[i].Skeleton.VDamping := 0.994;
-        Thing[i].Skeleton.Gravity := 1.15 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.15;
         Thing[i].Skeleton.Clone(RifleSkeleton18);
 
         a := Thing[i].Skeleton.Pos[2];
@@ -470,7 +470,7 @@ begin
     OBJECT_CHAINSAW:  // Chainsaw
       begin
         Thing[i].Skeleton.VDamping := 0.994;
-        Thing[i].Skeleton.Gravity := 1.15 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.15;
         Thing[i].Skeleton.Clone(RifleSkeleton28);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[CHAINSAW].TextureNum + k;
@@ -484,7 +484,7 @@ begin
     OBJECT_LAW:  // LAW
       begin
         Thing[i].Skeleton.VDamping := 0.994;
-        Thing[i].Skeleton.Gravity := 1.15 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 1.15;
         Thing[i].Skeleton.Clone(RifleSkeleton28);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[LAW].TextureNum + k;
@@ -497,7 +497,7 @@ begin
     OBJECT_STATIONARY_GUN:  // stationary gun
       begin
         Thing[i].Skeleton.VDamping := 0.99;
-        Thing[i].Skeleton.Gravity := 0.2 * GRAV;
+        Thing[i].Skeleton.GravityMultiplier := 0.2;
         Thing[i].Skeleton.Clone(StatSkeleton);
         {$IFNDEF SERVER}
         Thing[i].Tex1 := 0;
@@ -702,7 +702,7 @@ begin
               Collided := True;
 
               if Collided then
-                Skeleton.Forces[2].Y := Skeleton.Forces[2].Y + FLAG_STAND_FORCEUP * GRAV;
+                Skeleton.Forces[2].Y := Skeleton.Forces[2].Y + FLAG_STAND_FORCEUP * Grav;
             end;
           end
           else
@@ -751,7 +751,7 @@ begin
       if (HoldingSprite > 0) and (HoldingSprite < MAX_SPRITES + 1) then
       begin
         Skeleton.Pos[1] := Sprite[HoldingSprite].Skeleton.Pos[8];
-        Skeleton.Forces[2].Y := Skeleton.Forces[2].Y + FLAG_HOLDING_FORCEUP * GRAV;
+        Skeleton.Forces[2].Y := Skeleton.Forces[2].Y + FLAG_HOLDING_FORCEUP * Grav;
         Interest := DEFAULT_INTEREST_TIME;
 
         Interest := FLAG_INTEREST_TIME;
@@ -990,7 +990,7 @@ begin
         Skeleton.OldPos[4] := Skeleton.Pos[3];
         Skeleton.Pos[3] := a;
         Skeleton.OldPos[3] := a;
-        SpriteParts.Forces[HoldingSprite].Y := GRAV;
+        SpriteParts.Forces[HoldingSprite].Y := Grav;
       end;
     end else
     begin

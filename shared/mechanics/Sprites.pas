@@ -326,7 +326,7 @@ begin
 
   // create skeleton
   Sprite[i].Skeleton.TimeStep := 1;
-  Sprite[i].Skeleton.Gravity := 1.06 * GRAV;
+  Sprite[i].Skeleton.GravityMultiplier := 1.06;
   Sprite[i].Skeleton := GostekSkeleton;
   Sprite[i].Skeleton.VDamping := 0.9945;
 
@@ -2777,7 +2777,7 @@ begin
                  (Step.Y > SLIDELIMIT) then
               begin
                 SpriteParts.Pos[Num] := SpriteParts.OldPos[Num];
-                SpriteParts.Forces[Num].Y := SpriteParts.Forces[Num].Y - GRAV;
+                SpriteParts.Forces[Num].Y := SpriteParts.Forces[Num].Y - (SpriteParts.GravityMultiplier * Grav);
               end
               else
               begin
