@@ -8,9 +8,17 @@ uses
 type
   LauncherMessageIds = record
     const Commands = 'COMMANDS';
-    const ClientIdentity = 'CLIENT_ID';
-    const ServerIdentity = 'SERVER_ID';
+    const Identity = 'IDENTITY';
+    {$IFDEF SERVER}
+    const ReadyForClients = 'READY_FOR_CLIENTS';
+    {$ELSE}
     const JoinServer = 'JOIN_SERVER';
+    {$ENDIF}
+  end;
+
+  GameProcessTypes = record
+    const Client = 'CLIENT';
+    const Server = 'SERVER';
   end;
 
   TMessage = class(TPersistent)
@@ -20,17 +28,24 @@ type
     property id: String read FId write FId;
   end;
 
-  {$IFDEF SERVER}
-  TServerIdentityMessage = class(TMessage)
+  TIdentityMessage = class(TMessage)
+  private
+    FProcessId: String;
+    FProcessType: String;
   public
-    constructor Create;
+    constructor Create(ProcessType: String);
+  published
+    property processId: String read FProcessId write FProcessId;
+    property processType: String read FProcessType write FProcessType;
   end;
-  {$ELSE}
-  TClientIdentityMessage = class(TMessage)
+
+  {$IFDEF SERVER}
+  TReadyForClientsMessage = class(TMessage)
   public
     constructor Create;
   end;
 
+  {$ELSE}
   TJoinServerMessage = class(TMessage)
   private
     FIP: String;
@@ -46,17 +61,23 @@ type
 
 implementation
 
-{$IFDEF SERVER}
-constructor TServerIdentityMessage.Create;
+uses
+  SysUtils;
+
+constructor TIdentityMessage.Create(ProcessType: String);
 begin
-  FId := LauncherMessageIds.ServerIdentity;
-end;
-{$ELSE}
-constructor TClientIdentityMessage.Create;
-begin
-  FId := LauncherMessageIds.ClientIdentity;
+  FId := LauncherMessageIds.Identity;
+  FProcessId := GetProcessId.ToString;
+  FProcessType := ProcessType;
 end;
 
+{$IFDEF SERVER}
+constructor TReadyForClientsMessage.Create;
+begin
+  FId := LauncherMessageIds.ReadyForClients;
+end;
+
+{$ELSE}
 constructor TJoinServerMessage.Create(IP: String; Port: Integer);
 begin
   FId := LauncherMessageIds.JoinServer;

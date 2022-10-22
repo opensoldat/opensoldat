@@ -1054,6 +1054,9 @@ begin
   begin
     WriteLn('[NET] Game networking initialized.');
     WriteLn('[NET] Server is listening on ' + UDP.GetStringAddress(@UDP.Address, True));
+
+    if launcher_ipc_enable.Value then
+      LauncherIPC.SendReadyForClientsMessage;
   end
   else
   begin
