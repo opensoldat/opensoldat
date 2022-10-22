@@ -27,9 +27,9 @@ end;
 
 procedure TClientLauncherIPC.SendIdentityMessage;
 var
-  Message: TClientIdentityMessage;
+  Message: TIdentityMessage;
 begin
-  Message := TClientIdentityMessage.Create;
+  Message := TIdentityMessage.Create(GameProcessTypes.Client);
   SendObjectAsJSON(Message);
   Message.Free;
 end;
