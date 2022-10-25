@@ -10,7 +10,7 @@ uses
   Vector,
 
   // OpenSoldat units
-  Steam, Net, Sprites, Weapons, Sound,
+  Steam, Net, Sprites, Weapons, Sound, GameRendering,
   Constants, GameStrings;
 
 procedure ClientHandleNewPlayer(NetMessage: PSteamNetworkingMessage_t);
@@ -130,6 +130,7 @@ begin
     HeartbeatTimeWarnings := 0;
 
     r_zoom.SetValue(0.0);  // Reset zoom
+    ActualZoom := 0.0;
 
     if MapChangeCounter < 999999999 then
       MapChangeCounter := -60;
