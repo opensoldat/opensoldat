@@ -299,6 +299,8 @@ begin
     Result := CaseInsensitiveImageMap[Png]
   else if CaseInsensitiveImageMap[Orig] <> '' then
     Result := CaseInsensitiveImageMap[Orig]
+  else if PHYSFS_exists(PChar(Png)) then
+    Result := Png;
 end;
 
 function EaseZoom(Current, Goal: Single): Single;
