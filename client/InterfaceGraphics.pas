@@ -291,8 +291,8 @@ begin
   AddrRec := PInterface(@AddrFile[0])^;
   Int := AddrRec;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/health.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/health.bmp'))) then
   begin
     relinfo.HealthBar_Rel_X := Int.HealthIco_X;
     relinfo.HealthBar_Rel_Y := Int.HealthIco_Y;
@@ -306,8 +306,8 @@ begin
     relinfo.NadesBar_Rel_Y := Int.HealthIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/jet.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/jet.bmp'))) then
   begin
     relinfo.HealthBar_Rel_X := Int.JetIco_X;
     relinfo.HealthBar_Rel_Y := Int.JetIco_Y;
@@ -321,8 +321,8 @@ begin
     relinfo.NadesBar_Rel_Y := Int.JetIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/ammo.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/ammo.bmp'))) then
   begin
     relinfo.HealthBar_Rel_X := Int.AmmoIco_X;
     relinfo.HealthBar_Rel_Y := Int.AmmoIco_Y;
@@ -336,22 +336,22 @@ begin
     relinfo.NadesBar_Rel_Y := Int.AmmoIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/health.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/health.bmp'))) then
   begin
     relinfo.HealthBar_Rel_X := Int.HealthIco_X;
     relinfo.HealthBar_Rel_Y := Int.HealthIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/jet.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/jet.bmp'))) then
   begin
     relinfo.JetBar_Rel_X := Int.JetIco_X;
     relinfo.JetBar_Rel_Y := Int.JetIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/ammo.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/ammo.bmp'))) then
   begin
     relinfo.AmmoBar_Rel_X := Int.AmmoIco_X;
     relinfo.AmmoBar_Rel_Y := Int.AmmoIco_Y;
