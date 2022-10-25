@@ -313,6 +313,8 @@ begin
       ChatTimeCounter := ChatTimeCounter - 1;
   end;  // bullettime off
 
+  ActualZoom := EaseZoom(ActualZoom, r_zoom.Value);
+
   // MOVE -=CAMERA=-
   if (CameraFollowSprite > 0) and (CameraFollowSprite < MAX_SPRITES + 1) then
   begin
@@ -321,11 +323,11 @@ begin
       // FIXME(skoskav): Scope zoom and non-default resolution makes this a bit complicated. Why
       // does the magic number ~6.8 work so well?
 
-      M.X := exp(r_zoom.Value) * ((mx - GameWidthHalf) / Sprite[CameraFollowSprite].AimDistCoef *
+      M.X := exp(ActualZoom) * ((mx - GameWidthHalf) / Sprite[CameraFollowSprite].AimDistCoef *
         ((2 * 640 / GameWidth - 1) +
         (GameWidth - 640) / GameWidth * (DEFAULTAIMDIST - Sprite[CameraFollowSprite].AimDistCoef) / 6.8));
 
-      M.Y := exp(r_zoom.Value) * ((my - GameHeightHalf) / Sprite[CameraFollowSprite].AimDistCoef);
+      M.Y := exp(ActualZoom) * ((my - GameHeightHalf) / Sprite[CameraFollowSprite].AimDistCoef);
       CamV.X := CameraX;
       CamV.Y := CameraY;
       P.X := SpriteParts.Pos[CameraFollowSprite].X;
@@ -352,8 +354,8 @@ begin
     end
     else
     begin
-      M.X := (mx - GameWidthHalf) / SPECTATORAIMDIST;
-      M.Y := (my - GameHeightHalf) / SPECTATORAIMDIST;
+      M.X := exp(ActualZoom) * (mx - GameWidthHalf) / SPECTATORAIMDIST;
+      M.Y := exp(ActualZoom) * (my - GameHeightHalf) / SPECTATORAIMDIST;
     end;
     CamV.X := CameraX;
     CamV.Y := CameraY;

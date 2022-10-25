@@ -23,6 +23,7 @@ const
 var
   GameRenderingParams: TGameRenderingParams;
   Textures: TGfxSpriteArray;
+  ActualZoom: Single = 0.0;
 
 function InitGameGraphics: Boolean;
 procedure ReloadGraphics;
@@ -36,6 +37,7 @@ function FontStyleSize(Style: Integer): Single;
 procedure TakeScreenshot(Filename: string; Async: Boolean = True);
 procedure FillCaseInsensitiveImageMap;
 function FindImagePath(const Filename: string): string;
+function EaseZoom(Current, Goal: Single): Single;
 
 implementation
 
@@ -297,6 +299,15 @@ begin
     Result := CaseInsensitiveImageMap[Png]
   else if CaseInsensitiveImageMap[Orig] <> '' then
     Result := CaseInsensitiveImageMap[Orig]
+end;
+
+function EaseZoom(Current, Goal: Single): Single;
+const
+  EPSILON = 0.01;
+begin
+  Result := Current + (Goal - Current) / 4;
+  if Abs(Goal - Result) < EPSILON then
+    Result := Goal;
 end;
 
 procedure LoadMainTextures();
@@ -923,8 +934,8 @@ begin
     InterpolationState := Default(TInterpolationState);
     InterpolateState(FramePercent, InterpolationState, Paused);
 
-    w := exp(r_zoom.Value) * GameWidth;
-    h := exp(r_zoom.Value) * GameHeight;
+    w := exp(ActualZoom) * GameWidth;
+    h := exp(ActualZoom) * GameHeight;
 
     dx := CameraX - w / 2;
     dy := CameraY - h / 2;
@@ -997,6 +1008,11 @@ begin
     begin
       w := RenderWidth;
       h := RenderHeight;
+    end
+    else
+    begin
+      w := GameWidth;
+      h := GameHeight;
     end;
 
     if GrabActionSnap then
