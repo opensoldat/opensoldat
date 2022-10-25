@@ -155,6 +155,8 @@ begin
 
       ReadConf(conf, 'Favourite_Weapon', FavWeaponName);
       SpriteC.Brain.FavWeapon := WeaponNameToNum(FavWeaponName);
+      if SpriteC.Brain.FavWeapon = -1 then
+        Exit;
       ReadConf(conf, 'Secondary_Weapon', SpriteC.Player.SecWep);
       ReadConf(conf, 'Friend', SpriteC.Brain.Friend, True);
       ReadConf(conf, 'Accuracy', SpriteC.Brain.Accuracy);
