@@ -408,10 +408,10 @@ begin
   );
   GfxDrawQuad(
     Nil,
-    GfxVertex(EndX              , StartY - Thickness, 0.0, 0.0, Color),
-    GfxVertex(EndX   + Thickness, StartY - Thickness, 0.0, 0.0, Color),
-    GfxVertex(EndX   + Thickness, EndY   + Thickness, 0.0, 0.0, Color),
-    GfxVertex(EndX              , EndY   + Thickness, 0.0, 0.0, Color)
+    GfxVertex(EndX              , StartY            , 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, StartY            , 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, EndY              , 0.0, 0.0, Color),
+    GfxVertex(EndX              , EndY              , 0.0, 0.0, Color)
   );
   GfxDrawQuad(
     Nil,
@@ -422,10 +422,10 @@ begin
   );
   GfxDrawQuad(
     Nil,
-    GfxVertex(StartX - Thickness, StartY - Thickness, 0.0, 0.0, Color),
-    GfxVertex(StartX            , StartY - Thickness, 0.0, 0.0, Color),
-    GfxVertex(StartX            , EndY   + Thickness, 0.0, 0.0, Color),
-    GfxVertex(StartX - Thickness, EndY   + Thickness, 0.0, 0.0, Color)
+    GfxVertex(StartX - Thickness, StartY            , 0.0, 0.0, Color),
+    GfxVertex(StartX            , StartY            , 0.0, 0.0, Color),
+    GfxVertex(StartX            , EndY              , 0.0, 0.0, Color),
+    GfxVertex(StartX - Thickness, EndY              , 0.0, 0.0, Color)
   );
 end;
 
