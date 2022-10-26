@@ -365,6 +365,11 @@ begin
     ((CameraFollowSprite > 0) and (sv_advancedspectator.Value));
 end;
 
+function WorldToInterface(x: Single): Single;
+begin
+  Result := x / Exp(ActualZoom);
+end;
+
 function PixelAlignX(x: Single): Single;
 begin
   Result := PixelSize.x * Floor(x / PixelSize.x);
@@ -390,6 +395,67 @@ begin
     GfxVertex(x1, y1, 0, 0, Color),
     GfxVertex(x0, y1, 0, 0, Color)
   );
+end;
+
+procedure DrawBox(StartX, StartY, EndX, EndY, Thickness: Single; Color: TGfxColor);
+begin
+  GfxDrawQuad(
+    Nil,
+    GfxVertex(StartX - Thickness, StartY - Thickness, 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, StartY - Thickness, 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, StartY            , 0.0, 0.0, Color),
+    GfxVertex(StartX - Thickness, StartY            , 0.0, 0.0, Color)
+  );
+  GfxDrawQuad(
+    Nil,
+    GfxVertex(EndX              , StartY - Thickness, 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, StartY - Thickness, 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, EndY   + Thickness, 0.0, 0.0, Color),
+    GfxVertex(EndX              , EndY   + Thickness, 0.0, 0.0, Color)
+  );
+  GfxDrawQuad(
+    Nil,
+    GfxVertex(StartX - Thickness, EndY              , 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, EndY              , 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, EndY   + Thickness, 0.0, 0.0, Color),
+    GfxVertex(StartX - Thickness, EndY   + Thickness, 0.0, 0.0, Color)
+  );
+  GfxDrawQuad(
+    Nil,
+    GfxVertex(StartX - Thickness, StartY - Thickness, 0.0, 0.0, Color),
+    GfxVertex(StartX            , StartY - Thickness, 0.0, 0.0, Color),
+    GfxVertex(StartX            , EndY   + Thickness, 0.0, 0.0, Color),
+    GfxVertex(StartX - Thickness, EndY   + Thickness, 0.0, 0.0, Color)
+  );
+end;
+
+procedure RenderMinimapSquare;
+var
+  MinX, MinY, MaxX, MaxY: Single;
+  StartX, StartY, EndX, EndY: Single;
+  Color: TGfxColor;
+begin
+  Color := RGBA($FFFFFF, 127);
+
+  StartX := CameraX - (GameWidthHalf * Exp(ActualZoom));
+  StartY := CameraY - (GameHeightHalf * Exp(ActualZoom));
+  EndX := CameraX + (GameWidthHalf * Exp(ActualZoom));
+  EndY := CameraY + (GameHeightHalf * Exp(ActualZoom));
+
+  WorldToMinimap(StartX, StartY, StartX, StartY);
+  WorldToMinimap(EndX, EndY, EndX, EndY);
+
+  MinX := PixelAlignX(ui_minimap_posx.Value * _rscala.x);
+  MinY := PixelAlignY(ui_minimap_posy.Value);
+  MaxX := MinX + MapGfx.Minimap.Width * MapGfx.Minimap.Scale;
+  MaxY := MinY + MapGfx.Minimap.Height * MapGfx.Minimap.Scale;
+
+  StartX := Max(MinX, PixelAlignX(ui_minimap_posx.Value * _rscala.x + StartX));
+  StartY := Max(MinY, PixelAlignY(ui_minimap_posy.Value + StartY));
+  EndX := Min(MaxX, PixelAlignX(ui_minimap_posx.Value * _rscala.x + EndX));
+  EndY := Min(MaxY, PixelAlignY(ui_minimap_posy.Value + EndY));
+
+  DrawBox(StartX, StartY, EndX, EndY, 0.5, Color);
 end;
 
 function ToMinimap(const Pos: TVector2; Scale: Single = 1): TVector2;
@@ -1779,12 +1845,12 @@ var
   rc: TGfxRect;
   x, y, w, h, dx, dy: Single;
 begin
-  dy := iif(OnlyOffscreen, -10, 5) + 15;
+  dy := (iif(OnlyOffscreen, -10, 5) + 15) / Max(1, ActualZoom);
   rc := GfxTextMetrics(WideString(Sprite[i].Player.Name));
   w  := RectWidth(rc);
   h  := RectHeight(rc);
-  x  := (Sprite[i].Skeleton.Pos[7].x - CameraX + 0.5 * GameWidth) * _rscala.x;
-  y  := (Sprite[i].Skeleton.Pos[7].y - CameraY + 0.5 * GameHeight + dy) * _rscala.y;
+  x  := WorldToInterface(Sprite[i].Skeleton.Pos[7].x - CameraX) + 0.5 * GameWidth * _rscala.x;
+  y  := WorldToInterface(Sprite[i].Skeleton.Pos[7].y - CameraY) + 0.5 * GameHeight + dy * _rscala.y;
 
   if not OnlyOffscreen or (x < 0) or (x > Width) or (y < 0) or (y > Height) then
   begin
@@ -2264,8 +2330,8 @@ begin
     // Player indicator
     if ui_playerindicator.Value and SpriteMe.IsNotSpectator then
     begin
-      CharacterOffset.x := GameWidthHalf  - camerax + SpriteMe.Skeleton.Pos[12].x;
-      CharacterOffset.y := GameHeightHalf - cameray + SpriteMe.Skeleton.Pos[12].y;
+      CharacterOffset.x := GameWidthHalf  + WorldToInterface(-camerax + SpriteMe.Skeleton.Pos[12].x);
+      CharacterOffset.y := GameHeightHalf + WorldToInterface(-cameray + SpriteMe.Skeleton.Pos[12].y);
 
       x := T^[GFX_INTERFACE_ARROW].Width * T^[GFX_INTERFACE_ARROW].Scale;
       y := T^[GFX_INTERFACE_ARROW].Height * T^[GFX_INTERFACE_ARROW].Scale;
@@ -2463,6 +2529,9 @@ begin
       end;
     end;
   end;
+
+  if MiniMapShow and (MySprite > 0) and Sprite[MySprite].IsSpectator then
+    RenderMinimapSquare();
 
   // Background for self Weapon Stats
   if StatsMenuShow and not FragsMenuShow then
