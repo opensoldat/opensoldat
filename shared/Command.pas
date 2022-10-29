@@ -14,7 +14,7 @@ const
   MAX_COMMANDS = 1024;
 
 type
-  TCommandFlag = (CMD_INIT, CMD_ALIAS, CMD_SCRIPT, CMD_DEFERRED, CMD_ADMINONLY, CMD_PLAYERONLY);
+  TCommandFlag = (CMD_INIT, CMD_ALIAS, CMD_SCRIPT, CMD_DEFERRED, CMD_ADMINONLY, CMD_PLAYERONLY, CMD_INGAMEONLY);
   TCommandFlags = set of TCommandFlag;
   PCommand = ^TCommand;
   TCommandFunction = procedure(Args: array of AnsiString; Sender: Byte);
@@ -429,10 +429,17 @@ begin
     begin
       {$IFDEF SERVER}
       if CMD_ADMINONLY in CommandPtr.Flags then
-        if not ((Sender = 255) or (IsRemoteAdminIP(Sprite[Sender].Player.IP) or IsAdminIP(Sprite[Sender].Player.IP))) then
+        if not ((Sender = 0) or (Sender = 255) or (IsRemoteAdminIP(Sprite[Sender].Player.IP) or IsAdminIP(Sprite[Sender].Player.IP))) then
           Exit;
       if CMD_PLAYERONLY in CommandPtr.Flags then
         if (Sender = 0) or (Sender > MAX_PLAYERS + 1) then
+          Exit;
+      if CMD_INGAMEONLY in CommandPtr.Flags then
+        if UDP = Nil then
+          Exit;
+      {$ELSE}
+      if CMD_INGAMEONLY in CommandPtr.Flags then
+        if MySprite = 0 then
           Exit;
       {$ENDIF}
       CommandFunction := CommandPtr.FunctionPtr;
@@ -677,9 +684,9 @@ begin
   {$IFDEF DEVELOPMENT}
   CommandAdd('netconfig', CommandNetConfig, 'Set GNS config', []);
   CommandAdd('netconfig_conn', CommandNetConfig, 'Set GNS config for specific connection handle', []);
-  CommandAdd('netconfig_list', CommandNetConfigList, 'List GNS cvars', []);
+  CommandAdd('netconfig_list', CommandNetConfigList, 'List GNS cvars', [CMD_INGAMEONLY]);
 
-  CommandAdd('netconfig_loglevel', CommandNetLogLevel, 'Set GNS log level', []);
+  CommandAdd('netconfig_loglevel', CommandNetLogLevel, 'Set GNS log level', [CMD_INGAMEONLY]);
 
   {$ENDIF}
 end;
