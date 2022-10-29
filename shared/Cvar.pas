@@ -159,7 +159,12 @@ end;
 
 function r_zoomChange(Cvar: TCvarBase; NewValue: Single): Boolean;
 begin
-  if (not Sprite[MySprite].IsSpectator) and (not IsZero(NewValue)) then
+  if MySprite = 0 then
+  begin
+    Cvar.FErrorMessage := 'You need to be in-game to set zoom.';
+    Result := False;
+  end
+  else if (not Sprite[MySprite].IsSpectator) and (not IsZero(NewValue)) then
   begin
     Cvar.FErrorMessage := 'You need to be in the spectators team';
     Result := False;
@@ -169,6 +174,13 @@ end;
 
 function cl_player_wepChange(Cvar: TCvarBase; NewValue: Integer): Boolean;
 begin
+  if MySprite = 0 then
+  begin
+    Cvar.FErrorMessage := 'You need to be in-game to set cl_player_wep.';
+    Result := False;
+    Exit;
+  end;
+
   if WeaponActive[NewValue] = 1 then
     Sprite[MySprite].SelWeapon := NewValue;
   Cvar.FErrorMessage := '';
