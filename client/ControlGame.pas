@@ -736,7 +736,7 @@ begin
         else if Event.wheel.y < 0 then
           Bind := FindKeyBind(SDL_GetModState(), KEYID_MOUSEWHEEL_DOWN);
 
-        if not PerformKeyDownBindAction(Bind) then
+        if (Bind <> Nil) and (not PerformKeyDownBindAction(Bind)) then
         begin
           if Bind.keyid = KEYID_MOUSEWHEEL_UP then
             MouseWheelUpCounter := 1
