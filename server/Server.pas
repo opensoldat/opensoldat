@@ -922,8 +922,15 @@ begin
   end
   else
   begin
-    Result := False;
-    MainConsole.Console('Maps list file not found: configs/' + Filename, WARNING_MESSAGE_COLOR);
+    if Filename <> sv_maplist.DefaultValue then
+    begin
+      Result := sv_maplist.SetValue(sv_maplist.DefaultValue);
+    end
+    else
+    begin
+      Result := False;
+      MainConsole.Console('Maps list file not found: configs/' + Filename, WARNING_MESSAGE_COLOR);
+    end;
   end;
 
   // MapsList can't be empty on server's startup. This includes cases where
