@@ -146,7 +146,7 @@ var
   CvarsInitialized: Boolean = False;
 
 implementation
-  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} TraceLog, Math, Game {$IFNDEF SERVER}, Sound, Demo {$ENDIF};
+  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} TraceLog, Math, Game {$IFNDEF SERVER}, Sound, Demo {$ENDIF}, Things;
 
 {$IFNDEF SERVER}
 function snd_volumeChange(Cvar: TCvarBase; NewValue: Integer): Boolean;
@@ -240,9 +240,16 @@ end;
 {$POP}
 
 function sv_gravityChange(Cvar: TCvarBase; NewValue: Single): Boolean;
+var
+  i: Integer;
 begin
   Cvar := Cvar;
   Grav := NewValue;
+
+  for i := Low(Thing) to High(Thing) do
+    if Thing[i].Active then
+      Thing[i].StaticType := False;
+
   Result := True;
 end;
 
