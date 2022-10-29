@@ -786,7 +786,7 @@ begin
   r_maxfps := TIntegerCvar.Add('r_maxfps', '', 60, [CVAR_CLIENT], nil, 0, 9999);
   r_fpslimit := TBooleanCvar.Add('r_fpslimit', '', True, [CVAR_CLIENT], nil);
   r_resizefilter := TIntegerCvar.Add('r_resizefilter', '', 2, [CVAR_CLIENT], nil, 0, 2);
-  r_sleeptime := TIntegerCvar.Add('r_sleeptime', '', 0, [CVAR_CLIENT], nil, 0, 100);
+  r_sleeptime := TIntegerCvar.Add('r_sleeptime', 'Amount of time to sleep after rendering a frame (avoids busylooping)', 1, [CVAR_CLIENT], nil, 0, 100);
   r_screenwidth := TIntegerCvar.Add('r_screenwidth', '', 0, [CVAR_CLIENT], nil, 0, MaxInt);
   r_screenheight := TIntegerCvar.Add('r_screenheight', '', 0, [CVAR_CLIENT], nil, 0, MaxInt);
   r_renderwidth := TIntegerCvar.Add('r_renderwidth', '', 0, [CVAR_CLIENT, CVAR_INITONLY], nil, 0, MaxInt);
