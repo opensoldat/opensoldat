@@ -60,7 +60,6 @@ begin
   if Length(Args) = 1 then
     Exit;
 
-
   if Length(Args[1]) < 1 then
     Exit;
 
@@ -169,7 +168,7 @@ begin
   if Length(Name) < 1 then
     Exit;
 
-  if Sender = 255 then
+  if (Sender = 0) or (Sender = 255) then
     TempStr := 'an admin'
   else
     TempStr := Sprite[Sender].Player.Name;
@@ -945,38 +944,38 @@ end;
 
 procedure InitServerCommands();
 begin
-  CommandAdd('addbot', CommandAddbot, 'Add specific bot to game', [CMD_ADMINONLY]);
-  CommandAdd('addbot1', CommandAddbot, 'Add specific bot to alpha team', [CMD_ADMINONLY]);
-  CommandAdd('addbot2', CommandAddbot, 'Add specific bot to blue team', [CMD_ADMINONLY]);
-  CommandAdd('addbot3', CommandAddbot, 'Add specific bot to charlie team', [CMD_ADMINONLY]);
-  CommandAdd('addbot4', CommandAddbot, 'Add specific bot to delta team', [CMD_ADMINONLY]);
-  CommandAdd('addbot5', CommandAddbot, 'Add specific bot to spectators', [CMD_ADMINONLY]);
-  CommandAdd('nextmap', CommandNextmap, 'Change map to next in maplist', [CMD_ADMINONLY]);
-  CommandAdd('map', CommandMap, 'Change map to specified mapname', [CMD_ADMINONLY]);
+  CommandAdd('addbot', CommandAddbot, 'Add specific bot to game', [CMD_ADMINONLY, CMD_DEFERRED]);
+  CommandAdd('addbot1', CommandAddbot, 'Add specific bot to alpha team', [CMD_ADMINONLY, CMD_DEFERRED]);
+  CommandAdd('addbot2', CommandAddbot, 'Add specific bot to blue team', [CMD_ADMINONLY, CMD_DEFERRED]);
+  CommandAdd('addbot3', CommandAddbot, 'Add specific bot to charlie team', [CMD_ADMINONLY, CMD_DEFERRED]);
+  CommandAdd('addbot4', CommandAddbot, 'Add specific bot to delta team', [CMD_ADMINONLY, CMD_DEFERRED]);
+  CommandAdd('addbot5', CommandAddbot, 'Add specific bot to spectators', [CMD_ADMINONLY, CMD_DEFERRED]);
+  CommandAdd('nextmap', CommandNextmap, 'Change map to next in maplist', [CMD_ADMINONLY, CMD_DEFERRED, CMD_INGAMEONLY]);
+  CommandAdd('map', CommandMap, 'Change map to specified mapname', [CMD_ADMINONLY, CMD_DEFERRED, CMD_INGAMEONLY]);
   CommandAdd('pause', CommandPause, 'Pause game', [CMD_ADMINONLY]);
-  CommandAdd('unpause', CommandUnpause, 'Unpause game', [CMD_ADMINONLY]);
-  CommandAdd('restart', CommandRestart, 'Restart current map', [CMD_ADMINONLY]);
-  CommandAdd('kick', CommandKick, 'Kick player with specified nick or id', [CMD_ADMINONLY]);
-  CommandAdd('kicklast', CommandKicklast, 'Kick last connected player', [CMD_ADMINONLY]);
-  CommandAdd('ban', CommandBan, 'Ban player with specified nick or id', [CMD_ADMINONLY]);
-  CommandAdd('banip', CommandBaniphw, 'Ban specified IP address', [CMD_ADMINONLY]);
-  CommandAdd('banhw', CommandBaniphw, 'Ban specified hwid', [CMD_ADMINONLY]);
-  CommandAdd('unban', CommandUnban, 'Unban specified ip or hwid', [CMD_ADMINONLY]);
-  CommandAdd('unbanlast', CommandUnban, 'Unban last player', [CMD_ADMINONLY]);
-  CommandAdd('adm', CommandAdm, 'Give admin to specified nick or id', [CMD_ADMINONLY]);
-  CommandAdd('admip', CommandAdmip, 'add the IP number to the Remote Admins list', [CMD_ADMINONLY]);
-  CommandAdd('unadm', CommandUnadm, 'remove the IP number from the admins list', [CMD_ADMINONLY]);
+  CommandAdd('unpause', CommandUnpause, 'Unpause game', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('restart', CommandRestart, 'Restart current map', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('kick', CommandKick, 'Kick player with specified nick or id', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('kicklast', CommandKicklast, 'Kick last connected player', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('ban', CommandBan, 'Ban player with specified nick or id', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('banip', CommandBaniphw, 'Ban specified IP address', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('banhw', CommandBaniphw, 'Ban specified hwid', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('unban', CommandUnban, 'Unban specified ip or hwid', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('unbanlast', CommandUnban, 'Unban last player', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('adm', CommandAdm, 'Give admin to specified nick or id', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('admip', CommandAdmip, 'add the IP number to the Remote Admins list', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('unadm', CommandUnadm, 'remove the IP number from the admins list', [CMD_ADMINONLY, CMD_INGAMEONLY]);
   CommandAdd('setteam1', CommandSetteam, 'move specified id or nick to alpha team', [CMD_ADMINONLY]);
   CommandAdd('setteam2', CommandSetteam, 'move specified id or nick to bravo team', [CMD_ADMINONLY]);
   CommandAdd('setteam3', CommandSetteam, 'move specified id or nick to charlie team', [CMD_ADMINONLY]);
   CommandAdd('setteam4', CommandSetteam, 'move specified id or nick to delta team', [CMD_ADMINONLY]);
   CommandAdd('setteam5', CommandSetteam, 'move specified id or nick to spectators', [CMD_ADMINONLY]);
-  CommandAdd('say', CommandSay, 'Send chat message', [CMD_ADMINONLY]);
-  CommandAdd('pkill', CommandKill, 'Kill specified id or nick', [CMD_ADMINONLY]);
-  CommandAdd('loadwep', CommandLoadwep, 'Load weapons config', [CMD_ADMINONLY]);
-  CommandAdd('loadcon', CommandLoadcon, 'Load server config', [CMD_ADMINONLY]);
+  CommandAdd('say', CommandSay, 'Send chat message', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('pkill', CommandKill, 'Kill specified id or nick', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('loadwep', CommandLoadwep, 'Load weapons config', [CMD_ADMINONLY, CMD_INGAMEONLY]);
+  CommandAdd('loadcon', CommandLoadcon, 'Load server config', [CMD_ADMINONLY, CMD_INGAMEONLY]);
   CommandAdd('loadlist', CommandLoadlist, 'Load maplist', [CMD_ADMINONLY]);
-  CommandAdd('pm', CommandPm, 'Send private message to other player', [CMD_ADMINONLY]);
+  CommandAdd('pm', CommandPm, 'Send private message to other player', [CMD_ADMINONLY, CMD_INGAMEONLY]);
   CommandAdd('gmute', CommandGmute, 'Mute player on server', [CMD_ADMINONLY]);
   CommandAdd('ungmute', CommandUngmute, 'Unmute player on server', [CMD_ADMINONLY]);
   CommandAdd('addmap', CommandAddmap, 'Add map to the maplist', [CMD_ADMINONLY]);

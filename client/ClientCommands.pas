@@ -123,6 +123,7 @@ begin
     MainConsole.Console('Usage: say "text"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   ClientSendStringMessage(WideString(Args[1]), MSGTYPE_PUB);
 end;
 
@@ -133,6 +134,7 @@ begin
     MainConsole.Console('Usage: say_team "text"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   ClientSendStringMessage(WideString(Args[1]), MSGTYPE_TEAM);
 end;
 
@@ -258,6 +260,7 @@ begin
     MainConsole.Console('Usage: switchcam "id"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   if not Sprite[MySprite].IsSpectator then
   begin
     MainConsole.Console('You are not a spectator', DEBUG_MESSAGE_COLOR);
@@ -282,6 +285,7 @@ begin
     MainConsole.Console('Usage: switchcamflag "id"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   if Sprite[MySprite].IsSpectator then
   begin
     for i := 1 to MAX_THINGS do
@@ -323,16 +327,16 @@ begin
   CommandAdd('disconnect', CommandDisconnect, 'disconnect from server', [CMD_DEFERRED]);
   CommandAdd('retry', CommandRetry, 'retry connect to last server', [CMD_DEFERRED]);
   CommandAdd('screenshot', CommandScreenshot, 'take a screenshot of game', [CMD_DEFERRED]);
-  CommandAdd('say', CommandSay, 'send chat message', []);
-  CommandAdd('say_team', CommandSayTeam, 'send team chat message', []);
+  CommandAdd('say', CommandSay, 'send chat message', [CMD_INGAMEONLY]);
+  CommandAdd('say_team', CommandSayTeam, 'send team chat message', [CMD_INGAMEONLY]);
   CommandAdd('record', CommandRecord, 'record demo', []);
   CommandAdd('mute', CommandMute, 'mute specific nick or id', []);
   CommandAdd('unbindall', CommandUnbindall, 'Unbinds all binds', []);
   CommandAdd('unmute', CommandUnmute, 'unmute specific nick or id', []);
   CommandAdd('stop', CommandStop, 'stop recording demo', []);
   CommandAdd('shutdown', CommandShutdown, 'shutdown game', []);
-  CommandAdd('switchcam', CommandSwitchCam, 'switches camera to specific player', []);
-  CommandAdd('switchcamflag', CommandSwitchCamFlag, 'switches camera to specific flag', []);
+  CommandAdd('switchcam', CommandSwitchCam, 'switches camera to specific player', [CMD_INGAMEONLY]);
+  CommandAdd('switchcamflag', CommandSwitchCamFlag, 'switches camera to specific flag', [CMD_INGAMEONLY]);
   CommandAdd('demo_tick', CommandDemoTick, 'skips to a tick in demo', []);
   CommandAdd('demo_tick_r', CommandDemoTick, 'skips to a tick (relatively) in demo', []);
 end;
