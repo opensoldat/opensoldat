@@ -397,8 +397,11 @@ begin
 
     // Launcher connection
     if launcher_ipc_enable.Value then
-      if not LauncherIPC.ThreadAlive and (MainTickCounter mod launcher_ipc_reconnect_rate.Value = 0) then
+      if not LauncherIPC.ThreadAlive and (MainTickCounter mod launcher_ipc_reconnect_rate.Value = 0) then begin
         LauncherIPC.Connect(launcher_ipc_port.Value);
+        // This is so that launcher can rebuild the state of UI.
+        LauncherIPC.SendJoinServerMessage(ServerIP, ServerPort);
+      end;
 
     //UDP.FlushMsg;
   end;  // Client

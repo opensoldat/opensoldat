@@ -1025,6 +1025,10 @@ begin
   if not TryStrToInt(Trim(JoinPort), ServerPort) then
     Exit;
 
+  if launcher_ipc_enable.Value then begin
+    LauncherIPC.SendJoinServerMessage(ServerIP, ServerPort);
+  end;
+
   InitGameGraphics();
   DoTextureLoading(True);
 

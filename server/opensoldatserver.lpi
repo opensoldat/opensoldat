@@ -535,7 +535,7 @@
         </Mode0>
       </Modes>
     </RunParams>
-    <Units Count="90">
+    <Units Count="91">
       <Unit0>
         <Filename Value="opensoldatserver.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -897,6 +897,10 @@
         <Filename Value="ServerLauncherIPC.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit89>
+      <Unit90>
+        <Filename Value="..\shared\LauncherMessages.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit90>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
