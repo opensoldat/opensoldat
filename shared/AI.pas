@@ -403,7 +403,7 @@ begin
           Control.ThrowNade := True;
     end;
 
-    // Knife Throw
+    // Knife throw
     if (Sprite[SpriteNum].CeaseFireCounter < 30)             and
        (Sprite[SpriteNum].Weapon.Num = Guns[KNIFE].Num)      and
        (Sprite[SpriteNum].Brain.FavWeapon = Guns[KNIFE].Num) then
