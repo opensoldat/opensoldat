@@ -176,7 +176,7 @@ begin
   begin
     if ChatText = '' then
     begin
-      // force spectator chat to teamchat in survival mode when Round hasn't ended
+      // Force spectator chat to teamchat in survival mode when Round hasn't ended
       if (sv_survivalmode.Value) and Sprite[MySprite].IsSpectator() and
          not SurvivalEndRound and (sv_survivalmode_antispy.Value) then
         ChatType := MSGTYPE_TEAM
@@ -618,7 +618,7 @@ begin
           ChatText := '*' + WideString(RMenuState[0]) + WideString(RMenuState[1]) + ChatText;
           ClientSendStringMessage(ChatText, MSGTYPE_RADIO);
           ChatText := '';
-          // RadioCooldown := 3;
+          //RadioCooldown := 3;
           ShowRadioMenu := False;
           RMenuState := '  ';
         end;
@@ -643,7 +643,7 @@ begin
   if Result then
     Exit;
 
-  // bindings
+  // Bindings
   Result := PerformKeyDownBindAction(FindKeyBind(KeyMods, KeyCode));
 end;
 
@@ -665,7 +665,7 @@ begin
     Exit;
   end;
 
-  // bindings
+  // Bindings
   Bind := FindKeyBind(KeyMods, KeyCode);
   Result := Bind <> nil;
 

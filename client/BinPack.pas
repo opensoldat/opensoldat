@@ -164,8 +164,8 @@ begin
     end;
 
     // Note: this part will be enabled later on when I add support for
-    // rotated sprites in the texture atlas. That will be done when I get
-    // more control over the actual texture coordinates.
+    //       rotated sprites in the texture atlas. That will be done when I get
+    //       more control over the actual texture coordinates.
     {
     if (bp.Free[i].w >= h) and (bp.Free[i].h >= w) then
     begin

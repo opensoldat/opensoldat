@@ -166,22 +166,25 @@ begin
 end;
 
 //function MapExists(MapName: string; RootDirectory: string{$IFNDEF SERVER}; Checksum: TSHA1Digest{$ENDIF}): Boolean;
-{begin
+{
+begin
   Result := False;
+
   if PHYSFS_exists(PChar('maps/' + MapName + '.pms')) then
     Result := True
   else if FileExists(RootDirectory + 'maps/' + MapName + '.smap') then
     if Sha1Match(GetMapChecksum(MapName, RootDirectory), Checksum) then
       Result := True;
-end;}
+end;
+}
 
 function Md5StringHelper(Text: String): String;
 begin
   Result := MD5Print(MD5String(Text));
 end;
 
-// makes sure the directory exists
-// returns false on error and true if everything is allright
+// Make sure the directory exists
+// Returns false on error and true if everything is all right
 function CreateDirIfMissing(const Dir: string): Boolean;
 begin
   Result := True;
@@ -202,9 +205,8 @@ begin
     if FileHandle = THandle(-1) then
       Result := False
     else
-      // Attempting to read a file immediately after creating
-      // it throws an error on Windows. We close the handle
-      // manually to prevent it.
+      // Attempting to read a file immediately after creating it throws an
+      // error on Windows. We close the handle  manually to prevent it.
       FileClose(FileHandle);
   end;
 end;
@@ -383,7 +385,8 @@ begin
       Result := '(';
       with GetTypeData(ATypeInfo)^ do
       begin
-        {$IFNDEF VER3_0} //ifdef needed because of a field rename in trunk (ManagedFldCount to TotalFieldCount)
+        // Ifdef needed because of a field rename in trunk (ManagedFldCount to TotalFieldCount)
+        {$IFNDEF VER3_0}
         FirstField := PManagedField(PByte(@TotalFieldCount) + SizeOf(TotalFieldCount));
         for I := 0 to TotalFieldCount - 1 do
         {$ELSE}

@@ -325,7 +325,7 @@ begin
 
       if (MySprite = 0) or (ButtonIndex <> Sprite[MySprite].Player.Team) then
       begin
-        // NOTE this actually sends a change team request
+        // NOTE: this actually sends a change team request
         ClientSendPlayerInfo;
       end;
     end

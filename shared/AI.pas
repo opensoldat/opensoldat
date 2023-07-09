@@ -89,7 +89,7 @@ begin
         Control.Left  := True;
     end;
 
-    // X - Distance
+    // X-Distance
     DistToTargetX := CheckDistance(m.x, t.x);
 
     if DistToTargetX = DIST_TOO_CLOSE then
@@ -115,7 +115,7 @@ begin
       end;
       Control.Fire := True;
 
-      // if reloading
+      // If reloading
       if Weapon.AmmoCount = 0 then
       begin
         if not Sprite[SNum].Brain.GoThing then
@@ -141,7 +141,7 @@ begin
       Control.Down   := True;
       Control.Fire := True;
 
-      // if reloading
+      // If reloading
       if Weapon.AmmoCount = 0 then
       begin
         if not Sprite[SNum].Brain.GoThing then
@@ -163,7 +163,7 @@ begin
       Control.Down   := True;
       Control.Fire := True;
 
-      // if reloading
+      // If reloading
       if Weapon.AmmoCount = 0 then
       begin
         if not Sprite[SNum].Brain.GoThing then
@@ -237,7 +237,7 @@ begin
       end;
     end;
 
-    // move when other player camps
+    // Move when other player camps
     if not Sprite[SNum].Brain.GoThing then
       if (Sprite[Brain.TargetNum].Brain.CurrentWaypoint > 0) and
         (BotPath.Waypoint[Sprite[Brain.TargetNum].Brain.CurrentWaypoint].Action <>
@@ -251,7 +251,7 @@ begin
           Control.Left  := True;
       end;
 
-    // hide yourself behind collider
+    // Hide yourself behind collider
     if bots_difficulty.Value < 101 then
       if ColliderDistance < 255 then
       begin
@@ -262,7 +262,7 @@ begin
           Control.Left  := False;
           Control.Right := False;
 
-          // shoot!
+          // Shoot!
           if (Random(4) = 0) or (Weapon.Num = Guns[MINIGUN].Num) then
             Control.Fire := True;
         end;
@@ -271,17 +271,21 @@ begin
           if BodyAnimation.CurrFrame <> 11 then
             Control.Fire := false;
 
-        {if Brain.Camper > 128 then
-        if ColliderDistance < DIST_COLLIDE then
-          control.Prone := true;}
+        {
+        if Brain.Camper > 128 then
+          if ColliderDistance < DIST_COLLIDE then
+            control.Prone := true;
+        }
       end;
 
-    // get up if not behind collider
-    {if ColliderDistance > DIST_STOP_PRONE then
+    // Get up if not behind collider
+    {
+    if ColliderDistance > DIST_STOP_PRONE then
       if BodyAnimation.Name = Prone.Name then
-        control.Prone := True;}
+        control.Prone := True;
+    }
 
-    // if target behind collider and bot doesn't escape
+    // If target behind collider and bot doesn't escape
     if bots_difficulty.Value < 201 then
       if (Sprite[Brain.TargetNum].ColliderDistance < 255) and
          (ColliderDistance > 254) then
@@ -293,7 +297,7 @@ begin
             Control.Left  := True;
         end;
 
-    // go prone
+    // Go prone
     // Fists!
     if ((Sprite[SNum].Weapon.Num = Guns[NOWEAPON].Num)  or
         (Sprite[SNum].Weapon.Num = Guns[KNIFE].Num)     or
@@ -313,14 +317,14 @@ begin
         Control.Left  := True;
     end;
 
-    // Y - Distance
+    // Y-Distance
     DistToTargetY := CheckDistance(m.y, t.y);
 
     if not Sprite[SNum].Brain.GoThing then
       if (DistToTargetY >= DIST_ROCK_THROW) and (m.y > t.y) then
         Control.Jetpack := True;
 
-    // Flame god see
+    // Flame God see
     if Sprite[Brain.TargetNum].BonusStyle = BONUS_FLAMEGOD then
     begin
       Control.Right := False;
@@ -332,11 +336,13 @@ begin
     end;
 
     // Change weapon if reloading long
-    {if Difficulty < 201 then
+    {
+    if Difficulty < 201 then
       if (DistToTargetX < DIST_CLOSE) and (DistToTargetY < DIST_CLOSE) then
         if ((Weapon.AmmoCount = 0) and (Weapon.ReloadTimeCount > 185)) or
             (Weapon.FireIntervalCount > 185) then
-          Control.ChangeWeapon := True;}
+          Control.ChangeWeapon := True;
+    }
 
     // Realistic Mode - Burst Fire
     if sv_realisticmode.Value then
@@ -412,7 +418,7 @@ begin
       Control.MouseAimY := Round(t.y - (0.5 * DistToTargetX / (30)) -
         Brain.Accuracy + Random(Brain.Accuracy));
 
-    // impossible
+    // Impossible
     if bots_difficulty.Value < 60 then
       if  (Sprite[Brain.TargetNum].Weapon.Num = Guns[BARRETT].Num) or
           (Sprite[Brain.TargetNum].Weapon.Num = Guns[RUGER77].Num) then
@@ -491,7 +497,7 @@ begin
       if  (Player.Team = Sprite[Thing[TNum].HoldingSprite].Player.Team) and
           (not Thing[TNum].InBase) then
       begin
-        // X - Distance
+        // X-Distance
         DistToTargetX := CheckDistance(m.x, t.x);
 
         if  (DistToTargetX = DIST_TOO_CLOSE) or
@@ -508,7 +514,7 @@ begin
           Control.Jetpack := False;
       end;
 
-    // Y - Distance
+    // Y-Distance
     DistToTargetY := CheckDistance(m.y, t.y);
     if (DistToTargetY >= DIST_VERY_CLOSE) and (m.y > t.y) then
       Control.Jetpack := True;
@@ -525,7 +531,7 @@ var
 begin
   if (SpriteC.Player.ControlMethod = BOT) and
       not SpriteC.DeadMeat and not SpriteC.Dummy then
-  // if (MainTickCounter mod (SECOND * 2) = 0) then
+  //if (MainTickCounter mod (SECOND * 2) = 0) then
   begin
     tempb := SpriteC.Control.ThrowNade;
 
@@ -540,7 +546,7 @@ begin
     LookPoint.Y := SpriteC.Skeleton.Pos[12].Y - 2;
 
     // >see?
-    // See := False;
+    //See := False;
     SeeClosest := False;
     D := 999999;
     D2 := 0.0;
@@ -554,7 +560,7 @@ begin
             ((SpriteC.Brain.DeadKill = 1) and (Sprite[i].DeadTime < 180))) then
         begin
           StartPoint := Sprite[i].Skeleton.Pos[12];
-          // check if ray startpoint is not in map
+          // Check if ray startpoint is not in map
           b := Default(TVector2);
           if Map.CollisionTest(StartPoint, b) then
             StartPoint.Y := StartPoint.Y + 6;
@@ -580,7 +586,7 @@ begin
                 D := D2;
               SeeClosest := True;
 
-              // stop throwing grenades and weapons if it's dead
+              // Stop throwing grenades and weapons if it's dead
               if Sprite[i].DeadMeat then
               begin
                 SpriteC.Control.ThrowNade := False;
@@ -600,7 +606,7 @@ begin
                 //D := dt;
               end;
             end;
-          end;  // if see
+          end;  // If see
         end;
     // <see?
 
@@ -636,7 +642,7 @@ begin
         SpriteC.Brain.PissedOff := 0;
     end;
 
-    // have flag and not hurt, runaway!!!
+    // Have flag and not hurt, run away!!!
     RunAway := False;
     if SeeClosest then
       if SpriteC.HoldedThing > 0 then
@@ -648,8 +654,8 @@ begin
             RunAway := True;
           end;
 
-    // GO WITH WAYPOINTS
-    if not SeeClosest then  // it doesn't see any target
+    // Go with waypoints
+    if not SeeClosest then  // It doesn't see any target
     begin
       if not SpriteC.Brain.GoThing then
         if SpriteC.Stat = 0 then
@@ -665,19 +671,19 @@ begin
 
           SpriteC.Brain.OldWaypoint := SpriteC.Brain.CurrentWaypoint;
 
-          // current pathnum
-          // FIXME set an initial waypoint. this previously did an out-of-bounds read, so the
-          // next assignment doesn't make it worse...
+          // Current pathnum
+          // FIXME: Set an initial waypoint. This previously did an out-of-bounds read,
+          //        so the next assignment doesn't make it worse...
           if SpriteC.Brain.NextWaypoint = 0 then
             SpriteC.Brain.NextWaypoint := 1;
           SpriteC.Brain.PathNum := BotPath.Waypoint[SpriteC.Brain.NextWaypoint].PathNum;
 
-          // pathnum for CTF
+          // Pathnum for CTF
           if sv_gamemode.Value = GAMESTYLE_CTF then
           begin
             SpriteC.Brain.PathNum := SpriteC.Player.Team;
 
-            // i have the flag!
+            // I have the flag!
             if SpriteC.HoldedThing > 0 then
               if (Thing[SpriteC.HoldedThing].Style = OBJECT_ALPHA_FLAG) or
                   (Thing[SpriteC.HoldedThing].Style = OBJECT_BRAVO_FLAG) then
@@ -689,12 +695,12 @@ begin
               end;
           end;
 
-          // pathnum for HTF
+          // Pathnum for HTF
           if sv_gamemode.Value = GAMESTYLE_HTF then
           begin
             SpriteC.Brain.PathNum := SpriteC.Player.Team;
 
-            // i have the flag!
+            // I have the flag!
             if SpriteC.HoldedThing > 0 then
               if Thing[SpriteC.HoldedThing].Style = OBJECT_POINTMATCH_FLAG then
               begin
@@ -705,7 +711,7 @@ begin
               end;
           end;
 
-          // pathnum for Infiltration
+          // Pathnum for Infiltration
           if sv_gamemode.Value = GAMESTYLE_INF then
           begin
             if SpriteC.Player.Team = TEAM_ALPHA then
@@ -718,7 +724,7 @@ begin
               if SpriteC.Player.Team = TEAM_BRAVO then
                 SpriteC.Brain.PathNum := 2;
 
-            // i have the flag!
+            // I have the flag!
             if SpriteC.HoldedThing > 0 then
               if (Thing[SpriteC.HoldedThing].Style = OBJECT_ALPHA_FLAG) or
                   (Thing[SpriteC.HoldedThing].Style = OBJECT_BRAVO_FLAG) then
@@ -750,13 +756,13 @@ begin
               begin
                 SpriteC.Brain.NextWaypoint := BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Connections[k];
 
-                // face target
+                // Face target
                 SpriteC.Control.MouseAimX := Round(BotPath.Waypoint[SpriteC.Brain.NextWaypoint].X);
                 SpriteC.Control.MouseAimY := Round(BotPath.Waypoint[SpriteC.Brain.NextWaypoint].Y);
               end;
             end;
 
-            // apply waypoint movements to sprite
+            // Apply waypoint movements to sprite
             SpriteC.Control.Left := BotPath.Waypoint[SpriteC.Brain.NextWaypoint].Left;
             SpriteC.Control.Right := BotPath.Waypoint[SpriteC.Brain.NextWaypoint].Right;
             SpriteC.Control.Up := BotPath.Waypoint[SpriteC.Brain.NextWaypoint].Up;
@@ -773,7 +779,7 @@ begin
                 ((sv_gamemode.Value <> GAMESTYLE_INF) and
                 (sv_gamemode.Value <> GAMESTYLE_CTF) and
                 (sv_gamemode.Value <> GAMESTYLE_HTF)) then
-              // not infiltration escape path
+              // Not infiltration escape path
               if (BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.StopAndCamp) or
                   ((BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.Wait1Second) and
                   (SpriteC.Brain.OnePlaceCount < 60)) or
@@ -798,7 +804,7 @@ begin
                       SpriteC.Control.Down := True;
               end;
 
-            // fire at guy that is shooting me while running away
+            // Fire at guy that is shooting me while running away
             if RunAway then
               if SpriteC.Brain.PissedOff > 0 then
               begin
@@ -815,7 +821,7 @@ begin
               SpriteC.Brain.WaypointTime := 0;
             SpriteC.Brain.LastWaypoint := SpriteC.Brain.CurrentWaypoint;
 
-            // check if standing in place because stuck or sth
+            // Check if standing in place because stuck or something
             if SpriteC.Brain.CurrentWaypoint > 0 then
               if BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.None then
               begin
@@ -840,7 +846,7 @@ begin
                 SpriteC.Control.Up := True;
               end;
 
-            // change weapon back
+            // Change weapon back
             if bots_difficulty.Value < 201 then
               if ((SpriteC.Weapon.Num = Guns[COLT].Num) or
                   (SpriteC.Weapon.Num = Guns[NOWEAPON].Num) or
@@ -850,17 +856,17 @@ begin
                   (SpriteC.SecondaryWeapon.Num <> Guns[NOWEAPON].Num) then
                 SpriteC.Control.ChangeWeapon := True;
 
-            // reload if low ammo
+            // Reload if low ammo
             if bots_difficulty.Value < 201 then
               if (SpriteC.Weapon.AmmoCount < 4) and (SpriteC.Weapon.Ammo > 3) then
                 SpriteC.Control.Reload := True;
 
-            // get up if prone
+            // Get up if prone
             if Random(150) = 0 then
               if (SpriteC.BodyAnimation.ID = Prone.ID) or
                   (SpriteC.BodyAnimation.ID = ProneMove.ID) then
                 SpriteC.Control.Prone := True;
-          end;  // SpriteC.CurrentWaypoint>0
+          end;  // SpriteC.CurrentWaypoint > 0
         end;  // gothing
     end
     else
@@ -877,7 +883,7 @@ begin
           ((sv_gamemode.Value = GAMESTYLE_CTF) and (SpriteC.HoldedThing = 0)) or
           ((sv_gamemode.Value <> GAMESTYLE_INF) and (sv_gamemode.Value <> GAMESTYLE_CTF)))
            then
-        // not infiltration escape path
+        // Not infiltration escape path
         if BotPath.Waypoint[SpriteC.Brain.CurrentWaypoint].Action = TWaypointAction.StopAndCamp then
         begin
           SpriteC.Control.Left := False;
@@ -902,10 +908,10 @@ begin
     end;
 
     SeeThing := False;
-    // ThingHolded := False;
+    //ThingHolded := False;
     LookPoint.X := SpriteC.Skeleton.Pos[12].X;
     LookPoint.Y := SpriteC.Skeleton.Pos[12].Y - 4;
-    // look for flag or bow
+    // Look for flag or bow
     for i := 1 to MAX_THINGS do
       if not SeeThing and Thing[i].Active and (Thing[i].HoldingSprite <> SpriteC.Num) and
           ((Thing[i].Style = OBJECT_ALPHA_FLAG) or (Thing[i].Style = OBJECT_BRAVO_FLAG) or
@@ -924,10 +930,10 @@ begin
 
         if not Map.RayCast(LookPoint, StartPoint, D2, 651) then
           if D2 < DIST_FAR then
-          begin  // i see the flag! or bow or sth
+          begin  // I see the flag! Or bow or something
             SeeThing := True;
 
-            // dont take it if is my flag in base
+            // Dont take it if is my flag in base
             if ((sv_gamemode.Value = GAMESTYLE_CTF) or (sv_gamemode.Value = GAMESTYLE_INF)) and
                 (Thing[i].Style = SpriteC.Player.Team) and Thing[i].InBase then
             begin
@@ -936,24 +942,24 @@ begin
                 if Thing[SpriteC.HoldedThing].HoldingSprite = SpriteC.Num then
                   SeeThing := True;
             end;
-            // dont follow this flag if my flag is not inbase
+            // Dont follow this flag if my flag is not inbase
             if ((sv_gamemode.Value = GAMESTYLE_CTF) or (sv_gamemode.Value = GAMESTYLE_INF)) and
                 (Thing[i].Style <> SpriteC.Player.Team) and
                 (TeamFlag[SpriteC.Player.Team] > 0) and
                 not Thing[TeamFlag[SpriteC.Player.Team]].InBase then
               SeeThing := False;
-            // dont take it if is flag in base
+            // Dont take it if is flag in base
             if ((sv_gamemode.Value = GAMESTYLE_CTF) or (sv_gamemode.Value = GAMESTYLE_INF)) and
                 (Thing[i].Style <> SpriteC.Player.Team) and
                 (Thing[i].Style < OBJECT_USSOCOM) and Thing[i].InBase and
                 (D2 > DIST_CLOSE) then
               SeeThing := False;
-            // or better take it if hurt and medikit is close
+            // Or better take it if hurt and medikit is close
             if (Thing[i].Style = OBJECT_MEDICAL_KIT) and
                 (SpriteC.Health < HURT_HEALTH) and
                 (D2 < DIST_VERY_CLOSE) then
               SeeThing := True;
-            // dont take it when running away with flag
+            // Dont take it when running away with flag
             if ((Thing[i].Style = OBJECT_MEDICAL_KIT) or (Thing[i].Style = OBJECT_GRENADE_KIT) or
                 (Thing[i].Style = OBJECT_FLAMER_KIT) or (Thing[i].Style = OBJECT_PREDATOR_KIT) or
                 (Thing[i].Style = OBJECT_BERSERK_KIT)) and RunAway then
@@ -965,7 +971,7 @@ begin
             if Thing[i].Style = OBJECT_COMBAT_KNIFE then
               SeeThing := True;
 
-            // throw away weapon
+            // Throw away weapon
             if (D2 < 30) and (Thing[i].Style = OBJECT_RAMBO_BOW) then
               SpriteC.Control.ThrowWeapon := True;
 
@@ -1008,7 +1014,7 @@ begin
     if not SeeThing then
       SpriteC.Brain.GoThing := False;
 
-    // Runaway from grenade!
+    // Run away from grenade!
     if bots_difficulty.Value < 201 then
       for i := 1 to MAX_BULLETS do
         if Bullet[i].Active and (Bullet[i].Style = BULLET_STYLE_FRAGNADE) and
@@ -1027,7 +1033,7 @@ begin
           end;
         end;
 
-    // release grenade
+    // Release grenade
     if (SpriteC.BodyAnimation.ID = Throw.ID) and
         (SpriteC.BodyAnimation.CurrFrame > 35) then
       SpriteC.Control.ThrowNade := False;
@@ -1041,7 +1047,7 @@ begin
       SpriteC.Control.Up := True;
     end;
 
-    // waypoint is shit
+    // Waypoint is shit
     if SpriteC.Brain.WaypointTime > WAYPOINT_TIMEOUT then
     begin
       SpriteC.FreeControls;
@@ -1050,7 +1056,7 @@ begin
       SpriteC.Brain.WaypointTime := 0;
     end;
 
-    // fall damage save
+    // Fall damage save
     D := SpriteParts.Velocity[SpriteC.Num].Y;
     if D > 3.35 then
       SpriteC.Brain.FallSave := 1;
@@ -1091,10 +1097,12 @@ begin
         SpriteC.Brain.OnePlaceCount := 0;
     end;
 
-    // destroy weapon if fav weapon hands
-    {if NoWeapon.Name = SpriteC.Brain.FavWeapon then
+    // Destroy weapon if fav weapon hands
+    {
+    if NoWeapon.Name = SpriteC.Brain.FavWeapon then
         if SpriteC.Weapon.Num <> Guns[NOWEAPON].Num then
-          SpriteC.Weapon := Guns[NOWEAPON];}
+          SpriteC.Weapon := Guns[NOWEAPON];
+    }
   end;  // Bot
 end;
 

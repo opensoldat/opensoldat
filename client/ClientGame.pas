@@ -327,11 +327,11 @@ begin
 
     if (MySprite > 0) and (not DemoPlayer.Active) then
     begin
-      // connection problems
+      // Connection problems
       if (MapChangeCounter < 0) and not EscMenu.Active then
         Inc(NoHeartbeatTime);
 
-      if NoHeartbeatTime > CONNECTIONPROBLEM_TIME then
+      if NoHeartbeatTime > CONNECTIONPROBLEM_TIME_SMALL then
       begin
         if MainTickCounter mod 120 = 0 then
           if NoHeartbeatTime > DISCONNECTION_TIME then
@@ -393,7 +393,7 @@ begin
       end;
 
       ForceClientSpriteSnapshotMov := False;
-    end;  // playing
+    end;  // Playing
 
     // Launcher connection
     if launcher_ipc_enable.Value then

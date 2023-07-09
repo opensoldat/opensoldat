@@ -69,7 +69,8 @@ begin
     [ExtractFileName(FFilename), FProgress, GetSize(FDownloadPos), GetSize(FDownloadSize)])));
 end;
 
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 procedure TDownloadThread.DoProgress(Sender: TObject; const ContentLength, CurrentPos: Int64);
 var
   OldProgress: Int64;
@@ -90,7 +91,7 @@ begin
       Synchronize(SetStatus);
   end;
 end;
-{$pop}
+{$POP}
 
 procedure TDownloadThread.Execute;
 begin

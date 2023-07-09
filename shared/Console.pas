@@ -13,9 +13,9 @@ type
     Count: Integer;
     CountMax: Integer;
     ScrollTick: Integer;
-    ScrollTickMax: Integer;   // how long the scroll count down is before it
+    ScrollTickMax: Integer;   // How long the scroll countdown is before it
                               // scrolls - in ticks 60=1 sec}
-    NewMessageWait: Integer;  // how long it waits after a new message before
+    NewMessageWait: Integer;  // How long it waits after a new message before
                               // resuming the scroll count down
     AlphaCount: Byte;
     {$IFDEF SERVER}
@@ -60,10 +60,10 @@ begin
     begin
       TextMessageColor[X] := TextMessageColor[X + 1];
       TextMessage[X] := TextMessage[X + 1];
-      NumMessage[X] := NumMessage[X + 1];  // scroll the messages up 1
+      NumMessage[X] := NumMessage[X + 1];  // Scroll the messages up 1
       AlphaCount := 255;
     end;
-    TextMessage[Count] := '';  // blank the last message
+    TextMessage[Count] := '';  // Blank the last message
     NumMessage[Count] := 0;
     Dec(Count);
   end;
@@ -72,7 +72,7 @@ end;
 
 procedure TConsole.ConsoleAdd(What: WideString; Col: Cardinal);
 begin
-  // adds a new message
+  // Adds a new message
   Inc(Count);
   ScrollTick := -NewMessageWait;
   TextMessage[Count] := What;
@@ -86,7 +86,7 @@ end;
 
 procedure TConsole.ConsoleNum(What: WideString; Col: Cardinal; Num: Integer);
 begin
-  // adds a new message
+  // Adds a new message
   Inc(Count);
   ScrollTick := -NewMessageWait;
   TextMessage[Count] := What;
@@ -106,9 +106,9 @@ begin
   {$IFDEF SERVER}
   if TerminalColors then
     WriteLn(Format(#27'[38;2;%D;%D;%Dm%S'#27'[0m',
-      [(Col and $00FF0000) shr 16, // r
-      (Col and $0000FF00) shr 8,  // g
-      (Col and $000000FF), // b
+      [(Col and $00FF0000) shr 16, // R
+      (Col and $0000FF00) shr 8,   // G
+      (Col and $000000FF),         // B
       What]))
   else
     WriteLn(What);
@@ -116,9 +116,9 @@ begin
   BroadCastMsg(AnsiString(What));
   {$ENDIF}
 
-  // adds a new message
-  // NOTE: not thread save!
-  // added mod to prevent AVs
+  // Adds a new message
+  // NOTE: Not thread save!
+  // Added mod to prevent AVs
   Inc(Count);
   if Count >= CountMax then
     Count := 1;

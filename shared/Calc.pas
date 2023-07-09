@@ -56,7 +56,7 @@ begin
     // On a more serious note, let's not test the limit of floating point
     Exit;
 
-  // if the angle of the bullet is bigger than 45 degrees,
+  // If the angle of the bullet is bigger than 45 degrees,
   // flip the coordinate system.
   // This algorithm deals with lines being nearly horizontal just fine,
   // but nearly vertical would cause a havoc, as vertical line is not a function.

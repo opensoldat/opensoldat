@@ -880,7 +880,7 @@ var
 begin
   mg := @MapGfx;
 
-  // graphics might be destroyed before end of game loop
+  // Graphics might be destroyed before end of game loop
   if mg.VertexBuffer = nil then
     Exit;
 
@@ -1180,7 +1180,7 @@ var
   MainLoading, InterfaceLoading: Boolean;
   s: string;
 begin
-  Result := True; // return true when not loading
+  Result := True;  // Return true when not loading
 
   if (MainSpritesheet = nil) or (InterfaceSpritesheet = nil) then
     Exit;

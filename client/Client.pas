@@ -600,7 +600,7 @@ begin
   ParseCommandLine();
 
   // NOTE: fs_basepath, fs_userpath, fs_portable and fs_localmount
-  // must be set from command line, not in client.cfg.
+  //       must be set from command line, not in client.cfg.
   if fs_portable.Value then
   begin
     UserDirectory := BasePathSDL;
@@ -792,8 +792,9 @@ begin
 
   if r_fullscreen.Value = 2 then
   begin
-  //  WindowWidth := Screen.Width;
-  //  WindowHeight := Screen.Height;
+    // TODO: Why commented out?
+    //WindowWidth := Screen.Width;
+    //WindowHeight := Screen.Height;
   end;
 
   GfxLog(Format('Window size: %dx%d', [WindowWidth, WindowHeight]));
