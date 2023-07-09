@@ -89,7 +89,7 @@ end;
 // ie: gamemode := string(choose(gametype, ['CTF', 'DM']));
 function Choose(const Index: Integer; const Choices: array of Variant): Variant;
 begin
-  if Index <= High(Choices) then
+  if (Index >= Low(Choices)) and (Index <= High(Choices)) then
     Result := Choices[index]
   else
     Result := '';
