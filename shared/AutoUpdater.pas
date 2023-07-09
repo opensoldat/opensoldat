@@ -3,7 +3,8 @@ unit AutoUpdater;
 interface
 
 uses
-  Process, sysutils;
+  Process,
+  SysUtils;
 
 procedure StartAutoUpdater;
 

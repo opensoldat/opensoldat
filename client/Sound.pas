@@ -12,8 +12,13 @@ unit Sound;
 interface
 
 uses
-  {$IFDEF STEAM}fgl,{$ENDIF}
-  SDL2, Vector, openal, PhysFS;
+  {$IFDEF STEAM}
+  fgl,
+  {$ENDIF}
+  SDL2,
+  Vector,
+  openal,
+  PhysFS;
 
 type
   TSoundSample = record
@@ -69,8 +74,13 @@ procedure PlayVoiceData(Data: Pointer; DataLength: Word; SpriteNum: Byte);
 implementation
 
 uses
-  Client, SysUtils,
-  LogFile, Math, Constants, Game;
+  SysUtils,
+  Math,
+         
+  Client,
+  LogFile,
+  Constants,
+  Game;
 
 function InitSound(): Boolean;
 var

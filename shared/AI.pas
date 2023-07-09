@@ -34,8 +34,16 @@ procedure ControlBot(var SpriteC: TSprite);
 implementation
 
 uses
-  Vector, Net, Server, Game, Weapons, Constants, Bullets,Waypoints,
-  NetworkServerMessages, Calc;
+  Vector,
+  Net,
+  Server,
+  Game,
+  Weapons,
+  Constants,
+  Bullets,
+  Waypoints,
+  NetworkServerMessages,
+  Calc;
 
 // Checks the distance on one axis
 function CheckDistance(PosA, PosB: Single): Integer;

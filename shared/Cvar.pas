@@ -3,7 +3,17 @@ unit Cvar;
 interface
 
 uses
-  Classes, Contnrs, Sysutils, Variants, Command, Constants, Util;
+  // delphi and system units
+  Classes,
+  Contnrs,
+  SysUtils,
+  Variants,
+
+  // helper units
+  Command,
+  Constants,
+  Util;
+
 {
   Cvar tags
   sv_ - server cvar
@@ -146,7 +156,20 @@ var
   CvarsInitialized: Boolean = False;
 
 implementation
-  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} TraceLog, Math, Game {$IFNDEF SERVER}, Sound, Demo {$ENDIF}, Things;
+uses
+{$IFDEF SERVER}
+  Server,
+{$ELSE}
+  Client,
+{$ENDIF}
+  TraceLog,
+  Math,
+  Game,
+{$IFNDEF SERVER}
+  Sound,
+  Demo,
+{$ENDIF}
+  Things;
 
 {$IFNDEF SERVER}
 function snd_volumeChange(Cvar: TCvarBase; NewValue: Integer): Boolean;

@@ -3,7 +3,12 @@ unit Command;
 interface
 
 uses
-  classes, contnrs, sysutils, variants, Constants;
+  Classes,
+  Contnrs,
+  SysUtils,
+  Variants,
+
+  Constants;
 
 procedure CommandInit();
 procedure CommandCleanup();
@@ -39,9 +44,27 @@ var
   DeferredInitialized: Boolean = False;
 
 implementation
-  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF}Cvar, strutils, Game, Net
-    {$IFDEF DEVELOPMENT}, Steam, ctypes, TraceLog{$ENDIF}
-    {$IFDEF SERVER}, NetworkUtils{$ENDIF};
+  uses
+    StrUtils,
+
+    {$IFDEF DEVELOPMENT}
+    Steam,
+    ctypes,
+    TraceLog,
+    {$ENDIF}
+
+    {$IFDEF SERVER}
+    NetworkUtils,
+    {$ENDIF}
+
+    {$IFDEF SERVER}
+    Server,
+    {$ELSE}
+    Client,
+    {$ENDIF}
+    Cvar,
+    Net,
+    Game;
 
 {$PUSH}
 {$WARN 5024 OFF : Parameter "$1" not used}

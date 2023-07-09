@@ -3,7 +3,9 @@ unit GameRendering;
 interface
 
 uses
-  Gfx, SDL2;
+  SDL2,
+
+  Gfx;
 
 type
   TGameRenderingParams = record
@@ -42,11 +44,37 @@ function EaseZoom(Current, Goal: Single): Single;
 implementation
 
 uses
+  SysUtils,
+  IniFiles,
+  Math,
+  Classes,
+  Contnrs,
+       
+  PhysFS,
+
+  Util,
+  Constants,
+  Vector,
+  TraceLog,
+  {$IFDEF TESTING}
+  Version
+  {$ENDIF}
+          
+  Cvar,
+  PolyMap,
+  MapFile,
+  GameStrings,
+          
+  Input,
+  Sprites,
+  Weapons,
+  Parts,
+  Game,
   Client,
-  Math, SysUtils, IniFiles, Classes, Contnrs,
-  Constants, Sprites, Parts, Game, Weapons, PolyMap, MapFile, Vector, Util,
-  InterfaceGraphics, ClientGame, GameStrings, GostekGraphics, Input,
-  PhysFS, Cvar, MapGraphics, TraceLog {$IFDEF TESTING},  Version{$ENDIF};
+  ClientGame,
+  InterfaceGraphics,
+  GostekGraphics,
+  MapGraphics;
 
 type
   TTextureLoadData = record

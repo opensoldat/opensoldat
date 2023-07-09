@@ -4,17 +4,30 @@ interface
 
 uses
   // delphi and system units
-  SysUtils, Classes,
+  SysUtils,
+  Classes,
 
   // helper units
-  Vector, Util, Version, BitStream,
+  Vector,
+  Util,
+  Version,
+  BitStream,
 
   // anti-cheat units
-  {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
+  {$IFDEF ENABLE_FAE}
+  FaeClient,
+  {$ENDIF}
 
   // OpenSoldat units
-  LogFile, Steam, Net, Sprites, Weapons, Constants, GameStrings,
-  Cvar, PhysFS;
+  LogFile,
+  Steam,
+  Net,
+  Sprites,
+  Weapons,
+  Constants,
+  GameStrings,
+  Cvar,
+  PhysFS;
 
 procedure ClientRequestGame;
 procedure ClientSendPlayerInfo;

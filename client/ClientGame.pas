@@ -3,7 +3,10 @@ unit ClientGame;
 interface
 
 uses
-  SDL2, Constants, Vector;
+  SDL2,
+
+  Constants,
+  Vector;
 
 procedure ResetFrameTiming;
 procedure GameLoop;
@@ -59,12 +62,39 @@ var
 implementation
 
 uses
-  SysUtils, StrUtils, Math, Classes,
-  Client, Game, Sprites, GameStrings, Demo,
-  Net, NetworkClientSprite, NetworkClientConnection,
-  {$IFDEF ENABLE_FAE}FaeBase, FaeClient, NetworkClientFae,{$ENDIF}
-  {$IFDEF STEAM}Steam, NetworkClientGame,{$ENDIF}
-  GameRendering, Gfx, UpdateFrame, GameMenus, Util, InterfaceGraphics, Input;
+  SysUtils,
+  StrUtils,
+  Math,
+  Classes,
+
+  Client,
+  Game,
+  Sprites,
+  GameStrings,
+  Demo,
+
+  Net,
+  NetworkClientSprite,
+  NetworkClientConnection,
+
+  {$IFDEF ENABLE_FAE}
+  FaeBase,
+  FaeClient,
+  NetworkClientFae,
+  {$ENDIF}
+
+  {$IFDEF STEAM}
+  Steam,
+  NetworkClientGame,
+  {$ENDIF}
+
+  GameRendering,
+  Gfx,
+  UpdateFrame,
+  GameMenus,
+  Util,
+  InterfaceGraphics,
+  Input;
 
 type
   TFrameTiming = record

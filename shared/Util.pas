@@ -11,7 +11,14 @@ unit Util;
 interface
 
 uses
-  Variants, Classes, SysUtils, Sha1 {$IFDEF DEVELOPMENT}, typinfo{$ENDIF};
+  {$IFDEF DEVELOPMENT}
+  TypInfo,
+  {$ENDIF}
+
+  Classes,
+  SysUtils,
+  sha1,
+  Variants;
 
 type
   TColor = 0..$FFFFFFFF;
@@ -55,7 +62,20 @@ function ToStr(const AValue; ATypeInfo: PTypeInfo): AnsiString;
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Constants, PhysFS, Md5, Game {$IFDEF STEAM}, Steam{$ENDIF};
+  Md5,
+       
+  Constants,
+  PhysFS,
+  {$IFDEF STEAM}
+  Steam
+  {$ENDIF}
+
+  {$IFDEF SERVER}
+  Server,
+  {$ELSE}
+  Client,
+  {$ENDIF}
+  Game;
 
 function Iif(const Condition: Boolean; const TruePart: Variant;
   const FalsePart: Variant): Variant;

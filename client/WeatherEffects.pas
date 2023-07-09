@@ -11,7 +11,12 @@ unit WeatherEffects;
 interface
 
 uses
-  Game, Weapons, Vector, Sprites, Net, Sparks;
+  Game,
+  Weapons,
+  Vector,
+  Sprites,
+  Net,
+  Sparks;
 
 procedure MakeRain;
 procedure MakeSandStorm;
@@ -20,7 +25,10 @@ procedure MakeSnow;
 implementation
 
 uses
-  Client, Cvar, Sound, Constants;
+  Client,
+  Cvar,
+  Sound,
+  Constants;
 
 // Backgorund animation and sound for rain
 procedure MakeRain;

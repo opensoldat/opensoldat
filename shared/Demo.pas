@@ -11,11 +11,17 @@ unit Demo;
 interface
 
 uses
-  {$IFNDEF SERVER}
-  GameStrings, ClientGame,
-  {$ENDIF}
-  SysUtils, Classes, Vector, Sprites,
-  {$IFNDEF SERVER}Steam,{$ENDIF}
+{$IFNDEF SERVER}
+  GameStrings,
+  ClientGame,
+{$ENDIF}
+  SysUtils,
+  Classes,
+  Vector,
+  Sprites,
+{$IFNDEF SERVER}
+  Steam,
+{$ENDIF}
   Net;
 
 
@@ -91,8 +97,22 @@ var
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Game, PolyMap, Constants, Version, NetworkUtils, DateUtils,
-  NetworkServerConnection, NetworkServerThing {$IFNDEF SERVER}, InterfaceGraphics {$ENDIF};
+{$IFDEF SERVER}
+  Server,
+{$ELSE}
+  Client,
+{$ENDIF}
+  Game,
+  PolyMap,
+  Constants,
+  NetworkUtils,
+  DateUtils,
+  NetworkServerConnection,
+  NetworkServerThing,
+{$IFNDEF SERVER}
+  InterfaceGraphics,
+{$ENDIF}
+  Version;
 
 
 function TDemoRecorder.StartRecord(Filename: string): Boolean;

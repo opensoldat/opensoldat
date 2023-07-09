@@ -7,12 +7,36 @@ procedure GameInput;
 implementation
 
 uses
-  SDL2, SysUtils, Constants, Net,
-  NetworkClientConnection, NetworkClientMessages,
-  NetworkClientGame, Game, Weapons, Math, InterfaceGraphics,
-  Input, Sound, Classes, GameStrings, GameMenus, Demo, Util,
-  {$IFDEF STEAM} Steam, {$ENDIF}
-  Client, Sprites, ClientGame, Command, Cvar;
+  SysUtils,
+  Classes,
+  Math,
+
+  SDL2,
+  {$IFDEF STEAM}
+  Steam,
+  {$ENDIF}
+        
+  Util,
+  Constants,
+  GameStrings,
+
+  Command,
+  Cvar,
+
+  Net,
+  NetworkClientConnection,
+  NetworkClientMessages,
+  NetworkClientGame,
+  Sprites,
+  Weapons,
+  Input,
+  Sound,
+  GameMenus,
+  Demo,
+  InterfaceGraphics,
+  Game,
+  Client,
+  ClientGame;
 
 procedure ClearChatText;
 begin

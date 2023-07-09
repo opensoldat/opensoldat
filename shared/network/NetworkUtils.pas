@@ -6,16 +6,20 @@ interface
 
 uses
   // delphi and system units
-  SysUtils, Classes,
+  SysUtils,
+  Classes,
+  StrUtils,
 
   // helper units
-  Version, StrUtils,
+  Version,
 
   // OpenSoldat units
   {$IFNDEF SERVER}
   Sound,
   {$ENDIF}
-  Sprites, Weapons, Constants;
+  Sprites,
+  Weapons,
+  Constants;
 
 {$IFDEF SERVER}
 function IsRemoteAdminIP(IP: string): Boolean;

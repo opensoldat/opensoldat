@@ -3,8 +3,15 @@ unit FileClient;
 interface
 
 uses
-  SysUtils, Classes, sha1, strutils, fphttpclient,
-  GameRendering, Constants, Version;
+  SysUtils,
+  Classes,
+  sha1,
+  StrUtils,
+  fphttpclient,
+
+  GameRendering,
+  Constants,
+  Version;
 
 const
   MAX_DL_SIZE = 150000000;  // max download size in bytes

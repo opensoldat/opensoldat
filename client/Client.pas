@@ -15,35 +15,56 @@ uses
   {$IFDEF MSWINDOWS}
   MMSystem,
   {$ENDIF}
-  SysUtils, Classes, Math, GameStrings, Variants, FileClient,
+  SysUtils,
+  Classes,
+  Math,
+  Variants,
+  sha1,
+       
+  // SDL2
+  SDL2,
+  {$IFDEF STEAM}
+  // Steam
+  Steam,
+  {$ENDIF}
+  // PhysFS
+  PhysFS,
 
   // graphics units
   Gfx,
 
   // helper units
-  Version, Vector, Util, Sha1,
-
-  // SDL2
-  SDL2,
-
-  {$IFDEF STEAM}
-  // Steam
-  Steam,
-  {$ENDIF}
-
-  // PhysFS
-  PhysFS,
+  Version,
+  Vector,
+  Util,
+  GameStrings,
+  FileClient,
 
   // Cvar
   Cvar, Command, ClientCommands,
 
   // anti-cheat units
-  {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
+  {$IFDEF ENABLE_FAE}
+  FaeClient,
+  {$ENDIF}
 
   // OpenSoldat units
-  Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
-  NetworkClientConnection, GameMenus, Demo, Console,
-  Weapons, Constants, Game, GameRendering, ClientLauncherIPC;
+  Sprites,
+  Anims,
+  PolyMap,
+  Net,
+  LogFile,
+  Sound,
+  GetText,
+  NetworkClientConnection,
+  GameMenus,
+  Demo,
+  Console,
+  Weapons,
+  Constants,
+  Game,
+  GameRendering,
+  ClientLauncherIPC;
 
 procedure JoinServer;
 procedure StartGame;
@@ -308,7 +329,12 @@ var
 implementation
 
 uses
-  IniFiles, TraceLog, ClientGame, ControlGame, InterfaceGraphics, Input;
+  IniFiles,
+  TraceLog,
+  ClientGame,
+  ControlGame,
+  InterfaceGraphics,
+  Input;
 
 procedure RestartGraph;
 begin

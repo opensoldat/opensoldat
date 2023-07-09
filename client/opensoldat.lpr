@@ -24,9 +24,13 @@ uses
   cthreads,
   cwstring,
   {$ENDIF}
-  {$IFDEF MSWINDOWS}Windows,{$ENDIF}
+  {$IFDEF MSWINDOWS}
+  Windows,
+  {$ENDIF}
   SysUtils,
-  {$IFDEF AUTOUPDATER}AutoUpdater,{$ENDIF}
+  {$IFDEF AUTOUPDATER}
+  AutoUpdater,
+  {$ENDIF}
   Client in 'Client.pas';
 
 {$IFDEF MSWINDOWS}
