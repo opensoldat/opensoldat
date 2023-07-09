@@ -447,10 +447,10 @@ begin
 
     if (Sprite[Deathsnap.Killer].MultiKills > 1) and
       (Sprite[Deathsnap.Killer].MultiKills < 18) then
-      BigMessage(MULTIKILLMESSAGE[Sprite[Deathsnap.Killer].MultiKills],
+      BigMessage(MULTIKILL_MESSAGE[Sprite[Deathsnap.Killer].MultiKills],
         KILLMESSAGEWAIT, KILL_MESSAGE_COLOR);
     if (Sprite[Deathsnap.Killer].MultiKills > 17) then
-      BigMessage(MULTIKILLMESSAGE[9], KILLMESSAGEWAIT,
+      BigMessage(MULTIKILL_MESSAGE[9], KILLMESSAGEWAIT,
         KILL_MESSAGE_COLOR);
 
     if (ShotDistance > -1) and (Deathsnap.Killer <> i) then

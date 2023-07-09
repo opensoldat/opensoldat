@@ -235,12 +235,24 @@ const
   FIREINTERVAL_NET = 5;
   MELEE_DIST = 12;
 
-  MULTIKILLMESSAGE: array[2..17] of WideString = ('DOUBLE KILL', 'TRIPLE KILL',
-    'MULTI KILL', 'MULTI KILL X2', 'SERIAL KILL', 'INSANE KILLS', 'GIMME MORE!',
-    'MASTA KILLA!', 'MASTA KILLA!', 'MASTA KILLA!', 'STOP IT!!!!',
-    'MERCY!!!!!!!!!!', 'CHEATER!!!!!!!!',
+  MULTIKILL_MESSAGE: array[2..17] of WideString = (
+    'DOUBLE KILL',
+    'TRIPLE KILL',
+    'MULTI KILL',
+    'MULTI KILL X2',
+    'SERIAL KILL',
+    'INSANE KILLS',
+    'GIMME MORE!',
+    'MASTA KILLA!',
+    'MASTA KILLA!',
+    'MASTA KILLA!',
+    'STOP IT!!!!',
+    'MERCY!!!!!!!!!!',
+    'CHEATER!!!!!!!!',
     'Phased-plasma rifle in the forty watt range',
-    'Hey, just what you see, pal', 'just what you see, pal...');
+    'Hey, just what you see, pal',
+    'just what you see, pal...'
+  );
 
 
   DEFAULT_JETCOLOR = $FFFFBD24;
