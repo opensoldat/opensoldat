@@ -92,8 +92,8 @@ begin
       Control.Right := False;
       Control.Left  := False;
       if t.x > m.x then
-        Control.Right := True;
-      if t.x < m.x then
+        Control.Right := True
+      else if t.x < m.x then
         Control.Left  := True;
     end;
 
@@ -107,8 +107,8 @@ begin
         Control.Right := False;
         Control.Left  := False;
         if t.x < m.x then
-          Control.Right := True;
-        if t.x > m.x then
+          Control.Right := True
+        else if t.x > m.x then
           Control.Left  := True;
       end;
       Control.Fire := True;
@@ -131,8 +131,8 @@ begin
           Control.Right := False;
           Control.Left  := False;
           if t.x < m.x then
-            Control.Right := True;
-          if t.x > m.x then
+            Control.Right := True
+          else if t.x > m.x then
             Control.Left  := True;
         end;
         Control.Fire := False;
@@ -157,8 +157,8 @@ begin
           Control.Right := False;
           Control.Left  := False;
           if t.x < m.x then
-            Control.Right := true;
-          if t.x > m.x then
+            Control.Right := true
+          else if t.x > m.x then
             Control.Left  := True;
         end;
         Control.Down   := False;
@@ -179,8 +179,8 @@ begin
           Control.Right := False;
           Control.Left  := False;
           if t.x < m.x then
-            Control.Right := True;
-          if t.x > m.x then
+            Control.Right := True
+          else if t.x > m.x then
             Control.Left  := True;
         end;
         Control.Down   := False;
@@ -254,8 +254,8 @@ begin
         Control.Right := False;
         Control.Left  := False;
         if t.x > m.x then
-          Control.Right := True;
-        if t.x < m.x then
+          Control.Right := True
+        else if t.x < m.x then
           Control.Left  := True;
       end;
 
@@ -300,8 +300,8 @@ begin
         if Brain.Camper > 0 then
         begin
           if t.x < m.x then
-            Control.Right := True;
-          if t.x > m.x then
+            Control.Right := True
+          else if t.x > m.x then
             Control.Left  := True;
         end;
 
@@ -320,8 +320,8 @@ begin
       Control.Down   := False;
       Control.Fire := True;
       if t.x > m.x then
-        Control.Right := True;
-      if t.x < m.x then
+        Control.Right := True
+      else if t.x < m.x then
         Control.Left  := True;
     end;
 
@@ -338,8 +338,8 @@ begin
       Control.Right := False;
       Control.Left  := False;
       if t.x < m.x then
-        Control.Right := True;
-      if t.x > m.x then
+        Control.Right := True
+      else if t.x > m.x then
         Control.Left  := True;
     end;
 
@@ -496,8 +496,8 @@ begin
       t.y := t.y + 5;
 
     if t.x >= m.x then
-      Control.Right := True;
-    if t.x < m.x  then
+      Control.Right := True
+    else if t.x < m.x  then
       Control.Left  := True;
 
     if  (Thing[ThingNum].HoldingSprite > 0) and
