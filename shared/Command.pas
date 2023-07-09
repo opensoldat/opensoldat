@@ -19,7 +19,15 @@ const
   MAX_COMMANDS = 1024;
 
 type
-  TCommandFlag = (CMD_INIT, CMD_ALIAS, CMD_SCRIPT, CMD_DEFERRED, CMD_ADMINONLY, CMD_PLAYERONLY, CMD_INGAMEONLY);
+  TCommandFlag = (
+    CMD_INIT,
+    CMD_ALIAS,
+    CMD_SCRIPT,
+    CMD_DEFERRED,
+    CMD_ADMINONLY,
+    CMD_PLAYERONLY,
+    CMD_INGAMEONLY
+  );
   TCommandFlags = set of TCommandFlag;
   PCommand = ^TCommand;
   TCommandFunction = procedure(Args: array of AnsiString; Sender: Byte);
@@ -31,7 +39,8 @@ type
   end;
   TCommandTargets = array of byte;
 
-  function CommandAdd(CommandNameVar: AnsiString; CommandPtr: TCommandFunction; Description: AnsiString; Flags: TCommandFlags): PCommand;
+  function CommandAdd(CommandNameVar: AnsiString; CommandPtr: TCommandFunction;
+    Description: AnsiString; Flags: TCommandFlags): PCommand;
   function CommandFind(Name: AnsiString): PCommand;
   procedure CommandExecuteAlias(Args: array of AnsiString; Sender: Byte);
   procedure ParseCommandLine();
@@ -696,17 +705,17 @@ procedure CommandInit();
 begin
   Commands := TFPHashList.Create;
   DeferredCommands := TStringList.Create;
-  CommandAdd('echo', CommandEcho, 'echo text', []);
-  CommandAdd('exec', CommandExec, 'executes fileconfig', []);
-  CommandAdd('cmdlist', CommandCmdlist, 'list of commands', []);
+  CommandAdd('echo',     CommandEcho,     'echo text', []);
+  CommandAdd('exec',     CommandExec,     'executes fileconfig', []);
+  CommandAdd('cmdlist',  CommandCmdlist,  'list of commands',  []);
   CommandAdd('cvarlist', CommandCvarlist, 'list of cvars', []);
-  CommandAdd('reset', CommandReset, 'resets cvar to default value', []);
-  CommandAdd('alias', CommandAlias, 'creates alias', []);
-  CommandAdd('toggle', CommandToggle, 'toggles cvar between two values', []);
-  CommandAdd('inc', CommandInc, 'increments cvar value', []);
+  CommandAdd('reset',    CommandReset,    'resets cvar to default value', []);
+  CommandAdd('alias',    CommandAlias,    'creates alias', []);
+  CommandAdd('toggle',   CommandToggle,   'toggles cvar between two values', []);
+  CommandAdd('inc',      CommandInc,      'increments cvar value', []);
   {$IFDEF DEVELOPMENT}
-  CommandAdd('netconfig', CommandNetConfig, 'Set GNS config', []);
-  CommandAdd('netconfig_conn', CommandNetConfig, 'Set GNS config for specific connection handle', []);
+  CommandAdd('netconfig',      CommandNetConfig,     'Set GNS config', []);
+  CommandAdd('netconfig_conn', CommandNetConfig,     'Set GNS config for specific connection handle', []);
   CommandAdd('netconfig_list', CommandNetConfigList, 'List GNS cvars', [CMD_INGAMEONLY]);
 
   CommandAdd('netconfig_loglevel', CommandNetLogLevel, 'Set GNS log level', [CMD_INGAMEONLY]);

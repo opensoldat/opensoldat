@@ -161,14 +161,14 @@ begin
           else if t.x > m.x then
             Control.Left  := True;
         end;
-        Control.Down   := False;
+        Control.Down := False;
         Control.Fire := False;
       end;
     end
 
     else if DistToTargetX = DIST_ROCK_THROW then
     begin
-      Control.Down   := True;
+      Control.Down := True;
       Control.Fire := True;
 
       // If reloading
@@ -183,7 +183,7 @@ begin
           else if t.x > m.x then
             Control.Left  := True;
         end;
-        Control.Down   := False;
+        Control.Down := False;
         Control.Fire := False;
       end;
     end
@@ -315,10 +315,11 @@ begin
          (Sprite[Brain.TargetNum].Weapon.Num <> Guns[CHAINSAW].Num)) or
         (SpriteParts.Pos[Brain.TargetNum].Y > SpriteParts.Pos[SpriteNum].Y)) then
     begin
-      Control.Right  := False;
-      Control.Left   := False;
-      Control.Down   := False;
-      Control.Fire := True;
+      Control.Right := False;
+      Control.Left  := False;
+      Control.Down  := False;
+      Control.Fire  := True;
+
       if t.x > m.x then
         Control.Right := True
       else if t.x < m.x then
@@ -374,11 +375,11 @@ begin
 
     if Sprite[SpriteNum].Stat > 0 then
     begin
-      Control.Right  := False;
-      Control.Left   := False;
-      Control.Up     := False;
-      Control.Down   := False;
-      Control.Fire := True;
+      Control.Right := False;
+      Control.Left  := False;
+      Control.Up    := False;
+      Control.Down  := False;
+      Control.Fire  := True;
     end;
 
     // Grenade throw
@@ -448,7 +449,7 @@ begin
         begin
           FreeControls;
           Control.Fire := True;
-          Control.Down   := True;
+          Control.Down := True;
 
           if  (BodyAnimation.ID <> Stand.ID)         and
               (BodyAnimation.ID <> Recoil.ID)        and

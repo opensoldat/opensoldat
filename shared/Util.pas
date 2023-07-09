@@ -81,9 +81,9 @@ function Iif(const Condition: Boolean; const TruePart: Variant;
   const FalsePart: Variant): Variant;
 begin
   if Condition then
-    Result := Truepart
+    Result := TruePart
   else
-    Result := Falsepart;
+    Result := FalsePart;
 end;
 
 // ie: gamemode := string(choose(gametype, ['CTF', 'DM']));
@@ -393,11 +393,11 @@ begin
       FillByte(FormatSettings, SizeOf(TFormatSettings), 0);
       FormatSettings.DecimalSeparator := '.';
       case GetTypeData(ATypeInfo)^.FloatType of
-        ftSingle: Result := FormatFloat('0.######', Single(AValue), FormatSettings);
-        ftDouble: Result := FormatFloat('0.######', Double(AValue), FormatSettings);
+        ftSingle: Result   := FormatFloat('0.######', Single(AValue),   FormatSettings);
+        ftDouble: Result   := FormatFloat('0.######', Double(AValue),   FormatSettings);
         ftExtended: Result := FormatFloat('0.######', Extended(AValue), FormatSettings);
-        ftComp: Result := FormatFloat('0.######', Comp(AValue), FormatSettings);
-        ftCurr: Result := FormatFloat('0.######', Currency(AValue), FormatSettings);
+        ftComp: Result     := FormatFloat('0.######', Comp(AValue),     FormatSettings);
+        ftCurr: Result     := FormatFloat('0.######', Currency(AValue), FormatSettings);
       end;
     end;
     tkRecord:

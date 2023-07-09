@@ -364,6 +364,7 @@ begin
   SpriteParts.TimeStep := 1;
   SpriteParts.GravityMultiplier := 1;
   SpriteParts.EDamping := 0.99;
+
   GostekSkeleton.Destroy;
   GostekSkeleton.LoadPOObject('objects/gostek.po', SCALE);
   GostekSkeleton.TimeStep := 1;
@@ -385,8 +386,11 @@ begin
   SparkParts.EDamping := 0.998;
 
   FlagSkeleton.LoadPOObject('objects/flag.po', 4.0);
+
   ParaSkeleton.LoadPOObject('objects/para.po', 5.0);
+
   StatSkeleton.LoadPOObject('objects/stat.po', 4.0);
+
   RifleSkeleton10.LoadPOObject('objects/karabin.po', 1.0);
   RifleSkeleton11.LoadPOObject('objects/karabin.po', 1.1);
   RifleSkeleton18.LoadPOObject('objects/karabin.po', 1.8);
