@@ -138,9 +138,10 @@ const
   MOUSEAIMDELTA = 30;
   SPAWNRANDOMVELOCITY = 25;
 
-  FLAG_TIMEOUT     = SECOND * 25;
-  WAYPOINTTIMEOUT  = SECOND * 5 + 20;  // = 320
-  WAYPOINT_TIMEOUT = 480; // TODO: why the duplication?
+  FLAG_TIMEOUT           = SECOND * 25;
+  // TODO: why the duplication?
+  WAYPOINT_TIMEOUT_SMALL = SECOND * 5 + 20;  // = 320
+  WAYPOINT_TIMEOUT_BIG   = SECOND * 8;       // = 480
 
   WAYPOINTSEEKRADIUS = 21;
 

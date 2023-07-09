@@ -1051,13 +1051,13 @@ begin
     if SpriteC.Brain.WaypointTimeoutCounter < 0 then
     begin
       SpriteC.Brain.CurrentWaypoint := SpriteC.Brain.OldWaypoint;
-      SpriteC.Brain.WaypointTimeoutCounter := WAYPOINTTIMEOUT;
+      SpriteC.Brain.WaypointTimeoutCounter := WAYPOINT_TIMEOUT_SMALL;
       SpriteC.FreeControls;
       SpriteC.Control.Up := True;
     end;
 
     // Waypoint is shit
-    if SpriteC.Brain.WaypointTime > WAYPOINT_TIMEOUT then
+    if SpriteC.Brain.WaypointTime > WAYPOINT_TIMEOUT_BIG then
     begin
       SpriteC.FreeControls;
       SpriteC.Brain.CurrentWaypoint := 0;

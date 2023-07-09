@@ -353,7 +353,7 @@ begin
     Sprite[i].WearHelmet := 0;
 
   Sprite[i].Brain.TargetNum := 1;
-  Sprite[i].Brain.WaypointTimeoutCounter := WAYPOINTTIMEOUT;
+  Sprite[i].Brain.WaypointTimeoutCounter := WAYPOINT_TIMEOUT_SMALL;
 
   Sprite[i].DeadCollideCount := 0;
 

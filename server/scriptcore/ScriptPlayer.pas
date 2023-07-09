@@ -376,7 +376,7 @@ begin
   Self.FSecondary := TScriptSecondaryPlayerWeapon.Create(Self.FSpritePtr^);
   Self.FSpritePtr^.Player := TPlayer.Create;
   Self.FSpritePtr^.Brain.TargetNum := 1;
-  Self.FSpritePtr^.Brain.WaypointTimeoutCounter := WAYPOINTTIMEOUT;
+  Self.FSpritePtr^.Brain.WaypointTimeoutCounter := WAYPOINT_TIMEOUT_SMALL;
 end;
 
 destructor TScriptNewPlayer.Destroy;
