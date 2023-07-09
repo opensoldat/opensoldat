@@ -139,7 +139,7 @@ begin
        DestinationDirectory + '/' + FileNames[i]) then
       Result := False;
 
-    i += 1;
+    Inc(i);
   end;
 
   PHYSFS_freeList(FileNames);

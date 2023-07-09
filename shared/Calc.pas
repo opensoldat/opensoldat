@@ -80,11 +80,11 @@ begin
     diffy := temp;
   end
   else
-    flipped := false;
+    flipped := False;
 
   // Line equation: ax + b - y = 0. given x1, y1, x2, y2, let's calculate a and b
   // a = (y1 - y2)/(x1 - x2)
-  a := diffy/diffx;
+  a := diffy / diffx;
   // b := y - ax
   b := Line1.y - a * Line1.x;
   // Circle equation: (x - x1)^2 + (y - y1)^2 - r^2 = 0
