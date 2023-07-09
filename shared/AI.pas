@@ -27,8 +27,8 @@ const
   DIST_STOP_PRONE =  25;
 
 function CheckDistance(PosA, PosB: Single): Integer;
-procedure SimpleDecision(SNum: Byte);
-procedure GoToThing(SNum, TNum: Byte);
+procedure SimpleDecision(SpriteNum: Byte);
+procedure GoToThing(SpriteNum, ThingNum: Byte);
 procedure ControlBot(var SpriteC: TSprite);
 
 implementation
@@ -76,18 +76,18 @@ begin
     Result := DIST_TOO_FAR
 end;
 
-procedure SimpleDecision(SNum: Byte);
+procedure SimpleDecision(SpriteNum: Byte);
 var
   m, t, tv: TVector2;
   DistToTargetX, DistToTargetY, Dist: Integer;
   GR, i: Integer;
 begin
-  with Sprite[SNum] do
+  with Sprite[SpriteNum] do
   begin
-    m := SpriteParts.Pos[SNum];
+    m := SpriteParts.Pos[SpriteNum];
     t := SpriteParts.Pos[Brain.TargetNum];
 
-    if not Sprite[SNum].Brain.GoThing then
+    if not Sprite[SpriteNum].Brain.GoThing then
     begin
       Control.Right := False;
       Control.Left  := False;
@@ -102,7 +102,7 @@ begin
 
     if DistToTargetX = DIST_TOO_CLOSE then
     begin
-      if not Sprite[SNum].Brain.GoThing then
+      if not Sprite[SpriteNum].Brain.GoThing then
       begin
         Control.Right := False;
         Control.Left  := False;
@@ -116,7 +116,7 @@ begin
 
     else if DistToTargetX = DIST_VERY_CLOSE then
     begin
-      if not Sprite[SNum].Brain.GoThing then
+      if not Sprite[SpriteNum].Brain.GoThing then
       begin
         Control.Right := False;
         Control.Left  := False;
@@ -126,7 +126,7 @@ begin
       // If reloading
       if Weapon.AmmoCount = 0 then
       begin
-        if not Sprite[SNum].Brain.GoThing then
+        if not Sprite[SpriteNum].Brain.GoThing then
         begin
           Control.Right := False;
           Control.Left  := False;
@@ -141,7 +141,7 @@ begin
 
     else if DistToTargetX = DIST_CLOSE then
     begin
-      if not Sprite[SNum].Brain.GoThing then
+      if not Sprite[SpriteNum].Brain.GoThing then
       begin
         Control.Right := False;
         Control.Left  := False;
@@ -152,7 +152,7 @@ begin
       // If reloading
       if Weapon.AmmoCount = 0 then
       begin
-        if not Sprite[SNum].Brain.GoThing then
+        if not Sprite[SpriteNum].Brain.GoThing then
         begin
           Control.Right := False;
           Control.Left  := False;
@@ -174,7 +174,7 @@ begin
       // If reloading
       if Weapon.AmmoCount = 0 then
       begin
-        if not Sprite[SNum].Brain.GoThing then
+        if not Sprite[SpriteNum].Brain.GoThing then
         begin
           Control.Right := False;
           Control.Left  := False;
@@ -194,7 +194,7 @@ begin
 
       if Brain.Camper > 127 then
       begin
-        if not Sprite[SNum].Brain.GoThing then
+        if not Sprite[SpriteNum].Brain.GoThing then
         begin
           Control.Up   := False;
           Control.Down := True;
@@ -214,7 +214,7 @@ begin
           if BodyAnimation.ID <> Prone.ID then
             control.Prone := True;
 
-        if not Sprite[SNum].Brain.GoThing then
+        if not Sprite[SpriteNum].Brain.GoThing then
         begin
           Control.Right := False;
           Control.Left  := False;
@@ -235,7 +235,7 @@ begin
           if BodyAnimation.ID <> Prone.ID then
             control.Prone := True;
 
-        if not Sprite[SNum].Brain.GoThing then
+        if not Sprite[SpriteNum].Brain.GoThing then
         begin
           Control.Right := False;
           Control.Left  := False;
@@ -246,7 +246,7 @@ begin
     end;
 
     // Move when other player camps
-    if not Sprite[SNum].Brain.GoThing then
+    if not Sprite[SpriteNum].Brain.GoThing then
       if (Sprite[Brain.TargetNum].Brain.CurrentWaypoint > 0) and
         (BotPath.Waypoint[Sprite[Brain.TargetNum].Brain.CurrentWaypoint].Action <>
         TWaypointAction.None) then
@@ -307,13 +307,13 @@ begin
 
     // Go prone
     // Fists!
-    if ((Sprite[SNum].Weapon.Num = Guns[NOWEAPON].Num)  or
-        (Sprite[SNum].Weapon.Num = Guns[KNIFE].Num)     or
-        (Sprite[SNum].Weapon.Num = Guns[CHAINSAW].Num)) and
+    if ((Sprite[SpriteNum].Weapon.Num = Guns[NOWEAPON].Num)  or
+        (Sprite[SpriteNum].Weapon.Num = Guns[KNIFE].Num)     or
+        (Sprite[SpriteNum].Weapon.Num = Guns[CHAINSAW].Num)) and
        (((Sprite[Brain.TargetNum].Weapon.Num <> Guns[NOWEAPON].Num)  and
          (Sprite[Brain.TargetNum].Weapon.Num <> Guns[KNIFE].Num)     and
          (Sprite[Brain.TargetNum].Weapon.Num <> Guns[CHAINSAW].Num)) or
-        (SpriteParts.Pos[Brain.TargetNum].Y > SpriteParts.Pos[SNum].Y)) then
+        (SpriteParts.Pos[Brain.TargetNum].Y > SpriteParts.Pos[SpriteNum].Y)) then
     begin
       Control.Right  := False;
       Control.Left   := False;
@@ -328,7 +328,7 @@ begin
     // Y-Distance
     DistToTargetY := CheckDistance(m.y, t.y);
 
-    if not Sprite[SNum].Brain.GoThing then
+    if not Sprite[SpriteNum].Brain.GoThing then
       if (DistToTargetY >= DIST_ROCK_THROW) and (m.y > t.y) then
         Control.Jetpack := True;
 
@@ -372,7 +372,7 @@ begin
         end;
     end;
 
-    if Sprite[SNum].Stat > 0 then
+    if Sprite[SpriteNum].Stat > 0 then
     begin
       Control.Right  := False;
       Control.Left   := False;
@@ -403,9 +403,9 @@ begin
     end;
 
     // Knife Throw
-    if (Sprite[SNum].CeaseFireCounter < 30)             and
-       (Sprite[SNum].Weapon.Num = Guns[KNIFE].Num)      and
-       (Sprite[SNum].Brain.FavWeapon = Guns[KNIFE].Num) then
+    if (Sprite[SpriteNum].CeaseFireCounter < 30)             and
+       (Sprite[SpriteNum].Weapon.Num = Guns[KNIFE].Num)      and
+       (Sprite[SpriteNum].Brain.FavWeapon = Guns[KNIFE].Num) then
     begin
       Control.Fire := False;
       Control.ThrowWeapon := True;
@@ -422,7 +422,7 @@ begin
       Control.MouseAimY := Round(t.y - (1.75 * DistToTargetX /
         (Weapon.Speed)) - Brain.Accuracy + Random(Brain.Accuracy));
 
-    if Sprite[SNum].Stat > 0 then
+    if Sprite[SpriteNum].Stat > 0 then
       Control.MouseAimY := Round(t.y - (0.5 * DistToTargetX / (30)) -
         Brain.Accuracy + Random(Brain.Accuracy));
 
@@ -469,30 +469,30 @@ begin
   end;
 end;
 
-procedure GoToThing(SNum, TNum: Byte);
+procedure GoToThing(SpriteNum, ThingNum: Byte);
 var
   m, t: TVector2;
   DistToTargetX, DistToTargetY: Integer;
 begin
-  with Sprite[SNum] do
+  with Sprite[SpriteNum] do
   begin
-    m  := SpriteParts.Pos[SNum];
-    t  := Thing[TNum].Skeleton.Pos[2];
+    m  := SpriteParts.Pos[SpriteNum];
+    t  := Thing[ThingNum].Skeleton.Pos[2];
 
-    if  (Thing[TNum].Skeleton.Pos[2].x > Thing[TNum].Skeleton.Pos[1].x) and
-        (m.x < Thing[TNum].Skeleton.Pos[2].x) then
-      t := Thing[TNum].Skeleton.Pos[2];
-    if  (Thing[TNum].Skeleton.Pos[2].x > Thing[TNum].Skeleton.Pos[1].x) and
-        (m.x > Thing[TNum].Skeleton.Pos[1].x) then
-      t := Thing[TNum].Skeleton.Pos[1];
-    if  (Thing[TNum].Skeleton.Pos[2].x < Thing[TNum].Skeleton.Pos[1].x) and
-        (m.x < Thing[TNum].Skeleton.Pos[1].x) then
-      t := Thing[TNum].Skeleton.Pos[1];
-    if  (Thing[TNum].Skeleton.Pos[2].x < Thing[TNum].Skeleton.Pos[1].x) and
-        (m.x > Thing[TNum].Skeleton.Pos[2].x) then
-      t := Thing[TNum].Skeleton.Pos[2];
+    if  (Thing[ThingNum].Skeleton.Pos[2].x > Thing[ThingNum].Skeleton.Pos[1].x) and
+        (m.x < Thing[ThingNum].Skeleton.Pos[2].x) then
+      t := Thing[ThingNum].Skeleton.Pos[2];
+    if  (Thing[ThingNum].Skeleton.Pos[2].x > Thing[ThingNum].Skeleton.Pos[1].x) and
+        (m.x > Thing[ThingNum].Skeleton.Pos[1].x) then
+      t := Thing[ThingNum].Skeleton.Pos[1];
+    if  (Thing[ThingNum].Skeleton.Pos[2].x < Thing[ThingNum].Skeleton.Pos[1].x) and
+        (m.x < Thing[ThingNum].Skeleton.Pos[1].x) then
+      t := Thing[ThingNum].Skeleton.Pos[1];
+    if  (Thing[ThingNum].Skeleton.Pos[2].x < Thing[ThingNum].Skeleton.Pos[1].x) and
+        (m.x > Thing[ThingNum].Skeleton.Pos[2].x) then
+      t := Thing[ThingNum].Skeleton.Pos[2];
 
-    if Thing[TNum].HoldingSprite > 0 then
+    if Thing[ThingNum].HoldingSprite > 0 then
       t.y := t.y + 5;
 
     if t.x >= m.x then
@@ -500,10 +500,10 @@ begin
     if t.x < m.x  then
       Control.Left  := True;
 
-    if  (Thing[TNum].HoldingSprite > 0) and
+    if  (Thing[ThingNum].HoldingSprite > 0) and
         (TeamFlag[Player.Team] > TEAM_NONE) then
-      if  (Player.Team = Sprite[Thing[TNum].HoldingSprite].Player.Team) and
-          (not Thing[TNum].InBase) then
+      if  (Player.Team = Sprite[Thing[ThingNum].HoldingSprite].Player.Team) and
+          (not Thing[ThingNum].InBase) then
       begin
         // X-Distance
         DistToTargetX := CheckDistance(m.x, t.x);
@@ -516,7 +516,7 @@ begin
           Control.Down  := True;
         end;
 
-        if Sprite[Thing[TNum].HoldingSprite].Control.Jetpack then
+        if Sprite[Thing[ThingNum].HoldingSprite].Control.Jetpack then
           Control.Jetpack := True
         else
           Control.Jetpack := False;
