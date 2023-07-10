@@ -21,10 +21,15 @@ unit ScriptDispatcher;
 interface
 
 uses
+  // System units
   Classes,
-  Script,
+  SysUtils,
+
+  // Helper units
   Vector,
-  SysUtils;
+
+  // Project units
+  Script;
 
 
 type
@@ -180,11 +185,14 @@ var
 implementation
 
 uses
+  // System units
+  StrUtils,
+
+  // Project units
   Constants,
+  Game,
   ScriptCore,
   ScriptCore3,
-  StrUtils,
-  Game,
   Server;
 
 

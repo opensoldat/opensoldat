@@ -3,7 +3,17 @@ unit Rcon;
 interface
 
 uses
-  Classes, SysUtils, Sockets, Ssockets, Constants, Net;
+  // System units
+  Classes,
+  SysUtils,
+  Sockets,
+
+  // Library units
+  Ssockets,
+
+  // Project units
+  Constants,
+  Net;
 
 
 const
@@ -104,10 +114,31 @@ type
 implementation
 
 uses
-  {$IFDEF STEAM}Steam,{$ENDIF}
-  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
-  {$IFDEF UNIX}BaseUnix,{$ENDIF}
-  Server, Util, TraceLog, Command, Game, ServerHelper, Cvar, Version, Math;
+  // System units
+  Math,
+  {$IFDEF UNIX}
+    BaseUnix,
+  {$ENDIF}
+
+  // Library units
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Helper units
+  TraceLog,
+  Util,
+  Version,
+
+  // Project units
+  Command,
+  Cvar,
+  Game,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  Server,
+  ServerHelper;
 
 
 {$PUSH}

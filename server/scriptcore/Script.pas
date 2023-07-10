@@ -13,7 +13,15 @@ unit Script;
 interface
 
 uses
-  Classes, syncobjs, SysUtils, Vector;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  syncobjs,
+
+  // Helper units
+  Vector;
 
 
 type
@@ -109,6 +117,7 @@ type
 implementation
 
 uses
+  // Project units
   Game;
 
 

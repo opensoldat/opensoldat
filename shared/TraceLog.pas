@@ -25,7 +25,15 @@ procedure SteamWarning(Severity: Integer; WarnMessage: PAnsiChar); cdecl;
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} sysutils;
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+
+  // System units
+  SysUtils;
 
 
 procedure Debug(const Msg: string);

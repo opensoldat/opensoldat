@@ -3,12 +3,18 @@ unit NetworkServerThing;
 interface
 
 uses
-  // helper units
+  // Library units
+  {$IFDEF SERVER}
+    Steam,
+  {$ENDIF}
+
+  // Helper units
   Vector,
 
-  // OpenSoldat units
-  {$IFDEF SERVER}Steam,{$ENDIF}
-  Net, Sprites, Constants;
+  // Project units
+  Constants,
+  Net,
+  Sprites;
 
 
 {$IFDEF SERVER}
@@ -26,7 +32,18 @@ procedure ServerHandleRequestThing(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  {$IFDEF SERVER}Server, NetworkUtils, Calc, {$ELSE}Client,{$ENDIF} Game, Demo;
+  {$IFDEF SERVER}
+    // Helper units
+    Calc,
+
+    // Project units
+    NetworkUtils,
+    Server,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  Demo,
+  Game;
 
 
 {$IFDEF SERVER}

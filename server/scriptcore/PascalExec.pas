@@ -14,10 +14,15 @@ unit PascalExec;
 interface
 
 uses
-  // general
-  Classes, SysUtils,
-  // pascal script
-  uPSR_dll, uPSR_std, uPSRuntime, uPSUtils;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  uPSR_dll,
+  uPSR_std,
+  uPSRuntime,
+  uPSUtils;
 
 
 // just so that api units doesn't have to import uPSUtils unit

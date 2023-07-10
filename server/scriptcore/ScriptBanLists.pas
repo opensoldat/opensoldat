@@ -15,13 +15,16 @@ unit ScriptBanLists;
 interface
 
 uses
-  BanSystem,
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  BanSystem,
   PascalCompiler,
   PascalExec,
   Server,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
 
 
 type

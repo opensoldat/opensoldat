@@ -13,7 +13,17 @@ unit Sprites;
 interface
 
 uses
-  Parts, Anims, MapFile, PolyMap, Weapons, Constants, Vector, Net;
+  // Helper units
+  Vector,
+
+  // Project units
+  Anims,
+  Constants,
+  MapFile,
+  Net,
+  Parts,
+  PolyMap,
+  Weapons;
 
 
 const
@@ -229,17 +239,43 @@ var
 implementation
 
 uses
+  // System units
+  Calc,
+  Math,
+  SysUtils,
+
+  // Helper units
+  LogFile,
+  TraceLog,
+  Util,
+
+  // Project units
+  Bullets,
+  Control,
   {$IFDEF SERVER}
-  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
-  ServerHelper, LogFile,
-  NetworkServerSprite, NetworkServerMessages, NetworkServerConnection, NetworkServerGame, NetworkServerThing,
-  Server,
+    NetworkServerConnection,
+    NetworkServerGame,
+    NetworkServerMessages,
+    NetworkServerSprite,
+    NetworkServerThing,
+    {$IFDEF SCRIPT}
+      ScriptDispatcher,
+    {$ENDIF}
+    Server,
+    ServerHelper,
   {$ELSE}
-  Sound, Demo, GameStrings, ClientGame, GameMenus, Sparks,
-  NetworkClientSprite,
-  Client,
+    Client,
+    ClientGame,
+    Demo,
+    GameMenus,
+    GameStrings,
+    NetworkClientSprite,
+    Sound,
+    Sparks,
   {$ENDIF}
-  Bullets, Util, SysUtils, Calc, Math, TraceLog, Game, Control, Things, Cvar;
+  Cvar,
+  Game,
+  Things;
 
 
 function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;

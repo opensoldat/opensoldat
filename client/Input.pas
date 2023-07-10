@@ -11,7 +11,17 @@ unit Input;
 interface
 
 uses
-  sysutils, Constants, Weapons, Classes, Strutils, SDL2;
+  // System units
+  Classes,
+  StrUtils,
+  SysUtils,
+
+  // Library units
+  SDL2,
+
+  // Project units
+  Constants,
+  Weapons;
 
 
 type
@@ -69,7 +79,20 @@ var
 
 implementation
 
-uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} GameRendering, typinfo, TraceLog;
+uses
+  // System units
+  TypInfo,
+
+  // Helper units
+  TraceLog,
+
+  // Project units
+  {$IFDEF SERVER}
+  Server,
+  {$ELSE}
+  Client,
+  {$ENDIF}
+  GameRendering;
 
 
 // Used to determine the order binds are tried in, so for example

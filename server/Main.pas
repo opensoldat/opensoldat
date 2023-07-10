@@ -11,16 +11,24 @@ unit Main;
 interface
 
 uses
+  // System units
+  Classes,
+  SysUtils,
   {$IFDEF MSWINDOWS}
-  Windows,
+    Windows,
   {$ELSE}
-  Baseunix,
+    Baseunix,
   {$ENDIF}
 
-  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
+  // Project units
+  Constants,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  Server,
+  ServerHelper,
+  ServerLoop;
 
-
-  Server, Constants, SysUtils, Classes, ServerHelper, ServerLoop;
 
 procedure RunServer;
 

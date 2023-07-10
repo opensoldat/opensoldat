@@ -15,14 +15,17 @@ unit ScriptMapsList;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  Command,
+  Game,
   PascalCompiler,
   PascalExec,
-  Server,
-  Game,
-  Command,
   ScriptCore3Api,
-  SysUtils;
+  Server;
 
 
 type

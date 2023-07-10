@@ -2,7 +2,9 @@ unit BitStream;
 
 interface
 
-uses fgl;
+uses
+  // Library units
+  fgl;
 
 
 type
@@ -53,7 +55,10 @@ type
 
 implementation
 
-uses Math, SysUtils;
+uses
+  // System units
+  Math,
+  SysUtils;
 
 
 ////////////////////////////////////////////////////////////////////////////////

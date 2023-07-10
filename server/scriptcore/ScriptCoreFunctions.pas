@@ -14,11 +14,14 @@ unit ScriptCoreFunctions;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
 
 
 type
@@ -35,14 +38,21 @@ type
 implementation
 
 uses
-  Constants,
-  Weapons,
-  ScriptExceptions,
-  math,
+  // System units
+  Math,
+
+  // Library units
   RegExpr,
-  Server,
+
+  // Helper units
+  Calc,
   Util,
-  Calc;
+
+  // Project units
+  Constants,
+  ScriptExceptions,
+  Server,
+  Weapons;
 
 
 procedure SWriteLn(Text: string);

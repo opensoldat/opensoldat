@@ -5,7 +5,15 @@ unit ScriptMath;
 interface
 
 uses
-  Classes, SysUtils, Math, ScriptCore3Api, PascalCompiler, PascalExec;
+  // System units
+  Classes,
+  Math,
+  SysUtils,
+
+  // Project units
+  PascalCompiler,
+  PascalExec,
+  ScriptCore3Api;
 
 
 type

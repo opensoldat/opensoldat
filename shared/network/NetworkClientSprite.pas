@@ -3,15 +3,23 @@ unit NetworkClientSprite;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+
+  // Helper units
   Vector,
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Weapons, Sound,
-  Constants, GameStrings;
+  // Project units
+  Constants,
+  GameStrings,
+  Net,
+  Sound,
+  Sprites,
+  Weapons;
 
 
 procedure ClientHandleServerSpriteSnapshot(NetMessage: PSteamNetworkingMessage_t);
@@ -31,7 +39,17 @@ procedure ClientHandleClientSpriteSnapshot_Dead(NetMessage: PSteamNetworkingMess
 implementation
 
 uses
-  Client, NetworkUtils, Game, Demo, ClientGame, Sparks, GameMenus, TraceLog;
+  // Helper units
+  TraceLog,
+
+  // Project units
+  Client,
+  ClientGame,
+  Demo,
+  Game,
+  GameMenus,
+  NetworkUtils,
+  Sparks;
 
 
 var

@@ -12,13 +12,16 @@ unit ScriptWeapon;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   NetworkServerFunctions,
   PascalCompiler,
   PascalExec,
-  Sprites,
   ScriptCore3Api,
-  SysUtils,
+  Sprites,
   Weapons;
 
 

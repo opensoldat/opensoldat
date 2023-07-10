@@ -11,12 +11,39 @@ unit UpdateFrame;
 interface
 
 uses
-  {$IFDEF STEAM}Steam,{$ENDIF}
-  Sound, Demo, Classes, GameStrings, GameRendering, Sprites, Vector, Weapons, Net,
-  NetworkClientConnection, Constants,
-  Polymap, Game, Client, Util, SysUtils, Calc, LogFile, WeatherEffects, Sparks
-  {$IFDEF ENABLE_FAE}, FaeClient{$ENDIF}
-  ;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  {$IFDEF ENABLE_FAE}
+    FaeClient,
+  {$ENDIF}
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Helper units
+  Calc,
+  LogFile,
+  Util,
+  Vector,
+
+  // Project units
+  Client,
+  Constants,
+  Demo,
+  Game,
+  GameRendering,
+  GameStrings,
+  Net,
+  NetworkClientConnection,
+  Polymap,
+  Sound,
+  Sparks,
+  Sprites,
+  Weapons,
+  WeatherEffects;
 
 
 procedure Update_Frame;
@@ -25,7 +52,10 @@ procedure Update_Frame;
 implementation
 
 uses
-  ClientGame, InterfaceGraphics, GameMenus;
+  // Project units
+  ClientGame,
+  GameMenus,
+  InterfaceGraphics;
 
 
 var

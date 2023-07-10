@@ -3,7 +3,12 @@ unit MapFile;
 interface
 
 uses
-  Vector, Waypoints, Util;
+  // Helper units
+  Util,
+  Vector,
+
+  // Project units
+  Waypoints;
 
 
 type
@@ -96,7 +101,20 @@ function IsPropActive(var Map: TMapFile; Index: Integer): Boolean;
 
 implementation
 
-uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, PolyMap, PhysFS; // for constants
+uses
+  // System units
+  SysUtils,
+
+  // Library units
+  PhysFS,
+
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  PolyMap;
 
 
 {******************************************************************************}

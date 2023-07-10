@@ -3,18 +3,25 @@ unit NetworkServerSprite;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+
+  // Helper units
   Vector,
 
+  // Project units
+  Constants,
+  Net,
+  PolyMap,
   {$IFDEF SCRIPT}
-  ScriptDispatcher,
+    ScriptDispatcher,
   {$ENDIF}
-
-  // OpenSoldat units
-  Steam, Net, Sprites, Weapons, Constants, PolyMap;
+  Sprites,
+  Weapons;
 
 
 procedure ServerSpriteSnapshot(r: Byte);
@@ -41,7 +48,11 @@ var
 implementation
 
 uses
-  Server, NetworkUtils, Game, Demo;
+  // Project units
+  Demo,
+  Game,
+  NetworkUtils,
+  Server;
 
 
 // SERVER SNAPSHOT

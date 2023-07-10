@@ -5,12 +5,15 @@ unit ScriptSpawnPoint;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  MapFile,
   PascalCompiler,
   PascalExec,
-  MapFile,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
 
 
 type

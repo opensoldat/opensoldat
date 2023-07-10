@@ -11,24 +11,37 @@ unit Net;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes, fgl, {$IFDEF DEVELOPMENT}Util,{$ENDIF}
+  // System units
+  Classes,
+  fgl,
+  SysUtils,
 
-  // helper units
-  Vector, Sha1,
-
-  // anti-cheat
-  {$IFDEF SERVER}
-    {$IFDEF ENABLE_FAE}FaeBase, FaeRemoteAttestation, NetworkServerFae,{$ENDIF}
-  {$ELSE}
-    {$IFDEF ENABLE_FAE}FaeBase, FaeRemoteAttestation, NetworkClientFae,{$ENDIF}
-    GameRendering,
+  // Library units
+  sha1,
+  Steam,
+  {$IFDEF ENABLE_FAE}
+    // Anti-Cheat
+    FaeBase,
+    FaeRemoteAttestation,
+    {$IFDEF SERVER}
+      NetworkServerFae,
+    {$ELSE}
+      NetworkClientFae,
+    {$ENDIF}
   {$ENDIF}
 
-  Steam,
+  // Helper units
+  {$IFDEF DEVELOPMENT}
+    Util,
+  {$ENDIF}
+  Vector,
 
-  // OpenSoldat units
-  Weapons, Constants;
+  // Project units
+  Constants,
+  {$IFNDEF SERVER}
+    GameRendering,
+  {$ENDIF}
+  Weapons;
 
 
 const
@@ -867,17 +880,32 @@ var
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Game, TraceLog, Demo,
-  {$IFNDEF SERVER}
-  NetworkClientSprite, NetworkClientConnection, NetworkClientThing,
-  NetworkClientGame, NetworkClientFunctions, NetworkClientHeartbeat,
-  NetworkClientMessages, NetworkClientBullet
+  // Helper units
+  TraceLog,
+
+  // Project units
+  {$IFDEF SERVER}
+    NetworkServerBullet,
+    NetworkServerConnection,
+    NetworkServerFunctions,
+    NetworkServerGame,
+    NetworkServerMessages,
+    NetworkServerSprite,
+    NetworkServerThing,
+    Server,
   {$ELSE}
-  NetworkServerSprite, NetworkServerThing, NetworkServerMessages,
-  NetworkServerBullet, NetworkServerConnection, NetworkServerGame,
-  NetworkServerFunctions
+    Client,
+    NetworkClientBullet,
+    NetworkClientConnection,
+    NetworkClientFunctions,
+    NetworkClientGame,
+    NetworkClientHeartbeat,
+    NetworkClientMessages,
+    NetworkClientSprite,
+    NetworkClientThing,
   {$ENDIF}
-  ;
+  Demo,
+  Game;
 
 
 procedure ProcessEventsCallback(pInfo: PSteamNetConnectionStatusChangedCallback_t); cdecl;

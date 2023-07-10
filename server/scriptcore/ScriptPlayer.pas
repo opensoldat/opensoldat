@@ -14,16 +14,21 @@ unit ScriptPlayer;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Helper units
+  Vector,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   ScriptCore3Api,
   ScriptObject,
   ScriptWeapon,
   Sprites,
-  Things,
-  SysUtils,
-  Vector;
+  Things;
 
 
 type
@@ -358,16 +363,17 @@ type
 implementation
 
 uses
+  // Project units
+  Command,
   Constants,
+  Game,
   Net,
   NetworkServerFunctions,
   NetworkServerMessages,
   NetworkServerThing,
   NetworkUtils,
-  ServerHelper,
   Server,
-  Command,
-  Game,
+  ServerHelper,
   Weapons;
 
 

@@ -3,31 +3,32 @@ unit NetworkClientConnection;
 interface
 
 uses
-  // delphi and system units
-  SysUtils,
+  // System units
   Classes,
+  SysUtils,
 
-  // helper units
-  Vector,
-  Util,
-  Version,
-  BitStream,
-
-  // anti-cheat units
+  // Library units
   {$IFDEF ENABLE_FAE}
-  FaeClient,
+    // Anti-Cheat
+    FaeClient,
   {$ENDIF}
-
-  // OpenSoldat units
-  LogFile,
+  PhysFS,
   Steam,
+
+  // Helper units
+  BitStream,
+  LogFile,
+  Util,
+  Vector,
+  Version,
+
+  // Project units
+  Constants,
+  Cvar,
+  GameStrings,
   Net,
   Sprites,
-  Weapons,
-  Constants,
-  GameStrings,
-  Cvar,
-  PhysFS;
+  Weapons;
 
 
 procedure ClientRequestGame;
@@ -45,8 +46,24 @@ procedure ClientHandleSyncCvars(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  GameRendering, Client, Game, Demo, ClientGame, GameMenus, strutils,
-  NetworkUtils, NetworkClientSprite, FileClient, Sha1, Anims, Sound;
+  // System units
+  StrUtils,
+
+  // Library units
+  sha1,
+
+  // Project units
+  Anims,
+  Client,
+  ClientGame,
+  Demo,
+  FileClient,
+  Game,
+  GameMenus,
+  GameRendering,
+  NetworkClientSprite,
+  NetworkUtils,
+  Sound;
 
 
 // REQUEST GAME FROM SERVER

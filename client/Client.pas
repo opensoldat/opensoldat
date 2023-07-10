@@ -11,60 +11,55 @@ unit Client;
 interface
 
 uses
-  // system and delphi units
+  // System units
+  Classes,
+  Math,
   {$IFDEF MSWINDOWS}
   MMSystem,
   {$ENDIF}
   SysUtils,
-  Classes,
-  Math,
   Variants,
-  sha1,
-       
-  // SDL2
-  SDL2,
-  {$IFDEF STEAM}
-  // Steam
-  Steam,
-  {$ENDIF}
-  // PhysFS
-  PhysFS,
 
-  // graphics units
-  Gfx,
-
-  // helper units
-  Version,
-  Vector,
-  Util,
-  GameStrings,
-  FileClient,
-
-  // Cvar
-  Cvar, Command, ClientCommands,
-
-  // anti-cheat units
+  // Library units
   {$IFDEF ENABLE_FAE}
+  // Anti-Cheat
   FaeClient,
   {$ENDIF}
+  PhysFS,
+  SDL2,
+  sha1,
+  {$IFDEF STEAM}
+  Steam,
+  {$ENDIF}
 
-  // OpenSoldat units
-  Sprites,
+  // Helper units
+  Util,
+  Vector,
+  Version,
+
+  // Project units
   Anims,
-  PolyMap,
-  Net,
-  LogFile,
-  Sound,
-  GetText,
-  NetworkClientConnection,
-  GameMenus,
-  Demo,
+  ClientCommands,
+  ClientLauncherIPC,
+  Command,
   Console,
-  Weapons,
   Constants,
+  Cvar,
+  Demo,
+  FileClient,
   Game,
+  GameMenus,
   GameRendering,
-  ClientLauncherIPC;
+  GameStrings,
+  GetText,
+  Gfx,
+  LogFile,
+  Net,
+  NetworkClientConnection,
+  PolyMap,
+  Sound,
+  Sprites,
+  Weapons;
 
 
 procedure JoinServer;
@@ -331,12 +326,17 @@ var
 implementation
 
 uses
+  // Library units
   IniFiles,
+
+  // Helper units
   TraceLog,
+
+  // Project units
   ClientGame,
   ControlGame,
-  InterfaceGraphics,
-  Input;
+  Input,
+  InterfaceGraphics;
 
 
 procedure RestartGraph;

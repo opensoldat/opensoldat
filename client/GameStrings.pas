@@ -11,7 +11,12 @@ unit GameStrings;
 interface
 
 uses
-  GetText, Classes, PhysFS;
+  // System units
+  Classes,
+
+  // Library units
+  GetText,
+  PhysFS;
 
 var
   TranslationFile: TMOFile;

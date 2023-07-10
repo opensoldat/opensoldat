@@ -3,10 +3,13 @@ unit MapGraphics;
 interface
 
 uses
-  Gfx,
-  MapFile,
+  // Helper units
+  Util,
   Vector,
-  Util;
+
+  // Project units
+  Gfx,
+  MapFile;
 
 
 type
@@ -50,17 +53,19 @@ procedure SetTextureFilter(Texture: TGfxTexture; AllowMipmaps: Boolean);
 implementation
 
 uses
-  SysUtils,
+  // System units
   Math,
-         
+  SysUtils,
+
+  // Library units
   PhysFS,
 
-  PolyMap,
-
+  // Project units
   Client,
   ClientGame,
   Game,
-  GameRendering;
+  GameRendering,
+  PolyMap;
 
 
 function LoadMapTexture(TexName: string; ColorKey: TGfxColor): TGfxImage;

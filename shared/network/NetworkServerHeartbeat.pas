@@ -3,11 +3,15 @@ unit NetworkServerHeartbeat;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // OpenSoldat units
-  Net, Sprites, Weapons, Constants;
+  // Project units
+  Constants,
+  Net,
+  Sprites,
+  Weapons;
 
 
 procedure ServerHeartbeat;
@@ -16,7 +20,13 @@ procedure ServerHeartbeat;
 implementation
 
 uses
-  Server, Game, Demo, Steam;
+  // Library units
+  Steam,
+
+  // Project units
+  Demo,
+  Game,
+  Server;
 
 
 // HEARTBEAT

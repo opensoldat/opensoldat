@@ -12,7 +12,9 @@ unit ScriptExceptions;
 interface
 
 uses
-  Classes, SysUtils;
+  // System units
+  Classes,
+  SysUtils;
 
 
 // those types do not begin with "T" because Exception class clearly doesn't.

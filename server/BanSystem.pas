@@ -3,6 +3,7 @@ unit BanSystem;
 interface
 
 uses
+  // Project units
   Constants;
 
 
@@ -48,7 +49,16 @@ var
 implementation
 
 uses
-  Server, fpmasks, classes, sysutils, ServerHelper;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  FPMasks,
+
+  // Project units
+  Server,
+  ServerHelper;
 
 
 procedure AddBannedIP(IP: ShortString; Reason: string;

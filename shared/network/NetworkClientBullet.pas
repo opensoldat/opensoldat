@@ -3,14 +3,23 @@ unit NetworkClientBullet;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes, Math,
+  // System units
+  Classes,
+  Math,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+  // Helper units
   Vector,
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Weapons, Constants, NetworkServerBullet, Demo;
+  // Project units
+  Constants,
+  Demo,
+  Net,
+  NetworkServerBullet,
+  Sprites,
+  Weapons;
 
 
 procedure ClientSendBullet(i: Byte);
@@ -20,7 +29,11 @@ procedure ClientHandleBulletSnapshot(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Client, Game, Bullets, NetworkUtils;
+  // Project units
+  Bullets,
+  Client,
+  Game,
+  NetworkUtils;
 
 
 var

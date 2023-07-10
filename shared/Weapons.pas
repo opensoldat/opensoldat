@@ -162,7 +162,14 @@ function WeaponNumExternalToInternal(Num: Byte): Byte;
 implementation
 
 uses
-  TraceLog, Constants, SysUtils;
+  // System units
+  SysUtils,
+
+  // Helper units
+  TraceLog,
+
+  // Project units
+  Constants;
 
 
 procedure CreateWeapons(RealisticMode: Boolean);

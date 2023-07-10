@@ -5,7 +5,10 @@ unit ScriptCore3Api;
 interface
 
 uses
+  // System units
   Classes,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   Script;
@@ -29,7 +32,9 @@ type
 implementation
 
 uses
+  // Project units
   ScriptCore3;
+
 
 {$push}{$warn 5024 off}
 constructor TScriptCore3API.Create(Script: TScript);

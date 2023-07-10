@@ -14,15 +14,20 @@ unit ScriptPlayers;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Library units
+  fgl,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   ScriptCore3Api,
   ScriptPlayer,
   Sprites,
-  Things,
-  fgl,
-  SysUtils;
+  Things;
 
 
 type
@@ -65,15 +70,18 @@ type
 implementation
 
 uses
-  Constants,
+  // Helper units
   Vector,
+
+  // Project units
+  Constants,
+  Game,
   Net,
-  NetworkServerMessages,
   NetworkServerConnection,
+  NetworkServerMessages,
   ScriptDispatcher,
-  ServerHelper,
   Server,
-  Game;
+  ServerHelper;
 
 
 constructor TScriptPlayers.Create;

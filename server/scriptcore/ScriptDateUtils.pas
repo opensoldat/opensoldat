@@ -14,11 +14,14 @@ unit ScriptDateUtils;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
 
 
 type
@@ -32,6 +35,7 @@ type
 implementation
 
 uses
+  // Library units
   DateUtils;
 
 

@@ -25,6 +25,7 @@ unit Parts;
 interface
 
 uses
+  // Helper units
   Vector;
 
 
@@ -73,7 +74,14 @@ type
 implementation
 
 uses
-  Game, SysUtils, PhysFS;
+  // System units
+  SysUtils,
+
+  // Library units
+  PhysFS,
+
+  // Project units
+  Game;
 
 
 procedure ParticleSystem.DoVerletTimeStep;

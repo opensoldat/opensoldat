@@ -14,12 +14,15 @@ unit ScriptUnit;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   Script,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
 
 
 type
@@ -68,6 +71,7 @@ type
 implementation
 
 uses
+  // Project units
   ScriptCore3,
   ScriptExceptions;
 

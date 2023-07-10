@@ -26,8 +26,26 @@ procedure DoBalanceBots(LeftGame: Byte; NewTeam: Byte);
 implementation
 
 uses
-  Server, sysutils, strutils, classes, Cvar, Game, Net, Sprites, Constants, Util, Weapons,
-  TraceLog, NetworkServerMessages, BanSystem, Command;
+  // System units
+  Classes,
+  StrUtils,
+  SysUtils,
+
+  // Helper units
+  TraceLog,
+  Util,
+
+  // Project units
+  Constants,
+  Cvar,
+  Server,
+  Game,
+  Net,
+  Sprites,
+  Weapons,
+  NetworkServerMessages,
+  BanSystem,
+  Command;
 
 
 procedure WriteLn(S: Variant); overload;

@@ -14,10 +14,16 @@ unit PascalCompiler;
 interface
 
 uses
-  // general
-  Classes, SysUtils,
-  // pascal script
-  uPSC_dll, uPSCompiler, uPSC_std, uPSPreProcessor, uPSUtils;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  uPSC_dll,
+  uPSC_std,
+  uPSCompiler,
+  uPSPreProcessor,
+  uPSUtils;
 
 
 // just so that api units doesn't have to import uPSCompiler unit

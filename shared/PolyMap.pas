@@ -2,7 +2,14 @@ unit PolyMap;
 
 interface
 
-uses MapFile, Waypoints, Vector, Util;
+uses
+  // Helper units
+  Util,
+  Vector,
+
+  // Project units
+  MapFile,
+  Waypoints;
 
 
 const
@@ -118,11 +125,24 @@ procedure CheckOutOfBounds(var x: SmallInt; var y: SmallInt); overload;
 implementation
 
 uses
+  // System units
   {$IFNDEF SERVER}
-  Classes, SysUtils,
+    Classes,
+    SysUtils,
   {$ENDIF}
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF}
-  Math, Calc, Game, Constants;
+  Math,
+
+  // Helper units
+  Calc,
+
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  Constants,
+  Game;
 
 
 procedure TPolyMap.Initialize();

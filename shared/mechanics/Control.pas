@@ -11,13 +11,47 @@ unit Control;
 interface
 
 uses
+  // System units
+  Math,
+  SysUtils,
+
+  // Helper units
+  Calc,
+  Util,
+  Vector,
+
+  // Library units
   {$IFNDEF SERVER}
-  SDL2, Sound, Demo, ClientGame, Input, GameMenus, Sparks,
+    SDL2,
   {$ENDIF}
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Util, SysUtils, Calc, Math, Game, Sprites, Bullets,
-  Vector, Weapons, Constants, Net
-  {$IFDEF SERVER}, NetworkServerGame, NetworkServerSprite, AI {$ENDIF}
-  {$IFNDEF SERVER}, NetworkClientMessages, NetworkClientSprite, NetworkClientGame{$ENDIF};
+
+  // Project units
+  {$IFDEF SERVER}
+    AI,
+    NetworkServerGame,
+    NetworkServerSprite,
+  {$ELSE}
+    NetworkClientGame,
+    NetworkClientMessages,
+    NetworkClientSprite,
+  {$ENDIF}
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+    ClientGame,
+    Demo,
+    GameMenus,
+    Input,
+    Sound,
+    Sparks,
+  {$ENDIF}
+  Bullets,
+  Constants,
+  Game,
+  Net,
+  Sprites,
+  Weapons;
 
 
   procedure ControlSprite(var SpriteC: TSprite);

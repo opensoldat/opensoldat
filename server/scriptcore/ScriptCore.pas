@@ -13,12 +13,19 @@ unit ScriptCore;
 interface
 
 uses
-  Classes, PascalCore, ScriptCoreInterface, syncobjs,
-  // pascal script units
+  // System units
+  Classes,
+  syncobjs,
   SysUtils,
-  // critical section
-  uPSComponent, uPSRuntime, uPSUtils;
-  // scriptcore units
+
+  // Library units
+  uPSComponent,
+  uPSRuntime,
+  uPSUtils,
+
+  // Project units
+  PascalCore,
+  ScriptCoreInterface;
 
 
 type
@@ -103,16 +110,17 @@ function CheckFunction(Dir: string): TScriptCore;
 implementation
 
 uses
-  Net,
-  NetworkUtils,
-  // OnScriptCrash var
-  ScriptDispatcher, strutils,
-  // Main tick counter
-  Server,
-  Game,
+  // System units
+  StrUtils,
+
+  // Project units
   Command,
   Constants,
-  //OnPlayerKill
+  Game,
+  Net,
+  NetworkUtils,
+  ScriptDispatcher,
+  Server,
   Weapons;
 
 

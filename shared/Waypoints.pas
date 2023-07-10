@@ -38,7 +38,11 @@ type
 implementation
 
 uses
-  Calc, SysUtils;
+  // System units
+  SysUtils,
+
+  // Helper units
+  Calc;
 
 
 function TWaypoints.FindClosest(X, Y: Single; Radius, CurrWaypoint: Integer):

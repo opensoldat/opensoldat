@@ -14,35 +14,42 @@ unit ScriptCore3;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Library units
   IniFiles,
+
+  // Helper units
+  Vector,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   Script,
+  ScriptBanLists,
+  ScriptBullet,
   ScriptCore3Api,
   ScriptCoreAPIAdapter,
   ScriptCoreFunctions,
-  ScriptMath,
   ScriptDateUtils,
   {$IFDEF SCRIPT_FFI_FUZZ}
-  ScriptFFITests,
+    ScriptFFITests,
   {$ENDIF}
   ScriptFileAPI,
   ScriptGame,
+  ScriptGlobal,
   ScriptMap,
+  ScriptMapsList,
+  ScriptMath,
   ScriptObject,
-  ScriptBullet,
   ScriptPlayer,
   ScriptPlayers,
   ScriptSpawnPoint,
   ScriptTeam,
-  ScriptMapsList,
-  ScriptBanLists,
   ScriptUnit,
-  ScriptGlobal,
-  ScriptWeapon,
-  SysUtils,
-  Vector;
+  ScriptWeapon;
 
 
 type
@@ -167,13 +174,14 @@ function CheckFunction(Dir: string): TScriptCore3;
 implementation
 
 uses
+  // Project units
+  Game,
   Net,
   NetworkUtils,
-  Server,
-  Game,
   PascalDebugger,
   ScriptDispatcher,
   ScriptExceptions,
+  Server,
   Variants;
 
 

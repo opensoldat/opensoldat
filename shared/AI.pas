@@ -11,6 +11,7 @@ unit AI;
 interface
 
 uses
+  // Project units
   Sprites;
 
 
@@ -36,16 +37,19 @@ procedure ControlBot(var SpriteC: TSprite);
 implementation
 
 uses
+  // Helper units
+  Calc,
   Vector,
-  Net,
-  Server,
-  Game,
-  Weapons,
-  Constants,
+
+  // Project units
   Bullets,
-  Waypoints,
+  Constants,
+  Game,
+  Net,
   NetworkServerMessages,
-  Calc;
+  Server,
+  Waypoints,
+  Weapons;
 
 
 // Checks the distance on one axis

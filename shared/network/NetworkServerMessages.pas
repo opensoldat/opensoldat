@@ -3,18 +3,24 @@ unit NetworkServerMessages;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+
+  // Helper units
   Util,
 
+  // Project units
+  Command,
+  Constants,
+  Net,
   {$IFDEF SCRIPT}
-  ScriptDispatcher,
+    ScriptDispatcher,
   {$ENDIF}
-
-  // OpenSoldat units
-  Net, Steam, Sprites, Command, Constants;
+  Sprites;
 
 
   procedure ServerSendStringMessage(Text: WideString; ToNum: Byte; From: Byte; MsgType: Byte);
@@ -27,7 +33,10 @@ uses
 implementation
 
 uses
-  Server, Game, Demo;
+  // Project units
+  Demo,
+  Game,
+  Server;
 
 
 procedure ServerSendStringMessage(Text: WideString; ToNum: Byte; From: Byte; MsgType: Byte);

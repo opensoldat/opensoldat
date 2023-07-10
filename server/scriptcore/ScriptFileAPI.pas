@@ -14,18 +14,23 @@ unit ScriptFileAPI;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Library units
   IniFiles,
+  RegExpr,
+  uPSC_classes,
+  uPSR_classes,
+
+  // Project units
   PascalCompiler,
   PascalExec,
-  RegExpr,
   Script,
   ScriptCore3Api,
   ScriptExceptions,
-  SysUtils,
-  Server,
-  uPSC_classes,
-  uPSR_classes;
+  Server;
 
 
 type
@@ -118,6 +123,7 @@ type
 implementation
 
 uses
+  // Project units
   ScriptCore3;
 
 

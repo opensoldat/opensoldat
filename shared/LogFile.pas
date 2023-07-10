@@ -11,7 +11,9 @@ unit LogFile;
 interface
 
 uses
-  SyncObjs, Classes;
+  // System units
+  Classes,
+  SyncObjs;
 
 
 procedure NewLogFile(var F: TStringList; Name: string);
@@ -32,12 +34,21 @@ var
 implementation
 
 uses
+  // System units
+  SysUtils,
+
+  // Helper units
+  TraceLog,
+
+  // Project units
   {$IFDEF SERVER}
-  Server,
+    Server,
   {$ELSE}
-  Util, Client,
+    Client,
+    Util,
   {$ENDIF}
-  SysUtils, Constants, TraceLog, Cvar;
+  Constants,
+  Cvar;
 
 
 procedure NewLogFile(var F: TStringList; Name: string);

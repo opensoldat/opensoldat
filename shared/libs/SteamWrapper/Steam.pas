@@ -11,7 +11,9 @@ unit Steam;
 interface
 
 uses
-  ctypes, sysutils;
+  // System units
+  ctypes,
+  SysUtils;
 
 
 {$PACKENUM 4}

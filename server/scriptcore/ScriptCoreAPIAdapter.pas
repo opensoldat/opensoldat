@@ -5,13 +5,16 @@ unit ScriptCoreAPIAdapter;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   Script,
   ScriptCore3Api,
-  ScriptCoreInterface,
-  SysUtils;
+  ScriptCoreInterface;
 
 
 type
@@ -70,25 +73,32 @@ type
 implementation
 
 uses
+  // System units
+  Math,
+  StrUtils,
+
+  // Library units
+  FPMasks,
+
+  // Helper units
   Calc,
+  Util,
+  Version,
+
+  // Project units
   Constants,
-  fpmasks,
-  math,
   Net,
   NetworkServerFunctions,
   NetworkUtils,
   ScriptCore3,
   ScriptDispatcher,
+  Server,
   ServerHelper,
   Sprites,
-  strutils,
   {$IFDEF RCON}
-  Rcon,
+    Rcon,
   {$ENDIF}
-  Server,
   Game,
-  Util,
-  Version,
   Weapons;
 
 

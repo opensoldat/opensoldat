@@ -3,11 +3,22 @@ unit NetworkClientHeartbeat;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // OpenSoldat units
-  LogFile, Steam, Net, Sprites, Sound, Constants, GameStrings;
+  // Library units
+  Steam,
+
+  // Helper units
+  LogFile,
+
+  // Project units
+  Constants,
+  GameStrings,
+  Net,
+  Sound,
+  Sprites;
 
 
 procedure ClientHandleHeartBeat(NetMessage: PSteamNetworkingMessage_t);
@@ -16,7 +27,12 @@ procedure ClientHandleHeartBeat(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Client, NetworkUtils, NetworkClientConnection, Game, Demo;
+  // Project units
+  Client,
+  Demo,
+  Game,
+  NetworkClientConnection,
+  NetworkUtils;
 
 
 procedure ClientHandleHeartBeat(NetMessage: PSteamNetworkingMessage_t);

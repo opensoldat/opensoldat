@@ -5,7 +5,12 @@ interface
 {$WARN 5071 OFF : Private type "$1.$2" never used}
 
 uses
-  Classes, Generics.Collections, ssockets;
+  // System units
+  Classes,
+  Generics.Collections,
+
+  // Library units
+  ssockets;
 
 
 type
@@ -37,9 +42,15 @@ type
 implementation
 
 uses
-  TraceLog, SysUtils,
-  // These 2 give us a convenient way to access socket/system error codes
-  {$IFDEF UNIX}BaseUnix,{$ENDIF} Sockets;
+  // System units
+  {$IFDEF UNIX}
+    BaseUnix,
+  {$ENDIF}
+  Sockets,
+  SysUtils,
+
+  // Helper units
+  TraceLog;
 
 
 const

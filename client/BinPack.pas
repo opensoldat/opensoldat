@@ -22,6 +22,7 @@ type
 
 function PackRects(w, h: Integer; var Rects: TBPRectArray): Integer;
 
+
 implementation
 
 // Internal types

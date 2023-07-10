@@ -12,13 +12,16 @@ unit Sound;
 interface
 
 uses
+  // Library units
   {$IFDEF STEAM}
   fgl,
   {$ENDIF}
-  SDL2,
-  Vector,
   openal,
-  PhysFS;
+  PhysFS,
+  SDL2,
+
+  // Helper units
+  Vector;
 
 
 type
@@ -76,13 +79,15 @@ procedure PlayVoiceData(Data: Pointer; DataLength: Word; SpriteNum: Byte);
 implementation
 
 uses
-  SysUtils,
+  // System units
   Math,
-         
+  SysUtils,
+
+  // Project units
   Client,
-  LogFile,
   Constants,
-  Game;
+  Game,
+  LogFile;
 
 
 function InitSound(): Boolean;

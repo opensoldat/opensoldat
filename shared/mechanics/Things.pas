@@ -3,7 +3,18 @@ unit Things;
 interface
 
 uses
-  Parts, Anims, MapFile, PolyMap, Net, Weapons, Constants, Vector, Sprites;
+  // Helper units
+  Vector,
+
+  // Project units
+  Parts,
+  Anims,
+  MapFile,
+  PolyMap,
+  Net,
+  Weapons,
+  Constants,
+  Sprites;
 
 
   type TThingCollision = object
@@ -55,21 +66,39 @@ uses
   function SpawnBoxes(var Start: TVector2; Team: Byte; Num: Byte): Boolean;
   function RandomizeStart(var Start: TVector2; Team: Byte): Boolean;
 
+implementation
 
-  implementation
+uses
+  // System units
+  SysUtils,
 
-  uses
-    {$IFNDEF SERVER}
-    Gfx, Sound, GameRendering, Sparks,
-    {$ELSE}
-      {$IFDEF SCRIPT}
+  // Helper units
+  Calc,
+  TraceLog,
+
+  // Project units
+  {$IFNDEF SERVER}
+    GameRendering,
+    Gfx,
+    Sound,
+    Sparks,
+  {$ELSE}
+    {$IFDEF SCRIPT}
       ScriptDispatcher,
-      {$ENDIF}
     {$ENDIF}
-    {$IFDEF SERVER}
-    NetworkServerThing, NetworkServerMessages, NetworkServerGame,
-    {$ENDIF}
-    {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, Calc, TraceLog, Game, Bullets;
+  {$ENDIF}
+  {$IFDEF SERVER}
+    NetworkServerGame,
+    NetworkServerMessages,
+    NetworkServerThing,
+  {$ENDIF}
+  {$IFDEF SERVER}
+  Server,
+  {$ELSE}
+  Client,
+  {$ENDIF}
+  Bullets,
+  Game;
 
 
 function CreateThing(sPos: TVector2; owner, sStyle, N: Byte):

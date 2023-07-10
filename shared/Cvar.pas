@@ -3,16 +3,18 @@ unit Cvar;
 interface
 
 uses
-  // delphi and system units
+  // System units
   Classes,
   Contnrs,
   SysUtils,
   Variants,
 
-  // helper units
+  // Helper units
+  Util,
+
+  // Project units
   Command,
-  Constants,
-  Util;
+  Constants;
 
 
 {
@@ -160,18 +162,21 @@ var
 implementation
 
 uses
-{$IFDEF SERVER}
-  Server,
-{$ELSE}
-  Client,
-{$ENDIF}
-  TraceLog,
+  // System units
   Math,
+
+  // Helper units
+  TraceLog,
+
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+    Demo,
+    Sound,
+  {$ENDIF}
   Game,
-{$IFNDEF SERVER}
-  Sound,
-  Demo,
-{$ENDIF}
   Things;
 
 

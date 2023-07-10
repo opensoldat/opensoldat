@@ -3,8 +3,18 @@ unit Bullets;
 interface
 
 uses
-  Parts, MapFile, PolyMap, Net, Weapons, Constants,
-  Vector, Sprites, Things;
+  // Helper units
+  Vector,
+
+  // Project units
+  Constants,
+  MapFile,
+  Net,
+  Parts,
+  PolyMap,
+  Sprites,
+  Things,
+  Weapons;
 
 
 type TBullet = object
@@ -82,16 +92,35 @@ const
   function BulletCanSend(X, Y: Single; i: Integer; vX: Single): Boolean;
 
 
-  implementation
+implementation
 
-  uses
-    {$IFNDEF SERVER}
-    Gfx, Sound, GameRendering, Sparks, Util,
-    NetworkClientBullet, Demo, ClientGame,
-    {$ELSE}
+uses
+  // System units
+  Math,
+  SysUtils,
+
+  // Helper units
+  Calc,
+  TraceLog,
+  {$IFNDEF SERVER}
+    Util,
+  {$ENDIF}
+
+  // Project units
+  {$IFDEF SERVER}
     NetworkServerBullet,
-    {$ENDIF}
-    {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, Calc, Math, Game, TraceLog;
+    Server,
+  {$ELSE}
+    Client,
+    ClientGame,
+    Demo,
+    GameRendering,
+    Gfx,
+    NetworkClientBullet,
+    Sound,
+    Sparks,
+  {$ENDIF}
+  Game;
 
 
 function CreateBullet(sPos, sVelocity: TVector2; sNum: Byte;

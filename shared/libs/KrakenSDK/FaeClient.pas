@@ -11,7 +11,9 @@ unit FaeClient;
 
 interface
 
-uses FaeBase;
+uses
+  // Library units
+  FaeBase;
 
 
 const

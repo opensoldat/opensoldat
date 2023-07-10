@@ -14,7 +14,16 @@ unit ScriptGame;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Helper units
+  Version,
+
+  // Project units
+  Command,
+  Cvar,
   Net,
   NetworkServerGame,
   PascalCompiler,
@@ -25,13 +34,9 @@ uses
   ScriptTeam,
   ScriptMapsList,
   ScriptBanLists,
-  SysUtils,
   Server,
   Game,
-  Command,
-  Cvar,
-  Demo,
-  Version;
+  Demo;
 
 
 type
@@ -196,6 +201,7 @@ type
 implementation
 
 uses
+  // Project units
   ScriptCore3,
   ScriptPlayers;
 

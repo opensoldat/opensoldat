@@ -49,9 +49,31 @@ function GameMenuClick(): Boolean;
 implementation
 
 uses
-  SDL2, SysUtils, Client, Weapons, Game, GameStrings, ClientGame, Sound, InterfaceGraphics,
-  Constants, Net, NetworkClientConnection, NetworkClientSprite, Sprites, Cvar,
-  NetworkClientGame, NetworkClientMessages{$IFDEF STEAM}, Steam{$ENDIF};
+  // System units
+  SysUtils,
+
+  // Library units
+  SDL2,
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Project units
+  Client,
+  ClientGame,
+  Constants,
+  Cvar,
+  Game,
+  GameStrings,
+  InterfaceGraphics,
+  Net,
+  NetworkClientConnection,
+  NetworkClientGame,
+  NetworkClientMessages,
+  NetworkClientSprite,
+  Sound,
+  Sprites,
+  Weapons;
 
 
 var

@@ -1,7 +1,14 @@
 unit PhysFS;
 
 interface
-  uses sysutils, Classes, TraceLog;
+
+uses
+  // System units
+  SysUtils,
+  Classes,
+
+  // Helper units
+  TraceLog;
 
 
 const

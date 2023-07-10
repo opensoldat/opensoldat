@@ -18,13 +18,19 @@ unit ScriptCoreInterface;
 interface
 
 uses
-  // general
-  Classes, SysUtils, Util,
-  // other
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  uPSComponent,
+  uPSRuntime,
+
+  // Helper units
+  Util,
   Vector,
-  // pascal script
-  uPSComponent, uPSRuntime,
-  // OpenSoldat
+
+  // Project units
   PascalCore;
 
 
@@ -104,16 +110,46 @@ function ReadINI(FileName, Section, Value, Default: string): string;
 implementation
 
 uses
+  // System units
   {$IFNDEF MSWINDOWS}
     Unix,
   {$ELSE}
     ShellApi,
   {$ENDIF}
-  Net, NetworkUtils, NetworkServerFunctions, NetworkServerThing,
-  NetworkServerMessages, NetworkServerGame,
-  Server, Game, Calc, IniFiles, Sprites, fpmasks,
-  Math, ScriptDispatcher, Weapons, Things, Command, Bullets,
-  TraceLog, Constants, strutils, Version, RegExpr, Cvar, ServerHelper {$IFDEF RCON}, Rcon{$ENDIF};
+  Math,
+  StrUtils,
+
+  // Library units
+  fpmasks,
+  IniFiles,
+  RegExpr,
+
+  // Helper units
+  Calc,
+  TraceLog,
+  Version,
+
+  // Project units
+  Bullets,
+  Command,
+  Constants,
+  Cvar,
+  Game,
+  Net,
+  NetworkServerFunctions,
+  NetworkServerGame,
+  NetworkServerMessages,
+  NetworkServerThing,
+  NetworkUtils,
+  {$IFDEF RCON}
+    Rcon,
+  {$ENDIF}
+  ScriptDispatcher,
+  Server,
+  ServerHelper,
+  Sprites,
+  Things,
+  Weapons;
 
 
 function ExistsFile(FileName: String): Boolean;

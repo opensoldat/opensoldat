@@ -3,8 +3,10 @@ unit GameRendering;
 interface
 
 uses
+  // Library units
   SDL2,
 
+  // Project units
   Gfx;
 
 
@@ -46,37 +48,40 @@ function EaseZoom(Current, Goal: Single): Single;
 implementation
 
 uses
-  SysUtils,
-  IniFiles,
-  Math,
+  // System units
   Classes,
   Contnrs,
-       
+  Math,
+  SysUtils,
+
+  // Library units
+  IniFiles,
   PhysFS,
 
-  Util,
-  Constants,
-  Vector,
+  // Helper units
   TraceLog,
+  Util,
+  Vector,
   {$IFDEF TESTING}
-  Version
+    Version
   {$ENDIF}
-          
-  Cvar,
-  PolyMap,
-  MapFile,
-  GameStrings,
-          
-  Input,
-  Sprites,
-  Weapons,
-  Parts,
-  Game,
+
+  // Project units
   Client,
   ClientGame,
-  InterfaceGraphics,
+  Constants,
+  Cvar,
+  Game,
+  GameStrings,
   GostekGraphics,
-  MapGraphics;
+  Input,
+  InterfaceGraphics,
+  MapFile,
+  MapGraphics,
+  Parts,
+  PolyMap,
+  Sprites,
+  Weapons;
 
 
 type

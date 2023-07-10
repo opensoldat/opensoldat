@@ -13,6 +13,7 @@ unit Anims;
 interface
 
 uses
+  // Helper units
   Vector;
 
 
@@ -44,12 +45,23 @@ type
 implementation
 
 uses
+  // System units
+  SysUtils,
+
+  // Library units
+  PhysFS,
+
+  // Helper units
+  LogFile,
+  TraceLog,
+
+  // Project units
   {$IFDEF SERVER}
-  Server,
+    Server,
   {$ELSE}
-  Client,
+    Client,
   {$ENDIF}
-  SysUtils, TraceLog, PhysFS, Game, LogFile;
+  Game;
 
 
 const

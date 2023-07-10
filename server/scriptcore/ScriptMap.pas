@@ -12,21 +12,26 @@ unit ScriptMap;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Helper units
   Vector,
+
+  // Project units
+  Game,
   PascalCompiler,
   PascalExec,
   PolyMap,
+  ScriptBullet,
   ScriptCore3Api,
   ScriptObject,
-  ScriptBullet,
-  ScriptSpawnPoint,
   ScriptPlayer,
+  ScriptSpawnPoint,
+  Server,
   Sprites,
   Things,
-  SysUtils,
-  Server,
-  Game,
   Weapons;
 
 
@@ -93,6 +98,7 @@ type
 implementation
 
 uses
+  // Project units
   Bullets,
   Constants;
 

@@ -11,39 +11,56 @@ unit Server;
 interface
 
 uses
-  // system and delphi units
-  SysUtils, Classes, Variants,
+  // System units
+  SysUtils,
+  Classes,
+  Variants,
   {$IFNDEF MSWINDOWS}
-  Baseunix,
+    Baseunix,
   {$ENDIF}
-
-  // helper units
-  Vector, Util, Sha1,
-
-  // Cvar units
-  Cvar, Command,
-
-  // scripting units
-  {$IFDEF SCRIPT}
-  ScriptDispatcher,
-  {$ENDIF}
-
   {$IFDEF STEAM}
-  typinfo,
+    TypInfo,
   {$ENDIF}
 
+  // Library units
+  PhysFS,
+  sha1,
+  Steam,
+
+  // Helper units
+  Vector,
+  Util,
+  Constants,
+  LogFile,
+  Version,
+
+  // Project units
+  Anims,
+  BanSystem,
+  Command,
+  Console,
+  Cvar,
+  FileServer,
+  Game,
+  LobbyClient,
+  Net,
+  NetworkServerConnection,
+  NetworkServerGame,
+  NetworkServerSprite,
+  NetworkUtils,
+  PolyMap,
   {$IFDEF RCON}
-  Rcon,
+    Rcon,
   {$ENDIF}
-
-  FileServer, LobbyClient, ServerLauncherIPC,
-
-  // OpenSoldat units
-  Steam, Net, NetworkUtils,
-  NetworkServerSprite, NetworkServerConnection, NetworkServerGame,
-  ServerCommands, PhysFS, Console, ServerHelper,
-  Sprites, Anims, PolyMap, SharedConfig, Game, Things,
-  BanSystem, LogFile, Version, Constants;
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  ServerCommands,
+  ServerHelper,
+  ServerLauncherIPC,
+  SharedConfig,
+  Sprites,
+  Things;
 
 
 procedure ActivateServer;
@@ -303,7 +320,11 @@ var
 implementation
 
 uses
-  Weapons, TraceLog;
+  // Helper units
+  TraceLog,
+
+  // Project units
+  Weapons;
 
 
 {$IFNDEF MSWINDOWS}

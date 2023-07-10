@@ -5,21 +5,21 @@ unit NetworkUtils;
 interface
 
 uses
-  // delphi and system units
-  SysUtils,
+  // System units
   Classes,
   StrUtils,
+  SysUtils,
 
-  // helper units
+  // Helper units
   Version,
 
-  // OpenSoldat units
+  // Project units
+  Constants,
   {$IFNDEF SERVER}
-  Sound,
+    Sound,
   {$ENDIF}
   Sprites,
-  Weapons,
-  Constants;
+  Weapons;
 
 
 {$IFDEF SERVER}
@@ -62,12 +62,19 @@ procedure StringToArray(var c: array of Char; s: string);
 implementation
 
 uses
+  // Helper units
+  TraceLog,
+
+  // Project units
   {$IFDEF SERVER}
-  Server, BanSystem,
+    BanSystem,
+    Server,
   {$ELSE}
-  Client, GameMenus,
+    Client,
+    GameMenus,
   {$ENDIF}
-  Net, Game, TraceLog;
+  Game,
+  Net;
 
 
 {$IFNDEF SERVER}

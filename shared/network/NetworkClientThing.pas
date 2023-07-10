@@ -3,15 +3,26 @@ unit NetworkClientThing;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
-  Vector, Util,
+  // Library units
+  Steam,
 
-  // OpenSoldat units
-  Calc, LogFile, Steam, Net, Sprites, Weapons, Sound,
-  Constants, GameStrings;
+  // Helper units
+  Calc,
+  LogFile,
+  Util,
+  Vector,
+
+  // Project units
+  Constants,
+  GameStrings,
+  Net,
+  Sound,
+  Sprites,
+  Weapons;
 
 
 procedure ClientHandleServerThingSnapshot(NetMessage: PSteamNetworkingMessage_t);
@@ -22,8 +33,14 @@ procedure ClientHandleThingTaken(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Client, NetworkUtils, NetworkClientSprite, Game,
-  Demo, ClientGame, Things;
+  // Project units
+  Client,
+  ClientGame,
+  Demo,
+  Game,
+  NetworkClientSprite,
+  NetworkUtils,
+  Things;
 
 
 procedure ClientHandleServerThingSnapshot(NetMessage: PSteamNetworkingMessage_t);

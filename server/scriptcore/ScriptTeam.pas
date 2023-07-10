@@ -14,14 +14,17 @@ unit ScriptTeam;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  Game,
   PascalCompiler,
   PascalExec,
-  Server,
-  Game,
-  ScriptPlayer,
   ScriptCore3Api,
-  SysUtils;
+  ScriptPlayer,
+  Server;
 
 
 type

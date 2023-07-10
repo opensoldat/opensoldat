@@ -38,18 +38,25 @@ type
 implementation
 
 uses
-  {$IFDEF SERVER}
-  Server,
-  Net,
-  NetworkServerMessages,
-  {$IFDEF RCON}Rcon,{$ENDIF}
-  {$ELSE}
-  Client,
-  TraceLog,
-  {$ENDIF}
-  Game,
+  // System units
+  SysUtils,
+
+  // Helper units
   LogFile,
-  SysUtils;
+
+  // Project units
+  {$IFDEF SERVER}
+    Net,
+    NetworkServerMessages,
+    Server,
+    {$IFDEF RCON}
+      Rcon,
+    {$ENDIF}
+  {$ELSE}
+    Client,
+    TraceLog,
+  {$ENDIF}
+  Game;
 
 
 procedure TConsole.ScrollConsole;

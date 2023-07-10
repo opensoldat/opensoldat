@@ -9,17 +9,39 @@ procedure AppOnIdle;
 implementation
 
 uses
-  {$IFDEF SCRIPT}
-  ScriptDispatcher,
-  {$ENDIF}
+  // System units
+  Classes,
+  SysUtils,
+
+  // Helper units
+  LogFile,
+  TraceLog,
+  Vector,
+
+  // Project units
+  BanSystem,
+  Constants,
+  Cvar,
+  Demo,
+  Game,
+  LobbyClient,
+  Net,
   {$IFDEF ENABLE_FAE}
-  NetworkServerFae,
+    NetworkServerFae,
   {$ENDIF}
-  Server, Game, TraceLog, Constants, LogFile, BanSystem,
-  sysutils, Sprites, Net, Things, Vector, ServerHelper,
-  classes, Demo, Weapons, Cvar, LobbyClient,
-  NetworkServerGame, NetworkServerSprite, NetworkServerThing,
-  NetworkServerConnection, NetworkServerHeartbeat;
+  NetworkServerConnection,
+  NetworkServerGame,
+  NetworkServerHeartbeat,
+  NetworkServerSprite,
+  NetworkServerThing,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  Server,
+  ServerHelper,
+  Sprites,
+  Things,
+  Weapons;
 
 
 var

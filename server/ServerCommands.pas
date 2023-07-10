@@ -8,20 +8,40 @@ procedure InitServerCommands();
 implementation
 
 uses
-  // system and delphi units
-  SysUtils, Classes, dateutils,
+  // System units
+  Classes,
+  DateUtils,
+  SysUtils,
 
-  // helper units
-  Vector, Util, Version,
+  // Library units
+  Steam,
 
-  // scripting units
+  // Helper units
+  Vector,
+  Version,
+  Util,
+
+  // Project units
+  BanSystem,
+  Command,
+  Constants,
+  Demo,
+  Game,
+  Net,
+  NetworkServerConnection,
+  NetworkServerFunctions,
+  NetworkServerGame,
+  NetworkServerMessages,
+  NetworkUtils,
+  PolyMap,
   {$IFDEF SCRIPT}
-  ScriptDispatcher,
+    ScriptDispatcher,
   {$ENDIF}
-
-  Server, Command, Weapons, Net, NetworkUtils, NetworkServerMessages,
-  NetworkServerFunctions, NetworkServerConnection, NetworkServerGame,
-  Sprites, PolyMap, Game, Things, Constants, ServerHelper, BanSystem, Demo, Steam;
+  Server,
+  ServerHelper,
+  Sprites,
+  Things,
+  Weapons;
 
 
 {$PUSH}

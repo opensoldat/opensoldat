@@ -3,17 +3,25 @@ unit NetworkClientFunctions;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes, sockets,
+  // System units
+  Classes,
+  Sockets,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+
+  // Helper units
+  LogFile,
   Vector,
 
-  // Sound unit
+  // Project units
+  Constants,
+  Net,
   Sound,
+  Sprites,
+  Weapons;
 
-  // OpenSoldat units
-  LogFile, Steam, Net, Sprites, Weapons, Constants;
 
 procedure ClientHandleVoteOn(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleVoteOff;
@@ -30,8 +38,17 @@ procedure ClientHandlePlaySound(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Client, Game, Demo, GameMenus, NetworkClientConnection, PhysFS,
-  InterfaceGraphics, NetworkUtils;
+  // Library units
+  PhysFS,
+
+  // Project units
+  Client,
+  Demo,
+  Game,
+  GameMenus,
+  InterfaceGraphics,
+  NetworkClientConnection,
+  NetworkUtils;
 
 
 procedure ClientHandleVoteOn(NetMessage: PSteamNetworkingMessage_t);

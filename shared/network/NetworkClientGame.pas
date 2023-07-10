@@ -3,15 +3,24 @@ unit NetworkClientGame;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+
+  // Helper units
   Vector,
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Weapons, Sound, GameRendering,
-  Constants, GameStrings;
+  // Project units
+  Constants,
+  GameRendering,
+  GameStrings,
+  Net,
+  Sound,
+  Sprites,
+  Weapons;
 
 
 procedure ClientHandleNewPlayer(NetMessage: PSteamNetworkingMessage_t);
@@ -32,8 +41,15 @@ procedure ClientHandleVoiceData(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Client, NetworkUtils, Game, Demo, ClientGame, Sparks, GameMenus,
-  InterfaceGraphics;
+  // Project units
+  Client,
+  ClientGame,
+  Demo,
+  Game,
+  GameMenus,
+  InterfaceGraphics,
+  NetworkUtils,
+  Sparks;
 
 
 procedure ClientHandleNewPlayer(NetMessage: PSteamNetworkingMessage_t);

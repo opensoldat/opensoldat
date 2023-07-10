@@ -3,7 +3,11 @@ unit LauncherIPC;
 interface
 
 uses
-  LauncherConnection, Classes;
+  // System units
+  Classes,
+
+  // Project units
+  LauncherConnection;
 
 
 type
@@ -28,7 +32,11 @@ type
 implementation
 
 uses
-  Command, TraceLog;
+  // Helper units
+  TraceLog,
+
+  // Project units
+  Command;
 
 
 procedure TLauncherIPC.Connect(Port: Integer);

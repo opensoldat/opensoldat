@@ -3,15 +3,21 @@ unit FileClient;
 interface
 
 uses
+  // System units
   SysUtils,
   Classes,
-  sha1,
   StrUtils,
+
+  // Library units
+  sha1,
   fphttpclient,
 
-  GameRendering,
+  // Helper units
+  Version,
+
+  // Project units
   Constants,
-  Version;
+  GameRendering;
 
 
 const
@@ -50,7 +56,11 @@ var
 implementation
 
 uses
-  Client, Util;
+  // Helper units
+  Util,
+
+  // Project units
+  Client;
 
 
 constructor TDownloadThread.Create(DownloadURL: String; Name: String; Checksum: TSHA1Digest);

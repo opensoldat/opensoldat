@@ -3,15 +3,21 @@ unit NetworkServerGame;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
-  {$IFDEF SCRIPT}
-  // Script
-  ScriptDispatcher,
-  {$ENDIF}
+  // System units
+  Classes,
+  SysUtils,
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Constants;
+  // Library units
+  Steam,
+
+
+  // Project units
+  Constants,
+  Net,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  Sprites;
 
 
 procedure ServerHandlePlayerDisconnect(NetMessage: PSteamNetworkingMessage_t);
@@ -33,8 +39,16 @@ procedure ServerHandleVoiceData(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
-  Server, Game, Util, ServerHelper,
-  NetworkUtils, NetworkServerConnection, NetworkServerMessages;
+  // Helper units
+  Util,
+
+  // Project units
+  Game,
+  NetworkServerConnection,
+  NetworkServerMessages,
+  NetworkUtils,
+  Server,
+  ServerHelper;
 
 
 procedure ServerHandlePlayerDisconnect(NetMessage: PSteamNetworkingMessage_t);

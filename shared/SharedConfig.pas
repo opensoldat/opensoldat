@@ -11,6 +11,7 @@ unit SharedConfig;
 interface
 
 uses
+  // Project units
   Sprites;
 
 
@@ -23,8 +24,24 @@ function LoadWeaponsConfig(const FilePath: string): Boolean;
 implementation
 
 uses
-  Game, IniFiles, Classes, SysUtils, StrUtils, Math,
-  Util, Server, Net, Weapons, Constants;
+  // System units
+  Classes,
+  Math,
+  StrUtils,
+  SysUtils,
+
+  // Library units
+  IniFiles,
+
+  // Helper units
+  Util,
+
+  // Project units
+  Constants,
+  Game,
+  Net,
+  Server,
+  Weapons;
 
 
 procedure ReadConfColor(conf: TStringList; const SectionName: string; var VarName: LongWord); overload;

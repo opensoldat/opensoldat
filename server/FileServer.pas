@@ -3,7 +3,13 @@ unit FileServer;
 interface
 
 uses
-  sysutils, Classes, fphttpserver, strutils;
+  // System units
+  Classes,
+  StrUtils,
+  SysUtils,
+
+  // Library units
+  fphttpserver;
 
 
 type
@@ -37,7 +43,16 @@ procedure StopFileServer;
 implementation
 
 uses
-  Server{$IFDEF STEAM}, Steam{$ENDIF}, Version;
+  // Library units
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Helper units,
+  Version,
+
+  // Project units
+  Server;
 
 
 var

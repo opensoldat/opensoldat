@@ -15,7 +15,15 @@ unit PascalCore;
 interface
 
 uses
-  Classes, Script, SysUtils, uPSComponent;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  uPSComponent,
+
+  // Project units
+  Script;
 
 
 type
@@ -52,6 +60,7 @@ type
 implementation
 
 uses
+  // Project units
   ScriptDispatcher;
 
 

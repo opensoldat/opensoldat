@@ -11,7 +11,11 @@ unit Gfx;
 interface
 
 uses
-  Vector, Classes;
+  // System units
+  Classes,
+
+  // Helper units
+  Vector;
 
 
 const
@@ -295,9 +299,25 @@ var
 implementation
 
 uses
-  SysUtils, Math, dglOpenGL,
-  {$IFDEF MSWINDOWS}Windows, {$ENDIF}
-  BinPack, stb, FreeType, SDL2, Input, PhysFS;
+  // System units
+  Math,
+  SysUtils,
+  {$IFDEF MSWINDOWS}
+    Windows,
+  {$ENDIF}
+
+  // Library units
+  dglOpenGL,
+  FreeType,
+  PhysFS,
+  SDL2,
+  stb,
+
+  // Helper units
+  BinPack,
+
+  // Project units
+  Input;
 
 
 {******************************************************************************}

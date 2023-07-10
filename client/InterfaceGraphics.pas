@@ -3,7 +3,12 @@ unit InterfaceGraphics;
 interface
 
 uses
-  Vector, Sprites, Constants;
+  // Helper units
+  Vector,
+
+  // Project units
+  Constants,
+  Sprites;
 
 
 var
@@ -50,10 +55,35 @@ function IsDefaultInterface(const InterfaceName: string): Boolean;
 implementation
 
 uses
-  Client, SysUtils, Types, TraceLog,
-  Game, Math, Calc, Version, Util, PolyMap,
-  Demo, Weapons, GameStrings, Net, GameMenus, Gfx, GameRendering, PhysFS,
-  ClientGame, Console, MapGraphics, Steam;
+  // System units
+  Math,
+  SysUtils,
+  Types,
+
+  // Library units
+  PhysFS,
+  Steam,
+
+  // Helper units
+  Calc,
+  TraceLog,
+  Util,
+  Version,
+
+  // Project units
+  Client,
+  ClientGame,
+  Console,
+  Demo,
+  Game,
+  GameMenus,
+  GameRendering,
+  GameStrings,
+  Gfx,
+  MapGraphics,
+  Net,
+  PolyMap,
+  Weapons;
 
 
 type

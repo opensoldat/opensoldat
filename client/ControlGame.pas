@@ -8,36 +8,39 @@ procedure GameInput;
 implementation
 
 uses
-  SysUtils,
+  // System units
   Classes,
   Math,
+  SysUtils,
 
+  // Library units
   SDL2,
   {$IFDEF STEAM}
-  Steam,
+    Steam,
   {$ENDIF}
-        
+
+  // Helper units
   Util,
-  Constants,
-  GameStrings,
 
+  // Project units
+  Client,
+  ClientGame,
   Command,
+  Constants,
   Cvar,
-
+  Demo,
+  Game,
+  GameMenus,
+  GameStrings,
+  Input,
+  InterfaceGraphics,
   Net,
   NetworkClientConnection,
-  NetworkClientMessages,
   NetworkClientGame,
-  Sprites,
-  Weapons,
-  Input,
+  NetworkClientMessages,
   Sound,
-  GameMenus,
-  Demo,
-  InterfaceGraphics,
-  Game,
-  Client,
-  ClientGame;
+  Sprites,
+  Weapons;
 
 
 procedure ClearChatText;

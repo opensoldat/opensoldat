@@ -11,12 +11,30 @@ unit Game;
 interface
 
 uses
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  sha1,
+
+  // Helper units
+  Util,
+  Vector,
+
+  // Project units
+  Anims,
+  Bullets,
+  Constants,
+  Parts,
+  PolyMap,
   {$IFNDEF SERVER}
   Sparks,
   {$ENDIF}
-  Vector, Constants, PolyMap, Parts, Sprites, Bullets, Things, Waypoints, Anims,
-  Weapons, Sha1, Util;
+  Sprites,
+  Things,
+  Waypoints,
+  Weapons;
 
 
 type
@@ -158,21 +176,30 @@ procedure SortPlayers;
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF}
   {$IFDEF SERVER}
-  TraceLog, ServerHelper,
-  {$IFDEF SCRIPT}
-  ScriptDispatcher,
-  {$ENDIF}
+    Server,
+    ServerHelper,
+    {$IFDEF SCRIPT}
+      ScriptDispatcher,
+    {$ENDIF}
+    TraceLog,
   {$ELSE}
-  Sound, GameMenus, ClientGame, GameRendering, GameStrings, InterfaceGraphics,
+    Client,
+    ClientGame,
+    GameMenus,
+    GameRendering,
+    GameStrings,
+    InterfaceGraphics,
+    Sound,
   {$ENDIF}
-  Net, Demo,
+  Net,
   {$IFNDEF SERVER}
-  NetworkClientGame
+    NetworkClientGame,
   {$ELSE}
-  NetworkServerGame, NetworkServerSprite
-  {$ENDIF};
+    NetworkServerGame,
+    NetworkServerSprite,
+  {$ENDIF}
+  Demo;
 
 
 var

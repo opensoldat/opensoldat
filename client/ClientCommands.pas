@@ -10,10 +10,34 @@ procedure InitClientCommands();
 implementation
 
 uses
-  {$IFDEF STEAM}Steam,{$ENDIF}
-  Client, Command, Util, strutils, Game, ClientGame, Sound,
-  GameRendering, NetworkClientMessages, Demo, GameStrings, Net,
-  Sprites, Constants, classes, sysutils, Types, Input;
+  // System units
+  Classes,
+  StrUtils,
+  SysUtils,
+  Types,
+
+  // Library units
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Helper units
+  Util,
+
+  // Project units
+  Client,
+  ClientGame,
+  Command,
+  Constants,
+  Demo,
+  Game,
+  GameRendering,
+  GameStrings,
+  Input,
+  Net,
+  NetworkClientMessages,
+  Sound,
+  Sprites;
 
 
 var

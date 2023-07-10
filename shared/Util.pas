@@ -11,14 +11,17 @@ unit Util;
 interface
 
 uses
-  {$IFDEF DEVELOPMENT}
-  TypInfo,
-  {$ENDIF}
-
+  // Systen units
   Classes,
   SysUtils,
-  sha1,
-  Variants;
+  {$IFDEF DEVELOPMENT}
+    TypInfo,
+  {$ENDIF}
+  Variants,
+
+  // Library units
+  sha1;
+
 
 type
   TColor = 0..$FFFFFFFF;
@@ -63,19 +66,20 @@ function ToStr(const AValue; ATypeInfo: PTypeInfo): AnsiString;
 implementation
 
 uses
+  // Library units
   Md5,
-       
-  Constants,
   PhysFS,
   {$IFDEF STEAM}
-  Steam
+    Steam,
   {$ENDIF}
 
+  // Project units
   {$IFDEF SERVER}
-  Server,
+    Server,
   {$ELSE}
-  Client,
+    Client,
   {$ENDIF}
+  Constants,
   Game;
 
 

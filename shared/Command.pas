@@ -3,11 +3,13 @@ unit Command;
 interface
 
 uses
+  // System units
   Classes,
   Contnrs,
   SysUtils,
   Variants,
 
+  // Project units
   Constants;
 
 
@@ -55,27 +57,32 @@ var
 
 
 implementation
-  uses
-    StrUtils,
 
-    {$IFDEF DEVELOPMENT}
-    Steam,
+uses
+  // System units
+  StrUtils,
+  {$IFDEF DEVELOPMENT}
     ctypes,
+
+    // Library units
+    Steam,
+
+    // Helper units
     TraceLog,
-    {$ENDIF}
+  {$ENDIF}
 
-    {$IFDEF SERVER}
-    NetworkUtils,
-    {$ENDIF}
-
-    {$IFDEF SERVER}
+  // Project units
+  {$IFDEF SERVER}
     Server,
-    {$ELSE}
+  {$ELSE}
     Client,
-    {$ENDIF}
-    Cvar,
-    Net,
-    Game;
+  {$ENDIF}
+  Cvar,
+  Game,
+  {$IFDEF SERVER}
+    NetworkUtils,
+  {$ENDIF}
+  Net;
 
 
 {$PUSH}

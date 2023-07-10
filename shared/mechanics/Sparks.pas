@@ -3,8 +3,16 @@ unit Sparks;
 interface
 
 uses
-  Parts, MapFile, PolyMap, Net, Constants, Vector, Sprites;
+  // Helper units
+  Vector,
 
+  // Project units
+  Constants,
+  MapFile,
+  Net,
+  Parts,
+  PolyMap,
+  Sprites;
 
 type TSpark = object
     Active: Boolean;
@@ -30,8 +38,20 @@ var
 implementation
 
 uses
-  Gfx, Sound, Demo, GameRendering,
-  Client, Util, SysUtils, Math, Game;
+  // System units
+  Math,
+  SysUtils,
+
+  // Helper units
+  Util,
+
+  // Project units
+  Client,
+  Demo,
+  Game,
+  GameRendering,
+  Gfx,
+  Sound;
 
 
 function CreateSpark(sPos, sVelocity: TVector2; sStyle, sOwner: Byte; Life: Integer): Integer;

@@ -12,14 +12,17 @@ unit ScriptObject;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  Game,
   PascalCompiler,
   PascalExec,
   ScriptCore3Api,
-  Things,
-  SysUtils,
   Server,
-  Game;
+  Things;
 
 
 type
@@ -81,7 +84,10 @@ type
 implementation
 
 uses
-  NetworkServerThing, Parts, Constants;
+  // Project units
+  Constants,
+  NetworkServerThing,
+  Parts;
 
 
 function TScriptObject.GetX: Single;

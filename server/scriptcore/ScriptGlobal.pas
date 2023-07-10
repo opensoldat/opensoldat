@@ -16,12 +16,15 @@ unit ScriptGlobal;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   Script,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
 
 
 type

@@ -3,7 +3,11 @@ unit GostekGraphics;
 interface
 
 uses
-  Classes, Sprites;
+  // System units
+  Classes,
+
+  // Project units
+  Sprites;
 
 
 procedure RenderGostek(var Soldier: TSprite);
@@ -14,8 +18,22 @@ procedure ApplyGostekConstraints;
 implementation
 
 uses
-  Math, SysUtils, Client, Vector,
-  Game, ClientGame, Weapons, Parts, Constants, GameRendering, Gfx;
+  // System units
+  Math,
+  SysUtils,
+
+  // Helper units
+  Vector,
+
+  // Project units
+  Client,
+  ClientGame,
+  Constants,
+  Game,
+  GameRendering,
+  Gfx,
+  Parts,
+  Weapons;
 
 
 const

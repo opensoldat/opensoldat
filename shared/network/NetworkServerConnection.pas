@@ -3,16 +3,31 @@ unit NetworkServerConnection;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
-  Vector, Util, Cvar, BitStream,
+  // Library units
+  BitStream,
+  {$IFDEF SERVER}
+    Steam,
+  {$ENDIF}
 
-  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
+  // Helper units
+  Util,
+  Vector,
 
-  // OpenSoldat units
-  PolyMap, {$IFDEF SERVER}Steam,{$ENDIF} Net, Sprites, Weapons, Constants;
+  // Project units
+  Constants,
+  Cvar,
+  Net,
+  PolyMap,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  Sprites,
+  Weapons;
+
 
   {$IFDEF SERVER}
   procedure ServerHandleRequestGame(NetMessage: PSteamNetworkingMessage_t);
@@ -37,11 +52,32 @@ uses
 implementation
 
 uses
-    Game, NetworkUtils, Demo
-    {$IFDEF SERVER}, Server, ServerHelper, Sha1, NetworkServerGame, NetworkServerMessages,
-    NetworkServerThing, BanSystem, Things, Version, LogFile, TraceLog{$ELSE}, Client {$ENDIF}
-    {$IFDEF ENABLE_FAE}, NetworkServerFae{$ENDIF}
-    ;
+  {$IFDEF SERVER}
+    // Library units
+    sha1,
+
+    // Helper units
+    Version,
+    LogFile,
+    TraceLog,
+
+    // Project units
+    BanSystem,
+    NetworkServerGame,
+    NetworkServerMessages,
+    NetworkServerThing,
+    Server,
+    ServerHelper,
+    Things,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  {$IFDEF ENABLE_FAE}
+    NetworkServerFae,
+  {$ENDIF}
+  Game,
+  Demo,
+  NetworkUtils;
 
 
 {$IFDEF SERVER}

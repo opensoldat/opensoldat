@@ -3,10 +3,14 @@ unit ClientGame;
 interface
 
 uses
+  // Library units
   SDL2,
 
-  Constants,
-  Vector;
+  // Helper units
+  Vector,
+
+  // Project units
+  Constants;
 
 
 procedure ResetFrameTiming;
@@ -63,39 +67,43 @@ var
 implementation
 
 uses
-  SysUtils,
-  StrUtils,
-  Math,
+  // System units
   Classes,
+  Math,
+  StrUtils,
+  SysUtils,
 
-  Client,
-  Game,
-  Sprites,
-  GameStrings,
-  Demo,
-
-  Net,
-  NetworkClientSprite,
-  NetworkClientConnection,
-
+  // Library units
   {$IFDEF ENABLE_FAE}
-  FaeBase,
-  FaeClient,
-  NetworkClientFae,
+    FaeBase,
+    FaeClient,
+    NetworkClientFae,
   {$ENDIF}
-
   {$IFDEF STEAM}
-  Steam,
-  NetworkClientGame,
+    Steam,
   {$ENDIF}
 
-  GameRendering,
-  Gfx,
-  UpdateFrame,
-  GameMenus,
+  // Helper units
   Util,
+
+  // Project units
+  Client,
+  Demo,
+  Game,
+  GameMenus,
+  GameRendering,
+  GameStrings,
+  Gfx,
+  Input,
   InterfaceGraphics,
-  Input;
+  Net,
+  NetworkClientConnection,
+  {$IFDEF STEAM}
+    NetworkClientGame,
+  {$ENDIF}
+  NetworkClientSprite,
+  Sprites,
+  UpdateFrame;
 
 
 type

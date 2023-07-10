@@ -11,7 +11,9 @@ unit FaeRemoteAttestation;
 
 interface
 
-uses FaeBase;
+uses
+  // Library units
+  FaeBase;
 
 
 const

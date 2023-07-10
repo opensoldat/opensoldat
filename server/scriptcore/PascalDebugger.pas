@@ -14,9 +14,16 @@ unit PascalDebugger;
 interface
 
 uses
-  Classes, PascalExec, SysUtils,
-  uPSDebugger, uPSRuntime;
+  // System units
+  Classes,
+  SysUtils,
 
+  // Library units
+  uPSDebugger,
+  uPSRuntime,
+
+  // Project units
+  PascalExec;
 
 type
 

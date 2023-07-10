@@ -13,14 +13,17 @@ unit ScriptBullet;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  Bullets,
+  Game,
   PascalCompiler,
   PascalExec,
   ScriptCore3Api,
-  Bullets,
-  SysUtils,
-  Server,
-  Game;
+  Server;
 
 
 type
@@ -61,6 +64,7 @@ type
 implementation
 
 uses
+  // Project units
   Parts;
 
 

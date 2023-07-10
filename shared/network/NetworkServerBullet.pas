@@ -4,6 +4,7 @@ interface
 
 {$IFDEF SERVER}
 uses
+  // Library units
   Steam;
 {$ENDIF}
 
@@ -17,10 +18,28 @@ procedure ServerHandleBulletSnapshot(NetMessage: PSteamNetworkingMessage_t);
 implementation
 
 uses
+  // System units
+  Math,
+
+  // Helper units
+  Calc,
+  Vector,
+
+  // Project units
+  Bullets,
   {$IFDEF SERVER}
-  Server, Vector, Math, PolyMap, Calc, Sprites, Weapons, Constants, NetworkUtils, 
-  {$ELSE}Client,{$ENDIF} 
-  Demo, Net, Game, Bullets;
+    Constants,
+    NetworkUtils,
+    PolyMap,
+    Server,
+    Sprites,
+    Weapons,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  Demo,
+  Game,
+  Net;
 
 
 procedure ServerBulletSnapshot(i: Byte; {$IFDEF SERVER}ToNum: Byte;{$ENDIF} Forced: Boolean);
