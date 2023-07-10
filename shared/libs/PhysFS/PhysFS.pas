@@ -12,11 +12,11 @@ uses
 
 
 const
-{$IFDEF MSWINDOWS}
- PHYSFSLIB = 'physfs.dll';
-{$ELSE}
- PHYSFSLIB = 'physfs.so';
-{$ENDIF}
+  {$IFDEF MSWINDOWS}
+  PHYSFSLIB = 'physfs.dll';
+  {$ELSE}
+  PHYSFSLIB = 'physfs.so';
+  {$ENDIF}
 
 type
   PHYSFS_File = pointer;
