@@ -621,9 +621,8 @@
         <IsPartOfProject Value="True"/>
       </Unit20>
       <Unit21>
-        <Filename Value="scriptcore\scriptunit.pas"/>
+        <Filename Value="scriptcore\ScriptUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ScriptUnit"/>
       </Unit21>
       <Unit22>
         <Filename Value="scriptcore\ScriptExceptions.pas"/>
