@@ -312,8 +312,8 @@ begin
       Break;
 
     PhysFS_ReadLN(F, B);  // Part B
-    {if not Eof(F) then
-    begin}
+    //if not Eof(F) then
+    //begin
     Delete(A, 1, 1);
     Delete(B, 1, 1);
     Pa := StrToInt(A);
@@ -321,7 +321,7 @@ begin
 
     Delta := Vec2Subtract(Pos[Pa], Pos[Pb]);
     MakeConstraint(Pa, Pb, Sqrt(Vec2Dot(Delta, Delta)));
-    {end;}
+    //end;
   until A = 'ENDFILE';
 
   PHYSFS_close(F);

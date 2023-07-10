@@ -160,7 +160,8 @@ begin
   Result := FileExists(UserDirectory + Name);
 end;
 
-{function ScriptGetURL(Url: String): String;
+{
+function ScriptGetURL(Url: String): String;
 begin
   if ScrptDispatcher.SafeMode then
   begin
@@ -171,7 +172,8 @@ begin
   end;
 
   Result := GetURL(Url);
-end;}
+end;
+}
 
 function MySplitStr(const Source: String; const Delimiter: String): TStringArray;
 begin
