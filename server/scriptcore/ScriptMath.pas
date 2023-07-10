@@ -1,6 +1,6 @@
 unit ScriptMath;
 
-{$mode delphi}
+{$IFDEF FPC}{$mode delphi}{$ENDIF}
 
 interface
 
