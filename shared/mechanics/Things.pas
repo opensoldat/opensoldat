@@ -62,10 +62,10 @@ type
       {$IFNDEF SERVER}(ClientCheck: Boolean){$ENDIF}: Integer;
   end;
 
-  function CreateThing(sPos: TVector2; owner, sStyle, N: Byte): Integer;
-  function ThingCollision(ThingNum: Byte; CooldownEnd: LongInt): TThingCollision;
-  function SpawnBoxes(var Start: TVector2; Team: Byte; Num: Byte): Boolean;
-  function RandomizeStart(var Start: TVector2; Team: Byte): Boolean;
+function CreateThing(sPos: TVector2; owner, sStyle, N: Byte): Integer;
+function ThingCollision(ThingNum: Byte; CooldownEnd: LongInt): TThingCollision;
+function SpawnBoxes(var Start: TVector2; Team: Byte; Num: Byte): Boolean;
+function RandomizeStart(var Start: TVector2; Team: Byte): Boolean;
 
 
 implementation

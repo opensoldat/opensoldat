@@ -225,8 +225,8 @@ type
     function CanRespawn(DeadMeatBeforeRespawn: Boolean): Boolean;
   end;
 
-  function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
-  function TeamCollides(Poly, Team: Integer; Bullet: Boolean): Boolean;
+function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
+function TeamCollides(Poly, Team: Integer; Bullet: Boolean): Boolean;
 
 var
   SpriteMapColCount: Integer;

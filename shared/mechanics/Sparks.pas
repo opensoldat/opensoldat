@@ -30,7 +30,8 @@ type
     procedure Kill;
     procedure CheckOutOfBounds;
   end;
-  function CreateSpark(sPos, sVelocity: TVector2; sStyle, sOwner: Byte;
+
+function CreateSpark(sPos, sVelocity: TVector2; sStyle, sOwner: Byte;
     Life: Integer): Integer;
 
 var

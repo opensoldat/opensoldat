@@ -79,18 +79,18 @@ const
   HIT_TYPE_BODYHIT     = 9;
   HIT_TYPE_RICOCHET    = 10;
 
-  function CreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
-    sOwner: Integer; N: Byte; HitM: Single; Net, MustCreate: Boolean; Seed: LongInt = -1): Integer;
-  {$IFDEF SERVER}
-  function ServerCreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
-    sOwner: Integer; N: Byte; HitM: Single; Net: Boolean): Integer;
-  {$ELSE}
-  function CanHitSpray(Victim: Integer; Attacker: Integer): Boolean;
-  procedure CalculateRecoil(px: Single; py: Single; var cx: Single;
-    var cy: Single; da: Single);
-  procedure HitSpray();
-  {$ENDIF}
-  function BulletCanSend(X, Y: Single; i: Integer; vX: Single): Boolean;
+function CreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
+  sOwner: Integer; N: Byte; HitM: Single; Net, MustCreate: Boolean; Seed: LongInt = -1): Integer;
+{$IFDEF SERVER}
+function ServerCreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
+  sOwner: Integer; N: Byte; HitM: Single; Net: Boolean): Integer;
+{$ELSE}
+function CanHitSpray(Victim: Integer; Attacker: Integer): Boolean;
+procedure CalculateRecoil(px: Single; py: Single; var cx: Single;
+  var cy: Single; da: Single);
+procedure HitSpray();
+{$ENDIF}
+function BulletCanSend(X, Y: Single; i: Integer; vX: Single): Boolean;
 
 
 implementation

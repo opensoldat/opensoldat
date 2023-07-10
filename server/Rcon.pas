@@ -107,8 +107,8 @@ type
     NextMap: string[16];
   end;
 
-  procedure BroadcastMsg(Text: string);
-  procedure SendMessageToAdmin(ToIP, Text: string);
+procedure BroadcastMsg(Text: string);
+procedure SendMessageToAdmin(ToIP, Text: string);
 
 
 implementation

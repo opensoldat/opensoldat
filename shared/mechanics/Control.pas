@@ -54,7 +54,7 @@ uses
   Weapons;
 
 
-  procedure ControlSprite(var SpriteC: TSprite);
+procedure ControlSprite(var SpriteC: TSprite);
 
 
 implementation

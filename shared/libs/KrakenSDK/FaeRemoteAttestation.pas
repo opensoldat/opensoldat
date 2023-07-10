@@ -42,25 +42,25 @@ type
 // Remote Attestation (faecheck)
 // ----------------------------------------------------------------------------
 
-  procedure FaeInitSecret(Secret: PFaeSecret);
+procedure FaeInitSecret(Secret: PFaeSecret);
   cdecl; external FAECHECK_MODULE_NAME name 'FaeInitSecret';
 
-  procedure FaeInitChallenge(Secret: PFaeSecret; out Challenge: TFaeChallenge);
+procedure FaeInitChallenge(Secret: PFaeSecret; out Challenge: TFaeChallenge);
   cdecl; external FAECHECK_MODULE_NAME name 'FaeInitChallenge';
 
-  procedure FaeDeriveKey(Secret: PFaeSecret; Result: PFaeKey);
+procedure FaeDeriveKey(Secret: PFaeSecret; Result: PFaeKey);
   cdecl; external FAECHECK_MODULE_NAME name 'FaeDeriveKey';
 
-  function FaeCheck(Secret: PFaeSecret; Box: PFaeResponseBox; out Result:
+function FaeCheck(Secret: PFaeSecret; Box: PFaeResponseBox; out Result:
     TFaeResponse): Integer;
   cdecl; external FAECHECK_MODULE_NAME name 'FaeCheck';
 
-  procedure FaeLock(Mac: PFaeMac; CipherText: Pointer; Key: PFaeKey; Nonce:
+procedure FaeLock(Mac: PFaeMac; CipherText: Pointer; Key: PFaeKey; Nonce:
     PFaeNonce; AdditionalData: Pointer; AdSize: NativeUint; PlainText: Pointer;
     Size: NativeUint);
   cdecl; external FAECHECK_MODULE_NAME name 'FaeLock';
 
-  function FaeUnlock(PlainText: Pointer; Key: PFaeKey; Nonce:
+function FaeUnlock(PlainText: Pointer; Key: PFaeKey; Nonce:
     PFaeNonce; Mac: PFaeMac; AdditionalData: Pointer; AdSize: NativeUint;
     CipherText: Pointer; TextSize: NativeUint): Boolean;
   cdecl; external FAECHECK_MODULE_NAME name 'FaeUnlock';

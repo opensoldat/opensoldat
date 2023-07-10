@@ -29,24 +29,24 @@ uses
   Weapons;
 
 
-  {$IFDEF SERVER}
-  procedure ServerHandleRequestGame(NetMessage: PSteamNetworkingMessage_t);
-  procedure ServerHandlePlayerInfo(NetMessage: PSteamNetworkingMessage_t);
-  {$ENDIF}
-  procedure ServerSendPlayList({$IFDEF SERVER}Peer: HSteamNetConnection{$ENDIF});
-  procedure ServerSendNewPlayerInfo(Num: Byte; JoinType: Byte);
-  {$IFDEF SERVER}
-  function GetBanStrForIndex(BanIndex: Integer; BanHW: Boolean = False): string; // TODO move?
-  procedure ServerSendUnAccepted(Peer: HSteamNetConnection; State: Byte; Message: string = '');
-  procedure ServerDisconnect;
-  procedure ServerPlayerDisconnect(Player: TPlayer; Why: Byte; Now: Boolean = False);
-  procedure ServerPing(ToNum: Byte);
-  {$ENDIF}
-  procedure ServerSyncCvars({$IFDEF SERVER}ToNum: Byte; peer: HSteamNetConnection;{$ENDIF} FullSync: Boolean = False);
-  procedure ServerVars({$IFDEF SERVER}ToNum: Byte{$ENDIF});
-  {$IFDEF SERVER}
-  procedure ServerHandlePong(NetMessage: PSteamNetworkingMessage_t);
-  {$ENDIF}
+{$IFDEF SERVER}
+procedure ServerHandleRequestGame(NetMessage: PSteamNetworkingMessage_t);
+procedure ServerHandlePlayerInfo(NetMessage: PSteamNetworkingMessage_t);
+{$ENDIF}
+procedure ServerSendPlayList({$IFDEF SERVER}Peer: HSteamNetConnection{$ENDIF});
+procedure ServerSendNewPlayerInfo(Num: Byte; JoinType: Byte);
+{$IFDEF SERVER}
+function GetBanStrForIndex(BanIndex: Integer; BanHW: Boolean = False): string; // TODO move?
+procedure ServerSendUnAccepted(Peer: HSteamNetConnection; State: Byte; Message: string = '');
+procedure ServerDisconnect;
+procedure ServerPlayerDisconnect(Player: TPlayer; Why: Byte; Now: Boolean = False);
+procedure ServerPing(ToNum: Byte);
+{$ENDIF}
+procedure ServerSyncCvars({$IFDEF SERVER}ToNum: Byte; peer: HSteamNetConnection;{$ENDIF} FullSync: Boolean = False);
+procedure ServerVars({$IFDEF SERVER}ToNum: Byte{$ENDIF});
+{$IFDEF SERVER}
+procedure ServerHandlePong(NetMessage: PSteamNetworkingMessage_t);
+{$ENDIF}
 
 
 implementation
