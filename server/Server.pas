@@ -83,7 +83,8 @@ procedure StoreStats(Player: CSteamID);
 procedure RunManualCallbacks;
 {$ENDIF}
 
-const PATH_MAX = 4095;
+const
+  PATH_MAX = 4095;
 
 var
   ProgReady: Boolean = False;
