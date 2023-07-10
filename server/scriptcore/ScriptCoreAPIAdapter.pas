@@ -18,7 +18,6 @@ uses
 
 
 type
-
   TScriptCoreAPIAdapter = class(TScriptCore3API)
   private
     FAppOnIdleTimer: Longint;

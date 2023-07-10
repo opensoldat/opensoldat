@@ -36,7 +36,6 @@ const
   DEMO_MAGIC: array[1..6] of Char = 'SOLDEM';
 
 type
-
   TDemoHeader = record
     Header: array[1..6] of Char;
     Version: Word;

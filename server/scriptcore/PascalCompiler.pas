@@ -33,7 +33,6 @@ const
   iptW = uPSCompiler.iptW;
 
 type
-
   // same as above, import buster
   TPascalCompiletimeClass = uPSCompiler.TPSCompileTimeClass;
   TPascalInterface = uPSCompiler.TPSInterface;

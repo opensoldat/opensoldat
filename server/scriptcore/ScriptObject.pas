@@ -26,7 +26,6 @@ uses
 
 
 type
-
   PThing = ^TThing;
 
   TScriptObject = class(TObject)

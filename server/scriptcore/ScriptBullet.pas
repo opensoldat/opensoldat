@@ -27,7 +27,6 @@ uses
 
 
 type
-
   PBullet = ^TBullet;
 
   TScriptActiveBullet = class(TObject)

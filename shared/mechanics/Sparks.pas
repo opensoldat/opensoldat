@@ -14,7 +14,9 @@ uses
   PolyMap,
   Sprites;
 
-type TSpark = object
+
+type
+  TSpark = object
     Active: Boolean;
     Num: SmallInt;
     LifeReal: Single;

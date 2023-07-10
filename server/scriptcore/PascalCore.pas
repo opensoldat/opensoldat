@@ -43,7 +43,6 @@ type
     procedure ThreadFunc(const Parameters: array of Variant; FuncName: string);
   end;
 
-type
   TThreadScript = class(TThread)
   private
     FFuncName: string;

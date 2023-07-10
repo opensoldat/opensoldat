@@ -29,7 +29,6 @@ uses
 
 
 type
-
   TScriptMapsList = class;
 
   TScriptMapsList = class(TObject)

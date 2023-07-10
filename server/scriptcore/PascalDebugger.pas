@@ -25,8 +25,8 @@ uses
   // Project units
   PascalExec;
 
-type
 
+type
   TPascalError = uPSRuntime.TPSError;
 
   TPascalDebugger = class(TPascalExec)

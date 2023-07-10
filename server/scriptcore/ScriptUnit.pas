@@ -26,7 +26,6 @@ uses
 
 
 type
-
   TOnException = procedure(ErrorCode: TPSError; Message, UnitName, FunctionName: string;
     Row, Col: Cardinal) of object;
 

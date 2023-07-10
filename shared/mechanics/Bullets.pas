@@ -17,7 +17,8 @@ uses
   Weapons;
 
 
-type TBullet = object
+type
+  TBullet = object
     Active: Boolean;
     {$IFNDEF SERVER}
     HasHit: Boolean;

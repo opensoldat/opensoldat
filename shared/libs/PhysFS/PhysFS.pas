@@ -18,8 +18,9 @@ const
  PHYSFSLIB = 'physfs.so';
 {$ENDIF}
 
-type PHYSFS_File = pointer;
-type PHYSFS_Buffer = array of byte;
+type
+  PHYSFS_File = pointer;
+  PHYSFS_Buffer = array of byte;
 
 function PHYSFS_init(argv0: Pchar): LongBool; cdecl; external PHYSFSLIB;
 function PHYSFS_deinit(): LongInt; cdecl; external PHYSFSLIB;

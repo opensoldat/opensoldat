@@ -28,7 +28,6 @@ uses
 
 
 type
-
   TScriptGlobal = class(TObject)
   private
     function GetDateSeparator: Char;

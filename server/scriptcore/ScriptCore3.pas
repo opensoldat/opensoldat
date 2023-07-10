@@ -53,7 +53,6 @@ uses
 
 
 type
-
   TScriptCore3Conf = object
   private
     FSandboxLevel: Shortint;

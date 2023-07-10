@@ -14,8 +14,8 @@ uses
   // Project units
   Constants;
 
-type
 
+type
   TLobbyThread = Class(TThread)
     private
       FData: TStringStream;

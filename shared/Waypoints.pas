@@ -28,7 +28,6 @@ type
     Connections: array[1..MAX_CONNECTIONS] of Integer;
   end;
 
-type
   TWaypoints = object
     Waypoint: array[1..MAX_WAYPOINTS] of TWaypoint;
     function FindClosest(X, Y: Single; Radius, CurrWaypoint: Integer): Integer;

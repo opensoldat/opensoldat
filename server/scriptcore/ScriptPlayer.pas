@@ -32,7 +32,6 @@ uses
 
 
 type
-
   PSprite = ^TSprite;
 
   TScriptActivePlayer = class;

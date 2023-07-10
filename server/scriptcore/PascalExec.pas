@@ -65,8 +65,7 @@ const
   btExtClass = uPSUtils.btExtClass;
 
 type
-
-  // just so that api units doesn't have to import uPSRuntime unit
+  // Just so that api units doesn't have to import uPSRuntime unit
   TPascalRuntimeClass = uPSRuntime.TPSRuntimeClass;
 
   TUnableToLoadException = class(Exception)

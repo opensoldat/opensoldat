@@ -31,7 +31,6 @@ uses
 
 
 type
-
   TScriptPlayers = class(TObject)
   private
     FPlayers: array [1..MAX_SPRITES] of TScriptActivePlayer;

@@ -28,7 +28,6 @@ uses
 
 
 type
-
   TScriptTeam = class;
 
   TOnBeforeJoinTeam = function (Player: TScriptActivePlayer; Team, OldTeam: TScriptTeam): ShortInt of object;

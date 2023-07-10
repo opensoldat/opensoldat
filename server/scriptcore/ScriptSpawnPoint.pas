@@ -17,7 +17,6 @@ uses
 
 
 type
-
   TScriptSpawnPoint = class(TObject)
   protected
     FSpawnPoint: PMapSpawnPoint;

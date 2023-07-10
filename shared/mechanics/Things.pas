@@ -17,54 +17,56 @@ uses
   Sprites;
 
 
-  type TThingCollision = object
-      ThingNum: Byte;
-      CooldownEnd: LongInt;
+type
+  TThingCollision = object
+    ThingNum: Byte;
+    CooldownEnd: LongInt;
   end;
 
-  type TThing = object
-      Active: Boolean;
-      Style, Num, Owner: Byte;
-      HoldingSprite: Byte;
-      AmmoCount: Byte;
-      Radius: Single;
-      TimeOut: Integer;
-      StaticType: Boolean;
-      Interest: Integer;
-      CollideWithBullets: Boolean;
-      InBase: Boolean;
-      LastSpawn, Team: Byte;
-      Skeleton: ParticleSystem;
-      CollideCount: array[1..4] of Byte;
-      Polys: array[1..2] of TMapPolygon;
-      BGState: TBackgroundState;
-      {$IFNDEF SERVER}
-      Tex1, Tex2: Integer;
-      Texture: LongInt;
-      Color: LongWord;
-      {$ENDIF}
-    public
-      procedure Update;
-      {$IFNDEF SERVER}
-      procedure Render(TimeElapsed: Extended);
-      procedure PolygonsRender;
-      {$ENDIF}
-      function CheckMapCollision(i: Integer; X, Y: Single): Boolean;
-      procedure Kill;
-      procedure CheckOutOfBounds;
-      procedure Respawn;
-      procedure MoveSkeleton(x1, y1: Single; FromZero: Boolean);
-      {$IFDEF SERVER}
-      function CheckSpriteCollision: Integer;
-      {$ENDIF}
-      function CheckStationaryGunCollision
-        {$IFNDEF SERVER}(ClientCheck: Boolean){$ENDIF}: Integer;
-    end;
+  TThing = object
+    Active: Boolean;
+    Style, Num, Owner: Byte;
+    HoldingSprite: Byte;
+    AmmoCount: Byte;
+    Radius: Single;
+    TimeOut: Integer;
+    StaticType: Boolean;
+    Interest: Integer;
+    CollideWithBullets: Boolean;
+    InBase: Boolean;
+    LastSpawn, Team: Byte;
+    Skeleton: ParticleSystem;
+    CollideCount: array[1..4] of Byte;
+    Polys: array[1..2] of TMapPolygon;
+    BGState: TBackgroundState;
+    {$IFNDEF SERVER}
+    Tex1, Tex2: Integer;
+    Texture: LongInt;
+    Color: LongWord;
+    {$ENDIF}
+  public
+    procedure Update;
+    {$IFNDEF SERVER}
+    procedure Render(TimeElapsed: Extended);
+    procedure PolygonsRender;
+    {$ENDIF}
+    function CheckMapCollision(i: Integer; X, Y: Single): Boolean;
+    procedure Kill;
+    procedure CheckOutOfBounds;
+    procedure Respawn;
+    procedure MoveSkeleton(x1, y1: Single; FromZero: Boolean);
+    {$IFDEF SERVER}
+    function CheckSpriteCollision: Integer;
+    {$ENDIF}
+    function CheckStationaryGunCollision
+      {$IFNDEF SERVER}(ClientCheck: Boolean){$ENDIF}: Integer;
+  end;
 
   function CreateThing(sPos: TVector2; owner, sStyle, N: Byte): Integer;
   function ThingCollision(ThingNum: Byte; CooldownEnd: LongInt): TThingCollision;
   function SpawnBoxes(var Start: TVector2; Team: Byte; Num: Byte): Boolean;
   function RandomizeStart(var Start: TVector2; Team: Byte): Boolean;
+
 
 implementation
 

@@ -28,7 +28,6 @@ uses
 
 
 type
-
   TScriptBanLists = class;
 
   TScriptBanLists = class(TObject)
