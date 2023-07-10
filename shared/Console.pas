@@ -34,6 +34,7 @@ type
     function GetContentsAsPlainText(): WideString;
   end;
 
+
 implementation
 
 uses
@@ -49,6 +50,7 @@ uses
   Game,
   LogFile,
   SysUtils;
+
 
 procedure TConsole.ScrollConsole;
 var

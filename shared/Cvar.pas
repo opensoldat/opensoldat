@@ -14,6 +14,7 @@ uses
   Constants,
   Util;
 
+
 {
   Cvar tags
   sv_ - server cvar
@@ -155,7 +156,9 @@ var
   CvarsNeedSyncing: Boolean = False;
   CvarsInitialized: Boolean = False;
 
+
 implementation
+
 uses
 {$IFDEF SERVER}
   Server,
@@ -170,6 +173,7 @@ uses
   Demo,
 {$ENDIF}
   Things;
+
 
 {$IFNDEF SERVER}
 function snd_volumeChange(Cvar: TCvarBase; NewValue: Integer): Boolean;

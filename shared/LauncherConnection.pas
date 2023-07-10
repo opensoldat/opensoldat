@@ -7,6 +7,7 @@ interface
 uses
   Classes, Generics.Collections, ssockets;
 
+
 type
   TMessageCallback = procedure(Message: String) of object;
 
@@ -32,12 +33,14 @@ type
     procedure SendMessage(Message: String);
   end;
 
+
 implementation
 
 uses
   TraceLog, SysUtils,
   // These 2 give us a convenient way to access socket/system error codes
   {$IFDEF UNIX}BaseUnix,{$ENDIF} Sockets;
+
 
 const
   MAX_MESSAGE_LENGTH = 4096;

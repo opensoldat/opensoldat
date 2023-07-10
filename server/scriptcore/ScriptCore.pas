@@ -19,6 +19,8 @@ uses
   // critical section
   uPSComponent, uPSRuntime, uPSUtils;
   // scriptcore units
+
+
 type
   // ScriptCore class
   TScriptCore = class(TPascalCore)
@@ -112,6 +114,7 @@ uses
   Constants,
   //OnPlayerKill
   Weapons;
+
 
 constructor TScriptCore.Create(Dir: string);
 var

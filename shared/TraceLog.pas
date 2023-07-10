@@ -21,10 +21,12 @@ procedure Trace(const Msg: string);
 procedure SteamWarning(Severity: Integer; WarnMessage: PAnsiChar); cdecl;
 {$ENDIF}
 
+
 implementation
 
 uses
   {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} sysutils;
+
 
 procedure Debug(const Msg: string);
 begin

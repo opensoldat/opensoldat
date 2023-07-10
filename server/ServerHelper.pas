@@ -22,11 +22,13 @@ procedure UpdateWaveRespawnTime;
 function RandomBot: string;
 procedure DoBalanceBots(LeftGame: Byte; NewTeam: Byte);
 
+
 implementation
 
 uses
   Server, sysutils, strutils, classes, Cvar, Game, Net, Sprites, Constants, Util, Weapons,
   TraceLog, NetworkServerMessages, BanSystem, Command;
+
 
 procedure WriteLn(S: Variant); overload;
 begin

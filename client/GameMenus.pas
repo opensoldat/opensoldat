@@ -45,12 +45,14 @@ function GameMenuAction(Menu: PGameMenu; ButtonIndex: Integer): Boolean;
 procedure GameMenuMouseMove();
 function GameMenuClick(): Boolean;
 
+
 implementation
 
 uses
   SDL2, SysUtils, Client, Weapons, Game, GameStrings, ClientGame, Sound, InterfaceGraphics,
   Constants, Net, NetworkClientConnection, NetworkClientSprite, Sprites, Cvar,
   NetworkClientGame, NetworkClientMessages{$IFDEF STEAM}, Steam{$ENDIF};
+
 
 var
   LimboWasActive: Boolean;

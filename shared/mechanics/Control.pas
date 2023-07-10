@@ -18,7 +18,10 @@ uses
   Vector, Weapons, Constants, Net
   {$IFDEF SERVER}, NetworkServerGame, NetworkServerSprite, AI {$ENDIF}
   {$IFNDEF SERVER}, NetworkClientMessages, NetworkClientSprite, NetworkClientGame{$ENDIF};
+
+
   procedure ControlSprite(var SpriteC: TSprite);
+
 
 implementation
 

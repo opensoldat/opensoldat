@@ -15,6 +15,7 @@ interface
 uses
   Parts, Anims, MapFile, PolyMap, Weapons, Constants, Vector, Net;
 
+
 const
   MAX_SPRITES = MAX_PLAYERS;
   MAX_BULLETS = 254;
@@ -224,6 +225,7 @@ var
   procedure SelectDefaultWeapons(MySprite: Byte);
   {$ENDIF}
 
+
 implementation
 
 uses
@@ -238,6 +240,7 @@ uses
   Client,
   {$ENDIF}
   Bullets, Util, SysUtils, Calc, Math, TraceLog, Game, Control, Things, Cvar;
+
 
 function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
 var

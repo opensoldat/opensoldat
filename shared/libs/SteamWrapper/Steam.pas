@@ -13,6 +13,7 @@ interface
 uses
   ctypes, sysutils;
 
+
 {$PACKENUM 4}
 
 {$IFDEF UNIX}
@@ -8690,6 +8691,7 @@ type
     constructor Init(unIP: uint32; usGamePort: uint16; usQueryPort: uint16; ServerMode: EServerMode; pchVersionString: PChar);
   end;
 {$ENDIF}
+
 
 implementation
 

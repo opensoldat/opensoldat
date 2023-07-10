@@ -24,6 +24,7 @@ uses
   fgl,
   SysUtils;
 
+
 type
 
   TScriptPlayers = class(TObject)
@@ -60,6 +61,7 @@ type
     property Players: TScriptPlayers read FPlayers;
   end;
 
+
 implementation
 
 uses
@@ -72,6 +74,7 @@ uses
   ServerHelper,
   Server,
   Game;
+
 
 constructor TScriptPlayers.Create;
 var

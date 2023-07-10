@@ -13,6 +13,7 @@ uses
   Steam, Net, Sprites, Weapons, Sound,
   Constants, GameStrings;
 
+
 procedure ClientHandleServerSpriteSnapshot(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleServerSpriteSnapshot_Major(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleServerSkeletonSnapshot(NetMessage: PSteamNetworkingMessage_t);
@@ -26,10 +27,12 @@ procedure ClientHandleDelta_Weapons(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleDelta_Helmet(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleClientSpriteSnapshot_Dead(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
   Client, NetworkUtils, Game, Demo, ClientGame, Sparks, GameMenus, TraceLog;
+
 
 var
   OldClientSnapshotMsg: TMsg_ClientSpriteSnapshot;

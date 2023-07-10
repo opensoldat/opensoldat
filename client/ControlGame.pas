@@ -4,6 +4,7 @@ interface
 
 procedure GameInput;
 
+
 implementation
 
 uses
@@ -37,6 +38,7 @@ uses
   Game,
   Client,
   ClientGame;
+
 
 procedure ClearChatText;
 begin

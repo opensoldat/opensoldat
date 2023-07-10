@@ -16,6 +16,7 @@ uses
   // OpenSoldat units
   Steam, Net, Sprites, Weapons, Constants, PolyMap;
 
+
 procedure ServerSpriteSnapshot(r: Byte);
 procedure ServerSpriteSnapshotMajor(r: Byte);
 procedure ServerSpriteSnapshotMajorSingle(Who: Byte; r: Byte);
@@ -36,10 +37,12 @@ var
   Time_SpriteSnapshot: array[1..MAX_SPRITES] of Integer;
   Time_SpriteSnapshot_Mov: array[1..MAX_SPRITES] of Integer;
 
+
 implementation
 
 uses
   Server, NetworkUtils, Game, Demo;
+
 
 // SERVER SNAPSHOT
 procedure ServerSpriteSnapshot(r: Byte);

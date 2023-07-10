@@ -66,6 +66,7 @@ uses
   GameRendering,
   ClientLauncherIPC;
 
+
 procedure JoinServer;
 procedure StartGame;
 procedure ShutDown;
@@ -326,6 +327,7 @@ var
   ForceReconnect: Boolean;
   {$ENDIF}
 
+
 implementation
 
 uses
@@ -335,6 +337,7 @@ uses
   ControlGame,
   InterfaceGraphics,
   Input;
+
 
 procedure RestartGraph;
 begin
@@ -1112,4 +1115,5 @@ initialization
 
 finalization
   ShutDown;
+
 end.

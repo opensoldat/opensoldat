@@ -13,6 +13,7 @@ interface
 uses
   SyncObjs, Classes;
 
+
 procedure NewLogFile(var F: TStringList; Name: string);
 procedure WriteLogFile(var F: TStringList; Name: string);
 procedure AddLineToLogFile(var F: TStringList; S: string; Name: string; WithDate: Boolean = True);
@@ -27,6 +28,7 @@ var
   {$ENDIF}
   LogLock: TCriticalSection;
 
+
 implementation
 
 uses
@@ -36,6 +38,7 @@ uses
   Util, Client,
   {$ENDIF}
   SysUtils, Constants, TraceLog, Cvar;
+
 
 procedure NewLogFile(var F: TStringList; Name: string);
 var

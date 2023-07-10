@@ -158,10 +158,12 @@ function CalculateBink(Accumulated: Word; Bink: Word): Word;
 function WeaponNumInternalToExternal(Num: Byte): Byte;
 function WeaponNumExternalToInternal(Num: Byte): Byte;
 
+
 implementation
 
 uses
   TraceLog, Constants, SysUtils;
+
 
 procedure CreateWeapons(RealisticMode: Boolean);
 begin

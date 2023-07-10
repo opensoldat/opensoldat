@@ -6,6 +6,7 @@ uses
   Parts, MapFile, PolyMap, Net, Weapons, Constants,
   Vector, Sprites, Things;
 
+
 type TBullet = object
     Active: Boolean;
     {$IFNDEF SERVER}
@@ -80,6 +81,7 @@ const
   {$ENDIF}
   function BulletCanSend(X, Y: Single; i: Integer; vX: Single): Boolean;
 
+
   implementation
 
   uses
@@ -90,6 +92,7 @@ const
     NetworkServerBullet,
     {$ENDIF}
     {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, Calc, Math, Game, TraceLog;
+
 
 function CreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
   sOwner: Integer; N: Byte; HitM: Single; Net, MustCreate: Boolean; Seed: LongInt = -1): Integer;

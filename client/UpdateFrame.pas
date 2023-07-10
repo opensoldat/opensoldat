@@ -18,12 +18,15 @@ uses
   {$IFDEF ENABLE_FAE}, FaeClient{$ENDIF}
   ;
 
+
 procedure Update_Frame;
+
 
 implementation
 
 uses
   ClientGame, InterfaceGraphics, GameMenus;
+
 
 var
   IdleCounter, OldMouseX: Integer;

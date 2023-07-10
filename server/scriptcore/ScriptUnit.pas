@@ -21,6 +21,7 @@ uses
   ScriptCore3Api,
   SysUtils;
 
+
 type
 
   TOnException = procedure(ErrorCode: TPSError; Message, UnitName, FunctionName: string;
@@ -63,11 +64,13 @@ type
     property ScriptUnit: TScriptUnit read FUnit;
   end;
 
+
 implementation
 
 uses
   ScriptCore3,
   ScriptExceptions;
+
 
 function TScriptUnit.GetName: string;
 begin

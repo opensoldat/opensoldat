@@ -23,6 +23,7 @@ uses
   ScriptCore3Api,
   SysUtils;
 
+
 type
 
   TScriptGlobal = class(TObject)
@@ -46,6 +47,7 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
   end;
+
 
 implementation
 

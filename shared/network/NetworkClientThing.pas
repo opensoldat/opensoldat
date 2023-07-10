@@ -13,15 +13,18 @@ uses
   Calc, LogFile, Steam, Net, Sprites, Weapons, Sound,
   Constants, GameStrings;
 
+
 procedure ClientHandleServerThingSnapshot(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleServerThingMustSnapshot(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleThingTaken(NetMessage: PSteamNetworkingMessage_t);
+
 
 implementation
 
 uses
   Client, NetworkUtils, NetworkClientSprite, Game,
   Demo, ClientGame, Things;
+
 
 procedure ClientHandleServerThingSnapshot(NetMessage: PSteamNetworkingMessage_t);
 var

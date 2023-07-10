@@ -13,6 +13,7 @@ interface
 uses
   sysutils, Constants, Weapons, Classes, Strutils, SDL2;
 
+
 type
   {$scopedenums on}
   TAction = (None, Left, Right, Jump, Crouch, Fire, Jet, Reload, ChangeWeapon, VoiceChat,
@@ -65,9 +66,11 @@ var
   MouseWheelUpCounter: Integer = 0;
   MouseWheelDownCounter: Integer = 0;
 
+
 implementation
 
 uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} GameRendering, typinfo, TraceLog;
+
 
 // Used to determine the order binds are tried in, so for example
 // "ctrl+shift+x" is run instead of "x" if "ctrl+shift" are held.

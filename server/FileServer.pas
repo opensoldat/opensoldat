@@ -5,6 +5,7 @@ interface
 uses
   sysutils, Classes, fphttpserver, strutils;
 
+
 type
   THTTPServer = class(TFPHTTPServer)
   private
@@ -32,10 +33,12 @@ type
 procedure StartFileServer;
 procedure StopFileServer;
 
+
 implementation
 
 uses
   Server{$IFDEF STEAM}, Steam{$ENDIF}, Version;
+
 
 var
   FServerThread: THTTPFileServerThread;

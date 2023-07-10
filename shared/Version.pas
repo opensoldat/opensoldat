@@ -23,7 +23,7 @@ const
   {$ENDIF}
   DEMO_VERSION = $0000;  // version number for OpenSoldat demo files
 
+
 implementation
 
 end.
-

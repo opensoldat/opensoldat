@@ -18,9 +18,11 @@ uses
   Net,
   Sparks;
 
+
 procedure MakeRain;
 procedure MakeSandStorm;
 procedure MakeSnow;
+
 
 implementation
 
@@ -29,6 +31,7 @@ uses
   Cvar,
   Sound,
   Constants;
+
 
 // Backgorund animation and sound for rain
 procedure MakeRain;

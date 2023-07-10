@@ -46,6 +46,7 @@ type
     CipherText:  array[1..sizeof(TFaeResponse)] of Byte;
   end;
 
+
 implementation
 
 end.

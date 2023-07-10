@@ -5,6 +5,7 @@ interface
 uses
   Parts, MapFile, PolyMap, Net, Constants, Vector, Sprites;
 
+
 type TSpark = object
     Active: Boolean;
     Num: SmallInt;
@@ -31,6 +32,7 @@ implementation
 uses
   Gfx, Sound, Demo, GameRendering,
   Client, Util, SysUtils, Math, Game;
+
 
 function CreateSpark(sPos, sVelocity: TVector2; sStyle, sOwner: Byte; Life: Integer): Integer;
 var

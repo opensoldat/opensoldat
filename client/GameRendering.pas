@@ -7,6 +7,7 @@ uses
 
   Gfx;
 
+
 type
   TGameRenderingParams = record
     InterfaceName: string;
@@ -40,6 +41,7 @@ procedure TakeScreenshot(Filename: string; Async: Boolean = True);
 procedure FillCaseInsensitiveImageMap;
 function FindImagePath(const Filename: string): string;
 function EaseZoom(Current, Goal: Single): Single;
+
 
 implementation
 
@@ -75,6 +77,7 @@ uses
   InterfaceGraphics,
   GostekGraphics,
   MapGraphics;
+
 
 type
   TTextureLoadData = record
@@ -1336,4 +1339,5 @@ end;
 
 initialization
   GfxLog := @GfxLogCallback;
+
 end.

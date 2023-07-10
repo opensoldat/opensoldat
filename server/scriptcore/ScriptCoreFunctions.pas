@@ -20,6 +20,7 @@ uses
   ScriptCore3Api,
   SysUtils;
 
+
 type
   // TODO: GetTickCount, MaskCheck, RegExps, RGB, Round,
   // RoundTo, Sqrt(?), StrPos(?), StrReplace(?), Version, Regex class
@@ -42,6 +43,7 @@ uses
   Server,
   Util,
   Calc;
+
 
 procedure SWriteLn(Text: string);
 begin

@@ -13,6 +13,7 @@ uses
   // OpenSoldat units
   Steam, Net, Sprites, Constants;
 
+
 procedure ServerHandlePlayerDisconnect(NetMessage: PSteamNetworkingMessage_t);
 procedure ServerMapChange(ID: Byte);
 procedure ServerFlagInfo(Style, Who: Byte);
@@ -28,11 +29,13 @@ procedure ServerSyncMsg(ToNum: Integer = 0);
 procedure ServerHandleVoiceData(NetMessage: PSteamNetworkingMessage_t);
 {$ENDIF}
 
+
 implementation
 
 uses
   Server, Game, Util, ServerHelper,
   NetworkUtils, NetworkServerConnection, NetworkServerMessages;
+
 
 procedure ServerHandlePlayerDisconnect(NetMessage: PSteamNetworkingMessage_t);
 var

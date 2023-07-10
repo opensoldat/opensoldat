@@ -2,6 +2,8 @@ unit PhysFS;
 
 interface
   uses sysutils, Classes, TraceLog;
+
+
 const
 {$IFDEF MSWINDOWS}
  PHYSFSLIB = 'physfs.dll';
@@ -32,6 +34,7 @@ procedure PHYSFS_ReadLn(FileHandle: PHYSFS_File; var Line: AnsiString);
 function PHYSFS_CopyFileFromArchive(SourceFile: AnsiString; Destination: AnsiString): Boolean;
 function PHYSFS_CopyFilesFromArchiveDirectory(SourceDirectory: AnsiString; DestinationDirectory: AnsiString): Boolean;
 function PHYSFS_GetEnumeratedFiles(Dir: String): TStringArray;
+
 
 implementation
 

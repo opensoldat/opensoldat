@@ -8,6 +8,7 @@ uses
   Vector,
   Util;
 
+
 type
   TMapGraphics = record
     Filename: string;
@@ -45,6 +46,7 @@ procedure RenderMinimap(x, y: Single; Alpha: Byte);
 procedure WorldToMinimap(x, y: Single; var ox, oy: Single);
 procedure SetTextureFilter(Texture: TGfxTexture; AllowMipmaps: Boolean);
 
+
 implementation
 
 uses
@@ -59,6 +61,7 @@ uses
   ClientGame,
   Game,
   GameRendering;
+
 
 function LoadMapTexture(TexName: string; ColorKey: TGfxColor): TGfxImage;
 var

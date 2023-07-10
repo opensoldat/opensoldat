@@ -4,6 +4,7 @@ interface
 
 uses MapFile, Waypoints, Vector, Util;
 
+
 const
   MAX_POLYS = 5000;
   MIN_SECTOR  = -25;
@@ -113,6 +114,7 @@ type
 procedure CheckOutOfBounds(var x: Single; var y: Single); overload;
 procedure CheckOutOfBounds(var x: SmallInt; var y: SmallInt); overload;
 
+
 implementation
 
 uses
@@ -121,6 +123,7 @@ uses
   {$ENDIF}
   {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF}
   Math, Calc, Game, Constants;
+
 
 procedure TPolyMap.Initialize();
 var

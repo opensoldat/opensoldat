@@ -14,6 +14,7 @@ interface
 uses
   Classes, SysUtils;
 
+
 // those types do not begin with "T" because Exception class clearly doesn't.
 type
   ScriptException = class(Exception)
@@ -43,6 +44,7 @@ type
   ENotImplemented = class (ScriptException)
   end;
 
+
 implementation
 
 constructor EScriptRecompile.Create(Message: String; Force: Boolean);
@@ -68,4 +70,3 @@ begin
 end;
 
 end.
-

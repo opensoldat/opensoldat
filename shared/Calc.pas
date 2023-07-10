@@ -13,6 +13,7 @@ interface
 uses
   Vector;
 
+
 type
   TIntersectionResult = record
     Points: array [0..1] of TVector2;
@@ -32,10 +33,12 @@ function Distance(P1, P2: TVector2): Single; overload;
 function GreaterPowerOf2(N: Integer): Integer;
 function RoundFair(Value: Single): Integer;
 
+
 implementation
 
 uses
   Math;
+
 
 function IsLineIntersectingCircle(Line1, Line2, CircleCenter: TVector2;
     Radius: Single): TIntersectionResult;

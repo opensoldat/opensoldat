@@ -8,6 +8,7 @@ uses
   Constants,
   Vector;
 
+
 procedure ResetFrameTiming;
 procedure GameLoop;
 function GetGameFps: Integer;
@@ -95,6 +96,7 @@ uses
   Util,
   InterfaceGraphics,
   Input;
+
 
 type
   TFrameTiming = record

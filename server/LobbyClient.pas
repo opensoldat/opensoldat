@@ -5,6 +5,7 @@ interface
 uses
   SysUtils, Classes, fpjson, fphttpclient, Constants;
 
+
 type
 
   TLobbyThread = Class(TThread)
@@ -18,8 +19,10 @@ type
       constructor Create();
   end;
 
+
 implementation
   uses Server, Game, Sprites, Version, Weapons, Net, TraceLog;
+
 
 constructor TLobbyThread.Create();
 

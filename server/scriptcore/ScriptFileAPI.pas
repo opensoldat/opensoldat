@@ -27,6 +27,7 @@ uses
   uPSC_classes,
   uPSR_classes;
 
+
 type
   TScriptFileAPI = class;
 
@@ -113,10 +114,12 @@ type
     property DataFolder: string read GetDataFolder;
   end;
 
+
 implementation
 
 uses
   ScriptCore3;
+
 
 // Workaround for Kylix
 // TODO: Move to Kylix.pas Compatibility Unit

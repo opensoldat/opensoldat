@@ -13,6 +13,7 @@ interface
 uses
   Vector, Classes;
 
+
 const
   GFX_MONOCHROME = 1;
 
@@ -290,12 +291,14 @@ function RectHeight(const Rect: TGfxRect): Single;
 var
   GfxLog: procedure(s: string);
 
+
 implementation
 
 uses
   SysUtils, Math, dglOpenGL,
   {$IFDEF MSWINDOWS}Windows, {$ENDIF}
   BinPack, stb, FreeType, SDL2, Input, PhysFS;
+
 
 {******************************************************************************}
 {*                              Helper functions                              *}

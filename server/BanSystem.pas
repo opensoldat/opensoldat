@@ -5,6 +5,7 @@ interface
 uses
   Constants;
 
+
   procedure AddBannedIP(IP: ShortString; Reason: string;
     Duration: Integer = PERMANENT);
   function DelBannedIP(IP: ShortString): Boolean;
@@ -43,10 +44,12 @@ var
   LastBan: string;
   LastBanHW: string;
 
+
 implementation
 
 uses
   Server, fpmasks, classes, sysutils, ServerHelper;
+
 
 procedure AddBannedIP(IP: ShortString; Reason: string;
   Duration: Integer = PERMANENT);

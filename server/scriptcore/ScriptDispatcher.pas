@@ -26,6 +26,7 @@ uses
   Vector,
   SysUtils;
 
+
 type
   TCheckFunction = function(Dir: string): TScript;
 
@@ -175,6 +176,7 @@ type
 var
   ScrptDispatcher: TScriptDispatcher;
 
+
 implementation
 
 uses
@@ -184,6 +186,7 @@ uses
   StrUtils,
   Game,
   Server;
+
 
 constructor TScriptDispatcher.Instantiate;
 begin
@@ -855,4 +858,5 @@ initialization
   ScrptDispatcher := TScriptDispatcher.Instantiate;
   ScrptDispatcher.registerCheckFunction(@ScriptCore.CheckFunction);
   ScrptDispatcher.registerCheckFunction(@ScriptCore3.CheckFunction);
+
 end.

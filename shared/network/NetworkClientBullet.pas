@@ -12,13 +12,16 @@ uses
   // OpenSoldat units
   Steam, Net, Sprites, Weapons, Constants, NetworkServerBullet, Demo;
 
+
 procedure ClientSendBullet(i: Byte);
 procedure ClientHandleBulletSnapshot(NetMessage: PSteamNetworkingMessage_t);
+
 
 implementation
 
 uses
   Client, Game, Bullets, NetworkUtils;
+
 
 var
   OldBulletSnapshotMsg: array[1..MAX_SPRITES] of TMsg_BulletSnapshot;

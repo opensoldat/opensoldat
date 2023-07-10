@@ -15,6 +15,7 @@ interface
 uses
   Classes, syncobjs, SysUtils, Vector;
 
+
 type
   // Abstract script class.
   // Extended by each concrete script and the script dispatcher itself.
@@ -104,10 +105,12 @@ type
     property Lock: TSynchroObject read FLock;
   end;
 
+
 implementation
 
 uses
   Game;
+
 
 constructor TScript.Create;
 begin
@@ -256,6 +259,5 @@ begin
   Result := False;
 end;
 {$POP}
+
 end.
-
-

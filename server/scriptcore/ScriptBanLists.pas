@@ -23,6 +23,7 @@ uses
   ScriptCore3Api,
   SysUtils;
 
+
 type
 
   TScriptBanLists = class;
@@ -53,6 +54,7 @@ type
     procedure CompilerRegister(Compiler: TPascalCompiler); override;
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
+
 
 implementation
 
@@ -183,4 +185,3 @@ begin
 end;
 
 end.
-

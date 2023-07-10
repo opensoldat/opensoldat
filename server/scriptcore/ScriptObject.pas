@@ -21,6 +21,7 @@ uses
   Server,
   Game;
 
+
 type
 
   PThing = ^TThing;
@@ -76,10 +77,12 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
 
 uses
   NetworkServerThing, Parts, Constants;
+
 
 function TScriptObject.GetX: Single;
 begin

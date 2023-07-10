@@ -13,6 +13,7 @@ uses
   Constants,
   Version;
 
+
 const
   MAX_DL_SIZE = 150000000;  // max download size in bytes
 
@@ -45,10 +46,12 @@ type
 var
   DownloadRetry: Byte = 0;
 
+
 implementation
 
 uses
   Client, Util;
+
 
 constructor TDownloadThread.Create(DownloadURL: String; Name: String; Checksum: TSHA1Digest);
 begin

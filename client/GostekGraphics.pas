@@ -5,15 +5,18 @@ interface
 uses
   Classes, Sprites;
 
+
 procedure RenderGostek(var Soldier: TSprite);
 procedure LoadGostekData(Data: TStringList);
 procedure ApplyGostekConstraints;
+
 
 implementation
 
 uses
   Math, SysUtils, Client, Vector,
   Game, ClientGame, Weapons, Parts, Constants, GameRendering, Gfx;
+
 
 const
   {$DEFINE IDS}
@@ -456,4 +459,5 @@ end;
 
 initialization
   LoadDefaults();
+
 end.

@@ -54,6 +54,7 @@ function stbir_resize_uint8(in_data: PByte; in_w, in_h, in_stride: Integer;
   out_data: PByte; out_w, out_h, out_stride, num_channels: Integer): Integer;
   cdecl; external STBLIB;
 
+
 implementation
 
 end.

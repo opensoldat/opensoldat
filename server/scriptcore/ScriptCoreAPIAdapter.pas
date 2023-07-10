@@ -13,6 +13,7 @@ uses
   ScriptCoreInterface,
   SysUtils;
 
+
 type
 
   TScriptCoreAPIAdapter = class(TScriptCore3API)
@@ -65,6 +66,7 @@ type
     property Disabled: Boolean read FDisabled;
   end;
 
+
 implementation
 
 uses
@@ -88,6 +90,7 @@ uses
   Util,
   Version,
   Weapons;
+
 
 constructor TScriptCoreAPIAdapter.Create(Script: TScript);
 begin

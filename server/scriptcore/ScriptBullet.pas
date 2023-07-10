@@ -22,6 +22,7 @@ uses
   Server,
   Game;
 
+
 type
 
   PBullet = ^TBullet;
@@ -56,10 +57,12 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
 
 uses
   Parts;
+
 
 function TScriptActiveBullet.GetOwnerWeaponId: Integer;
 begin

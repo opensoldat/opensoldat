@@ -5,6 +5,7 @@ interface
 procedure UpdateFrame;
 procedure AppOnIdle;
 
+
 implementation
 
 uses
@@ -19,6 +20,7 @@ uses
   classes, Demo, Weapons, Cvar, LobbyClient,
   NetworkServerGame, NetworkServerSprite, NetworkServerThing,
   NetworkServerConnection, NetworkServerHeartbeat;
+
 
 var
   LastMinuteTick: QWord = 0;

@@ -15,6 +15,7 @@ interface
 uses
   Vector;
 
+
 const
   MAX_POS_INDEX    = 20;
   MAX_FRAMES_INDEX = 40;
@@ -39,6 +40,7 @@ type
 
   procedure LoadAnimObjects(ModDir: string);
 
+
 implementation
 
 uses
@@ -48,6 +50,7 @@ uses
   Client,
   {$ENDIF}
   SysUtils, TraceLog, PhysFS, Game, LogFile;
+
 
 const
   SCALE = 3;

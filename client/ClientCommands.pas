@@ -6,6 +6,7 @@ interface
 
 procedure InitClientCommands();
 
+
 implementation
 
 uses
@@ -13,6 +14,7 @@ uses
   Client, Command, Util, strutils, Game, ClientGame, Sound,
   GameRendering, NetworkClientMessages, Demo, GameStrings, Net,
   Sprites, Constants, classes, sysutils, Types, Input;
+
 
 var
   ScreenShotsInARow: Byte = 0;
@@ -341,4 +343,5 @@ begin
   CommandAdd('demo_tick_r', CommandDemoTick, 'skips to a tick (relatively) in demo', []);
 end;
 {$pop}
+
 end.

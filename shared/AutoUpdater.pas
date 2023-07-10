@@ -6,10 +6,12 @@ uses
   Process,
   SysUtils;
 
+
 procedure StartAutoUpdater;
 
 var
   UpdaterProcess: TProcess;
+
 
 implementation
 

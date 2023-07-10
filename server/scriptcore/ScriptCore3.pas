@@ -44,6 +44,7 @@ uses
   SysUtils,
   Vector;
 
+
 type
 
   TScriptCore3Conf = object
@@ -162,6 +163,7 @@ type
 
 function CheckFunction(Dir: string): TScriptCore3;
 
+
 implementation
 
 uses
@@ -173,6 +175,7 @@ uses
   ScriptDispatcher,
   ScriptExceptions,
   Variants;
+
 
 function CheckFunction(Dir: string): TScriptCore3;
 var

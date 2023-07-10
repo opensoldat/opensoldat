@@ -17,6 +17,7 @@ uses
   Classes, PascalExec, SysUtils,
   uPSDebugger, uPSRuntime;
 
+
 type
 
   TPascalError = uPSRuntime.TPSError;
@@ -37,6 +38,7 @@ type
     property DebugSymbols: string write LoadDebugSymbols;
     property LastError: TPascalError read GetLastError;
   end;
+
 
 implementation
 

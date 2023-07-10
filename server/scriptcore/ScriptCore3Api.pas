@@ -10,6 +10,7 @@ uses
   PascalExec,
   Script;
 
+
 type
   TScriptCore3API = class(TInterfacedObject, ICompilerAPI, IRuntimeAPI)
   protected
@@ -61,4 +62,5 @@ begin
   Result := TScriptCore3(FScript).CallEvent(Event, Params);
 end;
 {$pop}
+
 end.

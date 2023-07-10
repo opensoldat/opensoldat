@@ -9,12 +9,15 @@ uses
   // OpenSoldat units
   LogFile, Steam, Net, Sprites, Sound, Constants, GameStrings;
 
+
 procedure ClientHandleHeartBeat(NetMessage: PSteamNetworkingMessage_t);
+
 
 implementation
 
 uses
   Client, NetworkUtils, NetworkClientConnection, Game, Demo;
+
 
 procedure ClientHandleHeartBeat(NetMessage: PSteamNetworkingMessage_t);
 var

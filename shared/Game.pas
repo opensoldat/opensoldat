@@ -18,6 +18,7 @@ uses
   Vector, Constants, PolyMap, Parts, Sprites, Bullets, Things, Waypoints, Anims,
   Weapons, Sha1, Util;
 
+
 type
   TKillSort = record
     Kills, Deaths: Integer;
@@ -153,6 +154,7 @@ function IsPointOnScreen(Point: TVector2): Boolean;
 procedure ChangeMap;
 procedure SortPlayers;
 
+
 implementation
 
 uses
@@ -171,6 +173,7 @@ uses
   {$ELSE}
   NetworkServerGame, NetworkServerSprite
   {$ENDIF};
+
 
 var
   // NUMBER27's TIMING ROUTINES

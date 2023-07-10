@@ -5,6 +5,7 @@ interface
 uses
   Vector, Sprites, Constants;
 
+
 var
   // Chat stuff
   ChatMessage: array[1..MAX_SPRITES] of WideString;
@@ -45,6 +46,7 @@ procedure RenderInterface(TimeElapsed: Single; Width, Height: Single);
 procedure RenderActionSnapText(t: Extended);
 function IsDefaultInterface(const InterfaceName: string): Boolean;
 
+
 implementation
 
 uses
@@ -52,6 +54,7 @@ uses
   Game, Math, Calc, Version, Util, PolyMap,
   Demo, Weapons, GameStrings, Net, GameMenus, Gfx, GameRendering, PhysFS,
   ClientGame, Console, MapGraphics, Steam;
+
 
 type
   TInterfaceRelInfo = record

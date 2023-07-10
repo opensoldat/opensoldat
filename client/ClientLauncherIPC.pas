@@ -5,11 +5,13 @@ interface
 uses
   LauncherIPC;
 
+
 type
   TClientLauncherIPC = class(TLauncherIPC)
   protected
     procedure HandleMessage(Message: String); override;
   end;
+
 
 implementation
 

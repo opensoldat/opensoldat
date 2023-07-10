@@ -91,6 +91,7 @@ function Vec2Normalize(out vOut: TVector2; v: TVector2): PVector2;
 
 function Vec3Length(v: TVector3): Single;
 
+
 implementation
 
 function Vector2(x, y: Single): TVector2;

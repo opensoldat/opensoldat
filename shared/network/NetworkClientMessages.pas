@@ -13,14 +13,17 @@ uses
   // OpenSoldat units
   Steam, Net, Sprites, Constants, GameStrings;
 
+
 procedure ClientSendStringMessage(Text: WideString; MsgType: Byte);
 procedure ClientHandleChatMessage(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleSpecialMessage(NetMessage: PSteamNetworkingMessage_t);
+
 
 implementation
 
 uses
   Client, Game, InterfaceGraphics, NetworkUtils;
+
 
 procedure ClientSendStringMessage(Text: WideString; MsgType: Byte);
 var

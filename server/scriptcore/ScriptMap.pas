@@ -29,6 +29,7 @@ uses
   Game,
   Weapons;
 
+
 type
 
   TOnBeforeMapChange = procedure(Next: string) of object;
@@ -88,11 +89,13 @@ type
     property Map: TScriptMap read FMap;
   end;
 
+
 implementation
 
 uses
   Bullets,
   Constants;
+
 
 constructor TScriptMap.Create;
 var

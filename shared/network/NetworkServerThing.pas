@@ -10,6 +10,7 @@ uses
   {$IFDEF SERVER}Steam,{$ENDIF}
   Net, Sprites, Constants;
 
+
 {$IFDEF SERVER}
 procedure ServerThingSnapshot(ToNum: Byte);
 procedure ServerThingMustSnapshot(i: Byte);
@@ -21,10 +22,12 @@ procedure ServerThingTaken(i, w: Byte);
 procedure ServerHandleRequestThing(NetMessage: PSteamNetworkingMessage_t);
 {$ENDIF}
 
+
 implementation
 
 uses
   {$IFDEF SERVER}Server, NetworkUtils, Calc, {$ELSE}Client,{$ENDIF} Game, Demo;
+
 
 {$IFDEF SERVER}
 procedure ServerThingSnapshot(ToNum: Byte);
@@ -205,4 +208,3 @@ end;
 {$ENDIF}
 
 end.
-

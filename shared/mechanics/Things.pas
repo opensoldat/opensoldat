@@ -5,6 +5,7 @@ interface
 uses
   Parts, Anims, MapFile, PolyMap, Net, Weapons, Constants, Vector, Sprites;
 
+
   type TThingCollision = object
       ThingNum: Byte;
       CooldownEnd: LongInt;
@@ -54,6 +55,7 @@ uses
   function SpawnBoxes(var Start: TVector2; Team: Byte; Num: Byte): Boolean;
   function RandomizeStart(var Start: TVector2; Team: Byte): Boolean;
 
+
   implementation
 
   uses
@@ -68,6 +70,7 @@ uses
     NetworkServerThing, NetworkServerMessages, NetworkServerGame,
     {$ENDIF}
     {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, Calc, TraceLog, Game, Bullets;
+
 
 function CreateThing(sPos: TVector2; owner, sStyle, N: Byte):
   Integer;

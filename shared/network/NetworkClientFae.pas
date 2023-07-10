@@ -7,11 +7,13 @@ uses
   FaeBase,
   FaeClient;
 
+
 var
   FaePendingAuth: Pointer;
 
 procedure ClientSendFaeResponse(Response: TFaeResponseBox);
 procedure ClientHandleFaeChallenge(NetMessage: PSteamNetworkingMessage_t);
+
 
 implementation
 
@@ -24,6 +26,7 @@ uses
   NetworkUtils,
   TraceLog,
   Unit1;
+
 
 procedure ClientSendFaeResponse(Response: TFaeResponseBox);
 var

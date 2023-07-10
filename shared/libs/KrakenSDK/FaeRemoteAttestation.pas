@@ -13,6 +13,7 @@ interface
 
 uses FaeBase;
 
+
 const
 {$IFDEF MSWINDOWS}
   FAECHECK_MODULE_NAME = 'faecheck.dll';
@@ -61,6 +62,7 @@ type
     PFaeNonce; Mac: PFaeMac; AdditionalData: Pointer; AdSize: NativeUint;
     CipherText: Pointer; TextSize: NativeUint): Boolean;
   cdecl; external FAECHECK_MODULE_NAME name 'FaeUnlock';
+
 
 implementation
 

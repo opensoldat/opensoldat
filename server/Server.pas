@@ -45,6 +45,7 @@ uses
   Sprites, Anims, PolyMap, SharedConfig, Game, Things,
   BanSystem, LogFile, Version, Constants;
 
+
 procedure ActivateServer;
 function AddBotPlayer(Name: string; team: Integer): Byte;
 procedure StartServer;
@@ -297,6 +298,7 @@ var
   //SteamCallbacks: TSteamCallbacks;
   SteamAPI: TSteamGS;
   {$ENDIF}
+
 
 implementation
 

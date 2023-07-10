@@ -10,6 +10,7 @@ type
       function _Release: Integer; stdcall;
     end;
 
+
 implementation
 
 function TMyInterfacedObject.QueryInterface(const IID: TGUID; out Obj): HRESULT;

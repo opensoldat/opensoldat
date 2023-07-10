@@ -20,6 +20,7 @@ uses
   openal,
   PhysFS;
 
+
 type
   TSoundSample = record
     Loaded: Boolean;
@@ -71,6 +72,7 @@ function SetVolume(Channel: Integer; Volume: Single): Boolean;
 procedure PlayVoiceData(Data: Pointer; DataLength: Word; SpriteNum: Byte);
 {$ENDIF}
 
+
 implementation
 
 uses
@@ -81,6 +83,7 @@ uses
   LogFile,
   Constants,
   Game;
+
 
 function InitSound(): Boolean;
 var

@@ -24,6 +24,7 @@ uses
   ScriptCore3Api,
   SysUtils;
 
+
 type
 
   TScriptMapsList = class;
@@ -48,6 +49,7 @@ type
     procedure CompilerRegister(Compiler: TPascalCompiler); override;
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
+
 
 implementation
 

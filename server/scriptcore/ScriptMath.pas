@@ -7,6 +7,7 @@ interface
 uses
   Classes, SysUtils, Math, ScriptCore3Api, PascalCompiler, PascalExec;
 
+
 type
   TScriptMath = class
   private
@@ -53,6 +54,7 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
   end;
+
 
 implementation
 
@@ -302,4 +304,3 @@ begin
 end;
 
 end.
-

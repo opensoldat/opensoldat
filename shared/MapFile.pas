@@ -5,6 +5,7 @@ interface
 uses
   Vector, Waypoints, Util;
 
+
 type
   PMapColor = ^TMapColor;
   TMapColor = array[0..3] of Byte;  // [r,g,b,a]
@@ -92,9 +93,11 @@ function LoadMapFile(MapInfo: TMapInfo; var Map: TMapFile): Boolean;
 function MapColor(Color: LongInt): TMapColor;
 function IsPropActive(var Map: TMapFile; Index: Integer): Boolean;
 
+
 implementation
 
 uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, PolyMap, PhysFS; // for constants
+
 
 {******************************************************************************}
 {*                              Helper functions                              *}

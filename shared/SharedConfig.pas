@@ -13,16 +13,19 @@ interface
 uses
   Sprites;
 
+
 {$IFDEF SERVER}
 function LoadBotConfig(const FilePath: string; var SpriteC: TSprite): Boolean;
 {$ENDIF}
 function LoadWeaponsConfig(const FilePath: string): Boolean;
+
 
 implementation
 
 uses
   Game, IniFiles, Classes, SysUtils, StrUtils, Math,
   Util, Server, Net, Weapons, Constants;
+
 
 procedure ReadConfColor(conf: TStringList; const SectionName: string; var VarName: LongWord); overload;
 begin

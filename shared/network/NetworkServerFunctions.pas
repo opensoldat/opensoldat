@@ -12,6 +12,7 @@ uses
   // OpenSoldat units
   Steam, Net, Sprites, Weapons, Constants;
 
+
 procedure SetWeaponActive(ID, WeaponNum: Byte; State: Boolean);
 procedure ForceWeapon(ID, Primary, Secondary, Ammo, SecAmmo: Byte);
 procedure MovePlayer(ID: Byte; X, Y: Single);
@@ -20,10 +21,12 @@ procedure ForwardClient(ID: Byte; TargetIP: string; TargetPort: Integer; ShowMsg
 procedure PlaySound(ID: Byte; Name: string; X, Y: Single);
 procedure ServerHandleClientFreeCam(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
   Server, Game, NetworkUtils;
+
 
 procedure ServerSendFreeCam(ToNum: Byte; FreeCam: Boolean; Pos: TVector2);
 var

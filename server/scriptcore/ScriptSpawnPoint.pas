@@ -12,6 +12,7 @@ uses
   ScriptCore3Api,
   SysUtils;
 
+
 type
 
   TScriptSpawnPoint = class(TObject)
@@ -202,6 +203,5 @@ begin
     RegisterPropertyHelper(@IDReadHelper, nil, 'ID');
   end;
 end;
-
 
 end.

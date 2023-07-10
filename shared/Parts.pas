@@ -27,6 +27,7 @@ interface
 uses
   Vector;
 
+
 const
   NUM_PARTICLES = 560;
   RKV = 0.98;
@@ -68,10 +69,12 @@ type
     procedure SatisfyConstraintsFor(I: Integer);
   end;
 
+
 implementation
 
 uses
   Game, SysUtils, PhysFS;
+
 
 procedure ParticleSystem.DoVerletTimeStep;
 var

@@ -4,6 +4,7 @@ interface
 
 uses fgl;
 
+
 type
   TBitReader = class
   private
@@ -49,9 +50,11 @@ type
     property BitPos: Longint read FBitPos;
   end;
 
+
 implementation
 
 uses Math, SysUtils;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Read/Write helper functions

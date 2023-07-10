@@ -21,6 +21,7 @@ uses
   Weapons,
   Constants;
 
+
 {$IFDEF SERVER}
 function IsRemoteAdminIP(IP: string): Boolean;
 function IsAdminIP(IP: string): Boolean;
@@ -56,6 +57,8 @@ function IsFloodID(ID: Cardinal): Boolean;
 function AddIPToRemoteAdmins(SrcIP: string): Boolean;
 {$ENDIF}
 procedure StringToArray(var c: array of Char; s: string);
+
+
 implementation
 
 uses
@@ -65,6 +68,7 @@ uses
   Client, GameMenus,
   {$ENDIF}
   Net, Game, TraceLog;
+
 
 {$IFNDEF SERVER}
 procedure PlayRadioSound(RadioID: Byte);

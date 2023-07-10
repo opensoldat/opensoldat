@@ -19,6 +19,7 @@ uses
   // pascal script
   uPSC_dll, uPSCompiler, uPSC_std, uPSPreProcessor, uPSUtils;
 
+
 // just so that api units doesn't have to import uPSCompiler unit
 const
   iptRW = uPSCompiler.iptRW;
@@ -89,8 +90,8 @@ type
     procedure CompilerRegister(Compiler: TPascalCompiler);
   end;
 
-implementation
 
+implementation
 
 // BUG: this should also search in searchpaths
 // and be relative to calling file if possible

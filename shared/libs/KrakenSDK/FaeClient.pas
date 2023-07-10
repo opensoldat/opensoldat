@@ -13,6 +13,7 @@ interface
 
 uses FaeBase;
 
+
 const
 {$IFDEF MSWINDOWS}
   FAE_MODULE_NAME = 'fae.dll';
@@ -60,6 +61,7 @@ const
   // waits for auth op to complete (may take a few ms) and invalidates auth
   procedure FaeAuthCancel(Auth: Pointer);
   cdecl; external FAE_MODULE_NAME name 'Fae5';
+
 
 implementation
 

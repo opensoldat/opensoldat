@@ -13,6 +13,7 @@ interface
 uses
   Sprites;
 
+
 const
   DIST_AWAY       = 731;
   DIST_TOO_FAR    = 730;
@@ -31,6 +32,7 @@ procedure SimpleDecision(SpriteNum: Byte);
 procedure GoToThing(SpriteNum, ThingNum: Byte);
 procedure ControlBot(var SpriteC: TSprite);
 
+
 implementation
 
 uses
@@ -44,6 +46,7 @@ uses
   Waypoints,
   NetworkServerMessages,
   Calc;
+
 
 // Checks the distance on one axis
 function CheckDistance(PosA, PosB: Single): Integer;

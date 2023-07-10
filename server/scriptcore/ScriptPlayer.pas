@@ -25,6 +25,7 @@ uses
   SysUtils,
   Vector;
 
+
 type
 
   PSprite = ^TSprite;
@@ -353,6 +354,7 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
 
 uses
@@ -367,6 +369,7 @@ uses
   Command,
   Game,
   Weapons;
+
 
 constructor TScriptNewPlayer.Create;
 begin

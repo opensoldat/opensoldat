@@ -30,6 +30,7 @@ uses
   // OpenSoldat units
   Weapons, Constants;
 
+
 const
   // Binary ops
   B1 = 1;
@@ -862,6 +863,7 @@ var
   ForceWeaponCalled: Boolean;
   {$ENDIF}
 
+
 implementation
 
 uses
@@ -876,6 +878,7 @@ uses
   NetworkServerFunctions
   {$ENDIF}
   ;
+
 
 procedure ProcessEventsCallback(pInfo: PSteamNetConnectionStatusChangedCallback_t); cdecl;
 begin

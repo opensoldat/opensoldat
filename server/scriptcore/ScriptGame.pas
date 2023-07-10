@@ -33,6 +33,7 @@ uses
   Demo,
   Version;
 
+
 type
   TOnClockTick = procedure(Ticks: Integer) of object;
   TOnIdle = procedure() of object;
@@ -191,11 +192,13 @@ type
     property Game: TScriptGame read FGame;
   end;
 
+
 implementation
 
 uses
   ScriptCore3,
   ScriptPlayers;
+
 
 function TScriptGame.GetGameStyle: Byte;
 begin

@@ -5,6 +5,7 @@ interface
 uses
   LauncherConnection, Classes;
 
+
 type
   // Shared base class that manages the connection thread, and provides common
   // functionalities used by both client and server.
@@ -23,10 +24,12 @@ type
     property ThreadAlive: Boolean read FThreadAlive;
   end;
 
+
 implementation
 
 uses
   Command, TraceLog;
+
 
 procedure TLauncherIPC.Connect(Port: Integer);
 begin

@@ -27,6 +27,7 @@ uses
   // OpenSoldat
   PascalCore;
 
+
 // Scriptcore functions
 function ReadFile(FileName: String; UseEncryption: Boolean): String;
 function SRGB(R, G, B: Byte): TColor;
@@ -99,6 +100,7 @@ function AppendFile(FileName: String; Data: String): Boolean;
 function shell_exec(Command: String): Integer;
 function ReadINI(FileName, Section, Value, Default: string): string;
 
+
 implementation
 
 uses
@@ -112,6 +114,7 @@ uses
   Server, Game, Calc, IniFiles, Sprites, fpmasks,
   Math, ScriptDispatcher, Weapons, Things, Command, Bullets,
   TraceLog, Constants, strutils, Version, RegExpr, Cvar, ServerHelper {$IFDEF RCON}, Rcon{$ENDIF};
+
 
 function ExistsFile(FileName: String): Boolean;
 var

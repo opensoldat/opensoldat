@@ -16,16 +16,19 @@ uses
   // OpenSoldat units
   Net, Steam, Sprites, Command, Constants;
 
+
   procedure ServerSendStringMessage(Text: WideString; ToNum: Byte; From: Byte; MsgType: Byte);
   procedure ServerHandleChatMessage(NetMessage: PSteamNetworkingMessage_t);
   procedure ServerSendSpecialMessage(Text: string; MsgType: Byte;
     LayerId: Byte; Delay: Integer; Scale: Single; Color: UInt32;
     X: Single; Y: Single; ToNum: Byte);
 
+
 implementation
 
 uses
   Server, Game, Demo;
+
 
 procedure ServerSendStringMessage(Text: WideString; ToNum: Byte; From: Byte; MsgType: Byte);
 var

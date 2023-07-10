@@ -29,6 +29,7 @@ uses
   Cvar,
   PhysFS;
 
+
 procedure ClientRequestGame;
 procedure ClientSendPlayerInfo;
 procedure ClientDisconnect;
@@ -40,11 +41,13 @@ procedure ClientHandlePing(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleServerVars(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleSyncCvars(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
   GameRendering, Client, Game, Demo, ClientGame, GameMenus, strutils,
   NetworkUtils, NetworkClientSprite, FileClient, Sha1, Anims, Sound;
+
 
 // REQUEST GAME FROM SERVER
 procedure ClientRequestGame;

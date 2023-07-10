@@ -11,6 +11,7 @@ type
     procedure HandleMessage(Message: String); override;
   end;
 
+
 implementation
 
 procedure TServerLauncherIPC.HandleMessage(Message: String);
@@ -19,5 +20,3 @@ begin
 end;
 
 end.
-
-

@@ -9,12 +9,15 @@ uses
   // OpenSoldat units
   Net, Sprites, Weapons, Constants;
 
+
 procedure ServerHeartbeat;
+
 
 implementation
 
 uses
   Server, Game, Demo, Steam;
+
 
 // HEARTBEAT
 procedure ServerHeartbeat;

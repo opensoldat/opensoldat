@@ -21,6 +21,7 @@ function _(InputText: WideString): WideString; overload;
 function _(InputText: AnsiString): WideString; overload;
 procedure DeInitTranslation();
 
+
 implementation
 
 function InitTranslation(Filename: String): Boolean;

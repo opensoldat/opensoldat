@@ -59,6 +59,7 @@ function VerifyMapChecksum(Map: TMapInfo; Checksum: TSHA1Digest): Boolean;
 function ToStr(const AValue; ATypeInfo: PTypeInfo): AnsiString;
 {$ENDIF}
 
+
 implementation
 
 uses
@@ -76,6 +77,7 @@ uses
   Client,
   {$ENDIF}
   Game;
+
 
 function Iif(const Condition: Boolean; const TruePart: Variant;
   const FalsePart: Variant): Variant;

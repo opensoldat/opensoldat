@@ -7,10 +7,12 @@ uses
   Steam;
 {$ENDIF}
 
+
 procedure ServerBulletSnapshot(i: Byte; {$IFDEF SERVER}ToNum: Byte;{$ENDIF} Forced: Boolean);
 {$IFDEF SERVER}
 procedure ServerHandleBulletSnapshot(NetMessage: PSteamNetworkingMessage_t);
 {$ENDIF}
+
 
 implementation
 

@@ -17,6 +17,7 @@ interface
 uses
   Classes, Script, SysUtils, uPSComponent;
 
+
 type
   TPascalCore = class(TScript)
   private
@@ -47,10 +48,12 @@ type
       FuncName: string);
   end;
 
+
 implementation
 
 uses
   ScriptDispatcher;
+
 
 constructor TPascalCore.Create(Dir: string);
 begin

@@ -5,6 +5,7 @@ interface
 uses
   Classes, SysUtils, Sockets, Ssockets, Constants, Net;
 
+
 const
   REFRESHX_HEADER_CHARS = 10;
   RCON_AUTH_TIMEOUT = 5000;  // Authentication timeout (ms)
@@ -99,6 +100,7 @@ type
   procedure BroadcastMsg(Text: string);
   procedure SendMessageToAdmin(ToIP, Text: string);
 
+
 implementation
 
 uses
@@ -106,6 +108,7 @@ uses
   {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
   {$IFDEF UNIX}BaseUnix,{$ENDIF}
   Server, Util, TraceLog, Command, Game, ServerHelper, Cvar, Version, Math;
+
 
 {$PUSH}
 {$WARN 5024 OFF}  // Parameter "$1" not used

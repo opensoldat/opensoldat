@@ -13,6 +13,7 @@ uses
   Steam, Net, Sprites, Weapons, Sound, GameRendering,
   Constants, GameStrings;
 
+
 procedure ClientHandleNewPlayer(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientVoteKick(Num: Byte; Ban: Boolean; Reason: string);
 procedure ClientVoteMap(MapID: Word);
@@ -27,11 +28,13 @@ procedure ClientSendVoiceData(Data: Pointer; DataSize: Word);
 procedure ClientHandleVoiceData(NetMessage: PSteamNetworkingMessage_t);
 {$ENDIF}
 
+
 implementation
 
 uses
   Client, NetworkUtils, Game, Demo, ClientGame, Sparks, GameMenus,
   InterfaceGraphics;
+
 
 procedure ClientHandleNewPlayer(NetMessage: PSteamNetworkingMessage_t);
 var

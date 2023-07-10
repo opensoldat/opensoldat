@@ -10,6 +10,7 @@ uses
 
   Constants;
 
+
 procedure CommandInit();
 procedure CommandCleanup();
 function ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
@@ -52,6 +53,7 @@ var
   DeferredCommands: TStringList;
   DeferredInitialized: Boolean = False;
 
+
 implementation
   uses
     StrUtils,
@@ -74,6 +76,7 @@ implementation
     Cvar,
     Net,
     Game;
+
 
 {$PUSH}
 {$WARN 5024 OFF : Parameter "$1" not used}

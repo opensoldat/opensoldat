@@ -4,8 +4,10 @@ interface
 
 uses Steam;
 
+
 procedure ServerSendFaeChallenge(Peer: HSteamNetConnection; InOrder: Boolean);
 procedure ServerHandleFaeResponse(NetMessage: PSteamNetworkingMessage_t);
+
 
 implementation
 
@@ -21,6 +23,7 @@ uses
   NetworkUtils,
   TraceLog,
   Unit1;
+
 
 function IsFaeGameDataValid(Response: TFaeResponse): Boolean;
 begin
