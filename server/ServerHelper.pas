@@ -212,7 +212,7 @@ procedure SaveTxtLists;
 begin
   Trace('SaveTxtLists');
 
-  // save ban files
+  // Save ban files
   SaveBannedList(UserDirectory + 'configs/banned.txt');
   SaveBannedListHW(UserDirectory + 'configs/bannedhw.txt');
 
