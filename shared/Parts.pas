@@ -288,14 +288,14 @@ begin
     Exit;
 
   repeat
-    PhysFS_ReadLN(F, Nm);  // name
+    PhysFS_ReadLN(F, Nm);  // Name
     if Nm <> 'CONSTRAINTS' then
     begin
       PhysFS_ReadLN(F, X);  // X
       PhysFS_ReadLN(F, Y);  // Y
       PhysFS_ReadLN(F, Z);  // Z
 
-      // make object
+      // Make object
       P.X := -StrToFloat(X) * Scale / 1.2;
       P.Y := -StrToFloat(Z) * Scale;
 

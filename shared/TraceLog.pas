@@ -15,6 +15,8 @@ const
   LEVEL_DEBUG = 1;
   LEVEL_TRACE = 2;
 
+// TODO: move log_level here
+
 procedure Debug(const Msg: string);
 procedure Trace(const Msg: string);
 {$IFDEF STEAM}

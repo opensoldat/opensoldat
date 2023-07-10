@@ -21,7 +21,7 @@ const
   {$ELSE}
   DEDVERSION = 'GAME';
   {$ENDIF}
-  DEMO_VERSION = $0000;  // version number for OpenSoldat demo files
+  DEMO_VERSION = $0000;  // Version number for OpenSoldat demo files
 
 
 implementation

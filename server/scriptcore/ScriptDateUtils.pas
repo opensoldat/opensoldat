@@ -6,7 +6,6 @@
 {                                                       }
 {*******************************************************}
 
-// i guess there's not much to comment here
 unit ScriptDateUtils;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}

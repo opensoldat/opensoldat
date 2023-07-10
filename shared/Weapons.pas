@@ -86,7 +86,7 @@ const
   ORIGINAL_WEAPONS  = 20;
   TOTAL_WEAPONS     = 23;
 
-  // FIXME(skoskav): Normalize weapons' num with their index
+  // FIXME: Normalize weapons num with their index
   EAGLE_NUM          = 1;
   MP5_NUM            = 2;
   AK74_NUM           = 3;
