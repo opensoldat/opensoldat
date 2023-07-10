@@ -50,9 +50,10 @@ type
     procedure OnExecute(Script: TPSScript);
     // called after successful compilation, registers all pointer variables
     procedure OnAfterCompile;
-    {$push}{$warn 3018 off} // Hide "Constructor should be public"
+    {$PUSH}
+    {$WARN 3018 OFF} // Hide "Constructor should be public"
     constructor Create(Dir: string);
-    {$pop}
+    {$POP}
   public
     destructor Destroy; override;
     // Compiles ScriptCore instance
@@ -310,7 +311,8 @@ end;
 
 function TScriptCore.OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
   Forwarded: Boolean; Password: string): Integer;
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
   begin
@@ -321,10 +323,11 @@ begin
   end;
   Result := State;
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnJoinTeam(Id, Team, OldTeam: Byte; JoinGame: Boolean);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then begin
     if JoinGame and (Sprite[Id].Player.ControlMethod = Net.HUMAN) then
@@ -332,7 +335,7 @@ begin
     Self.CallFunc([Id, Team], 'OnJoinTeam', 0);
   end;
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnLeaveGame(Id: Byte; Kicked: Boolean);
 begin
@@ -341,12 +344,13 @@ begin
 end;
 
 procedure TScriptCore.OnBeforeMapChange(Map: string);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
     Self.CallFunc([], 'OnGameEnd', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnAfterMapChange(Map: string);
 begin
@@ -355,28 +359,31 @@ begin
 end;
 
 procedure TScriptCore.OnAdminConnect(Ip: string; Port: Word);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
     Self.CallFunc([Ip], 'OnAdminConnect', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnAdminDisconnect(Ip: string; Port: Word);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
     Self.CallFunc([Ip], 'OnAdminDisconnect', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnAdminMessage(Ip: string; Port: Word; Msg: string);
 begin
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
   if not Self.FDisabled then
     Self.CallFunc([Ip, Msg], 'OnAdminMessage', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnFlagGrab(Id, TeamFlag: Byte; GrabbedInBase: Boolean);
 begin
@@ -431,12 +438,13 @@ end;
 
 procedure TScriptCore.OnWeaponChange(Id, Primary, Secondary,
   PrimaryAmmo, SecondaryAmmo: Byte);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
     Self.CallFunc([Id, WeaponNumInternalToExternal(Primary), WeaponNumInternalToExternal(Secondary)], 'OnWeaponChange', 0);
 end;
-{$pop}
+{$POP}
 
 function TScriptCore.OnVoteMapStart(Id: Byte; Map: string): Boolean;
 begin
@@ -483,12 +491,13 @@ begin
 end;
 
 function TScriptCore.OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   Result := False;
   if not Self.FDisabled then
     Result := Self.CallFunc([255, Command], 'OnCommand', False);
 end;
-{$pop}
+{$POP}
 
 end.

@@ -105,9 +105,10 @@ type
     procedure SetHybridMode;
     function GetSandboxLevel: Shortint;
     function GetAllowIniEdit: Boolean;
-    {$push}{$warn 3018 off} // Hide "Constructor should be public"
+    {$PUSH}
+    {$WARN 3018 OFF} // Hide "Constructor should be public"
     constructor Create;
-    {$pop}
+    {$POP}
   protected
     procedure HandleException(E: Exception);
   public
@@ -356,10 +357,11 @@ begin
 
   // Workaround for OnWeaponChange: It needs 2 new objects,
   // which do not exist yet, when the method gets called.
-  {$push}{$warn 4046 off}
+  {$PUSH}
+  {$WARN 4046 OFF}
   Self.FOnWeaponChangeNewPrimary := TScriptWeaponChange.Create;
   Self.FOnWeaponChangeNewSecondary := TScriptWeaponChange.Create;
-  {$pop}
+  {$POP}
 
   Self.FApi := TList.Create;
   Self.FApi.Add(TScriptDateUtilsAPI.Create(Self));
@@ -1056,10 +1058,11 @@ begin
         // OnWeaponChange workaround
         Self.FOnWeaponChangeNewPrimary.SetGun(Primary, PrimaryAmmo);
         Self.FOnWeaponChangeNewSecondary.SetGun(Secondary, SecondaryAmmo);
-        {$push}{$warn 4040 off}
+        {$PUSH}
+        {$WARN 4040 OFF}
         Self.CallEvent(Self.FPlayers.Players[Id].OnWeaponChange,
           [PtrUInt(Self.FPlayers.Players[Id]), PtrUInt(TScriptPlayerWeapon(Self.FOnWeaponChangeNewPrimary)), PtrUInt(TScriptPlayerWeapon(Self.FOnWeaponChangeNewSecondary))]);
-        {$pop}
+        {$POP}
       end;
     except
       on e: Exception do

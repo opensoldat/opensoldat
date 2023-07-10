@@ -920,8 +920,8 @@ begin
   SetupVertexAttributes(Buffer);
   glDrawArrays(GL_TRIANGLES, Offset, Count);
 end;
-{$push}
-{$warn 4055 off}
+{$PUSH}
+{$WARN 4055 OFF}
 
 procedure GfxDraw(Buffer: TGfxVertexBuffer; IndexBuffer: TGfxIndexBuffer; Offset,
   Count: Integer);
@@ -962,7 +962,7 @@ begin
   end;
 end;
 
-{$pop}
+{$POP}
 
 procedure GfxPresent(Finish: Boolean);
 begin

@@ -55,9 +55,10 @@ type
     function GetScriptNames: TStringList;
 
     // private constructor
-    {$push}{$warn 3018 off} // Hide "Constructor should be public"
+    {$PUSH}
+    {$WARN 3018 OFF} // Hide "Constructor should be public"
     constructor Instantiate;
-    {$pop}
+    {$POP}
     procedure ProcessUnregisterQueue;
     procedure DoUnregisterScript(Script: TScript);
     procedure DoLock;

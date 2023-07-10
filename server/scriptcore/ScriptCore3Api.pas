@@ -36,7 +36,8 @@ uses
   ScriptCore3;
 
 
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 constructor TScriptCore3API.Create(Script: TScript);
 begin
   Self.FScript := Script;
@@ -66,6 +67,6 @@ function TScriptCore3API.CallEvent(const Event; const Params: array of Variant):
 begin
   Result := TScriptCore3(FScript).CallEvent(Event, Params);
 end;
-{$pop}
+{$POP}
 
 end.

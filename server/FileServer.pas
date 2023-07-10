@@ -154,7 +154,8 @@ begin
   end;
 end;
 
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 procedure THTTPFileServerThread.DoHandleRequest(Sender: TObject;
   var ARequest: TFPHTTPConnectionRequest; var AResponse: TFPHTTPConnectionResponse);
 var
@@ -233,6 +234,6 @@ begin
     AResponse.Free;
 
 end;
-{$pop}
+{$POP}
 
 end.

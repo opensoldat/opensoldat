@@ -454,7 +454,8 @@ begin
 end;
 
 procedure TScriptCoreAPIAdapter.OnJoinTeam(Id, Team, OldTeam: Byte; JoinGame: Boolean);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if Sprite[Id].Player.ControlMethod <> Net.HUMAN then
     Exit;
@@ -464,7 +465,7 @@ begin
     Self.FScript.CallFunc([Id, Team], 'OnJoinTeam', 0);
   end;
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnLeaveGame(Id: Byte; Kicked: Boolean);
 begin
@@ -473,12 +474,13 @@ begin
 end;
 
 procedure TScriptCoreAPIAdapter.OnBeforeMapChange(Map: string);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.Disabled then
     Self.FScript.CallFunc([], 'OnGameEnd', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnAfterMapChange(Map: string);
 begin
@@ -487,28 +489,31 @@ begin
 end;
 
 procedure TScriptCoreAPIAdapter.OnAdminConnect(Ip: string; Port: Word);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.Disabled then
     Self.FScript.CallFunc([Ip], 'OnAdminConnect', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnAdminDisconnect(Ip: string; Port: Word);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.Disabled then
     Self.FScript.CallFunc([Ip], 'OnAdminDisconnect', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnAdminMessage(Ip: string; Port: Word; Message: string);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.Disabled then
     Self.FScript.CallFunc([Ip, Message], 'OnAdminMessage', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnFlagGrab(Id, TeamFlag: Byte; GrabbedInBase: Boolean);
 begin
@@ -613,12 +618,13 @@ end;
 
 function TScriptCoreAPIAdapter.OnConsoleCommand(Ip: string; Port: Word;
   Command: string): Boolean;
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   Result := False;
   if not Self.Disabled then
     Result := Self.FScript.CallFunc([255, Command], 'OnCommand', False);
 end;
-{$pop}
+{$POP}
 
 end.
