@@ -556,134 +556,134 @@ begin
 
   if KeyModsMatch(KM_NONE, KeyMods, True) then
     case KeyCode of
-    SDL_SCANCODE_ESCAPE:
-    begin
-      if not ShouldRenderFrames then
-        GameLoopRun := False;
-    end;
-    SDL_SCANCODE_PAGEDOWN:
-    begin
-      if FragsMenuShow then
-        Inc(FragsScrollLev, Ord(FragsScrollLev < FragsScrollMax));
-    end;
-
-    SDL_SCANCODE_PAGEUP:
-    begin
-      if FragsMenuShow then
-        Dec(FragsScrollLev, Ord(FragsScrollLev > 0));
-    end;
-
-    SDL_SCANCODE_F11:
-    begin
-      Result := VoteActive;
-      VoteActive := False;
-    end;
-
-    SDL_SCANCODE_F12:
-    begin
-      Result := VoteActive;
-
-      if VoteActive then
+      SDL_SCANCODE_ESCAPE:
       begin
+        if not ShouldRenderFrames then
+          GameLoopRun := False;
+      end;
+      SDL_SCANCODE_PAGEDOWN:
+      begin
+        if FragsMenuShow then
+          Inc(FragsScrollLev, Ord(FragsScrollLev < FragsScrollMax));
+      end;
+
+      SDL_SCANCODE_PAGEUP:
+      begin
+        if FragsMenuShow then
+          Dec(FragsScrollLev, Ord(FragsScrollLev > 0));
+      end;
+
+      SDL_SCANCODE_F11:
+      begin
+        Result := VoteActive;
         VoteActive := False;
-
-        if VoteType = VOTE_MAP then
-        begin
-          ClientSendStringMessage('votemap ' + WideString(VoteTarget), MSGTYPE_CMD);
-          MainConsole.Console(WideFormat(_('You have voted on %s'), [VoteTarget]), VOTE_MESSAGE_COLOR);
-        end
-        else if VoteType = VOTE_KICK then
-        begin
-          i := StrToInt(VoteTarget);
-          ClientVoteKick(i, True, '');
-          MainConsole.Console(WideFormat(_('You have voted to kick %s'), [Sprite[i].Player.Name]), VOTE_MESSAGE_COLOR);
-        end;
       end;
-    end;
 
-    SDL_SCANCODE_F9:
-    begin
-      SDL_MinimizeWindow(GameWindow);
-      Result := True;
-    end;
-
-    SDL_SCANCODE_F8:
-    begin
-      Result := False;
-
-      if DemoPlayer.Active then
+      SDL_SCANCODE_F12:
       begin
-        Result := True;
-        demo_speed.SetValue(iif(GoalTicks = DEFAULT_GOALTICKS, 8.0, 1.0))
-      end;
-    end;
+        Result := VoteActive;
 
-    SDL_SCANCODE_F10:
-    begin
-      Result := False;
-
-      if DemoPlayer.Active then
-      begin
-        Result := True;
-        if (MapChangeCounter < 0) or (MapChangeCounter > 99999999) then
+        if VoteActive then
         begin
-          if MapChangeCounter < 0 then
-            MapChangeCounter := 999999999
-          else
-            MapChangeCounter := -60;
+          VoteActive := False;
+
+          if VoteType = VOTE_MAP then
+          begin
+            ClientSendStringMessage('votemap ' + WideString(VoteTarget), MSGTYPE_CMD);
+            MainConsole.Console(WideFormat(_('You have voted on %s'), [VoteTarget]), VOTE_MESSAGE_COLOR);
+          end
+          else if VoteType = VOTE_KICK then
+          begin
+            i := StrToInt(VoteTarget);
+            ClientVoteKick(i, True, '');
+            MainConsole.Console(WideFormat(_('You have voted to kick %s'), [Sprite[i].Player.Name]), VOTE_MESSAGE_COLOR);
+          end;
         end;
       end;
-    end;
 
-    SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3:
-    begin
-      Result := False;
-
-      if (ChatText = '') and (sv_radio.Value) and ShowRadioMenu then
+      SDL_SCANCODE_F9:
       begin
+        SDL_MinimizeWindow(GameWindow);
         Result := True;
-        i := Ord(RMenuState[0] <> ' ');
+      end;
 
-        case KeyCode of
-          SDL_SCANCODE_1: RMenuState[i] := '1';
-          SDL_SCANCODE_2: RMenuState[i] := '2';
-          SDL_SCANCODE_3: RMenuState[i] := '3';
-        end;
+      SDL_SCANCODE_F8:
+      begin
+        Result := False;
 
-        if i = 1 then
+        if DemoPlayer.Active then
         begin
-          ChatText := WideString(
-            RadioMenu.Values['Menu1' +
-              choose(StrToInt(RMenuState[0]) - 1, ['EFC', 'FFC', 'ES'])
-            ] + ' ' +
-            RadioMenu.Values['Menu2' +
-              choose(StrToInt(RMenuState[0]) - 1, ['EFC', 'FFC', 'ES']) +
-              choose(StrToInt(RMenuState[1]) - 1, ['U', 'M', 'D'])
-            ]);
-
-          ChatText := '*' + WideString(RMenuState[0]) + WideString(RMenuState[1]) + ChatText;
-          ClientSendStringMessage(ChatText, MSGTYPE_RADIO);
-          ChatText := '';
-          //RadioCooldown := 3;
-          ShowRadioMenu := False;
-          RMenuState := '  ';
+          Result := True;
+          demo_speed.SetValue(iif(GoalTicks = DEFAULT_GOALTICKS, 8.0, 1.0))
         end;
       end;
-    end;
 
-    else
-      Result := False;
-  end
+      SDL_SCANCODE_F10:
+      begin
+        Result := False;
+
+        if DemoPlayer.Active then
+        begin
+          Result := True;
+          if (MapChangeCounter < 0) or (MapChangeCounter > 99999999) then
+          begin
+            if MapChangeCounter < 0 then
+              MapChangeCounter := 999999999
+            else
+              MapChangeCounter := -60;
+          end;
+        end;
+      end;
+
+      SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3:
+      begin
+        Result := False;
+
+        if (ChatText = '') and (sv_radio.Value) and ShowRadioMenu then
+        begin
+          Result := True;
+          i := Ord(RMenuState[0] <> ' ');
+
+          case KeyCode of
+            SDL_SCANCODE_1: RMenuState[i] := '1';
+            SDL_SCANCODE_2: RMenuState[i] := '2';
+            SDL_SCANCODE_3: RMenuState[i] := '3';
+          end;
+
+          if i = 1 then
+          begin
+            ChatText := WideString(
+              RadioMenu.Values['Menu1' +
+                choose(StrToInt(RMenuState[0]) - 1, ['EFC', 'FFC', 'ES'])
+              ] + ' ' +
+              RadioMenu.Values['Menu2' +
+                choose(StrToInt(RMenuState[0]) - 1, ['EFC', 'FFC', 'ES']) +
+                choose(StrToInt(RMenuState[1]) - 1, ['U', 'M', 'D'])
+              ]);
+
+            ChatText := '*' + WideString(RMenuState[0]) + WideString(RMenuState[1]) + ChatText;
+            ClientSendStringMessage(ChatText, MSGTYPE_RADIO);
+            ChatText := '';
+            //RadioCooldown := 3;
+            ShowRadioMenu := False;
+            RMenuState := '  ';
+          end;
+        end;
+      end;
+
+      else
+        Result := False;
+    end
   else if KeyModsMatch(KM_ALT, KeyMods, True) then
     case KeyCode of
-    SDL_SCANCODE_F4:
-      ExitToMenu;
+      SDL_SCANCODE_F4:
+        ExitToMenu;
 
-    SDL_SCANCODE_F9:
-      ExitToMenu;
-    else
-      Result := False;
-  end
+      SDL_SCANCODE_F9:
+        ExitToMenu;
+      else
+        Result := False;
+    end
   else
     Result := False;
 
