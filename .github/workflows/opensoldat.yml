@@ -18,10 +18,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install cmake git libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6 patchelf
 
-      - name: Install fpc
-        run: |
-          curl -L -o ./fpc.deb https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.2.2/fpc-laz_3.2.2-210709_amd64.deb/download
-          sudo apt-get install ./fpc.deb
+      - name: Setup Lazarus environment
+        uses: gcarreno/setup-lazarus@v3.2.15
+        with:
+          lazarus-version: 2.2.6
+          #include-packages: "Synapse 40.1"
+          #with-cache: true
+
+#      - name: Install fpc
+#        run: |
+#          curl -L -o ./fpc.deb https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.2.2/fpc-laz_3.2.2-210709_amd64.deb/download
+#          sudo apt-get install ./fpc.deb
 
       - name: Compile OpenSoldat
         run: |
@@ -100,16 +107,23 @@ jobs:
           path: C:\vcpkg\installed
           key: vcpkg-cache
 
-      - name: Download freepascal
-        if: steps.fpc.outputs.cache-hit != 'true'
-        run: |
-          curl -o C:\fpc64.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/i386-win32/fpc-3.2.2.win32.and.win64.exe
+#      - name: Download freepascal
+#        if: steps.fpc.outputs.cache-hit != 'true'
+#        run: |
+#          curl -o C:\fpc64.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/i386-win32/fpc-3.2.2.win32.and.win64.exe
 
-      - name: Install freepascal
-        if: steps.fpc.outputs.cache-hit != 'true'
-        run: |
-           C:\fpc64.exe /silent /nocancel /suppressmsgboxes=no
-        shell: cmd
+#      - name: Install freepascal
+#        if: steps.fpc.outputs.cache-hit != 'true'
+#        run: |
+#           C:\fpc64.exe /silent /nocancel /suppressmsgboxes=no
+#        shell: cmd
+
+      - name: Setup Lazarus environment
+        uses: gcarreno/setup-lazarus@v3.2.15
+        with:
+          lazarus-version: 2.2.6
+          #include-packages: "Synapse 40.1"
+          #with-cache: true
 
       - name: Install dependencies
         run: |
