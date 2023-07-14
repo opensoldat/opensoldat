@@ -63,7 +63,7 @@ uses
   Util,
   Vector,
   {$IFDEF TESTING}
-    Version
+    Version,
   {$ENDIF}
 
   // Project units
