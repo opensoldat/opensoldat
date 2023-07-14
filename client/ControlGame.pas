@@ -341,17 +341,20 @@ begin
       Result := True;
 
       case KeyCode of
-        SDLK_HOME: begin
+        SDLK_HOME:
+        begin
           ChatChanged := True;
           CursorPosition := 1;
         end;
 
-        SDLK_END: begin
+        SDLK_END:
+        begin
           ChatChanged := True;
           CursorPosition := Length(ChatText);
         end;
 
-        SDLK_RIGHT: begin
+        SDLK_RIGHT:
+        begin
           ChatChanged := True;
           Len := Length(ChatText);
           while (CursorPosition < Len) do
@@ -365,7 +368,8 @@ begin
           end;
         end;
 
-        SDLK_LEFT: begin
+        SDLK_LEFT:
+        begin
           ChatChanged := True;
           while (CursorPosition > 1) do
           begin
@@ -386,7 +390,8 @@ begin
       Result := True;
 
       case KeyCode of
-        SDLK_ESCAPE: begin
+        SDLK_ESCAPE:
+        begin
           ClearChatText;
         end;
 
@@ -415,23 +420,27 @@ begin
           end;
         end;
 
-        SDLK_HOME: begin
+        SDLK_HOME:
+        begin
           ChatChanged := True;
           CursorPosition := 1;
         end;
 
-        SDLK_END: begin
+        SDLK_END:
+        begin
           ChatChanged := True;
           CursorPosition := Length(ChatText);
         end;
 
-        SDLK_RIGHT: begin
+        SDLK_RIGHT:
+        begin
           ChatChanged := True;
           if Length(ChatText) > CursorPosition then
             Inc(CursorPosition);
         end;
 
-        SDLK_LEFT: begin
+        SDLK_LEFT:
+        begin
           ChatChanged := True;
           if CursorPosition > 1 then
             Dec(CursorPosition);
@@ -545,22 +554,27 @@ begin
 
   // other hard coded key bindings
 
-  if KeyModsMatch(KM_NONE, KeyMods, True) then case KeyCode of
-    SDL_SCANCODE_ESCAPE: begin
+  if KeyModsMatch(KM_NONE, KeyMods, True) then
+    case KeyCode of
+    SDL_SCANCODE_ESCAPE:
+    begin
       if not ShouldRenderFrames then
         GameLoopRun := False;
     end;
-    SDL_SCANCODE_PAGEDOWN: begin
+    SDL_SCANCODE_PAGEDOWN:
+    begin
       if FragsMenuShow then
         Inc(FragsScrollLev, Ord(FragsScrollLev < FragsScrollMax));
     end;
 
-    SDL_SCANCODE_PAGEUP: begin
+    SDL_SCANCODE_PAGEUP:
+    begin
       if FragsMenuShow then
         Dec(FragsScrollLev, Ord(FragsScrollLev > 0));
     end;
 
-    SDL_SCANCODE_F11: begin
+    SDL_SCANCODE_F11:
+    begin
       Result := VoteActive;
       VoteActive := False;
     end;
@@ -587,12 +601,14 @@ begin
       end;
     end;
 
-    SDL_SCANCODE_F9: begin
+    SDL_SCANCODE_F9:
+    begin
       SDL_MinimizeWindow(GameWindow);
       Result := True;
     end;
 
-    SDL_SCANCODE_F8: begin
+    SDL_SCANCODE_F8:
+    begin
       Result := False;
 
       if DemoPlayer.Active then
@@ -602,7 +618,8 @@ begin
       end;
     end;
 
-    SDL_SCANCODE_F10: begin
+    SDL_SCANCODE_F10:
+    begin
       Result := False;
 
       if DemoPlayer.Active then
@@ -657,7 +674,8 @@ begin
     else
       Result := False;
   end
-  else if KeyModsMatch(KM_ALT, KeyMods, True) then case KeyCode of
+  else if KeyModsMatch(KM_ALT, KeyMods, True) then
+    case KeyCode of
     SDL_SCANCODE_F4:
       ExitToMenu;
 
@@ -731,30 +749,37 @@ begin
   while SDL_PollEvent(@Event) = 1 do
   begin
     case Event.type_ of
-      SDL_QUITEV: begin
+      SDL_QUITEV:
+      begin
         ClientDisconnect;
         Halt(0);
       end;
 
-      SDL_KEYDOWN: begin
+      SDL_KEYDOWN:
+      begin
         if not KeyDown(Event.key) then
           KeyStatus[Event.key.keysym.scancode] := True;
       end;
 
-      SDL_KEYUP: begin
+      SDL_KEYUP:
+      begin
         KeyStatus[Event.key.keysym.scancode] := False;
         KeyUp(Event.key);
       end;
 
-      SDL_MOUSEBUTTONDOWN: begin
+      SDL_MOUSEBUTTONDOWN:
+      begin
         if not GameMenuClick() then
           KeyStatus[Event.button.button + 300] := True;
       end;
 
       SDL_MOUSEBUTTONUP:
+      begin
         KeyStatus[Event.button.button + 300] := False;
+      end;
 
-      SDL_MOUSEWHEEL: begin
+      SDL_MOUSEWHEEL:
+      begin
         // SDL_MOUSEWHEEL_FLIPPED = 1
         if Event.wheel.direction = 1 then
           Event.wheel.y := Event.wheel.y * -1;
@@ -803,7 +828,8 @@ begin
         end;
       end;
 
-      SDL_MOUSEMOTION: begin
+      SDL_MOUSEMOTION:
+      begin
         if 0 <> (SDL_GetWindowFlags(GameWindow) and SDL_WINDOW_INPUT_FOCUS) then
         begin
           mx := Max(0, Min(GameWidth, mx + Event.motion.xrel * cl_sensitivity.Value));
