@@ -70,13 +70,13 @@ jobs:
           tar -cvf OpenSoldatServer-linux-x64.tar -C build OpenSoldatServer
 
       - name: Upload game build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: linux-build
           path: launcher/out/make/zip/linux/x64/
 
       - name: Upload server-only build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: linux-server-build
           path: OpenSoldatServer-linux-x64.tar
@@ -95,14 +95,14 @@ jobs:
 
       #- name: Cache fpc
       #  id: fpc
-      #  uses: actions/cache@v2
+      #  uses: actions/cache@v3
       #  with:
       #    path: C:\fpc
       #    key: freepascal-3.2.2
 
       - name: Cache vcpkg
         id: vcpkg-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: C:\vcpkg\installed
           key: vcpkg-cache
