@@ -347,25 +347,25 @@ end;
 
 procedure InitClientCommands();
 begin
-  CommandAdd('bind', CommandBind, 'Binds command to key', []);
-  CommandAdd('connect', CommandConnect, 'connect to server', [CMD_DEFERRED]);
-  CommandAdd('join', CommandConnect, 'connect to server', [CMD_DEFERRED]);
-  CommandAdd('joinurl', CommandConnect, 'connect to server using url', [CMD_DEFERRED]);
-  CommandAdd('disconnect', CommandDisconnect, 'disconnect from server', [CMD_DEFERRED]);
-  CommandAdd('retry', CommandRetry, 'retry connect to last server', [CMD_DEFERRED]);
-  CommandAdd('screenshot', CommandScreenshot, 'take a screenshot of game', [CMD_DEFERRED]);
-  CommandAdd('say', CommandSay, 'send chat message', [CMD_INGAMEONLY]);
-  CommandAdd('say_team', CommandSayTeam, 'send team chat message', [CMD_INGAMEONLY]);
-  CommandAdd('record', CommandRecord, 'record demo', []);
-  CommandAdd('mute', CommandMute, 'mute specific nick or id', []);
-  CommandAdd('unbindall', CommandUnbindall, 'Unbinds all binds', []);
-  CommandAdd('unmute', CommandUnmute, 'unmute specific nick or id', []);
-  CommandAdd('stop', CommandStop, 'stop recording demo', []);
-  CommandAdd('shutdown', CommandShutdown, 'shutdown game', []);
-  CommandAdd('switchcam', CommandSwitchCam, 'switches camera to specific player', [CMD_INGAMEONLY]);
-  CommandAdd('switchcamflag', CommandSwitchCamFlag, 'switches camera to specific flag', [CMD_INGAMEONLY]);
-  CommandAdd('demo_tick', CommandDemoTick, 'skips to a tick in demo', []);
-  CommandAdd('demo_tick_r', CommandDemoTick, 'skips to a tick (relatively) in demo', []);
+  CommandAdd('bind',          CommandBind,          'bind command to key', []);
+  CommandAdd('connect',       CommandConnect,       'connect to server', [CMD_DEFERRED]);
+  CommandAdd('join',          CommandConnect,       'connect to server', [CMD_DEFERRED]);
+  CommandAdd('joinurl',       CommandConnect,       'connect to server using url', [CMD_DEFERRED]);
+  CommandAdd('disconnect',    CommandDisconnect,    'disconnect from server', [CMD_DEFERRED]);
+  CommandAdd('retry',         CommandRetry,         'retry connect to last server', [CMD_DEFERRED]);
+  CommandAdd('screenshot',    CommandScreenshot,    'take a screenshot of game', [CMD_DEFERRED]);
+  CommandAdd('say',           CommandSay,           'send chat message', [CMD_INGAMEONLY]);
+  CommandAdd('say_team',      CommandSayTeam,       'send team chat message', [CMD_INGAMEONLY]);
+  CommandAdd('record',        CommandRecord,        'record demo', []);
+  CommandAdd('mute',          CommandMute,          'mute specific nick or id', []);
+  CommandAdd('unbindall',     CommandUnbindall,     'unbind all binds', []);
+  CommandAdd('unmute',        CommandUnmute,        'unmute specific nick or id', []);
+  CommandAdd('stop',          CommandStop,          'stop recording demo', []);
+  CommandAdd('shutdown',      CommandShutdown,      'shutdown game', []);
+  CommandAdd('switchcam',     CommandSwitchCam,     'switch camera to specific player', [CMD_INGAMEONLY]);
+  CommandAdd('switchcamflag', CommandSwitchCamFlag, 'switch camera to specific flag', [CMD_INGAMEONLY]);
+  CommandAdd('demo_tick',     CommandDemoTick,      'skip to a tick in demo', []);
+  CommandAdd('demo_tick_r',   CommandDemoTick,      'skip to a tick (relatively) in demo', []);
 end;
 {$POP}
 
