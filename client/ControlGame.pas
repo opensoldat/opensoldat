@@ -839,11 +839,12 @@ begin
         end;
       end;
 
-      SDL_WINDOWEVENT_ENTER, SDL_WINDOWEVENT_FOCUS_GAINED:
-      begin
-        SDL_ResetKeyboard();
-        SDL_ResetMouse();
-      end;
+      // NOTE: wait for SDL_ResetMouse, then update bindings
+      //SDL_WINDOWEVENT_ENTER, SDL_WINDOWEVENT_FOCUS_GAINED:
+      //begin
+        //SDL_ResetKeyboard();  // Requires SDL 2.24.0
+        //SDL_ResetMouse();     // Not yet implemented
+      //end;
     end;
   end;
 end;
