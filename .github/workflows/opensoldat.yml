@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout OpenSoldat code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout launcher code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: opensoldat/launcher
           path: launcher
@@ -85,20 +85,20 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout OpenSoldat code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout launcher code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: opensoldat/launcher
           path: launcher
 
-      - name: Cache fpc
-        id: fpc
-        uses: actions/cache@v2
-        with:
-          path: C:\fpc
-          key: freepascal-3.2.2
+      #- name: Cache fpc
+      #  id: fpc
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: C:\fpc
+      #    key: freepascal-3.2.2
 
       - name: Cache vcpkg
         id: vcpkg-cache
@@ -123,7 +123,7 @@ jobs:
         with:
           lazarus-version: 2.2.6
           #include-packages: "Synapse 40.1"
-          #with-cache: true
+          with-cache: false
 
       - name: Install dependencies
         run: |
@@ -168,7 +168,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: true
 
@@ -197,7 +197,7 @@ jobs:
     needs: [linux, windows, macos]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
