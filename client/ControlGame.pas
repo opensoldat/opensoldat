@@ -838,6 +838,12 @@ begin
           GameMenuMouseMove();
         end;
       end;
+
+      SDL_WINDOWEVENT_ENTER, SDL_WINDOWEVENT_FOCUS_GAINED:
+      begin
+        SDL_ResetKeyboard();
+        SDL_ResetMouse();
+      end;
     end;
   end;
 end;
