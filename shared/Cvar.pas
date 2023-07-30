@@ -31,22 +31,20 @@ const
     MAX_CVARS = 1024;
 
 type
-  {
-    CVAR_IMMUTABLE       - can't be changed after set
-    CVAR_ARCHIVE         - save cvar to cfg file
-    CVAR_SPONLY          - only in singleplayer mode
-    CVAR_NOTIFY          - notify players after change
-    CVAR_MODIFIED        - this flag is set after cvar changed initial value
-    CVAR_CLIENT          - client cvar
-    CVAR_SERVER          - server cvar
-    CVAR_SYNC            - sync cvar to client cvar
-    CVAR_SCRIPT          - cvar set by script
-    CVAR_INITONLY        - cvar can be changed only at startup
-    CVAR_SERVER_INITONLY - cvar can be changed only at startup by the server
-  }
-  TCvarFlag = (CVAR_IMMUTABLE, CVAR_ARCHIVE, CVAR_SPONLY, CVAR_NOTIFY,
-      CVAR_MODIFIED, CVAR_CLIENT, CVAR_SERVER, CVAR_SYNC, CVAR_SCRIPT,
-      CVAR_INITONLY, CVAR_SERVER_INITONLY, CVAR_TOSYNC);
+  TCvarFlag = (
+      CVAR_IMMUTABLE,        // can't be changed after set
+      CVAR_ARCHIVE,          // save cvar to cfg file
+      CVAR_SPONLY,           // only in singleplayer mode
+      CVAR_NOTIFY,           // notify players after change
+      CVAR_MODIFIED,         // this flag is set after cvar changed initial value
+      CVAR_CLIENT,           // client cvar
+      CVAR_SERVER,           // server cvar
+      CVAR_SYNC,             // sync cvar to client cvar
+      CVAR_SCRIPT,           // cvar set by script
+      CVAR_INITONLY,         // cvar can be changed only at startup
+      CVAR_SERVER_INITONLY,  // cvar can be changed only at startup by the server
+      CVAR_TOSYNC            // TODO: explain what this is for
+  );
   TCvarFlags = set of TCvarFlag;
 
   TCvarBase = class
