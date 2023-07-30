@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       Sound Unit for OPENSOLDAT                       }
-{                                                       }
-{       Copyright (c) 2002-2003 Michal Marcinkowski     }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Sound Unit for OpenSoldat                             }
+{                                                             }
+{       Copyright (c) 2002-2003 Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Sound;
 

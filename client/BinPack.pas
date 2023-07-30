@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       BinPack Unit for OPENSOLDAT                     }
-{                                                       }
-{       Copyright (c) 2015 Mariano Cuatrin              }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       BinPack Unit for OpenSoldat                           }
+{                                                             } 
+{       Copyright (c) 2015      Mariano Cuatrin               }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit BinPack;
 

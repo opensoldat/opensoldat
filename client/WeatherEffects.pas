@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       WeatherEffects Unit for OPENSOLDAT              }
-{                                                       }
-{       Copyright (c) 2003 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       WeatherEffects Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2003      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit WeatherEffects;
 
