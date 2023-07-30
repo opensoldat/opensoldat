@@ -1,10 +1,11 @@
-{*********************************************************}
-{                                                         }
-{   OpenSoldatServer                                      }
-{                                                         }
-{   Copyright (c) 2001 Michal Marcinkowski                }
-{                                                         }
-{*********************************************************}
+{*************************************************************}
+{                                                             }
+{       OpenSoldatServer                                      }
+{                                                             }
+{       Copyright (c) 2001      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 program opensoldatserver;
 

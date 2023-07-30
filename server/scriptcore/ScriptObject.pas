@@ -1,10 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptObject unit for OPENSOLDAT                }
-{                                                       }
-{       Copyright (c) 2013 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptObject Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2013      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptObject;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}

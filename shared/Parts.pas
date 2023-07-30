@@ -1,24 +1,25 @@
-{*******************************************************}
-{                                                       }
-{       Particle Unit for OPENSOLDAT                    }
-{                                                       }
-{       Copyright (c) 2001-02 Michal Marcinkowski       }
-{                                                       }
-{ PARTS ver. 1.0.7                                      }
-{ PARTICLE & CONSTRAINT PHYSICS MODULE FOR DELPHI 2D    }
-{  by Michal Marcinkowski                               }
-{                                                       }
-{  version history:                                     }
-{  Current - Modified for OPENSOLDAT                    }
-{  1.0.7 - Changed to 2D                                }
-{  1.0.6 - Added Constraint Active variable             }
-{  1.0.5 - Added PO Constraints only loading            }
-{  1.0.4 - Changed to D3DX Vectors                      }
-{  1.0.3 - Added PO loader scaling                      }
-{  1.0.2 - Added Euler Integrator                       }
-{  1.0.1 - Added PO files loading                       }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Particle Unit for OpenSoldat                          }
+{                                                             }
+{       Copyright (c) 2001-2002 Michal Marcinkowski           } 
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{  PARTS ver. 1.0.7                                           }
+{  PARTICLE & CONSTRAINT PHYSICS MODULE FOR DELPHI 2D         }
+{  by Michal Marcinkowski                                     }
+{                                                             }
+{  version history:                                           }
+{  Current - Modified for OPENSOLDAT                          }
+{  1.0.7 - Changed to 2D                                      }
+{  1.0.6 - Added Constraint Active variable                   }
+{  1.0.5 - Added PO Constraints only loading                  }
+{  1.0.4 - Changed to D3DX Vectors                            }
+{  1.0.3 - Added PO loader scaling                            }
+{  1.0.2 - Added Euler Integrator                             }
+{  1.0.1 - Added PO files loading                             }
+{                                                             }
+{*************************************************************}
 
 unit Parts;
 

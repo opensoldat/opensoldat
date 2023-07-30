@@ -1,3 +1,11 @@
+{*************************************************************}
+{                                                             }
+{       ScriptCore3Api Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptCore3Api;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}

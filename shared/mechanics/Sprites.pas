@@ -1,12 +1,13 @@
-{*******************************************************}
-{                                                       }
-{       Sprites Unit for OPENSOLDAT                     }
-{       Based on Strike of the Dragon Unit              }
-{       by Michal Marcinkowski                          }
-{                                                       }
-{       Copyright (c) 2002 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Sprites Unit for OpenSoldat                           }
+{       Based on Strike of the Dragon Unit                    }
+{       by Michal Marcinkowski                                }
+{                                                             }  
+{       Copyright (c) 2002      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Sprites;
 

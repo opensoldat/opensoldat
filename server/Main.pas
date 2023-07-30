@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       Main Unit for OPENSOLDAT                        }
-{                                                       }
-{       Copyright (c) 2012 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Main Unit for OpenSoldat                              }
+{                                                             }
+{       Copyright (c) 2012      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Main;
 

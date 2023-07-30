@@ -1,13 +1,14 @@
-{*******************************************************}
-{                                                       }
-{       PascalCore unit for OPENSOLDAT                  }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{ PascalCore defines a class that should be extended by }
-{ any script using PascalScript                         }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       PascalCore Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{  PascalCore defines a class that should be extended by any  }
+{  script using PascalScript                                  }
+{                                                             }
+{*************************************************************}
 unit PascalCore;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}

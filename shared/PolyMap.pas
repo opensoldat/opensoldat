@@ -1,3 +1,12 @@
+{*************************************************************}
+{                                                             }
+{       PolyMap Unit for OpenSoldat                           }
+{                                                             }
+{       Copyright (c) 2001-2020 Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit PolyMap;
 
 interface

@@ -1,3 +1,11 @@
+{*************************************************************}
+{                                                             }
+{       NetworkServerBullet Unit for OpenSoldat               }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkServerBullet;
 
 interface

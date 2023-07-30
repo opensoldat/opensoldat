@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       SharedConfig Unit for OPENSOLDAT                }
-{                                                       }
-{       Copyright (c) 2012 Daniel Forssten              }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       SharedConfig Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2012      Daniel Forssten               }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit SharedConfig;
 

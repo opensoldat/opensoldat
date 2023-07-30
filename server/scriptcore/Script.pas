@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       Abstract script unit for OPENSOLDAT             }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Script Unit for OpenSoldat                            }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Script;
 

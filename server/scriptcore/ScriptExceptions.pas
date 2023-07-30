@@ -1,10 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptExceptions unit for OPENSOLDAT            }
-{                                                       }
-{       Copyright (c) 2013 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptExceptions Unit for OpenSoldat                  }
+{                                                             }
+{       Copyright (c) 2013      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptExceptions;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}

@@ -1,12 +1,13 @@
-{*******************************************************}
-{                                                       }
-{       Animation Unit for OPENSOLDAT                   }
-{       Based on Strike of the Dragon ENGINE            }
-{       by Michal Marcinkowski                          }
-{                                                       }
-{       Copyright (c) 2001 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Animation Unit for OpenSoldat                         }
+{       Based on Strike of the Dragon ENGINE                  }
+{       by Michal Marcinkowski                                }
+{                                                             }
+{       Copyright (c) 2001      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Anims;
 

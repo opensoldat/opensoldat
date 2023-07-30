@@ -1,11 +1,13 @@
-{*******************************************************}
-{                                                       }
-{       ScriptBullet unit for OPENSOLDAT                }
-{                                                       }
-{       Copyright (c) 2014 Tomasz Kolosowski            }
-{                          and  Umut Karakas            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptBullet Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2014      Tomasz Kolosowski             }
+{       Copyright (c) 2014      Umut Karakas                  }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptBullet;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}

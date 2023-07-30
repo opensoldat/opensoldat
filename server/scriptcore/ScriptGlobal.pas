@@ -1,11 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptGlobal unit for OPENSOLDAT                }
-{                                                       }
-{       Copyright (c) 2014 Tomasz Kolosowski            }
-{                          and  Umut Karakas            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptGlobal Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2014      Tomasz Kolosowski             }
+{       Copyright (c) 2014      Umut Karakas                  }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // Unit for stuff that is not only used by this specific script.
 // TODO: Documentation.

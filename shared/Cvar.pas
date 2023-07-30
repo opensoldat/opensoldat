@@ -1,3 +1,15 @@
+{*************************************************************}
+{                                                             }
+{       Cvar Unit for OPENSOLDAT                              }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{                                                             }
+{  For reference see:                                         }
+{  https://developer.valvesoftware.com/wiki/ConVar            }
+{                                                             }
+{*************************************************************}
+
 unit Cvar;
 
 interface

@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       Waypoints Unit for OPENSOLDAT                   }
-{                                                       }
-{       Copyright (c) 2002 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Waypoints Unit for OpenSoldat                         }
+{                                                             }
+{       Copyright (c) 2002      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Waypoints;
 

@@ -1,15 +1,16 @@
-{*******************************************************}
-{                                                       }
-{       ScriptCoreInterface unit for OPENSOLDAT         }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{ ScriptCoreInterface unit holds all the old            }
-{ scriptcore's API functions.                           }
-{ I've put them all here to keep ScriptCore class more  }
-{ or less tidy.                                         }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptCoreInterface Unit for OpenSoldat               }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{  ScriptCoreInterface unit holds all the old                 }
+{  scriptcore's API functions.                                }
+{  I've put them all here to keep ScriptCore class more       }
+{  or less tidy.                                              }
+{                                                             }
+{*************************************************************}
 
 unit ScriptCoreInterface;
 

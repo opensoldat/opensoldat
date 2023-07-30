@@ -1,11 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptBanLists unit for OPENSOLDAT              }
-{                                                       }
-{       Copyright (c) 2015 Tomasz Kolosowski            }
-{                          and  Umut Karakas            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptBanLists Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2015      Tomasz Kolosowski             }
+{       Copyright (c) 2015      Umut Karakas                  }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit ScriptBanLists;

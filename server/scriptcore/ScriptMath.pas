@@ -1,3 +1,11 @@
+{*************************************************************}
+{                                                             }
+{       ScriptMath Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptMath;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}

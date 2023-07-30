@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       DateUtils unit for OPENSOLDAT                   }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptDateUtils Unit for OpenSoldat                   }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit ScriptDateUtils;
 

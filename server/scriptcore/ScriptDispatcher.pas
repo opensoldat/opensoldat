@@ -1,18 +1,19 @@
-{******************************************************************}
-{                                                                  }
-{             Script dispatcher unit for OPENSOLDAT                }
-{                                                                  }
-{             Copyright (c) 2012 Tomasz Kolosowski                 }
-{                                                                  }
-{ This is an entry scriptcore unit.                                }
-{ No other script unit should be imported in the rest of the code. }
-{ I've tried to implement it using slots & signals pattern         }
-{ but I've failed miserabley while trying to port it to pascal.    }
-{ Implemnted as observer instead, resulting in a big code          }
-{ redundancy. The good news though is that most of the errors will }
-{ be most likely caught during compilation time.                   }
-{                                                                  }
-{******************************************************************}
+{********************************************************************}
+{                                                                    }
+{       ScriptDispatcher Unit for OpenSoldat                         }
+{                                                                    }
+{       Copyright (c) 2012      Tomasz Kolosowski                    }
+{       Copyright (c) 2020-2023 OpenSoldat contributors              }
+{                                                                    }
+{  This is an entry scriptcore unit.                                 }
+{  No other script unit should be imported in the rest of the code.  }
+{  I've tried to implement it using slots & signals pattern          }
+{  but I've failed miserabley while trying to port it to pascal.     }
+{  Implemnted as observer instead, resulting in a big code           }
+{  redundancy. The good news though is that most of the errors will  }
+{  be most likely caught during compilation time.                    }
+{                                                                    }
+{********************************************************************}
 
 unit ScriptDispatcher;
 

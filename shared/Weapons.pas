@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       Weapons Unit for OPENSOLDAT                     }
-{                                                       }
-{       Copyright (c) 2012 Daniel Forssten              }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Weapons Unit for OpenSoldat                           }
+{                                                             }
+{       Copyright (c) 2012      Daniel Forssten               }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Weapons;
 
