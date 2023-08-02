@@ -320,187 +320,7 @@
           </Other>
         </CompilerOptions>
       </Item8>
-      <Item9 Name="macOS x86_64 debug">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value="build\opensoldat"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
-            <Libraries Value="build"/>
-            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
-            <UnitOutputDirectory Value="build\$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
-              <UseAnsiStrings Value="False"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <RelocatableUnit Value="True"/>
-            <TargetCPU Value="x86_64"/>
-            <TargetOS Value="darwin"/>
-          </CodeGeneration>
-          <Linking>
-            <Options>
-              <PassLinkerOptions Value="True"/>
-              <LinkerOptions Value="-FmacOS\Frameworks -framework OpenAL -framework OpenGL -framework SDL2 -rpath @executable_path -rpath @executable_path\..\Frameworks"/>
-            </Options>
-          </Linking>
-          <Other>
-            <Verbosity>
-              <ShowNotes Value="False"/>
-              <ShowHints Value="False"/>
-            </Verbosity>
-            <CustomOptions Value="-dDEBUG
--dDEVELOPMENT"/>
-          </Other>
-        </CompilerOptions>
-      </Item9>
-      <Item10 Name="macOS x86_64 release">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value="build\opensoldat"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
-            <Libraries Value="build"/>
-            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
-            <UnitOutputDirectory Value="build\$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
-              <UseAnsiStrings Value="False"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <RelocatableUnit Value="True"/>
-            <TargetCPU Value="x86_64"/>
-            <TargetOS Value="darwin"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-              <VariablesInRegisters Value="True"/>
-            </Optimizations>
-            <SmallerCode Value="True"/>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="False"/>
-              <UseLineInfoUnit Value="False"/>
-              <StripSymbols Value="True"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-            <Options>
-              <PassLinkerOptions Value="True"/>
-              <LinkerOptions Value="-FmacOS\Frameworks -framework OpenAL -framework OpenGL -framework SDL2 -rpath @executable_path -rpath @executable_path\..\Frameworks"/>
-            </Options>
-          </Linking>
-          <Other>
-            <Verbosity>
-              <ShowNotes Value="False"/>
-              <ShowHints Value="False"/>
-            </Verbosity>
-          </Other>
-        </CompilerOptions>
-      </Item10>
-      <Item11 Name="macOS i386 debug">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value="build\opensoldat"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
-            <Libraries Value="build"/>
-            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
-            <UnitOutputDirectory Value="build\$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
-              <UseAnsiStrings Value="False"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <RelocatableUnit Value="True"/>
-            <TargetCPU Value="i386"/>
-            <TargetOS Value="darwin"/>
-          </CodeGeneration>
-          <Linking>
-            <LinkSmart Value="True"/>
-            <Options>
-              <PassLinkerOptions Value="True"/>
-              <LinkerOptions Value="-FmacOS\Frameworks -framework OpenAL -framework OpenGL -framework SDL2 -rpath @executable_path -rpath @executable_path\..\Frameworks"/>
-            </Options>
-          </Linking>
-          <Other>
-            <Verbosity>
-              <ShowNotes Value="False"/>
-              <ShowHints Value="False"/>
-            </Verbosity>
-            <CustomOptions Value="-dDEBUG
--dDEVELOPMENT"/>
-          </Other>
-        </CompilerOptions>
-      </Item11>
-      <Item12 Name="macOS i386 release">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value="build\opensoldat"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
-            <Libraries Value="build"/>
-            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
-            <UnitOutputDirectory Value="build\$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
-              <UseAnsiStrings Value="False"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <RelocatableUnit Value="True"/>
-            <TargetCPU Value="i386"/>
-            <TargetOS Value="darwin"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-              <VariablesInRegisters Value="True"/>
-            </Optimizations>
-            <SmallerCode Value="True"/>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="False"/>
-              <UseLineInfoUnit Value="False"/>
-              <StripSymbols Value="True"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-            <Options>
-              <PassLinkerOptions Value="True"/>
-              <LinkerOptions Value="-FmacOS\Frameworks -framework OpenAL -framework OpenGL -framework SDL2 -rpath @executable_path -rpath @executable_path\..\Frameworks"/>
-            </Options>
-          </Linking>
-          <Other>
-            <Verbosity>
-              <ShowNotes Value="False"/>
-              <ShowHints Value="False"/>
-            </Verbosity>
-          </Other>
-        </CompilerOptions>
-      </Item12>
-      <Item13 Name="GNU/Linux ARM debug">
+      <Item9 Name="GNU/Linux ARM debug">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -533,8 +353,8 @@
 -dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
-      </Item13>
-      <Item14 Name="GNU/Linux ARM release">
+      </Item9>
+      <Item10 Name="GNU/Linux ARM release">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -570,6 +390,186 @@
               <StripSymbols Value="True"/>
             </Debugging>
             <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+          </Other>
+        </CompilerOptions>
+      </Item10>
+      <Item11 Name="macOS x86_64 debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\opensoldat"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
+            <Libraries Value="build"/>
+            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <RelocatableUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="darwin"/>
+          </CodeGeneration>
+          <Linking>
+            <Options>
+              <PassLinkerOptions Value="True"/>
+              <LinkerOptions Value="-FmacOS\Frameworks -framework OpenAL -framework OpenGL -framework SDL2 -rpath @executable_path -rpath @executable_path\..\Frameworks"/>
+            </Options>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dDEBUG
+-dDEVELOPMENT"/>
+          </Other>
+        </CompilerOptions>
+      </Item11>
+      <Item12 Name="macOS x86_64 release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\opensoldat"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
+            <Libraries Value="build"/>
+            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <RelocatableUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="darwin"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <PassLinkerOptions Value="True"/>
+              <LinkerOptions Value="-FmacOS\Frameworks -framework OpenAL -framework OpenGL -framework SDL2 -rpath @executable_path -rpath @executable_path\..\Frameworks"/>
+            </Options>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+          </Other>
+        </CompilerOptions>
+      </Item12>
+      <Item13 Name="macOS i386 debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\opensoldat"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
+            <Libraries Value="build"/>
+            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <RelocatableUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="darwin"/>
+          </CodeGeneration>
+          <Linking>
+            <LinkSmart Value="True"/>
+            <Options>
+              <PassLinkerOptions Value="True"/>
+              <LinkerOptions Value="-FmacOS\Frameworks -framework OpenAL -framework OpenGL -framework SDL2 -rpath @executable_path -rpath @executable_path\..\Frameworks"/>
+            </Options>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dDEBUG
+-dDEVELOPMENT"/>
+          </Other>
+        </CompilerOptions>
+      </Item13>
+      <Item14 Name="macOS i386 release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\opensoldat"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
+            <Libraries Value="build"/>
+            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <RelocatableUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="darwin"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <PassLinkerOptions Value="True"/>
+              <LinkerOptions Value="-FmacOS\Frameworks -framework OpenAL -framework OpenGL -framework SDL2 -rpath @executable_path -rpath @executable_path\..\Frameworks"/>
+            </Options>
           </Linking>
           <Other>
             <Verbosity>

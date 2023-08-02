@@ -340,7 +340,87 @@
           </Other>
         </CompilerOptions>
       </Item8>
-      <Item9 Name="OSX i386 debug">
+      <Item9 Name="GNU/Linux ARM debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\opensoldatserver"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="build"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <TargetCPU Value="arm"/>
+            <TargetOS Value="linux"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <UseLineInfoUnit Value="False"/>
+            </Debugging>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dSERVER
+-dDEVELOPMENT"/>
+          </Other>
+        </CompilerOptions>
+      </Item9>
+      <Item10 Name="GNU/Linux ARM release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\opensoldatserver" ApplyConventions="False"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
+            <Libraries Value="build"/>
+            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="arm"/>
+            <TargetOS Value="linux"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dSERVER"/>
+          </Other>
+        </CompilerOptions>
+      </Item10>
+      <Item11 Name="OSX i386 debug">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -379,8 +459,8 @@
 -dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
-      </Item9>
-      <Item10 Name="OSX i386 release">
+      </Item11>
+      <Item12 Name="OSX i386 release">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -425,86 +505,6 @@
             <CustomOptions Value="-dSERVER
 -dSCRIPT
 -dPS_USESSUPPORT"/>
-          </Other>
-        </CompilerOptions>
-      </Item10>
-      <Item11 Name="GNU/Linux ARM debug">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value="build\opensoldatserver"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-            <Libraries Value="build"/>
-            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
-            <UnitOutputDirectory Value="build\$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
-              <UseAnsiStrings Value="False"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <TargetCPU Value="arm"/>
-            <TargetOS Value="linux"/>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <UseLineInfoUnit Value="False"/>
-            </Debugging>
-          </Linking>
-          <Other>
-            <CustomOptions Value="-dSERVER
--dDEVELOPMENT"/>
-          </Other>
-        </CompilerOptions>
-      </Item11>
-      <Item12 Name="GNU/Linux ARM release">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value="build\opensoldatserver" ApplyConventions="False"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="libs;..\shared;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;$(ProjOutDir)"/>
-            <Libraries Value="build"/>
-            <OtherUnitFiles Value="scriptcore;..\shared;..\shared\network;..\shared\mechanics;..\shared\libs;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;..\3rdparty\pascalscript\Source;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core"/>
-            <UnitOutputDirectory Value="build\$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
-              <UseAnsiStrings Value="False"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <TargetCPU Value="arm"/>
-            <TargetOS Value="linux"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-              <VariablesInRegisters Value="True"/>
-            </Optimizations>
-            <SmallerCode Value="True"/>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="False"/>
-              <UseLineInfoUnit Value="False"/>
-              <StripSymbols Value="True"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-          </Linking>
-          <Other>
-            <Verbosity>
-              <ShowNotes Value="False"/>
-              <ShowHints Value="False"/>
-            </Verbosity>
-            <CustomOptions Value="-dSERVER"/>
           </Other>
         </CompilerOptions>
       </Item12>
