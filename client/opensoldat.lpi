@@ -496,7 +496,7 @@
             <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
+            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
             <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
@@ -537,7 +537,7 @@
             <Filename Value="build\opensoldat"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;libs\macOS;$(ProjOutDir)"/>
+            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
             <Libraries Value="build"/>
             <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
             <UnitOutputDirectory Value="build\$(TargetOS)"/>
