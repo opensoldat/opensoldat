@@ -24,7 +24,7 @@
       <Icon Value="0"/>
     </General>
     <LazDoc Paths="docs"/>
-    <BuildModes Count="13">
+    <BuildModes Count="14">
       <Item1 Name="Windows x86_64 debug" Default="True"/>
       <Item2 Name="Windows x86_64 release">
         <CompilerOptions>
@@ -72,7 +72,49 @@
           </Other>
         </CompilerOptions>
       </Item2>
-      <Item3 Name="Windows i386 release">
+      <Item3 Name="Windows i386 debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\opensoldat"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="..\3rdparty\Indy10\Lib\Core;..\shared;$(ProjOutDir)"/>
+            <Libraries Value="build"/>
+            <OtherUnitFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\PhysFS;..\shared\mechanics;..\shared\network;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <RelocatableUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="win32"/>
+            <Optimizations>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf2"/>
+            </Debugging>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-dDEBUG
+-dDEVELOPMENT"/>
+          </Other>
+        </CompilerOptions>
+      </Item3>
+      <Item4 Name="Windows i386 release">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -117,8 +159,8 @@
             </Verbosity>
           </Other>
         </CompilerOptions>
-      </Item3>
-      <Item4 Name="GNU/Linux x86_64 debug">
+      </Item4>
+      <Item5 Name="GNU/Linux x86_64 debug">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -148,56 +190,56 @@
             <CustomOptions Value="-k-rpath=$ORIGIN
 -dDEBUG
 -dDEVELOPMENT"/>
-          </Other>
-        </CompilerOptions>
-      </Item4>
-      <Item5 Name="GNU/Linux x86_64 release">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value="build\opensoldat" ApplyConventions="False"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
-            <Libraries Value="build"/>
-            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
-            <UnitOutputDirectory Value="build\$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
-              <UseAnsiStrings Value="False"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <TargetCPU Value="x86_64"/>
-            <TargetOS Value="linux"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-              <VariablesInRegisters Value="True"/>
-            </Optimizations>
-            <SmallerCode Value="True"/>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="False"/>
-              <UseLineInfoUnit Value="False"/>
-              <StripSymbols Value="True"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-          </Linking>
-          <Other>
-            <Verbosity>
-              <ShowNotes Value="False"/>
-              <ShowHints Value="False"/>
-            </Verbosity>
-            <CustomOptions Value="-k-rpath=$ORIGIN"/>
           </Other>
         </CompilerOptions>
       </Item5>
-      <Item6 Name="GNU/Linux i386 debug">
+      <Item6 Name="GNU/Linux x86_64 release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="build\opensoldat" ApplyConventions="False"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="libs;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared;..\shared\libs;..\shared\libs\KrakenSDK;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal;$(ProjOutDir)"/>
+            <Libraries Value="build"/>
+            <OtherUnitFiles Value="..\shared;..\shared\mechanics;..\shared\network;..\3rdparty\Pascal-SDL-2-Headers;..\3rdparty\Indy10\Lib\System;..\3rdparty\Indy10\Lib\Core;..\shared\libs;..\shared\libs\KrakenSDK;..\shared\libs\PhysFS;..\shared\libs\GameNetworkingSockets;..\shared\libs\SteamWrapper;libs;libs\dglOpenGL;libs\stb;libs\FreeType;libs\openal"/>
+            <UnitOutputDirectory Value="build\$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+              <UseAnsiStrings Value="False"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="linux"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+              <VariablesInRegisters Value="True"/>
+            </Optimizations>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <Verbosity>
+              <ShowNotes Value="False"/>
+              <ShowHints Value="False"/>
+            </Verbosity>
+            <CustomOptions Value="-k-rpath=$ORIGIN"/>
+          </Other>
+        </CompilerOptions>
+      </Item6>
+      <Item7 Name="GNU/Linux i386 debug">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -231,8 +273,8 @@
 -dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
-      </Item6>
-      <Item7 Name="GNU/Linux i386 release">
+      </Item7>
+      <Item8 Name="GNU/Linux i386 release">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -277,8 +319,8 @@
             <CustomOptions Value="-k-rpath=$ORIGIN"/>
           </Other>
         </CompilerOptions>
-      </Item7>
-      <Item8 Name="macOS x86_64 debug">
+      </Item8>
+      <Item9 Name="macOS x86_64 debug">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -317,8 +359,8 @@
 -dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
-      </Item8>
-      <Item9 Name="macOS x86_64 release">
+      </Item9>
+      <Item10 Name="macOS x86_64 release">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -366,8 +408,8 @@
             </Verbosity>
           </Other>
         </CompilerOptions>
-      </Item9>
-      <Item10 Name="macOS i386 debug">
+      </Item10>
+      <Item11 Name="macOS i386 debug">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -407,8 +449,8 @@
 -dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
-      </Item10>
-      <Item11 Name="macOS i386 release">
+      </Item11>
+      <Item12 Name="macOS i386 release">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -457,8 +499,8 @@
             </Verbosity>
           </Other>
         </CompilerOptions>
-      </Item11>
-      <Item12 Name="GNU/Linux ARM debug">
+      </Item12>
+      <Item13 Name="GNU/Linux ARM debug">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -491,8 +533,8 @@
 -dDEVELOPMENT"/>
           </Other>
         </CompilerOptions>
-      </Item12>
-      <Item13 Name="GNU/Linux ARM release">
+      </Item13>
+      <Item14 Name="GNU/Linux ARM release">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -536,7 +578,7 @@
             </Verbosity>
           </Other>
         </CompilerOptions>
-      </Item13>
+      </Item14>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
