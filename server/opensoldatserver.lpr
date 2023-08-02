@@ -1,6 +1,6 @@
 {*************************************************************}
 {                                                             }
-{       OpenSoldatServer                                      }
+{       OpenSoldat Server                                     }
 {                                                             }
 {       Copyright (c) 2001      Michal Marcinkowski           }
 {       Copyright (c) 2020-2023 OpenSoldat contributors       }
