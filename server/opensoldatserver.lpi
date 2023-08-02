@@ -420,7 +420,7 @@
           </Other>
         </CompilerOptions>
       </Item10>
-      <Item11 Name="OSX i386 debug">
+      <Item11 Name="macOS i386 debug">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -460,7 +460,7 @@
           </Other>
         </CompilerOptions>
       </Item11>
-      <Item12 Name="OSX i386 release">
+      <Item12 Name="macOS i386 release">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
