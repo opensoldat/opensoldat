@@ -363,7 +363,9 @@ begin
     Include(FFlags, CVAR_TOSYNC);
     CvarsNeedSyncing := True;
   end else
+  begin
     Exclude(Self.FFlags, CVAR_TOSYNC);
+  end;
 end;
 
 constructor TCvar<T>.Create(Name, Description: AnsiString; DefaultValue: T; Flags: TCvarFlags; OnChange: TCallback);
@@ -812,7 +814,7 @@ begin
   // Render Cvars
   r_fullscreen := TIntegerCvar.Add('r_fullscreen', 'Set mode of fullscreen', 0, [CVAR_CLIENT], nil, 0, 2);
   r_weathereffects := TBooleanCvar.Add('r_weathereffects', 'Weather effects', True, [CVAR_CLIENT], nil);
-  r_dithering := TBooleanCvar.Add('r_dithering', 'Dithering', False, [CVAR_CLIENT], nil);
+  r_dithering := TBooleanCvar.Add('r_dithering', 'Dithering', True, [CVAR_CLIENT], nil);
   r_swapeffect := TIntegerCvar.Add('r_swapeffect', 'Swap interval, 0 for immediate updates, 1 for updates synchronized with the vertical retrace, -1 for late swap tearing', 0, [CVAR_CLIENT], nil, -1, 1);
   r_compatibility := TBooleanCvar.Add('r_compatibility', 'OpenGL compatibility mode (use fixed pipeline)', False, [CVAR_CLIENT], nil);
   r_texturefilter := TIntegerCvar.Add('r_texturefilter', 'Texture filter (1 = nearest, 2 = linear)', 2, [CVAR_CLIENT], nil, 1, 2);
@@ -825,7 +827,7 @@ begin
   r_maxsparks := TIntegerCvar.Add('r_maxsparks', '', 557, [CVAR_CLIENT], nil, 0, 557);
   r_animations := TBooleanCvar.Add('r_animations', '', True, [CVAR_CLIENT], nil);
   r_renderbackground := TBooleanCvar.Add('r_renderbackground', '', True, [CVAR_CLIENT], nil);
-  r_maxfps := TIntegerCvar.Add('r_maxfps', '', 60, [CVAR_CLIENT], nil, 0, 9999);
+  r_maxfps := TIntegerCvar.Add('r_maxfps', '', 500, [CVAR_CLIENT], nil, 0, 9999);
   r_fpslimit := TBooleanCvar.Add('r_fpslimit', '', True, [CVAR_CLIENT], nil);
   r_resizefilter := TIntegerCvar.Add('r_resizefilter', '', 2, [CVAR_CLIENT], nil, 0, 2);
   r_sleeptime := TIntegerCvar.Add('r_sleeptime', 'Amount of time to sleep after rendering a frame (avoids busylooping)', 1, [CVAR_CLIENT], nil, 0, 100);
@@ -859,7 +861,7 @@ begin
   cl_sensitivity := TSingleCvar.Add('cl_sensitivity', 'Mouse sensitivity', 1.0, [CVAR_CLIENT], nil, 0.0, 1.0);
   cl_endscreenshot := TBooleanCvar.Add('cl_endscreenshot', 'Take screenshot when game ends', False, [CVAR_CLIENT], nil);
   cl_actionsnap := TBooleanCvar.Add('cl_actionsnap', 'Enables action snap', False, [CVAR_CLIENT], nil);
-  cl_screenshake := TBooleanCvar.Add('cl_screenshake', 'Enables screen shake from enemy fire', True, [CVAR_CLIENT], nil);
+  cl_screenshake := TBooleanCvar.Add('cl_screenshake', 'Enables screen shake from enemy fire', False, [CVAR_CLIENT], nil);
   cl_servermods := TBooleanCvar.Add('cl_servermods', 'Enables server mods feature', True, [CVAR_CLIENT], nil);
 
   {$IFDEF STEAM}
