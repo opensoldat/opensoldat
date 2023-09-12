@@ -174,15 +174,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install openssl@1.1 protobuf fpc cmake sdl2 physfs freetype2
+          brew install openssl@3 protobuf fpc cmake sdl2 physfs freetype2
 
       - name: Compile OpenSoldat
         run: |
           export BUILD_ID=${GITHUB_SHA::8}
           mkdir build
           cd build
-          export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@1.1/lib/pkgconfig
-          cmake -DCMAKE_INSTALL_PREFIX=./OpenSoldat-macos-x64 -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@1.1) .. -DCMAKE_BUILD_TYPE="Release"
+          export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@3/lib/pkgconfig
+          cmake -DCMAKE_INSTALL_PREFIX=./OpenSoldat-macos-x64 -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@3) .. -DCMAKE_BUILD_TYPE="Release"
           make
           make install
 

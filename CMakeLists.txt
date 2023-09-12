@@ -18,6 +18,11 @@ option(ADD_BFT "Copy BFT test to scripts directory" False)
 option(ADD_FFI_FUZZ "Enable ScriptCore FFI fuzz tests" False)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 include(${CMAKE_MODULE_PATH}/utils.cmake)
 
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
