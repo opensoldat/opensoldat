@@ -186,6 +186,9 @@ jobs:
           make
           make install
 
+      - name: Package soldat
+        run: ./.github/workflows/macos-fix-libs.sh
+
       - uses: actions/upload-artifact@v2
         with:
           name: OpenSoldat-macos-x64
@@ -204,6 +207,8 @@ jobs:
 
       - name: Zip build dirs back together
         run: |
+          chmod +x OpenSoldat-macos-x64/opensoldat
+          chmod +x OpenSoldat-macos-x64/opensoldatserver
           zip -r OpenSoldat-macos-x64.zip OpenSoldat-macos-x64
           zip -r OpenSoldatServer-win32-x64.zip OpenSoldatServer-win32-x64
 
