@@ -138,13 +138,14 @@ begin
 
   FrameTiming.PrevTime       := GetCurrentTime;
   FrameTiming.PrevRenderTime := FrameTiming.PrevTime;
-  FrameTiming.Accumulator := 0;
-  FrameTiming.MinDeltaTime := 0;
-  FrameTiming.Elapsed := 0;
 
+  FrameTiming.Accumulator  := 0.0;
+  FrameTiming.MinDeltaTime := 0.0;
+  FrameTiming.Elapsed      := 0.0;
+  FrameTiming.FpsAccum     := 0.0;
+
+  FrameTiming.Fps     := 0;
   FrameTiming.Counter := 0;
-  FrameTiming.Fps := 0;
-  FrameTiming.FpsAccum := 0;
 
   if r_fpslimit.Value then
     FrameTiming.MinDeltaTime := 1.0 / r_maxfps.Value;
