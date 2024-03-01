@@ -198,11 +198,7 @@ end;
 // Checks if the IP string is inside the remote IPs list
 function IsRemoteAdminIP(IP: string): Boolean;
 begin
-
-  if RemoteIPs.IndexOf(IP) > -1 then
-    Result := True
-  else
-    Result := False;
+  Result := RemoteIPs.IndexOf(IP) > -1;
 end;
 
 // Checks if the IP string is inside the admin IPs list
