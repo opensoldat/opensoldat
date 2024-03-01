@@ -470,29 +470,29 @@ begin
   for I := 0 to MAX_BIG_MESSAGES do
   begin
     // Big Text
-    BigText[I] := '';
+    BigText[I]  := '';
     BigDelay[I] := 0;
     BigScale[I] := 0;
     BigColor[I] := 0;
-    BigPosX[I] := 0;
-    BigPosY[I] := 0;
-    BigX[I] := 0;
+    BigPosX[I]  := 0;
+    BigPosY[I]  := 0;
+    BigX[I]     := 0;
     // World Text
-    WorldText[I] := '';
+    WorldText[I]  := '';
     WorldDelay[I] := 0;
     WorldScale[I] := 0;
     WorldColor[I] := 0;
-    WorldPosX[I] := 0;
-    WorldPosY[I] := 0;
-    WorldX[I] := 0;
+    WorldPosX[I]  := 0;
+    WorldPosY[I]  := 0;
+    WorldX[I]     := 0;
   end;
 
   // Reset ABOVE CHAT MESSAGE
   for I := 1 to MAX_SPRITES do
   begin
-    ChatDelay[I] := 0;
+    ChatDelay[I]   := 0;
     ChatMessage[I] := '';
-    ChatTeam[I] := False;
+    ChatTeam[I]    := False;
   end;
 
   MySprite := 0;
