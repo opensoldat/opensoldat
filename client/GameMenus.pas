@@ -246,7 +246,9 @@ begin
     HideAll;
 
     if Show then case sv_gamemode.Value of
-      GAMESTYLE_CTF, GAMESTYLE_INF, GAMESTYLE_HTF: begin
+      GAMESTYLE_CTF,
+      GAMESTYLE_INF,
+      GAMESTYLE_HTF: begin
         Menu.Button[0].Active := False;
         Menu.Button[1].Active := True;
         Menu.Button[2].Active := True;

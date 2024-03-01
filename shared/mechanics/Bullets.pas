@@ -1180,8 +1180,11 @@ begin
             if Map.PointInPolyEdges(Pos.X, Pos.y, w) then
             begin
               case Style of
-                BULLET_STYLE_PLAIN, BULLET_STYLE_SHOTGUN, BULLET_STYLE_PUNCH,
-                BULLET_STYLE_KNIFE, BULLET_STYLE_M2:
+                BULLET_STYLE_PLAIN,
+                BULLET_STYLE_SHOTGUN,
+                BULLET_STYLE_PUNCH,
+                BULLET_STYLE_KNIFE,
+                BULLET_STYLE_M2:
                   begin
                     BulletParts.OldPos[Num] := BulletParts.Pos[Num];
                     BulletParts.Pos[Num] := Vec2Subtract(Pos, BulletParts.Velocity[Num]);
@@ -1599,8 +1602,11 @@ begin
             end;
 
             case Style of
-              BULLET_STYLE_PLAIN, BULLET_STYLE_SHOTGUN, BULLET_STYLE_PUNCH,
-                BULLET_STYLE_KNIFE, BULLET_STYLE_M2:
+              BULLET_STYLE_PLAIN,
+              BULLET_STYLE_SHOTGUN,
+              BULLET_STYLE_PUNCH,
+              BULLET_STYLE_KNIFE,
+              BULLET_STYLE_M2:
                 begin
                   BulletParts.Pos[Num] := Pos;
 
@@ -2094,8 +2100,12 @@ begin
         end;
 
         case Style of
-          BULLET_STYLE_PLAIN, BULLET_STYLE_SHOTGUN, BULLET_STYLE_PUNCH,
-          BULLET_STYLE_KNIFE, BULLET_STYLE_THROWNKNIFE, BULLET_STYLE_M2:
+          BULLET_STYLE_PLAIN,
+          BULLET_STYLE_SHOTGUN,
+          BULLET_STYLE_PUNCH,
+          BULLET_STYLE_KNIFE,
+          BULLET_STYLE_THROWNKNIFE,
+          BULLET_STYLE_M2:
             begin
               BulletParts.Pos[Num] :=
                 Vec2Subtract(Pos, BulletParts.Velocity[Num]);
