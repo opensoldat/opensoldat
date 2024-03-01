@@ -340,7 +340,8 @@ begin
         {$IFDEF STEAM}
         4: begin
           if sv_website.Value <> '' then
-            SteamAPI.Friends.ActivateGameOverlayToWebPage(PChar(sv_website.Value), k_EActivateGameOverlayToWebPageMode_Default);
+            SteamAPI.Friends.ActivateGameOverlayToWebPage(PChar(sv_website.Value),
+              k_EActivateGameOverlayToWebPageMode_Default);
         end;
         {$ENDIF}
       end;

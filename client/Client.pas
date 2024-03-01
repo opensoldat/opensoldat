@@ -372,7 +372,8 @@ begin
   else
     Prefix := '';
 
-  MainConsole.Console(_('Loading Weapon Names from') + WideString(' ' + Prefix + 'txt/weaponnames.txt'), DEBUG_MESSAGE_COLOR);
+  MainConsole.Console(_('Loading Weapon Names from') +
+    WideString(' ' + Prefix + 'txt/weaponnames.txt'), DEBUG_MESSAGE_COLOR);
   TF := PHYSFS_openRead(PChar(Prefix + 'txt/weaponnames.txt'));
   if TF <> nil then
     for i := 0 to EXTENDED_WEAPONS - 1 do
@@ -534,7 +535,8 @@ var
   Sr: TSearchRec;
   Name: String;
 begin
-  if SteamAPI.UGC.GetItemInstallInfo(fs_workshop_mod.Value, @SizeOnDisk, @Path, 1024, @TimeStamp) then
+  if SteamAPI.UGC.GetItemInstallInfo(fs_workshop_mod.Value, @SizeOnDisk, @Path,
+    1024, @TimeStamp) then
   begin
     if FindFirst(Path + '/*.smod', faAnyFile - faDirectory, sr) = 0 then
     begin
@@ -544,7 +546,8 @@ begin
       if not PhysFS_mount(PChar(Path + '/' + Sr.Name),
         PChar('mods/' + LowerCase(Name) + '/'), False) then
       begin
-        ShowMessage(_('Could not load mod archive (' + IntToStr(fs_workshop_mod.Value) + '/' + Sr.Name + ').'));
+        ShowMessage(_('Could not load mod archive (' + IntToStr(fs_workshop_mod.Value) +
+          '/' + Sr.Name + ').'));
         Exit;
       end;
       ModDir := 'mods/' + LowerCase(Name) + '/';
@@ -561,10 +564,12 @@ var
   Path: array[0..4096] of Char;
   TimeStamp: Cardinal;
 begin
-  if SteamAPI.UGC.GetItemInstallInfo(fs_workshop_interface.Value, @SizeOnDisk, @Path, 1024, @TimeStamp) then
+  if SteamAPI.UGC.GetItemInstallInfo(fs_workshop_interface.Value, @SizeOnDisk,
+    @Path, 1024, @TimeStamp) then
     LoadInterfaceArchives(Path + '/', True)
   else
-    Debug('Failed to load interface from workshop - ' + IntToStr(fs_workshop_interface.Value));
+    Debug('Failed to load interface from workshop - ' +
+      IntToStr(fs_workshop_interface.Value));
 end;
 
 procedure DownloadItemResult(Callback: PDownloadItemResult_t); cdecl;
@@ -583,11 +588,14 @@ begin
         end;
       end;
     end else
-      Debug('[Steam] Failed to download workshop item, id:' + IntToStr(Callback.m_nPublishedFileId) + ' error: ' + IntToStr(Ord(Callback.m_eResult)));
+      Debug('[Steam] Failed to download workshop item, id:' +
+        IntToStr(Callback.m_nPublishedFileId) + ' error: ' +
+        IntToStr(Ord(Callback.m_eResult)));
   end;
 end;
 
-procedure SteamNetConnectionStatusChangedCallback(Callback: PSteamNetConnectionStatusChangedCallback_t); cdecl;
+procedure SteamNetConnectionStatusChangedCallback(Callback:
+  PSteamNetConnectionStatusChangedCallback_t); cdecl;
 begin
   if Assigned(UDP) then
     UDP.ProcessEvents(Callback);
@@ -644,7 +652,8 @@ begin
       if DirectoryExists(s) then
         UserDirectory := IncludeTrailingPathDelimiter(s)
       else
-        Debug('[FS] Warning: Specified fs_userpath directory ''' + fs_userpath.Value + ''' does not exist.');
+        Debug('[FS] Warning: Specified fs_userpath directory ''' +
+          fs_userpath.Value + ''' does not exist.');
     end;
 
     BaseDirectory := BasePathSDL;
@@ -654,7 +663,8 @@ begin
       if DirectoryExists(s) then
         BaseDirectory := IncludeTrailingPathDelimiter(s)
       else
-        Debug('[FS] Warning: Specified fs_basepath directory ''' + fs_basepath.Value + ''' does not exist.');
+        Debug('[FS] Warning: Specified fs_basepath directory ''' +
+          fs_basepath.Value + ''' does not exist.');
     end;
   end;
 
@@ -940,7 +950,8 @@ begin
 
   {$IFDEF ENABLE_FAE}
   if FaeIsEnabled then
-    MainConsole.Console('Multi-player sessions are protected by Fae Anti-Cheat', AC_MESSAGE_COLOR);
+    MainConsole.Console('Multi-player sessions are protected by Fae Anti-Cheat',
+      AC_MESSAGE_COLOR);
   {$ENDIF}
 
   // Load weapon display names
@@ -1095,13 +1106,15 @@ end;
 
 procedure ShowMessage(MessageText: WideString); overload;
 begin
-  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, PChar('Error'), PAnsiChar(AnsiString(MessageText)), nil);
+  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, PChar('Error'),
+    PAnsiChar(AnsiString(MessageText)), nil);
 end;
 
 initialization
   // Mask exceptions on 32 and 64 bit fpc builds
   {$IF defined(cpui386) or defined(cpux86_64)}
-  SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow, exUnderflow, exPrecision]);
+  SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow,
+    exUnderflow, exPrecision]);
   {$ENDIF}
 
 finalization

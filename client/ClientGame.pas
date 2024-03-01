@@ -564,7 +564,8 @@ begin
   if (AvailableVoice = k_EVoiceResultOK) and (AvailableVoiceBytes > 0) then
   begin
     SetLength(VoiceData, AvailableVoiceBytes);
-    AvailableVoice := SteamAPI.User.GetVoice(True, VoiceData, AvailableVoiceBytes, @AvailableVoiceBytes, false, nil, 0, nil, 0);
+    AvailableVoice := SteamAPI.User.GetVoice(True, VoiceData, AvailableVoiceBytes,
+      @AvailableVoiceBytes, false, nil, 0, nil, 0);
 
     if (AvailableVoice = k_EVoiceResultOK) and (AvailableVoiceBytes > 0) then
       ClientSendVoiceData(VoiceData, AvailableVoiceBytes);
