@@ -204,10 +204,7 @@ end;
 // Checks if the IP string is inside the admin IPs list
 function IsAdminIP(IP: string): Boolean;
 begin
-  if AdminIPs.IndexOf(IP) > -1 then
-    Result := True
-  else
-    Result := False;
+  Result := AdminIPs.IndexOf(IP) > -1;
 end;
 
 // Retruns true if the password is not empty and equal to the Admin password
