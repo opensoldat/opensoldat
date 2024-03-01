@@ -147,17 +147,17 @@ procedure CreateWeaponsBase;
 procedure CreateNormalWeapons;
 procedure CreateRealisticWeapons;
 procedure BuildWeapons;
-function CreateWMChecksum: LongWord;
-function WeaponNumToIndex(Num: Byte): SmallInt;
-function WeaponNameToNum(Name: string): Integer;
-function WeaponNumToName(Num: Integer): string;
-function WeaponNameByNum(Num: Integer): string;
-function IsMainWeaponIndex(WeaponIndex: SmallInt): Boolean;
-function IsSecondaryWeaponIndex(WeaponIndex: SmallInt): Boolean;
-function IsExtendedWeaponIndex(WeaponIndex: SmallInt): Boolean;
-function CalculateBink(Accumulated: Word; Bink: Word): Word;
-function WeaponNumInternalToExternal(Num: Byte): Byte;
-function WeaponNumExternalToInternal(Num: Byte): Byte;
+function  CreateWMChecksum: LongWord;
+function  WeaponNumToIndex(Num: Byte): SmallInt;
+function  WeaponNameToNum(Name: string): Integer;
+function  WeaponNumToName(Num: Integer): string;
+function  WeaponNameByNum(Num: Integer): string;
+function  IsMainWeaponIndex(WeaponIndex: SmallInt): Boolean;
+function  IsSecondaryWeaponIndex(WeaponIndex: SmallInt): Boolean;
+function  IsExtendedWeaponIndex(WeaponIndex: SmallInt): Boolean;
+function  CalculateBink(Accumulated: Word; Bink: Word): Word;
+function  WeaponNumInternalToExternal(Num: Byte): Byte;
+function  WeaponNumExternalToInternal(Num: Byte): Byte;
 
 
 implementation
