@@ -26,11 +26,41 @@ uses
 
 
 type
-  {$scopedenums on}
-  TAction = (None, Left, Right, Jump, Crouch, Fire, Jet, Reload, ChangeWeapon, VoiceChat,
-    ThrowGrenade, DropWeapon, Prone, FlagThrow, StatsMenu, GameStats,
-    MiniMap, PlayerName, FragsList, SniperLine, Radio, RecordDemo, VolumeUp, VolumeDown,
-    MouseSensitivityUp, MouseSensitivityDown, Cmd, Chat, TeamChat, Snap, Weapons, Bind);
+  {$SCOPEDENUMS ON}
+  TAction = (
+    None,
+    Left,
+    Right,
+    Jump,
+    Crouch,
+    Fire,
+    Jet,
+    Reload,
+    ChangeWeapon,
+    VoiceChat,
+    ThrowGrenade,
+    DropWeapon,
+    Prone,
+    FlagThrow,
+    StatsMenu,
+    GameStats,
+    MiniMap,
+    PlayerName,
+    FragsList,
+    SniperLine,
+    Radio,
+    RecordDemo,
+    VolumeUp,
+    VolumeDown,
+    MouseSensitivityUp,
+    MouseSensitivityDown,
+    Cmd,
+    Chat,
+    TeamChat,
+    Snap,
+    Weapons,
+    Bind
+  );
 
   TKeyMods = UInt32;
 
