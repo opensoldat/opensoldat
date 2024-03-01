@@ -16,21 +16,21 @@ uses
   Classes,
   Math,
   {$IFDEF MSWINDOWS}
-  MMSystem,
+    MMSystem,
   {$ENDIF}
   SysUtils,
   Variants,
 
   // Library units
   {$IFDEF ENABLE_FAE}
-  // Anti-Cheat
-  FaeClient,
+    // Anti-Cheat
+    FaeClient,
   {$ENDIF}
   PhysFS,
   SDL2,
   sha1,
   {$IFDEF STEAM}
-  Steam,
+    Steam,
   {$ENDIF}
 
   // Helper units
