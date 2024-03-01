@@ -11,9 +11,6 @@ unit AutoUpdater;
 interface
 
 uses
-  // System units
-  SysUtils,
-
   // Library units
   Process;
 
@@ -25,6 +22,10 @@ var
 
 
 implementation
+
+uses
+  // System units
+  SysUtils;
 
 procedure StartAutoUpdater;
 var
