@@ -610,7 +610,7 @@ begin
   Randomize;
 
   DefaultFormatSettings.DecimalSeparator := '.';
-  DefaultFormatSettings.DateSeparator := '-';
+  DefaultFormatSettings.DateSeparator    := '-';
 
   UserPathSDL := SDL_GetPrefPath('OpenSoldat', 'OpenSoldat');
   BasePathSDL := SDL_GetBasePath();
@@ -765,10 +765,10 @@ begin
   LoadInterfaceArchives(UserDirectory + 'custom-interfaces/');
 
   // these might change so keep a backup to avoid changing the settings file
-  ScreenWidth := r_screenwidth.Value;
+  ScreenWidth  := r_screenwidth.Value;
   ScreenHeight := r_screenheight.Value;
   RenderHeight := r_renderheight.Value;
-  RenderWidth := r_renderwidth.Value;
+  RenderWidth  := r_renderwidth.Value;
 
   SDL_Init(SDL_INIT_VIDEO);
   SDL_GetCurrentDisplayMode(0, @currentDisplay);
@@ -781,7 +781,7 @@ begin
 
   if (RenderWidth = 0) or (RenderHeight = 0) then
   begin
-    RenderWidth := ScreenWidth;
+    RenderWidth  := ScreenWidth;
     RenderHeight := ScreenHeight;
   end;
 
@@ -800,7 +800,7 @@ begin
 
   // Calulcate internal game width based on the fov and internal height
   GameWidth := Round(fov * GameHeight);
-  GameWidthHalf := GameWidth / 2;
+  GameWidthHalf  := GameWidth  / 2;
   GameHeightHalf := GameHeight / 2;
 
   if r_fullscreen.Value = 0 then
@@ -906,24 +906,24 @@ begin
 
   // Create Consoles
   MainConsole.CountMax := Round(ui_console_length.Value * _rscala.y);
-  MainConsole.ScrollTickMax := 150;
+  MainConsole.ScrollTickMax  := 150;
   MainConsole.NewMessageWait := 150;
-  MainConsole.AlphaCount := 255;
+  MainConsole.AlphaCount     := 255;
   MainConsole.Count := 0;
   if MainConsole.CountMax > 254 then
     MainConsole.CountMax := 254;
 
   BigConsole.CountMax := Floor((0.85 * RenderHeight) /
     (font_consolelineheight.Value * FontStyleSize(FONT_SMALL)));
-  BigConsole.ScrollTickMax := 1500000;
+  BigConsole.ScrollTickMax  := 1500000;
   BigConsole.NewMessageWait := 0;
-  BigConsole.AlphaCount := 255;
+  BigConsole.AlphaCount     := 255;
   BigConsole.Count := 0;
   if BigConsole.CountMax > 254 then
     BigConsole.CountMax := 254;
 
   KillConsole.CountMax := Round(ui_killconsole_length.Value * _rscala.y);
-  KillConsole.ScrollTickMax := 240;
+  KillConsole.ScrollTickMax  := 240;
   KillConsole.NewMessageWait := 70;
 
   // Create static player objects
