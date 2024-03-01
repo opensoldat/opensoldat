@@ -225,18 +225,26 @@ begin
   // Clear unused modifier bits...
   KeyMods := KeyMods and KM_ALL;
 
-  for i := Low(Binds) to High(Binds) do
+  if Exact then
   begin
-    if (Binds[i].KeyId = KeyCode) and Exact and (Binds[i].keymod = KeyMods) then
+    for i := Low(Binds) to High(Binds) do
     begin
-      Result := @Binds[i];
-      Exit;
-    end;
-
-    if (not Exact) and (Binds[i].KeyId = KeyCode) and KeyModsMatch(Binds[i].keymod, KeyMods, False) then
+      if (Binds[i].KeyId = KeyCode) and (Binds[i].keymod = KeyMods) then
+      begin
+        Result := @Binds[i];
+        Exit;
+      end;
+    end
+  end
+  else
+  begin
+    for i := Low(Binds) to High(Binds) do
     begin
-      Result := @Binds[i];
-      Exit;
+      if (Binds[i].KeyId = KeyCode) and KeyModsMatch(Binds[i].keymod, KeyMods, False) then
+      begin
+        Result := @Binds[i];
+        Exit;
+      end;
     end;
   end;
 end;
