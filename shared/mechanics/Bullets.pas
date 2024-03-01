@@ -803,7 +803,8 @@ begin
     if (Owner > 0) and (Owner < MAX_SPRITES + 1) then
       if Sprite[Owner].Active then
         if Sprite[Owner].Visible = 0 then
-          if Map.RayCast(BulletPos, Sprite[MySprite].Skeleton.Pos[9], grenvel, GameWidth, True) then
+          if Map.RayCast(BulletPos, Sprite[MySprite].Skeleton.Pos[9], grenvel,
+              GameWidth, True) then
             Exit;
 
   BulletVel := BulletParts.Velocity[Num];
@@ -847,7 +848,8 @@ begin
         begin
           a.x := BulletPos.X - Initial.X;
           a.y := BulletPos.Y - Initial.Y;
-          b.x := Vec2Length(a) * Min(1 / BULLETLENGTH, ((PingAdd + 2) / PingAddStart) / BULLETTRAIL);
+          b.x := Vec2Length(a) * Min(1 / BULLETLENGTH,
+            ((PingAdd + 2) / PingAddStart) / BULLETTRAIL);
           b.y := 1;
 
           if Active then
