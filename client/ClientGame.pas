@@ -155,11 +155,8 @@ begin
 end;
 
 function GetCurrentTime: Extended;
-var
-  x: Int64;
 begin
-  x := SDL_GetPerformanceCounter;
-  Result := (x - FrameTiming.StartTime) / FrameTiming.Frequency;
+  Result := (SDL_GetPerformanceCounter - FrameTiming.StartTime) / FrameTiming.Frequency;
 end;
 
 procedure BigMessage(Text: WideString; Delay: Integer; Col: Cardinal);
