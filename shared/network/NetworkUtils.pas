@@ -297,6 +297,7 @@ begin
     Sprite[i].SecondaryWeapon := Guns[NOWEAPON];
 end;
 {$ENDIF}
+
 {$IFDEF SERVER}
 function CheckWeaponNotAllowed(i: Byte): Boolean;
 var
@@ -357,7 +358,7 @@ var
 const
   FLOOD_ID_NOT_FOUND = 0;
 begin
-  {$IFDEF SERVER}
+  {$IFDEF SERVER}  // Leftover from client server?
   LastReqIP[LastReqID] := SrcIP;
   LastReqID := (LastReqID + 1) mod 4;
   {$ENDIF}
