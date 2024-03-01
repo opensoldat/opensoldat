@@ -1244,22 +1244,22 @@ begin
 
                     if Active then
                     begin
-                      BulletParts.Pos[Num] := Temp;
                       Perp := BulletParts.Velocity[Num];
+                      BulletParts.Pos[Num]      := Temp;
                       BulletParts.Velocity[Num] := Temp2;
 
                       Hit(HIT_TYPE_RICOCHET);
-                      BulletParts.Pos[Num] := HitSpot;
+                      BulletParts.Pos[Num]      := HitSpot;
                       BulletParts.Velocity[Num] := Perp;
                     end
                     else
                     begin
-                      BulletParts.Pos[Num] := Temp;
                       Perp := BulletParts.Velocity[Num];
+                      BulletParts.Pos[Num]      := Temp;
                       BulletParts.Velocity[Num] := Temp2;
 
                       Hit(HIT_TYPE_WALL);
-                      BulletParts.Pos[Num] := HitSpot;
+                      BulletParts.Pos[Num]      := HitSpot;
                       BulletParts.Velocity[Num] := Perp;
                     end;
                   end;
