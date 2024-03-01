@@ -125,9 +125,9 @@ begin
 
   SetLength(EscMenu.Button, {$IFDEF STEAM}5{$ELSE}4{$ENDIF});
   InitButton(EscMenu, 0, '1 ' + _('Exit to menu'), 5, 1 * 25, 240, 25);
-  InitButton(EscMenu, 1, '2 ' + _('Change map'), 5, 2 * 25, 240, 25);
-  InitButton(EscMenu, 2, '3 ' + _('Kick player'), 5, 3 * 25, 240, 25);
-  InitButton(EscMenu, 3, '4 ' + _('Change team'), 5, 4 * 25, 240, 25);
+  InitButton(EscMenu, 1, '2 ' + _('Change map'),   5, 2 * 25, 240, 25);
+  InitButton(EscMenu, 2, '3 ' + _('Kick player'),  5, 3 * 25, 240, 25);
+  InitButton(EscMenu, 3, '4 ' + _('Change team'),  5, 4 * 25, 240, 25);
   {$IFDEF STEAM}
   InitButton(EscMenu, 4, _('Server Website'), 5, 7 * 25, 240, 15);
   {$ENDIF}
@@ -140,12 +140,12 @@ begin
   TeamMenu.y := 0;
 
   SetLength(TeamMenu.Button, 6);
-  InitButton(TeamMenu, 0, '0 ' + _('0 Player'), 40, 140 + 40 * 1, 215, 35);
-  InitButton(TeamMenu, 1, '1 ' + _('Alpha Team'), 40, 140 + 40 * 1, 215, 35);
-  InitButton(TeamMenu, 2, '2 ' + _('Bravo Team'), 40, 140 + 40 * 2, 215, 35);
+  InitButton(TeamMenu, 0, '0 ' + _('0 Player'),     40, 140 + 40 * 1, 215, 35);
+  InitButton(TeamMenu, 1, '1 ' + _('Alpha Team'),   40, 140 + 40 * 1, 215, 35);
+  InitButton(TeamMenu, 2, '2 ' + _('Bravo Team'),   40, 140 + 40 * 2, 215, 35);
   InitButton(TeamMenu, 3, '3 ' + _('Charlie Team'), 40, 140 + 40 * 3, 215, 35);
-  InitButton(TeamMenu, 4, '4 ' + _('Delta Team'), 40, 140 + 40 * 4, 215, 35);
-  InitButton(TeamMenu, 5, '5 ' + _('Spectator'), 40, 140 + 40 * 5, 215, 35);
+  InitButton(TeamMenu, 4, '4 ' + _('Delta Team'),   40, 140 + 40 * 4, 215, 35);
+  InitButton(TeamMenu, 5, '5 ' + _('Spectator'),    40, 140 + 40 * 5, 215, 35);
 
   // limbo menu
 
@@ -174,10 +174,10 @@ begin
   KickMenu.y := 355;
 
   SetLength(KickMenu.Button, 4);
-  InitButton(KickMenu, 0, '<<<<',  15, 35, 90, 25);
-  InitButton(KickMenu, 1, '>>>>', 265, 35, 90, 25);
+  InitButton(KickMenu, 0, '<<<<',     15, 35, 90, 25);
+  InitButton(KickMenu, 1, '>>>>',    265, 35, 90, 25);
   InitButton(KickMenu, 2, _('Kick'), 105, 55, 90, 25);
-  InitButton(KickMenu, 3, _('Ban'), 195, 55, 80, 25);
+  InitButton(KickMenu, 3, _('Ban'),  195, 55, 80, 25);
 
   KickMenu.Button[3].Active := False;  // TODO: ban not supported for now
 
@@ -189,8 +189,8 @@ begin
   MapMenu.y := 355;
 
   SetLength(MapMenu.Button, 3);
-  InitButton(MapMenu, 0, '<<<<',  15, 35, 90, 25);
-  InitButton(MapMenu, 1, '>>>>', 265, 35, 90, 25);
+  InitButton(MapMenu, 0, '<<<<',       15, 35, 90, 25);
+  InitButton(MapMenu, 1, '>>>>',      265, 35, 90, 25);
   InitButton(MapMenu, 2, _('Select'), 120, 55, 90, 25);
 end;
 
