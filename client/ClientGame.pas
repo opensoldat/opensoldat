@@ -23,12 +23,12 @@ uses
 
 procedure ResetFrameTiming;
 procedure GameLoop;
-function GetGameFps: Integer;
-function GetCurrentTime: Extended;
+function  GetGameFps: Integer;
+function  GetCurrentTime: Extended;
 procedure TabComplete;
 procedure ResetWeaponStats;
 procedure BigMessage(Text: WideString; Delay: Integer; Col: Cardinal);
-function GetCameraTarget(Backwards: Boolean = False): Byte;
+function  GetCameraTarget(Backwards: Boolean = False): Byte;
 {$IFDEF STEAM}
 procedure GetMicData;
 {$ENDIF}
