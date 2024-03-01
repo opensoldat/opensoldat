@@ -36,7 +36,7 @@ procedure GetMicData;
 var
   MousePrev: TVector2;
   mx, my: Single;
-  MapChanged: Boolean = False;
+  MapChanged:  Boolean = False;
   ChatChanged: Boolean = True;  // used for blinking chat input
   ShouldRenderFrames: Boolean;  // false during game request phase
 
@@ -49,11 +49,11 @@ var
 
   // resolution
   IsFullscreen: Boolean;
-  ScreenWidth: Integer = DEFAULT_WIDTH;
+  ScreenWidth:  Integer = DEFAULT_WIDTH;
   ScreenHeight: Integer = DEFAULT_HEIGHT;
-  RenderWidth: Integer = 0;
+  RenderWidth:  Integer = 0;
   RenderHeight: Integer = 0;
-  WindowWidth: Integer = 0;
+  WindowWidth:  Integer = 0;
   WindowHeight: Integer = 0;
 
   // chat stuff
@@ -116,16 +116,16 @@ uses
 
 type
   TFrameTiming = record
-    Frequency: Int64;
-    StartTime: Int64;
-    PrevTime: Extended;
+    Frequency:      Int64;
+    StartTime:      Int64;
+    PrevTime:       Extended;
     PrevRenderTime: Extended;
-    Accumulator: Extended;
-    MinDeltaTime: Extended;
-    Elapsed: Extended;
-    Counter: Integer;
-    Fps: Integer;
-    FpsAccum: Extended;
+    Accumulator:    Extended;
+    MinDeltaTime:   Extended;
+    Elapsed:        Extended;
+    FpsAccum:       Extended;
+    Fps:            Integer;
+    Counter:        Integer;
   end;
 
 var

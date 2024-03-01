@@ -15,7 +15,8 @@ type
   PGameButton = ^TGameButton;
   TGameButton = record
     Active: Boolean;
-    x1, y1, x2, y2: Integer;
+    x1, y1: Integer;
+    x2, y2: Integer;
     Caption: WideString;
   end;
 
@@ -38,7 +39,7 @@ var
   KickMenu:  PGameMenu;
   MapMenu:   PGameMenu;
   KickMenuIndex: Integer = 0;
-  MapMenuIndex: Integer = 0;
+  MapMenuIndex:  Integer = 0;
 
 procedure InitGameMenus;
 procedure GameMenuShow(Menu: PGameMenu; Show: Boolean = True);

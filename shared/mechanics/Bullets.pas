@@ -2063,7 +2063,9 @@ end;
 function TBullet.CheckColliderCollision(lasthitdist: Single): TVector2;
 var
   j: Integer;
-  {$IFNDEF SERVER}i: Integer;{$ENDIF}
+  {$IFNDEF SERVER}
+  i: Integer;
+  {$ENDIF}
   StartPoint, EndPoint, Pos, ColPos, a: TVector2;
   dist: Single;
 begin

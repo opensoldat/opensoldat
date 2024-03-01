@@ -267,7 +267,7 @@ end;
 {$IFNDEF SERVER}
 procedure NewPlayerWeapon;
 var
-  i, j: Integer;
+  i, j:   Integer;
   SecWep: Integer;
 begin
   if Sprite[MySprite].Weapon.Num = Guns[NOWEAPON].Num then
