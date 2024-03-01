@@ -11,9 +11,6 @@ unit LauncherIPC;
 interface
 
 uses
-  // System units
-  Classes,
-
   // Project units
   LauncherConnection;
 
