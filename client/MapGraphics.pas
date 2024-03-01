@@ -905,10 +905,13 @@ begin
 
       mg.AnimationsBuffer[vbIndex + 0].u := Sprite.TexCoords.Left;
       mg.AnimationsBuffer[vbIndex + 0].v := Sprite.TexCoords.Top;
+
       mg.AnimationsBuffer[vbIndex + 1].u := Sprite.TexCoords.Right;
       mg.AnimationsBuffer[vbIndex + 1].v := Sprite.TexCoords.Top;
+
       mg.AnimationsBuffer[vbIndex + 2].u := Sprite.TexCoords.Right;
       mg.AnimationsBuffer[vbIndex + 2].v := Sprite.TexCoords.Bottom;
+
       mg.AnimationsBuffer[vbIndex + 3].u := Sprite.TexCoords.Left;
       mg.AnimationsBuffer[vbIndex + 3].v := Sprite.TexCoords.Bottom;
 
