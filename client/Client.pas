@@ -592,7 +592,6 @@ begin
   if Assigned(UDP) then
     UDP.ProcessEvents(Callback);
 end;
-
 {$ENDIF}
 
 procedure StartGame();
@@ -991,7 +990,6 @@ begin
     Exit;
 
   AddLineToLogFile(GameLog, 'Freeing sprites.', ConsoleLogFileName);
-
   // Free GFX
   DestroyGameGraphics();
 
@@ -1000,18 +998,16 @@ begin
   DeInitTranslation();
 
   AddLineToLogFile(GameLog, 'UDP closing.', ConsoleLogFileName);
-
   FreeAndNil(UDP);
 
   AddLineToLogFile(GameLog, 'Sound closing.', ConsoleLogFileName);
-
   CloseSound;
 
   AddLineToLogFile(GameLog, 'PhysFS closing.', ConsoleLogFileName);
-
   PhysFS_deinit();
 
-  if launcher_ipc_enable.Value then begin
+  if launcher_ipc_enable.Value then
+  begin
     AddLineToLogFile(GameLog, 'Launcher connection closing.', ConsoleLogFileName);
     FreeAndNil(LauncherIPC);
   end;
@@ -1062,6 +1058,7 @@ begin
   {$ENDIF}
 
   UDP := TClientNetwork.Create();
+
   // DEMO
   if JoinPort = '0' then
   begin
