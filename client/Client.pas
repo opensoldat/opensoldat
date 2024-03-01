@@ -166,13 +166,13 @@ var
   fs_workshop_interface: TIntegerCvar;
   {$ENDIF}
 
-  cl_player_name: TStringCvar;
-  cl_player_team: TIntegerCvar;
+  cl_player_name:  TStringCvar;
+  cl_player_team:  TIntegerCvar;
   cl_player_shirt: TColorCvar;
   cl_player_pants: TColorCvar;
-  cl_player_hair: TColorCvar;
-  cl_player_jet: TColorCvar;
-  cl_player_skin: TColorCvar;
+  cl_player_hair:  TColorCvar;
+  cl_player_jet:   TColorCvar;
+  cl_player_skin:  TColorCvar;
 
   cl_player_hairstyle: TIntegerCvar;
   cl_player_headstyle: TIntegerCvar;
