@@ -94,15 +94,15 @@ begin
 
   RadioCooldown := 3;
   case RadioID of
-    11: PlaySound(SFX_RADIO_EFCUP, SpriteParts.Pos[MySprite]);
-    12: PlaySound(SFX_RADIO_EFCMID, SpriteParts.Pos[MySprite]);
+    11: PlaySound(SFX_RADIO_EFCUP,   SpriteParts.Pos[MySprite]);
+    12: PlaySound(SFX_RADIO_EFCMID,  SpriteParts.Pos[MySprite]);
     13: PlaySound(SFX_RADIO_EFCDOWN, SpriteParts.Pos[MySprite]);
-    21: PlaySound(SFX_RADIO_FFCUP, SpriteParts.Pos[MySprite]);
-    22: PlaySound(SFX_RADIO_FFCMID, SpriteParts.Pos[MySprite]);
+    21: PlaySound(SFX_RADIO_FFCUP,   SpriteParts.Pos[MySprite]);
+    22: PlaySound(SFX_RADIO_FFCMID,  SpriteParts.Pos[MySprite]);
     23: PlaySound(SFX_RADIO_FFCDOWN, SpriteParts.Pos[MySprite]);
-    31: PlaySound(SFX_RADIO_ESUP, SpriteParts.Pos[MySprite]);
-    32: PlaySound(SFX_RADIO_ESMID, SpriteParts.Pos[MySprite]);
-    33: PlaySound(SFX_RADIO_ESDOWN, SpriteParts.Pos[MySprite]);
+    31: PlaySound(SFX_RADIO_ESUP,    SpriteParts.Pos[MySprite]);
+    32: PlaySound(SFX_RADIO_ESMID,   SpriteParts.Pos[MySprite]);
+    33: PlaySound(SFX_RADIO_ESDOWN,  SpriteParts.Pos[MySprite]);
   end;
 end;
 {$ENDIF}
