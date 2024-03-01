@@ -81,7 +81,7 @@ begin
     else if Keys[i] = 'alt' then
       Modifier := Modifier or KM_ALT
     else if BindKeyName = '' then
-      BindKeyName := Keys[i]; // First specific key (can be a specific modifier, like 'left shift') is allowed to be trigger key.
+      BindKeyName := Keys[i];  // First specific key (can be a specific modifier, like 'left shift') is allowed to be trigger key.
 
     if Keys[i] = 'left shift' then
       Modifier := Modifier or KM_LSHIFT
@@ -98,7 +98,7 @@ begin
     else if Keys[i] = 'alt gr' then
       Modifier := Modifier or KM_RALT
     else
-      BindKeyName := Keys[i]; // Last non-modifier key is the trigger key.
+      BindKeyName := Keys[i];  // Last non-modifier key is the trigger key.
   end;
 
   if Args[2][1] = '+' then
