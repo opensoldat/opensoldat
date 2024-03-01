@@ -70,7 +70,7 @@ type
     keyId: LongWord;
     keyMod: TKeyMods;
     Command: WideString;
-    Specificity: UInt32; // Used to sort/prioritize binds.
+    Specificity: UInt32;  // Used to sort/prioritize binds.
   end;
 
 const

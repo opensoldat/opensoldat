@@ -336,8 +336,8 @@ begin
         DemoPlayer.ProcessDemo;
     end;
 
-    // Mousewheel events do not have a guaranteed inverse (like keyup/keydown). So
-    // instead, mousewheel "pressed" state lasts 1 frame. This must happen
+    // Mousewheel events do not have a guaranteed inverse (like keyup/keydown).
+    // So instead, mousewheel "pressed" state lasts 1 frame. This must happen
     // after `UpdateFrame()` is called.
     if MouseWheelUpCounter > 0 then
     begin

@@ -206,7 +206,7 @@ uses
 var
   // NUMBER27's TIMING ROUTINES
   TimeinMil, TimeinMilLast: QWord;  // time in Milliseconds the computer has
-                                       // been running
+                                    // been running
   Timepassed: Cardinal;  // Time in Milliseconds the program has been running
   Seconds, SecondsLast: Integer;  // Seconds the program has been running
 

@@ -237,7 +237,7 @@ begin
   {$ENDIF}
   Bullet[i].StartUpTime := MainTickCounter;
   Bullet[i].RicochetCount := 0;
-  {$IFNDEF SERVER} // TODO: Check if this should be used also in server
+  {$IFNDEF SERVER}  // TODO: Check if this should be used also in server
   Bullet[i].DegradeCount := 0;
   Bullet[i].PingAdd := 0;
   Bullet[i].PingAddStart := 0;
