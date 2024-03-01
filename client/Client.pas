@@ -754,7 +754,8 @@ begin
   if fs_workshop_mod.Value <> 0 then
     LoadWorkshopModArchives
   else
-  {$ENDIF}if fs_mod.Value <> '' then
+  {$ENDIF}
+  if fs_mod.Value <> '' then
   begin
     Debug('[PhysFS] Mounting mods/' + fs_mod.Value + '.smod');
     if not PhysFS_mount(PChar(UserDirectory + 'mods/' + fs_mod.Value + '.smod'),
@@ -785,7 +786,7 @@ begin
 
   if (ScreenWidth = 0) or (ScreenHeight = 0) then
   begin
-    ScreenWidth := currentDisplay.w;
+    ScreenWidth  := currentDisplay.w;
     ScreenHeight := currentDisplay.h;
   end;
 

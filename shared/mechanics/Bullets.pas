@@ -1188,7 +1188,7 @@ begin
                   begin
                     BulletParts.OldPos[Num] := BulletParts.Pos[Num];
                     BulletParts.Pos[Num] := Vec2Subtract(Pos, BulletParts.Velocity[Num]);
-                    Temp := BulletParts.Pos[Num];
+                    Temp  := BulletParts.Pos[Num];
                     Temp2 := BulletParts.Velocity[Num];
 
                     Perp := Vec2Subtract(BulletParts.Pos[Num], HitSpot);
