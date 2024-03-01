@@ -646,7 +646,7 @@ begin
       ShowMessage('Error creating sdl2 window');
       Result := False;
       Exit;
-     end;
+    end;
 
   if not GfxInitContext(GameWindow, r_dithering.Value, r_compatibility.Value) then
   begin
