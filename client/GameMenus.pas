@@ -114,12 +114,12 @@ begin
 
   if r_scaleinterface.Value then
   begin
-    EscMenu.x := Round((GameWidth - EscMenu.w) / 2);
+    EscMenu.x := Round((GameWidth  - EscMenu.w) / 2);
     EscMenu.y := Round((GameHeight - EscMenu.h) / 2);
   end
   else
   begin
-    EscMenu.x := Round((RenderWidth - EscMenu.w) / 2);
+    EscMenu.x := Round((RenderWidth  - EscMenu.w) / 2);
     EscMenu.y := Round((RenderHeight - EscMenu.h) / 2);
   end;
 
