@@ -22,10 +22,10 @@ uses
   Version,
 
   // Project units
-  Constants,
   {$IFNDEF SERVER}
     Sound,
   {$ENDIF}
+  Constants,
   Sprites,
   Weapons;
 
