@@ -119,9 +119,9 @@ uses
 
   // Project units
   {$IFDEF SERVER}
-  Server,
+    Server,
   {$ELSE}
-  Client,
+    Client,
   {$ENDIF}
   GameRendering;
 
