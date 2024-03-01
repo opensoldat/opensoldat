@@ -814,15 +814,15 @@ begin
     BULLET_STYLE_PLAIN:  // bullet
       if TimeOutReal < BULLET_TIMEOUT - 2 then
       begin
-        if (ImageStyle <> Guns[EAGLE].BulletImageStyle) and
-           (ImageStyle <> Guns[MP5].BulletImageStyle) and
-           (ImageStyle <> Guns[AK74].BulletImageStyle) and
+        if (ImageStyle <> Guns[EAGLE].BulletImageStyle)    and
+           (ImageStyle <> Guns[MP5].BulletImageStyle)      and
+           (ImageStyle <> Guns[AK74].BulletImageStyle)     and
            (ImageStyle <> Guns[STEYRAUG].BulletImageStyle) and
-           (ImageStyle <> Guns[RUGER77].BulletImageStyle) and
-           (ImageStyle <> Guns[BARRETT].BulletImageStyle) and
-           (ImageStyle <> Guns[M249].BulletImageStyle) and
-           (ImageStyle <> Guns[MINIGUN].BulletImageStyle) and
-           (ImageStyle <> Guns[COLT].BulletImageStyle) then
+           (ImageStyle <> Guns[RUGER77].BulletImageStyle)  and
+           (ImageStyle <> Guns[BARRETT].BulletImageStyle)  and
+           (ImageStyle <> Guns[M249].BulletImageStyle)     and
+           (ImageStyle <> Guns[MINIGUN].BulletImageStyle)  and
+           (ImageStyle <> Guns[COLT].BulletImageStyle)     then
           ImageStyle := Guns[COLT].BulletImageStyle;
 
         _p.x := BulletPos.X + BulletVel.X;
@@ -1173,12 +1173,12 @@ begin
         w := Map.Sectors[kx, ky].Polys[j];
         teamcol := TeamCollides(w, Sprite[Owner].Player.Team, True);
         if teamcol then
-          if (Map.PolyType[w] <> POLY_TYPE_ONLY_PLAYER) and
-            (Map.PolyType[w] <> POLY_TYPE_DOESNT) and
-            (Map.PolyType[w] <> POLY_TYPE_ONLY_FLAGGERS) and
-            (Map.PolyType[w] <> POLY_TYPE_NOT_FLAGGERS) and
-            (Map.PolyType[w] <> POLY_TYPE_BACKGROUND) and
-            (Map.PolyType[w] <> POLY_TYPE_BACKGROUND_TRANSITION) then
+          if (Map.PolyType[w] <> POLY_TYPE_ONLY_PLAYER)   and
+             (Map.PolyType[w] <> POLY_TYPE_DOESNT)        and
+             (Map.PolyType[w] <> POLY_TYPE_ONLY_FLAGGERS) and
+             (Map.PolyType[w] <> POLY_TYPE_NOT_FLAGGERS)  and
+             (Map.PolyType[w] <> POLY_TYPE_BACKGROUND)    and
+             (Map.PolyType[w] <> POLY_TYPE_BACKGROUND_TRANSITION) then
             if Map.PointInPolyEdges(Pos.X, Pos.y, w) then
             begin
               case Style of
@@ -1224,13 +1224,13 @@ begin
                         for k := 1 to High(Map.Sectors[kx, ky].Polys) do
                         begin
                           w2 := Map.Sectors[kx, ky].Polys[k];
-                          if (Map.PolyType[w2] <> POLY_TYPE_ONLY_PLAYER) and
-                             (Map.PolyType[w2] <> POLY_TYPE_DOESNT) and
+                          if (Map.PolyType[w2] <> POLY_TYPE_ONLY_PLAYER)   and
+                             (Map.PolyType[w2] <> POLY_TYPE_DOESNT)        and
                              (Map.PolyType[w2] <> POLY_TYPE_ONLY_FLAGGERS) and
-                             (Map.PolyType[w2] <> POLY_TYPE_NOT_FLAGGERS) and
-                             (Map.PolyType[w2] <> POLY_TYPE_BACKGROUND) and
+                             (Map.PolyType[w2] <> POLY_TYPE_NOT_FLAGGERS)  and
+                             (Map.PolyType[w2] <> POLY_TYPE_BACKGROUND)    and
                              (Map.PolyType[w2] <> POLY_TYPE_BACKGROUND_TRANSITION) and
-                            TeamCollides(w2, Sprite[Owner].Player.Team, True) then
+                             TeamCollides(w2, Sprite[Owner].Player.Team, True) then
                             if Map.PointInPolyEdges(Pos.X, Pos.y, w2) then
                             begin
                               Kill;
