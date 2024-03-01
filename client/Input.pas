@@ -88,7 +88,17 @@ const
   KM_ALT    = $20000;
   KM_SHIFT  = $40000;
 
-  KM_ALL    = KM_LSHIFT or KM_RSHIFT or KM_LCTRL or KM_RCTRL or KM_LALT or KM_RALT or KM_CTRL or KM_ALT or KM_SHIFT;
+  KM_ALL    =
+    KM_LSHIFT or
+    KM_RSHIFT or
+    KM_LCTRL or
+    KM_RCTRL or
+    KM_LALT or
+    KM_RALT or
+    // custom keymod flags
+    KM_CTRL or
+    KM_ALT or
+    KM_SHIFT;
 
   // Custom "KeyIDs" to allow for mousewheel controls.
   KEYID_MOUSEWHEEL_UP   = 513;
