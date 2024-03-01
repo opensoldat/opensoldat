@@ -317,7 +317,7 @@ begin
 
           Halt(0);
         end;
-        1: GameMenuShow(MapMenu, not MapMenu.Active);
+        1: GameMenuShow(MapMenu,  not MapMenu.Active);
         2: GameMenuShow(KickMenu, not KickMenu.Active);
         3: begin
           Result := (MySprite > 0) and (MapChangeCounter < 0);

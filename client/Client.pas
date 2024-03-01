@@ -823,8 +823,8 @@ begin
     //WindowHeight := Screen.Height;
   end;
 
-  GfxLog(Format('Window size: %dx%d', [WindowWidth, WindowHeight]));
-  GfxLog(Format('Target resolution: %dx%d', [ScreenWidth, ScreenHeight]));
+  GfxLog(Format('Window size: %dx%d',         [WindowWidth, WindowHeight]));
+  GfxLog(Format('Target resolution: %dx%d',   [ScreenWidth, ScreenHeight]));
   GfxLog(Format('Internal resolution: %dx%d', [RenderWidth, RenderHeight]));
 
   // even windowed mode can behave as fullscreen with the right size
