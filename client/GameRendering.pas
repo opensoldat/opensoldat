@@ -539,41 +539,41 @@ begin
   Fonts[1] := GfxCreateFont(FontPath[1], Npot(w div 2), Npot(h div 2));
   Fonts[2] := GfxCreateFont(FontPath[2], Npot(w div 3), Npot(h div 3));
 
-  FontStyles[FONT_SMALL].Font := Fonts[2];
-  FontStyles[FONT_SMALL].Size := s * font_consolesize.Value;
+  FontStyles[FONT_SMALL].Font    := Fonts[2];
+  FontStyles[FONT_SMALL].Size    := s * font_consolesize.Value;
   FontStyles[FONT_SMALL].Stretch := font_2_scale.Value / 100;
-  FontStyles[FONT_SMALL].Flags := 0;
+  FontStyles[FONT_SMALL].Flags   := 0;
 
   // bold not supported for now so same as FONT_SMALL
-  FontStyles[FONT_SMALL_BOLD].Font := Fonts[2];
-  FontStyles[FONT_SMALL_BOLD].Size := s * font_consolesize.Value;
+  FontStyles[FONT_SMALL_BOLD].Font    := Fonts[2];
+  FontStyles[FONT_SMALL_BOLD].Size    := s * font_consolesize.Value;
   FontStyles[FONT_SMALL_BOLD].Stretch := font_2_scale.Value / 100;
-  FontStyles[FONT_SMALL_BOLD].Flags := 0;
+  FontStyles[FONT_SMALL_BOLD].Flags   := 0;
 
-  FontStyles[FONT_SMALLEST].Font := Fonts[2];
-  FontStyles[FONT_SMALLEST].Size := s * font_consolesmallsize.Value;;
+  FontStyles[FONT_SMALLEST].Font    := Fonts[2];
+  FontStyles[FONT_SMALLEST].Size    := s * font_consolesmallsize.Value;;
   FontStyles[FONT_SMALLEST].Stretch := font_2_scale.Value / 100;
-  FontStyles[FONT_SMALLEST].Flags := 0;
+  FontStyles[FONT_SMALLEST].Flags   := 0;
 
-  FontStyles[FONT_BIG].Font := Fonts[1];
-  FontStyles[FONT_BIG].Size := font_bigsize.Value;
+  FontStyles[FONT_BIG].Font    := Fonts[1];
+  FontStyles[FONT_BIG].Size    := font_bigsize.Value;
   FontStyles[FONT_BIG].Stretch := font_1_scale.Value / 100;
-  FontStyles[FONT_BIG].Flags := 0;
+  FontStyles[FONT_BIG].Flags   := 0;
 
-  FontStyles[FONT_MENU].Font := Fonts[1];
-  FontStyles[FONT_MENU].Size := s * font_menusize.Value;
+  FontStyles[FONT_MENU].Font    := Fonts[1];
+  FontStyles[FONT_MENU].Size    := s * font_menusize.Value;
   FontStyles[FONT_MENU].Stretch := font_1_scale.Value / 100;
-  FontStyles[FONT_MENU].Flags := 0;
+  FontStyles[FONT_MENU].Flags   := 0;
 
-  FontStyles[FONT_WEAPONS_MENU].Font := Fonts[2];
-  FontStyles[FONT_WEAPONS_MENU].Size := s * font_weaponmenusize.Value;;
+  FontStyles[FONT_WEAPONS_MENU].Font    := Fonts[2];
+  FontStyles[FONT_WEAPONS_MENU].Size    := s * font_weaponmenusize.Value;;
   FontStyles[FONT_WEAPONS_MENU].Stretch := font_2_scale.Value / 100;
-  FontStyles[FONT_WEAPONS_MENU].Flags := 0;
+  FontStyles[FONT_WEAPONS_MENU].Flags   := 0;
 
-  FontStyles[FONT_WORLD].Font := Fonts[1];
-  FontStyles[FONT_WORLD].Size := 128 * (RenderHeight / GameHeight);
+  FontStyles[FONT_WORLD].Font    := Fonts[1];
+  FontStyles[FONT_WORLD].Size    := 128 * (RenderHeight / GameHeight);
   FontStyles[FONT_WORLD].Stretch := font_1_scale.Value / 100;
-  FontStyles[FONT_WORLD].Flags := 0;
+  FontStyles[FONT_WORLD].Flags   := 0;
 
   for i := Low(FontStyles) to High(FontStyles) do
   begin
