@@ -114,7 +114,7 @@ var
   KeyStatus: array [0..514] of Boolean;
   Binds: array of TBind;
   GameWindow : PSDL_Window;
-  MouseWheelUpCounter: Integer = 0;
+  MouseWheelUpCounter:   Integer = 0;
   MouseWheelDownCounter: Integer = 0;
 
 
@@ -151,7 +151,7 @@ begin
   Result := PopCnt(KeyMods) shl 19;
 
   // One modifier key is more specific than either modifier key.
-  Result := Result or ((KeyMods and (KM_CTRL or KM_ALT or KM_SHIFT)) shr 16);
+  Result := Result or ((KeyMods and     (KM_CTRL or KM_ALT or KM_SHIFT)) shr 16);
   Result := Result or ((KeyMods and not (KM_CTRL or KM_ALT or KM_SHIFT)) shl 4);
 end;
 

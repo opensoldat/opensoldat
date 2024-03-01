@@ -214,14 +214,14 @@ var
 procedure Number27Timing;
 begin
   TimeInMilLast := TimeInMil;
-  TimeInMil := GetTickCount64;
+  TimeInMil     := GetTickCount64;
 
   if TimeInMil - TimeinMilLast > 2000 then
     TimeInMilLast := TimeInMil;  // safety precaution
 
-  Timepassed := Timepassed + (TimeInMil - TimeInMilLast);
+  Timepassed  := Timepassed + (TimeInMil - TimeInMilLast);
   SecondsLast := Seconds;
-  Seconds := Trunc(Timepassed / 1000);
+  Seconds     := Trunc(Timepassed / 1000);
 
   if Seconds <> SecondsLast then
   begin  // new Second
@@ -275,7 +275,7 @@ begin
       if PlayersNum > 0 then
         for i := 1 to PlayersNum do
         begin
-          S.Add(Sprite[SortedPlayers[i].PlayerNum].Player.Name);
+          S.Add(         Sprite[SortedPlayers[i].PlayerNum].Player.Name);
           S.Add(IntToStr(Sprite[SortedPlayers[i].PlayerNum].Player.Kills));
           S.Add(IntToStr(Sprite[SortedPlayers[i].PlayerNum].Player.Deaths));
           S.Add(IntToStr(Sprite[SortedPlayers[i].PlayerNum].Player.Team));
