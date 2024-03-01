@@ -114,17 +114,17 @@ begin
   Controls := @SpriteC.Control;
 
   Keys16 := 0;
-  if Controls.Left          then Keys16 := Keys16 or B1;
-  if Controls.Right         then Keys16 := Keys16 or B2;
-  if Controls.Up            then Keys16 := Keys16 or B3;
-  if Controls.Down          then Keys16 := Keys16 or B4;
-  if Controls.Fire          then Keys16 := Keys16 or B5;
-  if Controls.Jetpack       then Keys16 := Keys16 or B6;
-  if Controls.ThrowNade     then Keys16 := Keys16 or B7;
-  if Controls.ChangeWeapon  then Keys16 := Keys16 or B8;
-  if Controls.ThrowWeapon   then Keys16 := Keys16 or B9;
-  if Controls.Reload        then Keys16 := Keys16 or B10;
-  if Controls.FlagThrow     then Keys16 := Keys16 or B11;
+  if Controls.Left         then Keys16 := Keys16 or B1;
+  if Controls.Right        then Keys16 := Keys16 or B2;
+  if Controls.Up           then Keys16 := Keys16 or B3;
+  if Controls.Down         then Keys16 := Keys16 or B4;
+  if Controls.Fire         then Keys16 := Keys16 or B5;
+  if Controls.Jetpack      then Keys16 := Keys16 or B6;
+  if Controls.ThrowNade    then Keys16 := Keys16 or B7;
+  if Controls.ChangeWeapon then Keys16 := Keys16 or B8;
+  if Controls.ThrowWeapon  then Keys16 := Keys16 or B9;
+  if Controls.Reload       then Keys16 := Keys16 or B10;
+  if Controls.FlagThrow    then Keys16 := Keys16 or B11;
 
   if SpriteC.BodyAnimation.ID = Change.ID then
     Keys16 := Keys16 or B8;
