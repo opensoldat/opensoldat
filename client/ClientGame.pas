@@ -136,7 +136,7 @@ begin
   FrameTiming.Frequency := SDL_GetPerformanceFrequency;
   FrameTiming.StartTime := SDL_GetPerformanceCounter;
 
-  FrameTiming.PrevTime := GetCurrentTime;
+  FrameTiming.PrevTime       := GetCurrentTime;
   FrameTiming.PrevRenderTime := FrameTiming.PrevTime;
   FrameTiming.Accumulator := 0;
   FrameTiming.MinDeltaTime := 0;
@@ -149,7 +149,7 @@ begin
   if r_fpslimit.Value then
     FrameTiming.MinDeltaTime := 1.0 / r_maxfps.Value;
 
-  TickTime := 0;
+  TickTime     := 0;
   TickTimeLast := 0;
 end;
 
@@ -248,11 +248,11 @@ var
 begin
   for i := 0 to 20 do
   begin
-    WepStats[i].Shots := 0;
-    WepStats[i].Hits := 0;
-    WepStats[i].Kills := 0;
+    WepStats[i].Shots     := 0;
+    WepStats[i].Hits      := 0;
+    WepStats[i].Kills     := 0;
     WepStats[i].Headshots := 0;
-    WepStats[i].Accuracy := 0;
+    WepStats[i].Accuracy  := 0;
   end;
 end;
 
