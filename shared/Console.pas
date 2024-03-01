@@ -15,9 +15,9 @@ const
 
 type
   TConsole = object
-    TextMessage: array[1..CONSOLE_MAX_MESSAGES] of WideString;
+    TextMessage:      array[1..CONSOLE_MAX_MESSAGES] of WideString;
     TextMessageColor: array[1..CONSOLE_MAX_MESSAGES] of LongWord;
-    NumMessage: array[1..CONSOLE_MAX_MESSAGES] of Integer;
+    NumMessage:       array[1..CONSOLE_MAX_MESSAGES] of Integer;
     Count: Integer;
     CountMax: Integer;
     ScrollTick: Integer;

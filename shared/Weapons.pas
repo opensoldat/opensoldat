@@ -137,7 +137,7 @@ const
   WEAPON_NOCOLLISION_EXP_SELF  = 1 shl 5;
 
 var
-  Guns: array[1..TOTAL_WEAPONS] of TGun;
+  Guns:        array[1..TOTAL_WEAPONS] of TGun;
   DefaultGuns: array[1..TOTAL_WEAPONS] of TGun;
   DefaultWMChecksum, LoadedWMChecksum: LongWord;
 
