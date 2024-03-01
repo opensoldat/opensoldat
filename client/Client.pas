@@ -702,12 +702,12 @@ begin
   CreateDirIfMissing(UserDirectory + '/custom-interfaces');
 
   PHYSFS_CopyFileFromArchive('configs/bindings.cfg', UserDirectory + '/configs/bindings.cfg');
-  PHYSFS_CopyFileFromArchive('configs/client.cfg', UserDirectory + '/configs/client.cfg');
+  PHYSFS_CopyFileFromArchive('configs/client.cfg',   UserDirectory + '/configs/client.cfg');
   PHYSFS_CopyFileFromArchive('configs/controls.cfg', UserDirectory + '/configs/controls.cfg');
-  PHYSFS_CopyFileFromArchive('configs/game.cfg', UserDirectory + '/configs/game.cfg');
+  PHYSFS_CopyFileFromArchive('configs/game.cfg',     UserDirectory + '/configs/game.cfg');
   PHYSFS_CopyFileFromArchive('configs/graphics.cfg', UserDirectory + '/configs/graphics.cfg');
-  PHYSFS_CopyFileFromArchive('configs/player.cfg', UserDirectory + '/configs/player.cfg');
-  PHYSFS_CopyFileFromArchive('configs/sound.cfg', UserDirectory + '/configs/sound.cfg');
+  PHYSFS_CopyFileFromArchive('configs/player.cfg',   UserDirectory + '/configs/player.cfg');
+  PHYSFS_CopyFileFromArchive('configs/sound.cfg',    UserDirectory + '/configs/sound.cfg');
 
   LoadConfig('client.cfg');
 
