@@ -11,6 +11,14 @@ unit GameStrings;
 
 interface
 
+function InitTranslation(Filename: String): Boolean;
+function _(InputText: WideString): WideString; overload;
+function _(InputText: AnsiString): WideString; overload;
+procedure DeInitTranslation();
+
+
+implementation
+
 uses
   // System units
   Classes,
@@ -21,14 +29,6 @@ uses
 
 var
   TranslationFile: TMOFile;
-
-function InitTranslation(Filename: String): Boolean;
-function _(InputText: WideString): WideString; overload;
-function _(InputText: AnsiString): WideString; overload;
-procedure DeInitTranslation();
-
-
-implementation
 
 function InitTranslation(Filename: String): Boolean;
 var
