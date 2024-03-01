@@ -278,7 +278,7 @@ begin
   if Exclusive then
     Result := Result and ((BindKeyMods and $FFFF) = KeyMods)
   else
-    Result := Result and ((Keymods and BindKeyMods) = (BindKeyMods and $ffff));
+    Result := Result and ((Keymods and BindKeyMods) = (BindKeyMods and $FFFF));
 end;
 
 procedure UnbindAll;
