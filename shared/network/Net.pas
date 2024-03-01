@@ -558,18 +558,18 @@ type
   PMsg_RequestGame = ^TMsg_RequestGame;
   TMsg_RequestGame = packed record
     Header: TMsgHeader;
-    Version: array[0..VERSION_PACKET_CHARS - 1] of char;
+    Version: array[0..VERSION_PACKET_CHARS - 1] of Char;
     Forwarded: Byte;
     HaveAntiCheat: Byte;
     HardwareID: string[PLAYERHWID_CHARS];
-    Password: array[0..24] of char;
+    Password: array[0..24] of Char;
   end;
 
   // PLAYER INFO TYPE
   PMsg_PlayerInfo = ^TMsg_PlayerInfo;
   TMsg_PlayerInfo = packed record
     Header: TMsgHeader;
-    Name: array[0..PLAYERNAME_CHARS - 1] of char;
+    Name: array[0..PLAYERNAME_CHARS - 1] of Char;
     Look: Byte;
     Team: Byte;
     ShirtColor, PantsColor, SkinColor, HairColor, JetColor: LongWord;
@@ -581,12 +581,12 @@ type
   PMsg_PlayersList = ^TMsg_PlayersList;
   TMsg_PlayersList = packed record
     Header: TMsgHeader;
-    ModName: array[0..MAPNAME_CHARS - 1] of char;
+    ModName: array[0..MAPNAME_CHARS - 1] of Char;
     ModChecksum: TSHA1Digest;
-    MapName: array[0..MAPNAME_CHARS - 1] of char;
+    MapName: array[0..MAPNAME_CHARS - 1] of Char;
     MapChecksum: TSHA1Digest;
     Players: Byte;
-    Name: array[1..MAX_PLAYERS] of array[0..PLAYERNAME_CHARS - 1] of char;
+    Name: array[1..MAX_PLAYERS] of array[0..PLAYERNAME_CHARS - 1] of Char;
     ShirtColor, PantsColor, SkinColor, HairColor, JetColor: array[1..MAX_PLAYERS]
       of LongWord;
     Team: array[1..MAX_PLAYERS] of Byte;
@@ -605,8 +605,8 @@ type
   TMsg_UnAccepted = packed record
     Header: TMsgHeader;
     State: Byte;
-    Version: array[0..VERSION_PACKET_CHARS - 1] of char;
-    Text: array[0..0] of char;
+    Version: array[0..VERSION_PACKET_CHARS - 1] of Char;
+    Text: array[0..0] of Char;
   end;
 
   // NEW PLAYER TYPE
@@ -616,7 +616,7 @@ type
     Num: Byte;
     AdoptSpriteID: Byte;
     JoinType: Byte;
-    Name: array[0..PLAYERNAME_CHARS - 1] of char;
+    Name: array[0..PLAYERNAME_CHARS - 1] of Char;
     ShirtColor, PantsColor, SkinColor, HairColor, JetColor: LongWord;
     Team: Byte;
     Look: Byte;
@@ -756,8 +756,8 @@ type
     VoteType: Byte;
     Timer: Word;
     Who: Byte;
-    TargetName: array[0..MAPNAME_CHARS - 1] of char;
-    Reason: array[0..REASON_CHARS - 1] of char;
+    TargetName: array[0..MAPNAME_CHARS - 1] of Char;
+    Reason: array[0..REASON_CHARS - 1] of Char;
   end;
 
   // VOTING OFF TYPE
@@ -787,7 +787,7 @@ type
     Header: TMsgHeader;
     Ban: Byte;
     Num: Byte;
-    Reason: array[0..REASON_CHARS - 1] of char;
+    Reason: array[0..REASON_CHARS - 1] of Char;
   end;
 
   // MESSAGE PACKET
@@ -816,13 +816,13 @@ type
     Header: TMsgHeader;
     IP: LongWord;
     Port: Word;
-    ShowMsg: array[0..50] of char;
+    ShowMsg: array[0..50] of Char;
   end;
 
   PMsg_PlaySound = ^TMsg_PlaySound;
   TMsg_PlaySound = packed record  // Server -> Client
     Header: TMsgHeader;
-    Name: array[0..26] of char;
+    Name: array[0..26] of Char;
     Emitter: TVector2;
   end;
 

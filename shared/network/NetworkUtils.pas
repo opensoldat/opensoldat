@@ -152,7 +152,7 @@ begin
 end;
 
 // Sets the player name to Major if it is invalid
-function FixPlayerName(Name: array of char): string;
+function FixPlayerName(Name: array of Char): string;
 begin
   if (Trim(Name) = '') or
     (Name = #12) or
