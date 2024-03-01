@@ -31,39 +31,36 @@ uses
 
 
 {$IFDEF SERVER}
-function IsRemoteAdminIP(IP: string): Boolean;
-function IsAdminIP(IP: string): Boolean;
-function IsAdminPassword(Password: string): Boolean;
+function  IsRemoteAdminIP(IP: string): Boolean;
+function  IsAdminIP(IP: string): Boolean;
+function  IsAdminPassword(Password: string): Boolean;
+function  IsServerTotallyFull: Boolean;
+function  IsServerFull: Boolean;
+function  IsWrongGamePassword(GamePassword: string): Boolean;
+
+function  CheckWeaponNotAllowed(i: Byte): Boolean;
+
+function  FindFloodID(SrcIP: string): Integer;
+function  AddFloodIP(SrcIP: string): Cardinal;
+function  UpdateAntiFlood(SrcIP: string): Cardinal;
+function  IsFloodID(ID: Cardinal): Boolean;
+
+function  AddIPToRemoteAdmins(SrcIP: string): Boolean;
 {$ENDIF}
-function IsWrongGameVersion(RequestVersion: string): Boolean;
-function VerifyPacket(ValidSize, ReceiveSize, PacketId: Integer): Boolean;
-function VerifyPacketLargerOrEqual(ValidSize, ReceiveSize, PacketId: Integer): Boolean;
-{$IFDEF SERVER}
-function IsServerTotallyFull: Boolean;
-function IsServerFull: Boolean;
-function IsWrongGamePassword(GamePassword: string): Boolean;
-{$ENDIF}
-function FixPlayerName(Name: array of char): string;
 
 {$IFNDEF SERVER}
 procedure PlayRadioSound(RadioID: Byte);
 procedure NewPlayerWeapon;
-function ReturnFixedPlayerName(name: string): string;
+function  ReturnFixedPlayerName(name: string): string;
 {$ENDIF}
-{$IFDEF SERVER}
-function CheckWeaponNotAllowed(i: Byte): Boolean;
-{$ENDIF}
+
+function  IsWrongGameVersion(RequestVersion: string): Boolean;
+function  VerifyPacket(ValidSize, ReceiveSize, PacketId: Integer): Boolean;
+function  VerifyPacketLargerOrEqual(ValidSize, ReceiveSize, PacketId: Integer): Boolean;
+function  FixPlayerName(Name: array of Char): string;
 
 procedure EncodeKeys(var SpriteC: TSprite; out Keys16: Word);
 procedure DecodeKeys(var SpriteC: TSprite; var Keys16: Word);
-{$IFDEF SERVER}
-function FindFloodID(SrcIP: string): Integer;
-function AddFloodIP(SrcIP: string): Cardinal;
-function UpdateAntiFlood(SrcIP: string): Cardinal;
-function IsFloodID(ID: Cardinal): Boolean;
-
-function AddIPToRemoteAdmins(SrcIP: string): Boolean;
-{$ENDIF}
 procedure StringToArray(var c: array of Char; s: string);
 
 
