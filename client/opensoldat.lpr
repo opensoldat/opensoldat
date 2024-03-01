@@ -9,10 +9,6 @@
 
 program opensoldat;
 
-{$IFDEF MSWINDOWS}
-{$APPTYPE CONSOLE}
-{$ENDIF}
-
 {$IFDEF DARWIN}
 {$linklib freetype}
 {$linklib stb}
