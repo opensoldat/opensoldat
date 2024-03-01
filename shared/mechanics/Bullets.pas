@@ -2859,7 +2859,7 @@ function TBullet.GetWeaponIndex: Byte;
 var
   WeaponIndex: Byte;
 begin
-  for WeaponIndex := 1 to High(Guns) do
+  for WeaponIndex := Low(Guns) to High(Guns) do
   begin
     if OwnerWeapon = Guns[WeaponIndex].Num then
     begin
