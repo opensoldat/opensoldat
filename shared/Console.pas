@@ -39,7 +39,7 @@ type
     procedure Console(What: Variant; Col: Cardinal); overload;
     procedure ConsoleAdd(What: WideString; Col: Cardinal);
     procedure ConsoleNum(What: WideString; Col: Cardinal; Num: Integer);
-    function GetContentsAsPlainText(): WideString;
+    function  GetContentsAsPlainText(): WideString;
   end;
 
 

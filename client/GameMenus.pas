@@ -42,7 +42,7 @@ var
 
 procedure InitGameMenus;
 procedure GameMenuShow(Menu: PGameMenu; Show: Boolean = True);
-function GameMenuAction(Menu: PGameMenu; ButtonIndex: Integer): Boolean;
+function  GameMenuAction(Menu: PGameMenu; ButtonIndex: Integer): Boolean;
 procedure GameMenuMouseMove();
 function GameMenuClick(): Boolean;
 

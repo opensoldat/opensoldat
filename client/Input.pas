@@ -64,9 +64,9 @@ const
   KEYID_MOUSEWHEEL_UP   = 513;
   KEYID_MOUSEWHEEL_DOWN = 514;
 
-function BindKey(key, action, command: string; KeyMods: TKeyMods): Boolean;
-function FindKeyBind(KeyMods: TKeyMods; KeyCode: TSDL_ScanCode; Exact: Boolean = False): PBind;
-function KeyModsMatch(BindKeyMods, KeyMods: TKeyMods; Exclusive: Boolean = False): Boolean;
+function  BindKey(key, action, command: string; KeyMods: TKeyMods): Boolean;
+function  FindKeyBind(KeyMods: TKeyMods; KeyCode: TSDL_ScanCode; Exact: Boolean = False): PBind;
+function  KeyModsMatch(BindKeyMods, KeyMods: TKeyMods; Exclusive: Boolean = False): Boolean;
 procedure StartInput;
 procedure UnbindAll;
 
