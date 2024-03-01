@@ -215,6 +215,7 @@ procedure Number27Timing;
 begin
   TimeInMilLast := TimeInMil;
   TimeInMil := GetTickCount64;
+
   if TimeInMil - TimeinMilLast > 2000 then
     TimeInMilLast := TimeInMil;  // safety precaution
 

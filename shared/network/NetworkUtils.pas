@@ -417,12 +417,14 @@ var
   i: Integer;
 begin
   FillChar(c, sizeOf(c), 0);
+
   if Length(s) < 1 then
     Exit;
   if Length(c) < 1 then
     Exit;
   if Length(s) > Length(c) then
     Exit;
+
   for i := 0 to Length(s) - 1 do
   begin
     c[i] := s[i + 1];

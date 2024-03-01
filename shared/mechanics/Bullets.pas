@@ -1236,6 +1236,7 @@ begin
                       BulletParts.Pos[Num] := Temp;
                       Perp := BulletParts.Velocity[Num];
                       BulletParts.Velocity[Num] := Temp2;
+
                       Hit(HIT_TYPE_RICOCHET);
                       BulletParts.Pos[Num] := HitSpot;
                       BulletParts.Velocity[Num] := Perp;
@@ -1245,6 +1246,7 @@ begin
                       BulletParts.Pos[Num] := Temp;
                       Perp := BulletParts.Velocity[Num];
                       BulletParts.Velocity[Num] := Temp2;
+
                       Hit(HIT_TYPE_WALL);
                       BulletParts.Pos[Num] := HitSpot;
                       BulletParts.Velocity[Num] := Perp;
