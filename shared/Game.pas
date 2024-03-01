@@ -255,11 +255,11 @@ begin
       case sv_gamemode.Value of
         GAMESTYLE_DEATHMATCH: S.Add('Gamemode: Deathmatch');
         GAMESTYLE_POINTMATCH: S.Add('Gamemode: Pointmatch');
-        GAMESTYLE_TEAMMATCH: S.Add('Gamemode: Teammatch');
-        GAMESTYLE_CTF: S.Add('Gamemode: Capture the Flag');
-        GAMESTYLE_RAMBO: S.Add('Gamemode: Rambomatch');
-        GAMESTYLE_INF: S.Add('Gamemode: Infiltration');
-        GAMESTYLE_HTF: S.Add('Gamemode: Hold the Flag');
+        GAMESTYLE_TEAMMATCH:  S.Add('Gamemode: Teammatch');
+        GAMESTYLE_CTF:        S.Add('Gamemode: Capture the Flag');
+        GAMESTYLE_RAMBO:      S.Add('Gamemode: Rambomatch');
+        GAMESTYLE_INF:        S.Add('Gamemode: Infiltration');
+        GAMESTYLE_HTF:        S.Add('Gamemode: Hold the Flag');
       end;
       S.Add('Timeleft: ' + IntToStr(TimeLeftMin) + ':' + IntToStr(TimeLeftSec));
       if IsTeamGame() then
