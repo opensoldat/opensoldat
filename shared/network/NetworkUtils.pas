@@ -155,10 +155,10 @@ end;
 function FixPlayerName(Name: array of Char): string;
 begin
   if (Trim(Name) = '') or
-    (Name = #12) or
-    (UpperCase(Name) = 'SERVER MESSAGE') or
-    AnsiContainsStr(Name, #10) or
-    AnsiContainsStr(Name, #13) then
+      (Name = #12) or
+      (UpperCase(Name) = 'SERVER MESSAGE') or
+      AnsiContainsStr(Name, #10) or
+      AnsiContainsStr(Name, #13) then
     Result := 'Major'
   else
     Result := Name;
