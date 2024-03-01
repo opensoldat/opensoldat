@@ -35,14 +35,14 @@ type
       FSize: Integer;
       FCapacity: Integer;
 
-      function GetValue(Index: Integer): TBPRect;
+      function  GetValue(Index: Integer): TBPRect;
       procedure SetValue(Index: Integer; const Value: TBPRect);
 
     public
       constructor Create;
       destructor Destroy; override;
-      procedure Push(const Rect: TBPRect);
-      procedure Remove(Index: Integer);
+      procedure  Push(const Rect: TBPRect);
+      procedure  Remove(Index: Integer);
 
       property Size: Integer read FSize;
       property Items[Index: Integer]: TBPRect read GetValue write SetValue;
@@ -53,6 +53,7 @@ type
     Used: TRectList;
     Free: TRectList;
   end;
+
 
 // Forward declarations of internal functions
 
@@ -66,6 +67,7 @@ procedure PruneFreeList(var bp: TBinPack);
   forward;
 function IsContainedIn(const a, b: TBPRect): Boolean;
   forward;
+
 
 // PackRects
 
@@ -131,6 +133,7 @@ begin
 
   Result := i;
 end;
+
 
 // Internal functions
 
@@ -312,6 +315,7 @@ begin
   Result := (a.x >= b.x) and (a.y >= b.y) and ((a.x + a.w) <= (b.x + b.w)) and
     ((a.y + a.h) <= (b.y + b.h));
 end;
+
 
 // TRectList class
 
