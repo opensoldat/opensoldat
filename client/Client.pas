@@ -1076,28 +1076,22 @@ begin
   begin
     DemoPlayer.OpenDemo(UserDirectory + 'demos/' + JoinIP + '.sdm');
     DemoPlayer.ProcessDemo;
-    ProgReady := True;
-    GameLoopRun := True;
-    RenderGameInfo(_('Loading'));
-    StartGameLoop();
-  end else
+  end
+  else
   begin
     RenderGameInfo(_(WideFormat('Connecting to %s:%d', [ServerIP, ServerPort])));
 
-    if UDP.Connect(ServerIP, ServerPort) then
-    begin
-      ProgReady := True;
-      GameLoopRun := True;
-      RenderGameInfo(_('Loading'));
-      ClientRequestGame;
-      StartGameLoop;
-    end
-    else
+    if not UDP.Connect(ServerIP, ServerPort) then
     begin
       RenderGameInfo(_('Connection timed out.'));
       Exit;
     end;
   end;
+
+  ProgReady   := True;
+  GameLoopRun := True;
+  RenderGameInfo(_('Loading'));
+  StartGameLoop();
 end;
 
 procedure ShowMessage(MessageText: AnsiString); overload;
