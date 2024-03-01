@@ -284,38 +284,44 @@ begin
   CaseInsensitiveImageMap.Clear();
 
   ImageDirs := TStringArray.Create(
-    'scenery-gfx/',
+                'scenery-gfx/',
     'current_map/scenery-gfx/',
-    'textures/',
-    'textures/edges/',
-    'textures/objects/',
+
+                'textures/',
+                'textures/edges/',
+                'textures/objects/',
     'current_map/textures/',
     'current_map/textures/edges/',
-    ModDir + 'textures/',
-    ModDir + 'textures/edges/',
-    ModDir + 'textures/objects/',
-    'gostek-gfx/',
-    'gostek-gfx/ranny/',
-    'gostek-gfx/team2/',
-    'gostek-gfx/team2/ranny/',
-    ModDir + 'gostek-gfx/',
-    ModDir + 'gostek-gfx/ranny/',
-    ModDir + 'gostek-gfx/team2/',
-    ModDir + 'gostek-gfx/team2/ranny/',
-    'weapons-gfx/',
-    ModDir + 'weapons-gfx/',
-    'sparks-gfx/',
-    'sparks-gfx/explosion/',
-    'sparks-gfx/flames/',
-    ModDir + 'sparks-gfx/',
-    ModDir + 'sparks-gfx/explosion/',
-    ModDir + 'sparks-gfx/flames/',
-    'interface-gfx/',
-    'interface-gfx/guns/',
-    ModDir + 'interface-gfx/',
-    ModDir + 'interface-gfx/guns/',
-    'objects-gfx/',
-    ModDir + 'objects-gfx/'
+    ModDir +    'textures/',
+    ModDir +    'textures/edges/',
+    ModDir +    'textures/objects/',
+
+                'gostek-gfx/',
+                'gostek-gfx/ranny/',
+                'gostek-gfx/team2/',
+                'gostek-gfx/team2/ranny/',
+    ModDir +    'gostek-gfx/',
+    ModDir +    'gostek-gfx/ranny/',
+    ModDir +    'gostek-gfx/team2/',
+    ModDir +    'gostek-gfx/team2/ranny/',
+
+                'weapons-gfx/',
+    ModDir +    'weapons-gfx/',
+
+                'sparks-gfx/',
+                'sparks-gfx/explosion/',
+                'sparks-gfx/flames/',
+    ModDir +    'sparks-gfx/',
+    ModDir +    'sparks-gfx/explosion/',
+    ModDir +    'sparks-gfx/flames/',
+
+                'interface-gfx/',
+                'interface-gfx/guns/',
+    ModDir +    'interface-gfx/',
+    ModDir +    'interface-gfx/guns/',
+
+                'objects-gfx/',
+    ModDir +    'objects-gfx/'
   );
 
   for ImageDir in ImageDirs do
