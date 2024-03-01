@@ -38,19 +38,19 @@ var
   Textures: TGfxSpriteArray;
   ActualZoom: Single = 0.0;
 
-function InitGameGraphics: Boolean;
-procedure ReloadGraphics;
+function  InitGameGraphics(): Boolean;
+procedure ReloadGraphics();
 procedure DestroyGameGraphics();
 procedure RenderFrame(TimeElapsed, FramePercent: Extended; Paused: Boolean);
 procedure RenderGameInfo(TextString: WideString);
-function DoTextureLoading(FinishLoading: Boolean = False): Boolean;
+function  DoTextureLoading(FinishLoading: Boolean = False): Boolean;
 procedure SetFontStyle(Style: Integer); overload;
 procedure SetFontStyle(Style: Integer; Scale: Single); overload;
-function FontStyleSize(Style: Integer): Single;
+function  FontStyleSize(Style: Integer): Single;
 procedure TakeScreenshot(Filename: string; Async: Boolean = True);
-procedure FillCaseInsensitiveImageMap;
-function FindImagePath(const Filename: string): string;
-function EaseZoom(Current, Goal: Single): Single;
+procedure FillCaseInsensitiveImageMap();
+function  FindImagePath(const Filename: string): string;
+function  EaseZoom(Current, Goal: Single): Single;
 
 
 implementation
