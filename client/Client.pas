@@ -90,7 +90,6 @@ var
   JoinIP: String; // join ip to server
 
   WindowReady: Boolean = False;
-  Initing: Byte;
   GraphicsInitialized: Boolean = False;
 
   BaseDirectory: string;
@@ -721,8 +720,6 @@ begin
     timeBeginPeriod(r_sleeptime.Value);
   {$ENDIF}
 
-  Initing := 0;
-
   {$IFDEF STEAM}
   Debug('[Steam] Initializing system');
   // Initialize steam
@@ -1047,10 +1044,6 @@ end;
 procedure JoinServer();
 begin
   ResetFrameTiming;
-
-  Inc(Initing);
-  if Initing > 10 then
-    Initing := 10;
 
   ServerIP := Trim(JoinIP);
   if not TryStrToInt(Trim(JoinPort), ServerPort) then
