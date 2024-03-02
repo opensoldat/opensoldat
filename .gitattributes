@@ -1,5 +1,5 @@
 # set default behavior
-* text=auto
+* text=auto eol=lf
 
 # normalize and convert to native line endings on checkout
 *.inc text
@@ -11,6 +11,7 @@
 # checkout with CRLF line endings
 *.dof text eol=crlf
 *.dfm text eol=crlf
+*.bat text eol=crlf
 
 # checkout with LF line endings
 *.sh  text eol=lf
