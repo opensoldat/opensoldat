@@ -219,4 +219,11 @@ jobs:
 
           git tag continuous
           git push --tags origin continuous
-          gh release create continuous windows-build/*.zip OpenSoldatServer-win32-x64.zip OpenSoldat-macos-x64.zip linux-build/*.zip linux-server-build/*.tar --notes "OpenSoldat 1.8 alpha dev build" --title "OpenSoldat 1.8 alpha dev build"
+          gh release create continuous \
+            windows-build/*.zip \
+            OpenSoldatServer-win32-x64.zip \
+            OpenSoldat-macos-x64.zip \
+            linux-build/*.zip \
+            linux-server-build/*.tar \
+            --notes "OpenSoldat 1.8 alpha dev build" \
+            --title "OpenSoldat 1.8 alpha dev build"
