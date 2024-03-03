@@ -204,6 +204,7 @@ jobs:
 
       - name: Zip build dirs back together
         run: |
+          ls
           zip -r OpenSoldat-macos-x64.zip OpenSoldat-macos-x64
           zip -r OpenSoldatServer-win32-x64.zip OpenSoldatServer-win32-x64
 
