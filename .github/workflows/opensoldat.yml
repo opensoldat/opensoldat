@@ -211,22 +211,32 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git fetch --tags
-          if git rev-parse continuous &>/dev/null; then
-            gh release delete continuous --yes
-            git tag --delete continuous
-            git push --delete origin continuous
-          fi
-
-          git tag continuous
-          git push --tags origin continuous
-
-          echo debug paths
+          echo debug paths 1
           ls
           ls windows-build/*.zip
           ls OpenSoldatServer-win32-x64.zip
           ls OpenSoldat-macos-x64.zip
           ls linux-build/*.zip
           ls linux-server-build/*.tar
+          echo debug paths 2
+          git fetch --tags
+          echo debug paths 3
+          if git rev-parse continuous &>/dev/null; then
+            echo debug paths 3.1
+            gh release delete continuous --yes
+            echo debug paths 3.2
+            git tag --delete continuous
+            echo debug paths 3.3
+            git push --delete origin continuous
+            echo debug paths 3.4
+          fi
+          echo debug paths 4
+
+          git tag continuous
+          echo debug paths 5
+
+          git push --tags origin continuous
+          echo debug paths 6
 
           gh release create continuous windows-build/*.zip OpenSoldatServer-win32-x64.zip OpenSoldat-macos-x64.zip linux-build/*.zip linux-server-build/*.tar --notes "OpenSoldat 1.8 alpha dev build" --title "OpenSoldat 1.8 alpha dev build"
+          echo debug paths 7
