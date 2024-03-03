@@ -214,9 +214,8 @@ jobs:
           echo ci debug 1
           #git rev-parse continuous
           echo ci debug 1.1
-          git show-ref --tags continuous
-          echo ci debug 1.2
           #if git rev-parse continuous &>/dev/null; then
+          echo ci debug 1.2
           if ! git show-ref --tags continuous &>/dev/null; then
             echo ci debug 2.0
             gh release delete continuous --yes || echo "Failed to delete GitHub release. Ignoring."
