@@ -146,14 +146,21 @@ begin
   end;
 end;
 
+// converts BBGGRR, BBGGRRA and BBGGRRAA into AARRGGBB with alpha set to $FF
+// examples:
+// $11223344 -> $FF332211
+// $1122334  -> $FF332211
+// $112233   -> $FF332211
 function ColorToHex(Color: TColor): LongWord;
-var
-  Temp: LongWord;
-  Temp2: string;
 begin
-  Temp := Color;
-  Temp2 := IntToHex(Temp, 6);
-  Result := LongWord(StrToInt('$FF' + Copy(Temp2, 5, 2) + Copy(Temp2, 3, 2) + Copy(Temp2, 1, 2)));
+  while (Color and $FF000000) > 0 do
+    Color := Color shr 4;
+
+  Result :=
+    $FF000000 or
+    (Color and $FF) shl 16 or
+    (Color and $FF00) or
+    (Color and $FF0000) shr 16;
 end;
 
 function StringToColor(const S: string): TColor;
