@@ -119,9 +119,9 @@ jobs:
 #        shell: cmd
 
       - name: Setup Lazarus environment
-        uses: gcarreno/setup-lazarus@v3.2.15
+        uses: gcarreno/setup-lazarus@v3.2.17
         with:
-          lazarus-version: 2.2.6
+          lazarus-version: 3.0
           #include-packages: "Synapse 40.1"
           with-cache: false
 
