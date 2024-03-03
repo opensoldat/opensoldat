@@ -79,7 +79,8 @@ end;
 
 destructor TLauncherIPC.Destroy;
 begin
-  if FThreadAlive then begin
+  if FThreadAlive then
+  begin
     Debug('[LauncherIPC] Killing thread...');
     FConnectionThread.Terminate;
     FConnectionThread.WaitFor;

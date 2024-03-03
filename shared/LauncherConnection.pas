@@ -83,7 +83,7 @@ end;
 
 procedure TLauncherConnection.Execute;
 type
-  TBuffer = array[0..MAX_MESSAGE_LENGTH-1] of Char;
+  TBuffer = array[0..MAX_MESSAGE_LENGTH - 1] of Char;
 var
   ReadBuffer: TBuffer;
   ReadLength: LongInt;
@@ -91,7 +91,8 @@ begin
   try
     FSocket := TInetSocket.Create('127.0.0.1', FPort, 5000);
   except
-    on SocketError: ESocketError do begin
+    on SocketError: ESocketError do
+    begin
       Debug('[LauncherConnection] ' + SocketError.Message);
       Exit;
     end;
@@ -100,16 +101,21 @@ begin
   FSocket.IOTimeout := 1000;
   ReadBuffer := Default(TBuffer);
 
-  while not Terminated do begin
+  while not Terminated do
+  begin
     ReadLength := FSocket.Read(ReadBuffer, MAX_MESSAGE_LENGTH);
     if ReadLength > 0 then begin
       FReceivedMessage := ReadBuffer;
       Synchronize(HandleMessage);
-    end else if ReadLength = 0 then begin
+    end
+    else if ReadLength = 0 then
+    begin
       Debug('[LauncherConnection] Launcher closed the connection');
       Exit;
-    end else begin
-      if IsRealSocketError(FSocket.LastError) then begin
+    end else
+    begin
+      if IsRealSocketError(FSocket.LastError) then
+      begin
         Debug('[LauncherConnection] Failed to read from socket. Error code: ' +
           IntToStr(FSocket.LastError));
         Exit;
@@ -133,7 +139,8 @@ var
   Queue: TList<String>;
 begin
   Queue := FSendQueue.LockList;
-  if Queue.Count = 0 then begin
+  if Queue.Count = 0 then
+  begin
     FSendQueue.UnlockList;
     Exit;
   end;
