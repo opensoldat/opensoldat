@@ -19,9 +19,9 @@ jobs:
           sudo apt-get install cmake git libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6 patchelf
 
       - name: Setup Lazarus environment
-        uses: gcarreno/setup-lazarus@v3.2.15
+        uses: gcarreno/setup-lazarus@v3
         with:
-          lazarus-version: 2.2.6
+          lazarus-version: 3.0
           #include-packages: "Synapse 40.1"
           #with-cache: true
 
