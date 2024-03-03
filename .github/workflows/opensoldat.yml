@@ -211,28 +211,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo ci debug 1
-          #git rev-parse continuous
-          echo ci debug 1.1
-          #if git rev-parse continuous &>/dev/null; then
-          echo ci debug 1.2
           if ! git show-ref --tags continuous &>/dev/null; then
-            echo ci debug 2.0
             gh release delete continuous --yes || echo "Failed to delete GitHub release. Ignoring."
-            echo ci debug 2.1
             git tag --delete continuous || echo "Failed to delete local tag. Ignoring."
-            echo ci debug 2.2
             git push --delete origin continuous || echo "Failed to delete remote tag. Ignoring."
-            echo ci debug 2.3
-          else
-            echo ci debug 2.9
           fi
 
-          echo ci debug 3
           git tag continuous
-          echo ci debug 4
           git push --tags origin continuous
-          echo ci debug 5
           gh release create continuous \
             windows-build/*.zip \
             OpenSoldatServer-win32-x64.zip \
@@ -241,4 +227,3 @@ jobs:
             linux-server-build/*.tar \
             --notes "OpenSoldat 1.8 alpha dev build" \
             --title "OpenSoldat 1.8 alpha dev build"
-          echo ci debug 6
