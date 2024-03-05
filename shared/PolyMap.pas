@@ -581,7 +581,7 @@ begin
   ky := Round(Pos.y / SectorsDivision);
 
   if (kx > -SectorsNum) and (kx < SectorsNum) and
-    (ky > -SectorsNum) and (ky < SectorsNum) then
+     (ky > -SectorsNum) and (ky < SectorsNum) then
   begin
     for j := 1 to High(Sectors[kx, ky].Polys) do
     begin
@@ -616,7 +616,7 @@ begin
   ky := Round(Pos.y / SectorsDivision);
 
   if (kx > -SectorsNum) and (kx < SectorsNum) and
-    (ky > -SectorsNum) and (ky < SectorsNum) then
+     (ky > -SectorsNum) and (ky < SectorsNum) then
   begin
     for j := 1 to High(Sectors[kx, ky].Polys) do
     begin
@@ -663,7 +663,7 @@ begin
   by := Round(Max(a.y, b.y) / SectorsDivision);
 
   if (ax > MAX_SECTORZ) or (bx < MIN_SECTORZ) or
-    (ay > MAX_SECTORZ) or (by < MIN_SECTORZ) then
+     (ay > MAX_SECTORZ) or (by < MIN_SECTORZ) then
     Exit;
 
   ax := Max(MIN_SECTORZ, ax);
