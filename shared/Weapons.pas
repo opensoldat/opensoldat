@@ -223,280 +223,280 @@ var
 begin
   // Desert Eagle
   Gun := @Guns[EAGLE];
-  Gun.Name    := 'Desert Eagles';
-  Gun.IniName := Gun.Name;
-  Gun.Num := EAGLE_NUM;
-  Gun.TextureNum := GFX_WEAPONS_DEAGLES;
-  Gun.ClipTextureNum := GFX_WEAPONS_DEAGLES_CLIP;
-  Gun.ClipReload := True;
+  Gun.Name             := 'Desert Eagles';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := EAGLE_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_DEAGLES;
+  Gun.ClipTextureNum   := GFX_WEAPONS_DEAGLES_CLIP;
+  Gun.ClipReload       := True;
   Gun.BulletImageStyle := GFX_WEAPONS_DEAGLES_BULLET;
-  Gun.FireStyle := GFX_WEAPONS_DEAGLES_FIRE;
-  Gun.FireMode := 2;
+  Gun.FireStyle        := GFX_WEAPONS_DEAGLES_FIRE;
+  Gun.FireMode         := 2;
 
   // MP5
   Gun := @Guns[MP5];
-  Gun.Name    := 'HK MP5';
-  Gun.IniName := Gun.Name;
-  Gun.Num := MP5_NUM;
-  Gun.TextureNum := GFX_WEAPONS_MP5;
-  Gun.ClipTextureNum := GFX_WEAPONS_MP5_CLIP;
-  Gun.ClipReload := True;
+  Gun.Name             := 'HK MP5';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := MP5_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_MP5;
+  Gun.ClipTextureNum   := GFX_WEAPONS_MP5_CLIP;
+  Gun.ClipReload       := True;
   Gun.BulletImageStyle := GFX_WEAPONS_MP5_BULLET;
-  Gun.FireStyle := GFX_WEAPONS_MP5_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_MP5_FIRE;
+  Gun.FireMode         := 0;
 
   // AK-74
   Gun := @Guns[AK74];
-  Gun.Name    := 'Ak-74';
-  Gun.IniName := Gun.Name;
-  Gun.Num := AK74_NUM;
-  Gun.TextureNum := GFX_WEAPONS_AK74;
-  Gun.ClipTextureNum := GFX_WEAPONS_AK74_CLIP;
-  Gun.ClipReload := True;
+  Gun.Name             := 'Ak-74';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := AK74_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_AK74;
+  Gun.ClipTextureNum   := GFX_WEAPONS_AK74_CLIP;
+  Gun.ClipReload       := True;
   Gun.BulletImageStyle := GFX_WEAPONS_AK74_BULLET;
-  Gun.FireStyle := GFX_WEAPONS_AK74_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_AK74_FIRE;
+  Gun.FireMode         := 0;
 
   // Steyr AUG
   Gun := @Guns[STEYRAUG];
-  Gun.Name    := 'Steyr AUG';
-  Gun.IniName := Gun.Name;
-  Gun.Num := STEYRAUG_NUM;
-  Gun.TextureNum := GFX_WEAPONS_STEYR;
-  Gun.ClipTextureNum := GFX_WEAPONS_STEYR_CLIP;
-  Gun.ClipReload := True;
+  Gun.Name             := 'Steyr AUG';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := STEYRAUG_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_STEYR;
+  Gun.ClipTextureNum   := GFX_WEAPONS_STEYR_CLIP;
+  Gun.ClipReload       := True;
   Gun.BulletImageStyle := GFX_WEAPONS_STEYR_BULLET;
-  Gun.FireStyle := GFX_WEAPONS_STEYR_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_STEYR_FIRE;
+  Gun.FireMode         := 0;
 
   // SPAS-12
   Gun := @Guns[SPAS12];
-  Gun.Name    := 'Spas-12';
-  Gun.IniName := Gun.Name;
-  Gun.Num := SPAS12_NUM;
-  Gun.TextureNum := GFX_WEAPONS_SPAS;
-  Gun.ClipTextureNum := 0;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Spas-12';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := SPAS12_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_SPAS;
+  Gun.ClipTextureNum   := 0;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_SPAS_FIRE;
-  Gun.FireMode := 2;
+  Gun.FireStyle        := GFX_WEAPONS_SPAS_FIRE;
+  Gun.FireMode         := 2;
 
   // Ruger 77
   Gun := @Guns[RUGER77];
-  Gun.Name    := 'Ruger 77';
-  Gun.IniName := Gun.Name;
-  Gun.Num := RUGER77_NUM;
-  Gun.TextureNum := GFX_WEAPONS_RUGER;
-  Gun.ClipTextureNum := 0;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Ruger 77';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := RUGER77_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_RUGER;
+  Gun.ClipTextureNum   := 0;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := GFX_WEAPONS_RUGER_BULLET;
-  Gun.FireStyle := GFX_WEAPONS_RUGER_FIRE;
-  Gun.FireMode := 2;
+  Gun.FireStyle        := GFX_WEAPONS_RUGER_FIRE;
+  Gun.FireMode         := 2;
 
   // M79 grenade launcher
   Gun := @Guns[M79];
-  Gun.Name    := 'M79';
-  Gun.IniName := Gun.Name;
-  Gun.Num := M79_NUM;
-  Gun.TextureNum := GFX_WEAPONS_M79;
-  Gun.ClipTextureNum := GFX_WEAPONS_M79_CLIP;
-  Gun.ClipReload := True;
+  Gun.Name             := 'M79';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := M79_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_M79;
+  Gun.ClipTextureNum   := GFX_WEAPONS_M79_CLIP;
+  Gun.ClipReload       := True;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_M79_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_M79_FIRE;
+  Gun.FireMode         := 0;
 
   // Barrett M82A1
   Gun := @Guns[BARRETT];
-  Gun.Name    := 'Barrett M82A1';
-  Gun.IniName := 'Barret M82A1';
-  Gun.Num := BARRETT_NUM;
-  Gun.TextureNum := GFX_WEAPONS_BARRETT;
-  Gun.ClipTextureNum := GFX_WEAPONS_BARRETT_CLIP;
-  Gun.ClipReload := True;
+  Gun.Name             := 'Barrett M82A1';
+  Gun.IniName          := 'Barret M82A1';
+  Gun.Num              := BARRETT_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_BARRETT;
+  Gun.ClipTextureNum   := GFX_WEAPONS_BARRETT_CLIP;
+  Gun.ClipReload       := True;
   Gun.BulletImageStyle := GFX_WEAPONS_BARRETT_BULLET;
-  Gun.FireStyle := GFX_WEAPONS_BARRETT_FIRE;
-  Gun.FireMode := 2;
+  Gun.FireStyle        := GFX_WEAPONS_BARRETT_FIRE;
+  Gun.FireMode         := 2;
 
   // M249
   Gun := @Guns[M249];
-  Gun.Name    := 'FN Minimi';
-  Gun.IniName := Gun.Name;
-  Gun.Num := M249_NUM;
-  Gun.TextureNum := GFX_WEAPONS_MINIMI;
-  Gun.ClipTextureNum := GFX_WEAPONS_MINIMI_CLIP;
-  Gun.ClipReload := True;
+  Gun.Name             := 'FN Minimi';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := M249_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_MINIMI;
+  Gun.ClipTextureNum   := GFX_WEAPONS_MINIMI_CLIP;
+  Gun.ClipReload       := True;
   Gun.BulletImageStyle := GFX_WEAPONS_MINIMI_BULLET;
-  Gun.FireStyle := GFX_WEAPONS_MINIMI_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_MINIMI_FIRE;
+  Gun.FireMode         := 0;
 
   // Minigun
   Gun := @Guns[MINIGUN];
-  Gun.Name    := 'XM214 Minigun';
-  Gun.IniName := Gun.Name;
-  Gun.Num := MINIGUN_NUM;
-  Gun.TextureNum := GFX_WEAPONS_MINIGUN;
-  Gun.ClipTextureNum := 0;
-  Gun.ClipReload := False;
+  Gun.Name             := 'XM214 Minigun';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := MINIGUN_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_MINIGUN;
+  Gun.ClipTextureNum   := 0;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := GFX_WEAPONS_MINIGUN_BULLET;
-  Gun.FireStyle := GFX_WEAPONS_MINIGUN_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_MINIGUN_FIRE;
+  Gun.FireMode         := 0;
 
   // Colt 1911
   Gun := @Guns[COLT];
-  Gun.Name    := 'USSOCOM';
-  Gun.IniName := Gun.Name;
-  Gun.Num := COLT_NUM;
-  Gun.TextureNum := GFX_WEAPONS_SOCOM;
-  Gun.ClipTextureNum := GFX_WEAPONS_SOCOM_CLIP;
-  Gun.ClipReload := True;
+  Gun.Name             := 'USSOCOM';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := COLT_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_SOCOM;
+  Gun.ClipTextureNum   := GFX_WEAPONS_SOCOM_CLIP;
+  Gun.ClipReload       := True;
   Gun.BulletImageStyle := GFX_WEAPONS_COLT_BULLET;
-  Gun.FireStyle := GFX_WEAPONS_SOCOM_FIRE;
-  Gun.FireMode := 2;
+  Gun.FireStyle        := GFX_WEAPONS_SOCOM_FIRE;
+  Gun.FireMode         := 2;
 
   // Knife
   Gun := @Guns[KNIFE];
-  Gun.Name    := 'Combat Knife';
-  Gun.IniName := Gun.Name;
-  Gun.Num := KNIFE_NUM;
-  Gun.TextureNum := GFX_WEAPONS_KNIFE;
-  Gun.ClipTextureNum := 0;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Combat Knife';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := KNIFE_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_KNIFE;
+  Gun.ClipTextureNum   := 0;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := 0;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := 0;
+  Gun.FireMode         := 0;
 
   // Chainsaw
   Gun := @Guns[CHAINSAW];
-  Gun.Name    := 'Chainsaw';
-  Gun.IniName := Gun.Name;
-  Gun.Num := CHAINSAW_NUM;
-  Gun.TextureNum := GFX_WEAPONS_CHAINSAW;
-  Gun.ClipTextureNum := 0;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Chainsaw';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := CHAINSAW_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_CHAINSAW;
+  Gun.ClipTextureNum   := 0;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_CHAINSAW_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_CHAINSAW_FIRE;
+  Gun.FireMode         := 0;
 
   // M72 LAW
   Gun := @Guns[LAW];
-  Gun.Name    := 'LAW';
-  Gun.IniName := 'M72 LAW';
-  Gun.Num := LAW_NUM;
-  Gun.TextureNum := GFX_WEAPONS_LAW;
-  Gun.ClipTextureNum := 0;
-  Gun.ClipReload := True;
+  Gun.Name             := 'LAW';
+  Gun.IniName          := 'M72 LAW';
+  Gun.Num              := LAW_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_LAW;
+  Gun.ClipTextureNum   := 0;
+  Gun.ClipReload       := True;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_LAW_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_LAW_FIRE;
+  Gun.FireMode         := 0;
 
   // Rambo Bow with flame
   Gun := @Guns[BOW2];
-  Gun.Name    := 'Flame Bow';
-  Gun.IniName := 'Flamed Arrows';
-  Gun.Num := BOW2_NUM;
-  Gun.TextureNum := GFX_WEAPONS_BOW;
-  Gun.ClipTextureNum := GFX_WEAPONS_BOW_S;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Flame Bow';
+  Gun.IniName          := 'Flamed Arrows';
+  Gun.Num              := BOW2_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_BOW;
+  Gun.ClipTextureNum   := GFX_WEAPONS_BOW_S;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_BOW_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_BOW_FIRE;
+  Gun.FireMode         := 0;
 
   // Rambo Bow
   Gun := @Guns[BOW];
-  Gun.Name    := 'Bow';
-  Gun.IniName := 'Rambo Bow';
-  Gun.Num := BOW_NUM;
-  Gun.TextureNum := GFX_WEAPONS_BOW;
-  Gun.ClipTextureNum := GFX_WEAPONS_BOW_S;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Bow';
+  Gun.IniName          := 'Rambo Bow';
+  Gun.Num              := BOW_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_BOW;
+  Gun.ClipTextureNum   := GFX_WEAPONS_BOW_S;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_BOW_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_BOW_FIRE;
+  Gun.FireMode         := 0;
 
   // Flamethrower
   Gun := @Guns[FLAMER];
-  Gun.Name    := 'Flamer';
-  Gun.IniName := Gun.Name;
-  Gun.Num := FLAMER_NUM;
-  Gun.TextureNum := GFX_WEAPONS_FLAMER;
-  Gun.ClipTextureNum := GFX_WEAPONS_FLAMER;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Flamer';
+  Gun.IniName          := Gun.Name;
+  Gun.Num              := FLAMER_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_FLAMER;
+  Gun.ClipTextureNum   := GFX_WEAPONS_FLAMER;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_FLAMER_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_FLAMER_FIRE;
+  Gun.FireMode         := 0;
 
   // M2
   Gun := @Guns[M2];
-  Gun.Name    := 'M2 MG';
-  Gun.IniName := 'Stationary Gun';
-  Gun.Num := M2_NUM;
-  Gun.TextureNum := GFX_WEAPONS_MINIGUN;
-  Gun.ClipTextureNum := 0;
-  Gun.ClipReload := False;
+  Gun.Name             := 'M2 MG';
+  Gun.IniName          := 'Stationary Gun';
+  Gun.Num              := M2_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_MINIGUN;
+  Gun.ClipTextureNum   := 0;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := 0;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := 0;
+  Gun.FireMode         := 0;
 
   // No weapon
   Gun := @Guns[NOWEAPON];
-  Gun.Name    := 'Hands';
-  Gun.IniName := 'Punch';
-  Gun.Num := NOWEAPON_NUM;
-  Gun.TextureNum := 0;
-  Gun.ClipTextureNum := 0;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Hands';
+  Gun.IniName          := 'Punch';
+  Gun.Num              := NOWEAPON_NUM;
+  Gun.TextureNum       := 0;
+  Gun.ClipTextureNum   := 0;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := 0;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := 0;
+  Gun.FireMode         := 0;
 
   // Frag grenade
   Gun := @Guns[FRAGGRENADE];
-  Gun.Name    := 'Frag Grenade';
-  Gun.IniName := 'Grenade';
-  Gun.Num := FRAGGRENADE_NUM;
-  Gun.TextureNum := GFX_WEAPONS_FRAG_GRENADE;
-  Gun.ClipTextureNum := GFX_WEAPONS_FRAG_GRENADE;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Frag Grenade';
+  Gun.IniName          := 'Grenade';
+  Gun.Num              := FRAGGRENADE_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_FRAG_GRENADE;
+  Gun.ClipTextureNum   := GFX_WEAPONS_FRAG_GRENADE;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_AK74_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_AK74_FIRE;
+  Gun.FireMode         := 0;
 
   // TODO(skoskav): Add a proper entry for cluster nade and thrown knife
   // Cluster grenade
   Gun := @Guns[CLUSTERGRENADE];
-  Gun.Name    := 'Frag Grenade';
-  Gun.IniName := '';
-  Gun.Num := CLUSTERGRENADE_NUM;
-  Gun.TextureNum := GFX_WEAPONS_FRAG_GRENADE;
-  Gun.ClipTextureNum := GFX_WEAPONS_FRAG_GRENADE;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Frag Grenade';
+  Gun.IniName          := '';
+  Gun.Num              := CLUSTERGRENADE_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_FRAG_GRENADE;
+  Gun.ClipTextureNum   := GFX_WEAPONS_FRAG_GRENADE;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_AK74_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_AK74_FIRE;
+  Gun.FireMode         := 0;
 
   // Cluster
   Gun := @Guns[CLUSTER];
-  Gun.Name    := 'Frag Grenade';
-  Gun.IniName := '';
-  Gun.Num := CLUSTER_NUM;
-  Gun.TextureNum := GFX_WEAPONS_FRAG_GRENADE;
-  Gun.ClipTextureNum := GFX_WEAPONS_FRAG_GRENADE;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Frag Grenade';
+  Gun.IniName          := '';
+  Gun.Num              := CLUSTER_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_FRAG_GRENADE;
+  Gun.ClipTextureNum   := GFX_WEAPONS_FRAG_GRENADE;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := GFX_WEAPONS_AK74_FIRE;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := GFX_WEAPONS_AK74_FIRE;
+  Gun.FireMode         := 0;
 
   // Thrown knife
   Gun := @Guns[THROWNKNIFE];
-  Gun.Name    := 'Combat Knife';
-  Gun.IniName := '';
-  Gun.Num := THROWNKNIFE_NUM;
-  Gun.TextureNum := GFX_WEAPONS_KNIFE;
-  Gun.ClipTextureNum := 0;
-  Gun.ClipReload := False;
+  Gun.Name             := 'Combat Knife';
+  Gun.IniName          := '';
+  Gun.Num              := THROWNKNIFE_NUM;
+  Gun.TextureNum       := GFX_WEAPONS_KNIFE;
+  Gun.ClipTextureNum   := 0;
+  Gun.ClipReload       := False;
   Gun.BulletImageStyle := 0;
-  Gun.FireStyle := 0;
-  Gun.FireMode := 0;
+  Gun.FireStyle        := 0;
+  Gun.FireMode         := 0;
 end;
 
 procedure CreateNormalWeapons;
@@ -1277,50 +1277,50 @@ begin
   // TODO(skoskav): Add a proper entry for cluster nade and thrown knife
   // Cluster grenade
   Gun := @Guns[CLUSTERGRENADE];
-  Gun.HitMultiply := Guns[FRAGGRENADE].HitMultiply;
-  Gun.FireInterval := Guns[FRAGGRENADE].FireInterval;
-  Gun.Ammo := Guns[FRAGGRENADE].Ammo;
-  Gun.ReloadTime := Guns[FRAGGRENADE].ReloadTime;
-  Gun.Speed := Guns[FRAGGRENADE].Speed;
-  Gun.BulletStyle := BULLET_STYLE_CLUSTERNADE;
-  Gun.StartUpTime := Guns[FRAGGRENADE].StartUpTime;
-  Gun.Bink := Guns[FRAGGRENADE].Bink;
-  Gun.MovementAcc := Guns[FRAGGRENADE].MovementAcc;
-  Gun.BulletSpread := Guns[FRAGGRENADE].BulletSpread;
-  Gun.Recoil := Guns[FRAGGRENADE].Recoil;
-  Gun.Push := Guns[FRAGGRENADE].Push;
+  Gun.HitMultiply       := Guns[FRAGGRENADE].HitMultiply;
+  Gun.FireInterval      := Guns[FRAGGRENADE].FireInterval;
+  Gun.Ammo              := Guns[FRAGGRENADE].Ammo;
+  Gun.ReloadTime        := Guns[FRAGGRENADE].ReloadTime;
+  Gun.Speed             := Guns[FRAGGRENADE].Speed;
+  Gun.BulletStyle       := BULLET_STYLE_CLUSTERNADE;
+  Gun.StartUpTime       := Guns[FRAGGRENADE].StartUpTime;
+  Gun.Bink              := Guns[FRAGGRENADE].Bink;
+  Gun.MovementAcc       := Guns[FRAGGRENADE].MovementAcc;
+  Gun.BulletSpread      := Guns[FRAGGRENADE].BulletSpread;
+  Gun.Recoil            := Guns[FRAGGRENADE].Recoil;
+  Gun.Push              := Guns[FRAGGRENADE].Push;
   Gun.InheritedVelocity := Guns[FRAGGRENADE].InheritedVelocity;
 
   // Cluster
   Gun := @Guns[CLUSTER];
-  Gun.HitMultiply := Guns[CLUSTERGRENADE].HitMultiply;
-  Gun.FireInterval := Guns[CLUSTERGRENADE].FireInterval;
-  Gun.Ammo := Guns[CLUSTERGRENADE].Ammo;
-  Gun.ReloadTime := Guns[CLUSTERGRENADE].ReloadTime;
-  Gun.Speed := Guns[CLUSTERGRENADE].Speed;
-  Gun.BulletStyle := BULLET_STYLE_CLUSTER;
-  Gun.StartUpTime := Guns[CLUSTERGRENADE].StartUpTime;
-  Gun.Bink := Guns[CLUSTERGRENADE].Bink;
-  Gun.MovementAcc := Guns[CLUSTERGRENADE].MovementAcc;
-  Gun.BulletSpread := Guns[CLUSTERGRENADE].BulletSpread;
-  Gun.Recoil := Guns[CLUSTERGRENADE].Recoil;
-  Gun.Push := Guns[CLUSTERGRENADE].Push;
+  Gun.HitMultiply       := Guns[CLUSTERGRENADE].HitMultiply;
+  Gun.FireInterval      := Guns[CLUSTERGRENADE].FireInterval;
+  Gun.Ammo              := Guns[CLUSTERGRENADE].Ammo;
+  Gun.ReloadTime        := Guns[CLUSTERGRENADE].ReloadTime;
+  Gun.Speed             := Guns[CLUSTERGRENADE].Speed;
+  Gun.BulletStyle       := BULLET_STYLE_CLUSTER;
+  Gun.StartUpTime       := Guns[CLUSTERGRENADE].StartUpTime;
+  Gun.Bink              := Guns[CLUSTERGRENADE].Bink;
+  Gun.MovementAcc       := Guns[CLUSTERGRENADE].MovementAcc;
+  Gun.BulletSpread      := Guns[CLUSTERGRENADE].BulletSpread;
+  Gun.Recoil            := Guns[CLUSTERGRENADE].Recoil;
+  Gun.Push              := Guns[CLUSTERGRENADE].Push;
   Gun.InheritedVelocity := Guns[CLUSTERGRENADE].InheritedVelocity;
 
   // Thrown knife
   Gun := @Guns[THROWNKNIFE];
-  Gun.HitMultiply := Guns[KNIFE].HitMultiply;
-  Gun.FireInterval := Guns[KNIFE].FireInterval;
-  Gun.Ammo := Guns[KNIFE].Ammo;
-  Gun.ReloadTime := Guns[KNIFE].ReloadTime;
-  Gun.Speed := Guns[KNIFE].Speed;
-  Gun.BulletStyle := BULLET_STYLE_THROWNKNIFE;
-  Gun.StartUpTime := Guns[KNIFE].StartUpTime;
-  Gun.Bink := Guns[KNIFE].Bink;
-  Gun.MovementAcc := Guns[KNIFE].MovementAcc;
-  Gun.BulletSpread := Guns[KNIFE].BulletSpread;
-  Gun.Recoil := Guns[KNIFE].Recoil;
-  Gun.Push := Guns[KNIFE].Push;
+  Gun.HitMultiply       := Guns[KNIFE].HitMultiply;
+  Gun.FireInterval      := Guns[KNIFE].FireInterval;
+  Gun.Ammo              := Guns[KNIFE].Ammo;
+  Gun.ReloadTime        := Guns[KNIFE].ReloadTime;
+  Gun.Speed             := Guns[KNIFE].Speed;
+  Gun.BulletStyle       := BULLET_STYLE_THROWNKNIFE;
+  Gun.StartUpTime       := Guns[KNIFE].StartUpTime;
+  Gun.Bink              := Guns[KNIFE].Bink;
+  Gun.MovementAcc       := Guns[KNIFE].MovementAcc;
+  Gun.BulletSpread      := Guns[KNIFE].BulletSpread;
+  Gun.Recoil            := Guns[KNIFE].Recoil;
+  Gun.Push              := Guns[KNIFE].Push;
   Gun.InheritedVelocity := Guns[KNIFE].InheritedVelocity;
 
   for WeaponIndex := 1 to High(Guns) do
