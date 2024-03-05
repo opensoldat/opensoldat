@@ -198,7 +198,7 @@ begin
   Self.MapID := MapFile.Hash;
   Self.SectorsDivision := MapFile.SectorsDivision;
   Self.SectorsNum := MapFile.SectorsNum;
-  Self.StartJet := 119 * MapFile.StartJet div 100;  // quickfix bla bla
+  Self.StartJet := 119 * MapFile.StartJet div 100;  // quickfix
   Self.Grenades := MapFile.GrenadePacks;
   Self.Medikits := MapFile.Medikits;
   Self.Weather := MapFile.Weather;

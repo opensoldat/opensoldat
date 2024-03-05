@@ -1522,7 +1522,8 @@ end;
 function CalculateBink(Accumulated: Word; Bink: Word): Word;
 begin
   // Adding bink has diminishing returns as more gets accumulated
-  Result := Accumulated + Bink - Round(Accumulated * (Accumulated / ((10 * Bink) + Accumulated)));
+  Result :=  Accumulated + Bink -
+    Round(Accumulated * (Accumulated / ((10 * Bink) + Accumulated)));
 end;
 
 end.
