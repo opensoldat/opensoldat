@@ -89,10 +89,7 @@ begin
   RequestMsg := PMsg_RequestGame(SendBuffer);
 
   RequestMsg.Header.ID := MsgID_RequestGame;
-  if OPENSOLDAT_VERSION_LONG <> '' then
-    RequestMsg.Version := OPENSOLDAT_VERSION_LONG
-  else
-    RequestMsg.Version := OPENSOLDAT_VERSION;
+  RequestMsg.Version := OPENSOLDAT_VERSION_LONG;
 
   RequestMsg.HaveAntiCheat := ACTYPE_NONE;
 
