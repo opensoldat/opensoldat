@@ -1464,12 +1464,12 @@ begin
 
   if Why = KICK_LEFTGAME then
     case Sprite[i].Player.Team of
-      0: MainConsole.Console(Sprite[i].Player.Name + ' has left the game.', ENTER_MESSAGE_COLOR);
-      1: MainConsole.Console(Sprite[i].Player.Name + ' has left alpha team.', ALPHAJ_MESSAGE_COLOR);
-      2: MainConsole.Console(Sprite[i].Player.Name + ' has left bravo team.', BRAVOJ_MESSAGE_COLOR);
+      0: MainConsole.Console(Sprite[i].Player.Name + ' has left the game.',     ENTER_MESSAGE_COLOR);
+      1: MainConsole.Console(Sprite[i].Player.Name + ' has left alpha team.',   ALPHAJ_MESSAGE_COLOR);
+      2: MainConsole.Console(Sprite[i].Player.Name + ' has left bravo team.',   BRAVOJ_MESSAGE_COLOR);
       3: MainConsole.Console(Sprite[i].Player.Name + ' has left charlie team.', CHARLIEJ_MESSAGE_COLOR);
-      4: MainConsole.Console(Sprite[i].Player.Name + ' has left delta team.', DELTAJ_MESSAGE_COLOR);
-      5: MainConsole.Console(Sprite[i].Player.Name + ' has left spectators', DELTAJ_MESSAGE_COLOR);
+      4: MainConsole.Console(Sprite[i].Player.Name + ' has left delta team.',   DELTAJ_MESSAGE_COLOR);
+      5: MainConsole.Console(Sprite[i].Player.Name + ' has left spectators',    DELTAJ_MESSAGE_COLOR);
     end;
 
   if not Ban and not (why = KICK_LEFTGAME) and not (why = KICK_SILENT) then
@@ -1499,8 +1499,8 @@ begin
         CLIENT_MESSAGE_COLOR)
     end else
       MainConsole.Console(Sprite[i].Player.Name +
-      ' has been kicked and permanently banned (' + Reason + ')',
-      CLIENT_MESSAGE_COLOR);
+        ' has been kicked and permanently banned (' + Reason + ')',
+        CLIENT_MESSAGE_COLOR);
   end;
 
   SaveTxtLists;
