@@ -3,7 +3,7 @@
 {       Version Unit for OpenSoldat                           }
 {                                                             }
 {       Copyright (c) 2011      Gregor A. Cieslak             }
-{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{       Copyright (c) 2020-2024 OpenSoldat contributors       }
 {                                                             }
 {*************************************************************}
 
@@ -14,7 +14,7 @@ interface
 const
   OPENSOLDAT_VERSION = {$INCLUDE Version.txt};
   OPENSOLDAT_VERSION_CHARS = Length(OPENSOLDAT_VERSION);
-  OPENSOLDAT_VERSION_LONG = {$INCLUDE %BUILD_ID%};
+  OPENSOLDAT_VERSION_LONG = {$INCLUDE VersionLong.txt};
   OPENSOLDAT_VERSION_LONG_CHARS = Length(OPENSOLDAT_VERSION_LONG);
   {$IFDEF SERVER}
   DEDVERSION = '2.9.0';
