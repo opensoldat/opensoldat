@@ -1511,7 +1511,6 @@ begin
   Result := True;
 end;
 
-{$IFDEF STEAM}
 initialization
   {$IFNDEF DEBUG}
   // Mask exceptions on 32 and 64 bit fpc builds
@@ -1519,6 +1518,5 @@ initialization
   SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow, exUnderflow, exPrecision]);
   {$ENDIF}
   {$ENDIF}
-{$ENDIF}
 
 end.
