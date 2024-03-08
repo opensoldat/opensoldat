@@ -16,6 +16,7 @@ uses
   SysUtils,
   Classes,
   Variants,
+  Math,
   {$IFNDEF MSWINDOWS}
     Baseunix,
   {$ENDIF}
