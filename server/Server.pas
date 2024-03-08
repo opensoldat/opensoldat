@@ -1515,7 +1515,8 @@ initialization
   {$IFNDEF DEBUG}
   // Mask exceptions on 32 and 64 bit fpc builds
   {$IF defined(cpui386) or defined(cpux86_64)}
-  SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow, exUnderflow, exPrecision]);
+  SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow,
+    exUnderflow, exPrecision]);
   {$ENDIF}
   {$ENDIF}
 
