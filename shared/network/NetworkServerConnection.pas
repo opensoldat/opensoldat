@@ -652,10 +652,8 @@ begin
   // fill memory
   UnAccepted.Header.ID := MsgID_UnAccepted;
   UnAccepted.State := State;
-  if OPENSOLDAT_VERSION_LONG <> '' then
-    UnAccepted.Version := OPENSOLDAT_VERSION_LONG
-  else
-    UnAccepted.Version := OPENSOLDAT_VERSION;
+  UnAccepted.Version := OPENSOLDAT_VERSION_LONG;
+
   StrPCopy(UnAccepted.Text, Message);
 
   UDP.SendData(UnAccepted^, Size, Peer, k_nSteamNetworkingSend_Reliable);
