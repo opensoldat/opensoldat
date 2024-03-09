@@ -64,6 +64,7 @@ uses
 const
   MAX_MESSAGE_LENGTH = 4096;
 
+
 function IsRealSocketError(ErrCode: Integer): Boolean;
 begin
   {$IFDEF UNIX}

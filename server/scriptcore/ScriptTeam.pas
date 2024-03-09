@@ -70,6 +70,7 @@ type
 
 implementation
 
+
 constructor TScriptTeam.Create(ID: Byte);
 begin
   Self.FID := ID;

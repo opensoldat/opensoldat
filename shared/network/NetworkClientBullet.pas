@@ -47,6 +47,7 @@ uses
 var
   OldBulletSnapshotMsg: array[1..MAX_SPRITES] of TMsg_BulletSnapshot;
 
+
 procedure ClientSendBullet(i: Byte);
 var
   BulletMsg: TMsg_ClientBulletSnapshot;

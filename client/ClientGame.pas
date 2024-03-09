@@ -131,6 +131,7 @@ type
 var
   FrameTiming: TFrameTiming;
 
+
 procedure ResetFrameTiming;
 begin
   FrameTiming.Frequency := SDL_GetPerformanceFrequency;

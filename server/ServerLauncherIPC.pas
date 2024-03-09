@@ -14,6 +14,7 @@ uses
   // Project units
   LauncherIPC;
 
+
 type
   TServerLauncherIPC = class(TLauncherIPC)
   protected
@@ -22,6 +23,7 @@ type
 
 
 implementation
+
 
 procedure TServerLauncherIPC.HandleMessage(Message: String);
 begin

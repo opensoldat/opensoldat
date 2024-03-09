@@ -64,6 +64,7 @@ var
   OldClientSnapshotMsg: TMsg_ClientSpriteSnapshot;
   OldClientSnapshotMovMsg: TMsg_ClientSpriteSnapshot_Mov;
 
+
 procedure ClientHandleServerSpriteSnapshot(NetMessage: PSteamNetworkingMessage_t);
 var
   SpriteSnap: TMsg_ServerSpriteSnapshot;

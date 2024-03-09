@@ -10,6 +10,7 @@ unit ControlGame;
 
 interface
 
+
 procedure GameInput;
 
 

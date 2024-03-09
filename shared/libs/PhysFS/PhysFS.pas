@@ -54,6 +54,7 @@ function PHYSFS_GetEnumeratedFiles(Dir: String): TStringArray;
 
 implementation
 
+
 function PHYSFS_readBuffer(Name: PChar): PHYSFS_Buffer;
 var
   FileHandle: PHYSFS_File;

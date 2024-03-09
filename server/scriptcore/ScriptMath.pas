@@ -74,6 +74,7 @@ type
 
 implementation
 
+
 function TScriptMath.GetE: Extended;
 begin
   Result := 2.718281828459045;

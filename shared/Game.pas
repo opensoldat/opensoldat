@@ -210,6 +210,7 @@ var
   Timepassed: Cardinal;  // Time in Milliseconds the program has been running
   Seconds, SecondsLast: Integer;  // Seconds the program has been running
 
+
 // Timing routine
 procedure Number27Timing;
 begin

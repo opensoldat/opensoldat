@@ -54,6 +54,7 @@ type
 
 implementation
 
+
 function TScriptGlobal.GetDateSeparator: Char;
 begin
   Result := DefaultFormatSettings.DateSeparator;

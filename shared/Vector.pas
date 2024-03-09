@@ -68,6 +68,7 @@ unit Vector;
 
 interface
 
+
 type
   PVector2 = ^TVector2;
   TVector2 = packed record
@@ -93,6 +94,7 @@ function Vec3Length(v: TVector3): Single;
 
 
 implementation
+
 
 function Vector2(x, y: Single): TVector2;
 begin

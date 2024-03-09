@@ -27,6 +27,7 @@ uses
   // System units
   SysUtils;
 
+
 procedure StartAutoUpdater;
 var
   i: Integer;

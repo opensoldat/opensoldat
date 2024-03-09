@@ -11,6 +11,7 @@ unit Waypoints;
 
 interface
 
+
 const
   MAX_WAYPOINTS = 5000;
   MAX_CONNECTIONS = 20;

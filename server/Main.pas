@@ -36,8 +36,10 @@ procedure RunServer;
 
 implementation
 
+
 var
   CtrlCHit: Boolean = False;
+
 
 {$IFDEF MSWINDOWS}
 // The windows server needs a hook to make OpenSoldatServer exit normally

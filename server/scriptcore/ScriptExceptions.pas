@@ -51,6 +51,7 @@ type
 
 implementation
 
+
 constructor EScriptRecompile.Create(Message: String; Force: Boolean);
 begin
   inherited Create(Message);

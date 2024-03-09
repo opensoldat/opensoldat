@@ -68,6 +68,7 @@ uses
 const
   SCALE = 3;
 
+
 procedure TAnimation.DoAnimation;
 begin
   Inc(Count);

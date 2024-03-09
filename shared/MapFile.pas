@@ -171,6 +171,7 @@ const
     $AFB010B1,$AB710D06,$A6322BDF,$A2F33668,$BCB4666D,$B8757BDA,$B5365D03,$B1F740B4
   );
 
+
 function crc32(crc: LongWord; Data: PByte; Len: Integer): LongWord;
 begin
   Result := crc;

@@ -56,6 +56,7 @@ type
 
 implementation
 
+
 procedure TScriptMapsList.AddMap(Name: string);
 begin
   ParseInput('addmap ' + Name, 255);

@@ -11,6 +11,7 @@ unit TraceLog;
 
 interface
 
+
 const
   LEVEL_OFF   = 0;
   LEVEL_DEBUG = 1;

@@ -15,6 +15,7 @@ interface
 {$INCLUDE gfx.inc}
 {$UNDEF GFXID}
 
+
 const
   DEFAULT_FONT = 'play-regular.ttf';
 
@@ -598,5 +599,6 @@ const
 
 
 implementation
+
 
 end.

@@ -10,6 +10,7 @@ unit MyInterfacedObject;
 
 interface
 
+
 type
   TMyInterfacedObject = class(TObject, IInterface)
     protected
@@ -20,6 +21,7 @@ type
 
 
 implementation
+
 
 function TMyInterfacedObject.QueryInterface(const IID: TGUID; out Obj): HRESULT;
 const

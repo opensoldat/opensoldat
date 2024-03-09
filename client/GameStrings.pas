@@ -11,6 +11,7 @@ unit GameStrings;
 
 interface
 
+
 function  InitTranslation(Filename: String): Boolean;
 function  _(InputText: WideString): WideString; overload;
 function  _(InputText: AnsiString): WideString; overload;
@@ -27,8 +28,10 @@ uses
   GetText,
   PhysFS;
 
+
 var
   TranslationFile: TMOFile;
+
 
 function InitTranslation(Filename: String): Boolean;
 var

@@ -99,6 +99,7 @@ type
 
 implementation
 
+
 // BUG: this should also search in searchpaths
 // and be relative to calling file if possible
 function OnNeedFile(Sender: TPSPreProcessor; const CallingFilename: TbtString;

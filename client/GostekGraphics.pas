@@ -81,6 +81,7 @@ var
   GostekSprites: array[GOSTEK_FIRST..GOSTEK_LAST] of TGostekSprite;
   GostekBase: TGostekSpriteSet;
 
+
 procedure LoadDefaults();
 var
   DefIndex: Integer;

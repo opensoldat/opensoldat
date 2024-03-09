@@ -10,6 +10,7 @@ unit ServerLoop;
 
 interface
 
+
 procedure UpdateFrame;
 procedure AppOnIdle;
 
@@ -54,6 +55,7 @@ uses
 
 var
   LastMinuteTick: QWord = 0;
+
 
 procedure AppOnIdle;
 var

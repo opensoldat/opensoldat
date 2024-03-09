@@ -163,6 +163,7 @@ var
     VestBar: Byte;
   end;
 
+
 procedure LoadInterfaceArchives(Path: AnsiString; FirstOnly: Boolean = False);
 var
  Sr: TSearchRec;

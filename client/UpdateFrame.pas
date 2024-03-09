@@ -62,6 +62,7 @@ uses
 var
   IdleCounter, OldMouseX: Integer;
 
+
 procedure Update_Frame;
 var
   j: Integer;

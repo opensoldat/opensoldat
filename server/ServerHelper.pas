@@ -10,6 +10,7 @@ unit ServerHelper;
 
 interface
 
+
 function CheckNextMap: string;
 procedure WriteLn(S: Variant); overload;
 function IDToName(ID: Integer): string;

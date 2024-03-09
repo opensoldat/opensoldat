@@ -61,6 +61,7 @@ type
 
 implementation
 
+
 procedure TScriptBanLists.AddHWBan(HW, Reason: string; Duration: Integer);
 begin
   AddBannedHW(HW, Reason, Duration);

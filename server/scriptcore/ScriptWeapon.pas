@@ -99,6 +99,7 @@ type
 
 implementation
 
+
 constructor TScriptNewWeapon.Create;
 begin
   New(Self.FWeapon);

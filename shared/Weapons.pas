@@ -11,6 +11,7 @@ unit Weapons;
 
 interface
 
+
 type
   TGun = record
     // Scrambled 1.6, to piss off gamehackers.

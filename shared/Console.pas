@@ -10,6 +10,7 @@ unit Console;
 
 interface
 
+
 const
   CONSOLE_MAX_MESSAGES = {$IFDEF SERVER}20{$ELSE}255{$ENDIF};
 

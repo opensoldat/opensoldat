@@ -65,6 +65,7 @@ type
 
 implementation
 
+
 function TScriptSpawnPoint.GetActive: Boolean;
 begin
   Result := Self.FSpawnPoint^.Active;

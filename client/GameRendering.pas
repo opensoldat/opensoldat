@@ -147,6 +147,7 @@ var
     CustomInterface: TStringList;
   end;
 
+
 procedure LoadModInfo();
 var
   i: Integer;

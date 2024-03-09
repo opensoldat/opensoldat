@@ -11,6 +11,7 @@ unit Version;
 
 interface
 
+
 const
   OPENSOLDAT_VERSION            = {$INCLUDE Version.txt};
   OPENSOLDAT_VERSION_CHARS      = Length(OPENSOLDAT_VERSION);
@@ -26,5 +27,6 @@ const
 
 
 implementation
+
 
 end.

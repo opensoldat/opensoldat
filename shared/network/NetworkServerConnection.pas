@@ -94,6 +94,7 @@ var
   PingSendCount: array[1..MAX_PLAYERS] of Byte;
 {$ENDIF}
 
+
 {$IFDEF SERVER}
 procedure ServerHandleRequestGame(NetMessage: PSteamNetworkingMessage_t);
 var

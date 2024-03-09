@@ -11,6 +11,7 @@ unit GameMenus;
 
 interface
 
+
 type
   PGameButton = ^TGameButton;
   TGameButton = record
@@ -80,6 +81,7 @@ uses
 
 var
   LimboWasActive: Boolean;
+
 
 procedure InitButton(Menu: PGameMenu; Button: Integer; Caption: WideString;
   x, y, w, h: Integer; Active: Boolean = True);

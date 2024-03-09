@@ -24,6 +24,7 @@ type
 
 implementation
 
+
 procedure TClientLauncherIPC.HandleMessage(Message: String);
 begin
   HandleCommand(Message);
