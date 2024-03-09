@@ -102,9 +102,9 @@ type
     Waypoints: array of TWaypoint;
   end;
 
-function LoadMapFile(MapInfo: TMapInfo; var Map: TMapFile): Boolean;
-function MapColor(Color: LongInt): TMapColor;
-function IsPropActive(var Map: TMapFile; Index: Integer): Boolean;
+function  LoadMapFile(MapInfo: TMapInfo; var Map: TMapFile): Boolean;
+function  MapColor(Color: LongInt): TMapColor;
+function  IsPropActive(var Map: TMapFile; Index: Integer): Boolean;
 
 
 implementation

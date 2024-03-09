@@ -108,9 +108,9 @@ type
     BackgroundStatus: Byte;
     BackgroundPoly: SmallInt;
     BackgroundTestResult: Boolean;
-    function BackgroundTest(Poly: Word): Boolean;
+    function  BackgroundTest(Poly: Word): Boolean;
     procedure BackgroundTestBigPolyCenter(Pos: TVector2);
-    function BackgroundFindCurrentPoly(Pos: TVector2): SmallInt;
+    function  BackgroundFindCurrentPoly(Pos: TVector2): SmallInt;
     procedure BackgroundTestPrepare();
     procedure BackgroundTestReset();
   end;
@@ -187,14 +187,14 @@ type
     procedure Update;
     procedure Kill;
     procedure Die(How, Who, Where, What: Integer; Impact: TVector2);
-    function DropWeapon(): Integer;
+    function  DropWeapon(): Integer;
     procedure LegsApplyAnimation(Anim: TAnimation; Curr: Integer);
     procedure BodyApplyAnimation(Anim: TAnimation; Curr: Integer);
     procedure MoveSkeleton(x1, y1: Single; FromZero: Boolean);
-    function CheckMapCollision(X, Y: Single; Area: Integer): Boolean;
-    function CheckRadiusMapCollision(X, Y: Single; HasCollided: Boolean): Boolean;
-    function CheckMapVerticesCollision(X, Y: Single; R: Single; HasCollided: Boolean): Boolean;
-    function CheckSkeletonMapCollision(i: Integer; X, Y: Single): Boolean;
+    function  CheckMapCollision(X, Y: Single; Area: Integer): Boolean;
+    function  CheckRadiusMapCollision(X, Y: Single; HasCollided: Boolean): Boolean;
+    function  CheckMapVerticesCollision(X, Y: Single; R: Single; HasCollided: Boolean): Boolean;
+    function  CheckSkeletonMapCollision(i: Integer; X, Y: Single): Boolean;
     procedure HandleSpecialPolyTypes(PolyType: Integer; Pos: TVector2);
     procedure ApplyWeaponByNum(WNum: Byte; Gun: Byte; Ammo: Integer = -1;
       RestorePrimaryState: Boolean = False);
@@ -213,21 +213,21 @@ type
     procedure Fire();
     procedure ThrowFlag();
     procedure ThrowGrenade();
-    function GetMoveacc(): Single;
-    function GetCursorAimDirection(): TVector2;
-    function GetHandsAimDirection(): TVector2;
-    function IsSolo(): Boolean;
-    function IsNotSolo(): Boolean;
-    function IsInTeam(): Boolean;
-    function IsSpectator(): Boolean;
-    function IsNotSpectator(): Boolean;
-    function IsInSameTeam(const OtherPlayer: TSprite): Boolean;
-    function IsNotInSameTeam(const OtherPlayer: TSprite): Boolean;
-    function CanRespawn(DeadMeatBeforeRespawn: Boolean): Boolean;
+    function  GetMoveacc(): Single;
+    function  GetCursorAimDirection(): TVector2;
+    function  GetHandsAimDirection(): TVector2;
+    function  IsSolo(): Boolean;
+    function  IsNotSolo(): Boolean;
+    function  IsInTeam(): Boolean;
+    function  IsSpectator(): Boolean;
+    function  IsNotSpectator(): Boolean;
+    function  IsInSameTeam(const OtherPlayer: TSprite): Boolean;
+    function  IsNotInSameTeam(const OtherPlayer: TSprite): Boolean;
+    function  CanRespawn(DeadMeatBeforeRespawn: Boolean): Boolean;
   end;
 
-function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
-function TeamCollides(Poly, Team: Integer; Bullet: Boolean): Boolean;
+function  CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
+function  TeamCollides(Poly, Team: Integer; Bullet: Boolean): Boolean;
 
 var
   SpriteMapColCount: Integer;

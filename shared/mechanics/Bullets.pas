@@ -61,18 +61,18 @@ type
     procedure Render(TimeElapsed: Extended);
     {$ENDIF}
     procedure Kill;
-    function CheckMapCollision(X, Y: Single): TVector2;
-    function CheckSpriteCollision(lasthitdist: Single): TVector2;
-    function CheckThingCollision(lasthitdist: Single): TVector2;
-    function CheckColliderCollision(lasthitdist: Single): TVector2;
+    function  CheckMapCollision(X, Y: Single): TVector2;
+    function  CheckSpriteCollision(lasthitdist: Single): TVector2;
+    function  CheckThingCollision(lasthitdist: Single): TVector2;
+    function  CheckColliderCollision(lasthitdist: Single): TVector2;
     procedure Hit(T: Integer; SpriteHit: Integer = 0; Where: Integer = 0);
     procedure ExplosionHit(Typ, SpriteHit, Where: Integer);
     procedure CheckOutOfBounds;
-    function FilterSpritesByDistance(var SpriteIndexes: TSpriteIndexes): Integer;
-    function TargetableSprite(i: Integer): Boolean;
-    function GetComparableSpriteDistance(i: Integer): Single;
-    function GetSpriteCollisionPoint(i: Integer): TVector2;
-    function GetWeaponIndex: Byte;
+    function  FilterSpritesByDistance(var SpriteIndexes: TSpriteIndexes): Integer;
+    function  TargetableSprite(i: Integer): Boolean;
+    function  GetComparableSpriteDistance(i: Integer): Single;
+    function  GetSpriteCollisionPoint(i: Integer): TVector2;
+    function  GetWeaponIndex: Byte;
   end;
 
 const
@@ -87,18 +87,18 @@ const
   HIT_TYPE_BODYHIT     = 9;
   HIT_TYPE_RICOCHET    = 10;
 
-function CreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
+function  CreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
   sOwner: Integer; N: Byte; HitM: Single; Net, MustCreate: Boolean; Seed: LongInt = -1): Integer;
 {$IFDEF SERVER}
 function ServerCreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
   sOwner: Integer; N: Byte; HitM: Single; Net: Boolean): Integer;
 {$ELSE}
-function CanHitSpray(Victim: Integer; Attacker: Integer): Boolean;
+function  CanHitSpray(Victim: Integer; Attacker: Integer): Boolean;
 procedure CalculateRecoil(px: Single; py: Single; var cx: Single;
   var cy: Single; da: Single);
 procedure HitSpray();
 {$ENDIF}
-function BulletCanSend(X, Y: Single; i: Integer; vX: Single): Boolean;
+function  BulletCanSend(X, Y: Single; i: Integer; vX: Single): Boolean;
 
 
 implementation

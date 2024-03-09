@@ -66,16 +66,16 @@ uses
 
 
 procedure ActivateServer;
-function AddBotPlayer(Name: string; team: Integer): Byte;
+function  AddBotPlayer(Name: string; team: Integer): Byte;
 procedure StartServer;
-function LoadMapsList(Filename: string = ''): Boolean;
+function  LoadMapsList(Filename: string = ''): Boolean;
 procedure LoadWeapons(filename: string);
 procedure ShutDown;
 procedure NextMap;
 procedure SpawnThings(style, amount: Byte);
-function KickPlayer(num: Byte; Ban: Boolean; why: Integer; time: Integer;
+function  KickPlayer(num: Byte; Ban: Boolean; why: Integer; time: Integer;
   Reason: string = ''): Boolean;  // True if kicked
-function PrepareMapChange(Name: String): Boolean;
+function  PrepareMapChange(Name: String): Boolean;
 {$IFDEF STEAM}
 {$IFDEF STEAMSTATS}
 procedure RequestUserStats(Player: CSteamID);

@@ -30,26 +30,26 @@ type
   PHYSFS_File = pointer;
   PHYSFS_Buffer = array of byte;
 
-function PHYSFS_init(argv0: Pchar): LongBool; cdecl; external PHYSFSLIB;
-function PHYSFS_deinit(): LongInt; cdecl; external PHYSFSLIB;
-function PHYSFS_mount(newDir, mountPoint: PChar; appendToPath: LongBool): LongBool; cdecl; external PHYSFSLIB;
-function PHYSFS_openRead(filename: PChar): PHYSFS_File; cdecl; external PHYSFSLIB;
-function PHYSFS_exists(filename: PChar): LongBool; cdecl; external PHYSFSLIB;
-function PHYSFS_eof(pfile: PHYSFS_File): LongBool; cdecl; external PHYSFSLIB;
-function PHYSFS_read(pfile: PHYSFS_File; buffer: pointer; obj_size: Longword; obj_count: Longword): Int64; cdecl; external PHYSFSLIB;
-function PHYSFS_close(pfile: PHYSFS_File): Int64; cdecl; external PHYSFSLIB;
-function PHYSFS_getLastError(): PChar; cdecl; external PHYSFSLIB;
-function PHYSFS_fileLength(pfile: PHYSFS_File): Int64; cdecl; external PHYSFSLIB;
-function PHYSFS_removeFromSearchPath(oldDir: PChar): LongBool; cdecl; external PHYSFSLIB;
+function  PHYSFS_init(argv0: Pchar): LongBool; cdecl; external PHYSFSLIB;
+function  PHYSFS_deinit(): LongInt; cdecl; external PHYSFSLIB;
+function  PHYSFS_mount(newDir, mountPoint: PChar; appendToPath: LongBool): LongBool; cdecl; external PHYSFSLIB;
+function  PHYSFS_openRead(filename: PChar): PHYSFS_File; cdecl; external PHYSFSLIB;
+function  PHYSFS_exists(filename: PChar): LongBool; cdecl; external PHYSFSLIB;
+function  PHYSFS_eof(pfile: PHYSFS_File): LongBool; cdecl; external PHYSFSLIB;
+function  PHYSFS_read(pfile: PHYSFS_File; buffer: pointer; obj_size: Longword; obj_count: Longword): Int64; cdecl; external PHYSFSLIB;
+function  PHYSFS_close(pfile: PHYSFS_File): Int64; cdecl; external PHYSFSLIB;
+function  PHYSFS_getLastError(): PChar; cdecl; external PHYSFSLIB;
+function  PHYSFS_fileLength(pfile: PHYSFS_File): Int64; cdecl; external PHYSFSLIB;
+function  PHYSFS_removeFromSearchPath(oldDir: PChar): LongBool; cdecl; external PHYSFSLIB;
 procedure PHYSFS_freeList(listVar: PPChar); cdecl; external PHYSFSLIB;
-function PHYSFS_enumerateFiles(const dir: PChar): PPChar; cdecl; external PHYSFSLIB;
+function  PHYSFS_enumerateFiles(const dir: PChar): PPChar; cdecl; external PHYSFSLIB;
 
-function PHYSFS_readBuffer(Name: PChar): PHYSFS_Buffer;
-function PHYSFS_readAsStream(Name: PChar): TStream;
+function  PHYSFS_readBuffer(Name: PChar): PHYSFS_Buffer;
+function  PHYSFS_readAsStream(Name: PChar): TStream;
 procedure PHYSFS_ReadLn(FileHandle: PHYSFS_File; var Line: AnsiString);
-function PHYSFS_CopyFileFromArchive(SourceFile: AnsiString; Destination: AnsiString): Boolean;
-function PHYSFS_CopyFilesFromArchiveDirectory(SourceDirectory: AnsiString; DestinationDirectory: AnsiString): Boolean;
-function PHYSFS_GetEnumeratedFiles(Dir: String): TStringArray;
+function  PHYSFS_CopyFileFromArchive(SourceFile: AnsiString; Destination: AnsiString): Boolean;
+function  PHYSFS_CopyFilesFromArchiveDirectory(SourceDirectory: AnsiString; DestinationDirectory: AnsiString): Boolean;
+function  PHYSFS_GetEnumeratedFiles(Dir: String): TStringArray;
 
 
 implementation

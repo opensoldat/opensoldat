@@ -54,10 +54,10 @@ var
   fragx, fragy: Integer;
 
 procedure LoadInterfaceArchives(Path: AnsiString; FirstOnly: Boolean = False);
-function LoadInterfaceData(InterfaceName: string): Boolean;
+function  LoadInterfaceData(InterfaceName: string): Boolean;
 procedure RenderInterface(TimeElapsed: Single; Width, Height: Single);
 procedure RenderActionSnapText(t: Extended);
-function IsDefaultInterface(const InterfaceName: string): Boolean;
+function  IsDefaultInterface(const InterfaceName: string): Boolean;
 
 
 implementation

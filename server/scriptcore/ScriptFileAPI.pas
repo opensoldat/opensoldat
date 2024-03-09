@@ -65,9 +65,9 @@ type
     constructor Create(API: TScriptFileAPI);
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string);
-    function Read(var Buffer: String; Count:LongInt): LongInt;
+    function  Read(var Buffer: String; Count:LongInt): LongInt;
       {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
-    function Write(const Buffer: String; Count:LongInt): LongInt;
+    function  Write(const Buffer: String; Count:LongInt): LongInt;
       {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
     procedure ReadBuffer(var Buffer: String; Count:LongInt);
     procedure WriteBuffer(const Buffer: String; Count:LongInt);
@@ -76,11 +76,11 @@ type
   TMyStringStream = class(TStringStream)
   public
     constructor Create;
-    function Read(var Buffer: String; Count: LongInt): LongInt;
+    function  Read(var Buffer: String; Count: LongInt): LongInt;
       {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
-    function Write(const Buffer: String; Count: LongInt): LongInt;
+    function  Write(const Buffer: String; Count: LongInt): LongInt;
       {$IFDEF FPC}{$IF FPC_FULLVERSION < 30200}reintroduce;{$ENDIF}{$ENDIF}
-    function ReadString(Count: LongInt): String;
+    function  ReadString(Count: LongInt): String;
   end;
 
   TScriptFile = class(TObject)
@@ -88,16 +88,16 @@ type
     FAPI: TScriptFileAPI;
   public
     constructor Create(API: TScriptFileAPI);
-    function CheckAccess(const FilePath: string): Boolean;
-    function CreateFileStream(): TMyMemoryStream;
-    function CreateFileStreamFromFile(const Path: string): TMyMemoryStream;
-    function CreateStringList(): TMyStringList;
-    function CreateStringListFromFile(const Path: string): TMyStringList;
-    function CreateINI(const Path: string): TMyIniFile;
-    function Exists(const Path: string): Boolean;
-    function Copy(const Source, Destination: string): Boolean;
-    function Move(const Source, Destination: string): Boolean;
-    function Delete(const Path: string): Boolean;
+    function  CheckAccess(const FilePath: string): Boolean;
+    function  CreateFileStream(): TMyMemoryStream;
+    function  CreateFileStreamFromFile(const Path: string): TMyMemoryStream;
+    function  CreateStringList(): TMyStringList;
+    function  CreateStringListFromFile(const Path: string): TMyStringList;
+    function  CreateINI(const Path: string): TMyIniFile;
+    function  Exists(const Path: string): Boolean;
+    function  Copy(const Source, Destination: string): Boolean;
+    function  Move(const Source, Destination: string): Boolean;
+    function  Delete(const Path: string): Boolean;
   end;
 
   // TODO: Get rid of TPowerCoreAPI and make such object for each api class
@@ -105,13 +105,13 @@ type
   TScriptFileAPI = class(TScriptCore3API)
   private
     FFile: TScriptFile;
-    function GetSandboxLevel: Byte;
-    function GetAllowIniEdit: Boolean;
-    function GetDataFolder: string;
+    function  GetSandboxLevel: Byte;
+    function  GetAllowIniEdit: Boolean;
+    function  GetDataFolder: string;
   public
     constructor Create(Script: TScript);
     destructor Destroy; override;
-    function CheckAccess(var FilePath: string): Boolean;
+    function  CheckAccess(var FilePath: string): Boolean;
     procedure CompilerRegister(Compiler: TPascalCompiler); override;
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;

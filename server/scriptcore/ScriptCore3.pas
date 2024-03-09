@@ -100,12 +100,12 @@ type
 
     procedure WriteInfo(Msg: string);
     procedure Deprecated(FnName: string; Msg: string = '');
-    function Compile: Boolean;
+    function  Compile: Boolean;
     procedure OnException(Sender: TPascalExec; ExError: TPSError;
       const ExParam: string; ExObject: TObject; ProcNo, Position: Cardinal);
     procedure SetHybridMode;
-    function GetSandboxLevel: Shortint;
-    function GetAllowIniEdit: Boolean;
+    function  GetSandboxLevel: Shortint;
+    function  GetAllowIniEdit: Boolean;
     {$PUSH}
     {$WARN 3018 OFF} // Hide "Constructor should be public"
     constructor Create;
@@ -114,18 +114,18 @@ type
     procedure HandleException(E: Exception);
   public
     destructor Destroy; override;
-    function Prepare: Boolean; override;
+    function  Prepare: Boolean; override;
     procedure Launch; override;
-    function CallFunc(const Params: array of Variant; FuncName: string;
+    function  CallFunc(const Params: array of Variant; FuncName: string;
       DefaultReturn: Variant): Variant; override;
-    function CallEvent(const Event;
+    function  CallEvent(const Event;
       const Params: array of Variant): Variant; overload;
     // EVENTS
     procedure OnClockTick; override;
     procedure OnIdle; override;
-    function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
+    function  OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer; override;
-    function OnBeforeJoinTeam(Id, Team, OldTeam: Byte): ShortInt; override;
+    function  OnBeforeJoinTeam(Id, Team, OldTeam: Byte): ShortInt; override;
     procedure OnJoinTeam(Id, Team, OldTeam: Byte; JoinGame: Boolean); override;
     procedure OnLeaveGame(Id: Byte; Kicked: Boolean); override;
 
@@ -143,7 +143,7 @@ type
 
     procedure OnKitPickup(Id, KitId: Byte); override;
 
-    function OnBeforePlayerRespawn(Id: Byte): TVector2; override;
+    function  OnBeforePlayerRespawn(Id: Byte): TVector2; override;
     procedure OnAfterPlayerRespawn(Id: Byte); override;
     function OnPlayerDamage(Victim, Shooter: Byte; Damage: Single;
       BulletID: Byte): Single; override;
@@ -151,14 +151,14 @@ type
     procedure OnWeaponChange(Id, Primary, Secondary,
       PrimaryAmmo, SecondaryAmmo: Byte); override;
 
-    function OnVoteMapStart(Id: Byte; Map: string): Boolean; override;
-    function OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean; override;
+    function  OnVoteMapStart(Id: Byte; Map: string): Boolean; override;
+    function  OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean; override;
     procedure OnVoteMap(Id: Byte; Map: string); override;
     procedure OnVoteKick(Id, Victim: Byte); override;
 
     procedure OnPlayerSpeak(Id: Byte; Text: string); override;
-    function OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
-    function OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
+    function  OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
+    function  OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
       override;
 
     property SandboxLevel: Shortint read GetSandboxLevel;
@@ -169,7 +169,7 @@ type
     property API: TList read FApi;
   end;
 
-function CheckFunction(Dir: string): TScriptCore3;
+function  CheckFunction(Dir: string): TScriptCore3;
 
 
 implementation

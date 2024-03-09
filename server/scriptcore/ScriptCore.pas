@@ -58,17 +58,17 @@ type
   public
     destructor Destroy; override;
     // Compiles ScriptCore instance
-    function Prepare: Boolean; override;
+    function  Prepare: Boolean; override;
     // Does nothing, yet
     procedure Launch; override;
     // CrossFunc implementation, used also by all the event calls
-    function CallFunc(const Params: array of Variant; FuncName: string;
+    function  CallFunc(const Params: array of Variant; FuncName: string;
       DefaultReturn: Variant): Variant; override;
     procedure OnClockTick; override;
     procedure OnIdle; override;
     //procedure OnScriptShutdown(ServerShutdown: Boolean);
 
-    function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
+    function  OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer; override;
     procedure OnJoinTeam(Id, Team, OldTeam: Byte; JoinGame: Boolean); override;
     procedure OnLeaveGame(Id: Byte; Kicked: Boolean); override;
@@ -91,14 +91,14 @@ type
     procedure OnWeaponChange(Id, Primary, Secondary,
       PrimaryAmmo, SecondaryAmmo: Byte); override;
 
-    function OnVoteMapStart(Id: Byte; Map: string): Boolean; override;
-    function OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean;
+    function  OnVoteMapStart(Id: Byte; Map: string): Boolean; override;
+    function  OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean;
       override;
     procedure OnVoteMap(Id: Byte; Map: string); override;
     procedure OnVoteKick(Id, Victim: Byte); override;
     procedure OnPlayerSpeak(Id: Byte; Text: string); override;
-    function OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
-    function OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
+    function  OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
+    function  OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
       override;
   end;
 
@@ -106,7 +106,7 @@ type
 
 // @param dir Directory to check
 // @return TScriptCore instance if Includes.txt is found, null otherwise
-function CheckFunction(Dir: string): TScriptCore;
+function  CheckFunction(Dir: string): TScriptCore;
 
 
 implementation

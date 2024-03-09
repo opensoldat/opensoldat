@@ -11,24 +11,24 @@ unit ServerHelper;
 interface
 
 
-function CheckNextMap: string;
+function  CheckNextMap: string;
 procedure WriteLn(S: Variant); overload;
-function IDToName(ID: Integer): string;
-function TeamToName(ID: Integer): string;
-function NameToID(Name: string): Integer;
-function NameToHW(Name: string): string;
-function FindLowestTeam(const Arr: array of Integer): Integer;
+function  IDToName(ID: Integer): string;
+function  TeamToName(ID: Integer): string;
+function  NameToID(Name: string): Integer;
+function  NameToHW(Name: string): string;
+function  FindLowestTeam(const Arr: array of Integer): Integer;
 procedure SaveTxtLists;
 procedure SaveMapList;
-function RGB(r, g, b: Byte): Cardinal;
-function FixTeam(Team: Byte): Byte;
-function WeaponNameByNum(Num: Integer): string;
-function CheckFileSize(filename: string): Integer;
+function  RGB(r, g, b: Byte): Cardinal;
+function  FixTeam(Team: Byte): Byte;
+function  WeaponNameByNum(Num: Integer): string;
+function  CheckFileSize(filename: string): Integer;
 procedure WritePID;
-function GetPID: Integer;
+function  GetPID: Integer;
 procedure WriteConsole(ID: Byte; Text: string; Colour: UInt32);
 procedure UpdateWaveRespawnTime;
-function RandomBot: string;
+function  RandomBot: string;
 procedure DoBalanceBots(LeftGame: Byte; NewTeam: Byte);
 
 

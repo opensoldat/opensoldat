@@ -35,32 +35,32 @@ type
   end;
 
 // Gets a specific piece of a string
-function GetPiece(const Source: string; const Delimiter: string;
+function  GetPiece(const Source: string; const Delimiter: string;
   const Piece: Integer): string;
 
-function Iif(const Condition: Boolean; const TruePart: Variant;
+function  Iif(const Condition: Boolean; const TruePart: Variant;
   const FalsePart: Variant): Variant;
-function Choose(const Index: Integer; const Choices: array of Variant): Variant;
+function  Choose(const Index: Integer; const Choices: array of Variant): Variant;
 
-function ColorToHex(Color: TColor): LongWord;
-function StringToColor(const S: string): TColor;
+function  ColorToHex(Color: TColor): LongWord;
+function  StringToColor(const S: string): TColor;
 
 {$IFNDEF SERVER}
-function NumberFormat(Num: Cardinal): string;
-function CheckFileSize(filename: string): Integer;
+function  NumberFormat(Num: Cardinal): string;
+function  CheckFileSize(filename: string): Integer;
 {$ENDIF}
 
-function OverrideFileExt(const Filename, Ext: string): string;
-//function MapExists(MapName: string; RootDirectory: string{$IFNDEF SERVER}; Checksum: TSHA1Digest{$ENDIF}): Boolean;
-function Md5StringHelper(Text: String): String;
-function CreateDirIfMissing(const Dir: string): Boolean;
-function CreateFileIfMissing(const Filename: string): Boolean;
-function GetSize(Bytes: Int64): string;
-function GetMapChecksum(Map: TMapInfo): TSHA1Digest;
-function GetMapInfo(MapName: String; Directory: String; out MapInfo: TMapInfo): Boolean;
-function VerifyMapChecksum(Map: TMapInfo; Checksum: TSHA1Digest): Boolean;
+function  OverrideFileExt(const Filename, Ext: string): string;
+//function  MapExists(MapName: string; RootDirectory: string{$IFNDEF SERVER}; Checksum: TSHA1Digest{$ENDIF}): Boolean;
+function  Md5StringHelper(Text: String): String;
+function  CreateDirIfMissing(const Dir: string): Boolean;
+function  CreateFileIfMissing(const Filename: string): Boolean;
+function  GetSize(Bytes: Int64): string;
+function  GetMapChecksum(Map: TMapInfo): TSHA1Digest;
+function  GetMapInfo(MapName: String; Directory: String; out MapInfo: TMapInfo): Boolean;
+function  VerifyMapChecksum(Map: TMapInfo; Checksum: TSHA1Digest): Boolean;
 {$IFDEF DEVELOPMENT}
-function ToStr(const AValue; ATypeInfo: PTypeInfo): AnsiString;
+function  ToStr(const AValue; ATypeInfo: PTypeInfo): AnsiString;
 {$ENDIF}
 
 

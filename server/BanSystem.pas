@@ -17,17 +17,17 @@ uses
 
 procedure AddBannedIP(IP: ShortString; Reason: string;
   Duration: Integer = PERMANENT);
-function DelBannedIP(IP: ShortString): Boolean;
-function CheckBannedIP(IP: ShortString): Boolean;
-function FindBan(IP: ShortString): Integer;
+function  DelBannedIP(IP: ShortString): Boolean;
+function  CheckBannedIP(IP: ShortString): Boolean;
+function  FindBan(IP: ShortString): Integer;
 procedure LoadBannedList(filename: string);
 procedure SaveBannedList(filename: string);
 // bans hardwareids
 procedure AddBannedHW(HW: string; Reason: string;
   Duration: Integer = PERMANENT);
-function DelBannedHW(HW: string): Boolean;
-function CheckBannedHW(HW: string): Boolean;
-function FindBanHW(HW: string): Integer;
+function  DelBannedHW(HW: string): Boolean;
+function  CheckBannedHW(HW: string): Boolean;
+function  FindBanHW(HW: string): Integer;
 procedure LoadBannedListHW(filename: string);
 procedure SaveBannedListHW(filename: string);
 procedure UpdateIPBanList;

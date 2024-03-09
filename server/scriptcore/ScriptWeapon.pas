@@ -34,11 +34,11 @@ type
   TScriptWeapon = class(TObject)
   protected
     FWeapon: PGun;
-    function GetGun: TGun;
-    function GetType: Byte;
-    function GetName: string;
-    function GetBulletStyle: Byte;
-    function GetAmmo: Byte;
+    function  GetGun: TGun;
+    function  GetType: Byte;
+    function  GetName: string;
+    function  GetBulletStyle: Byte;
+    function  GetAmmo: Byte;
     procedure SetAmmo(Ammo: Byte); virtual; abstract;
   public
     property Gun: TGun read GetGun;

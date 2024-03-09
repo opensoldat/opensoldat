@@ -58,19 +58,19 @@ type
     procedure OnFlagReturn(Id, TeamFlag: Byte);
 
     procedure OnAfterPlayerRespawn(Id: Byte);
-    function OnPlayerDamage(Victim, Shooter: Byte; Damage: Single;
+    function  OnPlayerDamage(Victim, Shooter: Byte; Damage: Single;
       BulletID: Byte): Single;
     procedure OnPlayerKill(Killer, Victim, Weapon: Byte);
     procedure OnWeaponChange(Id, Primary, Secondary: Byte);
 
-    function OnVoteMapStart(Id: Byte; Map: string): Boolean;
-    function OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean;
+    function  OnVoteMapStart(Id: Byte; Map: string): Boolean;
+    function  OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean;
     procedure OnVoteMap(Id: Byte; Map: string);
     procedure OnVoteKick(Id, Victim: Byte);
 
     procedure OnPlayerSpeak(Id: Byte; Text: string);
-    function OnPlayerCommand(Id: Byte; Command: string): Boolean;
-    function OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
+    function  OnPlayerCommand(Id: Byte; Command: string): Boolean;
+    function  OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
 
     property AppOnIdleTimer: Longint read FAppOnIdleTimer;
     property Disabled: Boolean read FDisabled;

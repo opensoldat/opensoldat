@@ -31,9 +31,9 @@ uses
 type
   TScriptGlobal = class(TObject)
   private
-    function GetDateSeparator: Char;
+    function  GetDateSeparator: Char;
     procedure SetDateSeparator(Separator: Char);
-    function GetShortDateFormat: string;
+    function  GetShortDateFormat: string;
     procedure SetShortDateFormat(Format: string);
   public
     property ScriptDateSeparator: Char read GetDateSeparator write SetDateSeparator;

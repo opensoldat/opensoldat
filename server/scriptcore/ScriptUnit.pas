@@ -38,10 +38,10 @@ type
     FScript: TScript;
     FOnException: TOnException;
     FOnUnhandledException: TOnUnhandledException;
-    function GetName: string;
-    function GetVersion: string;
-    function GetDir: string;
-    function GetDebugMode: Boolean;
+    function  GetName: string;
+    function  GetVersion: string;
+    function  GetDir: string;
+    function  GetDebugMode: Boolean;
   public
     constructor Create(Script: TScript);
     procedure Recompile(Force: Boolean);
@@ -52,7 +52,7 @@ type
     property DebugMode: Boolean read GetDebugMode;
     property OnException: TOnException read FOnException write FOnException;
     property OnUnhandledException: TOnUnhandledException
-        read FOnUnhandledException write FOnUnhandledException;
+      read FOnUnhandledException write FOnUnhandledException;
   end;
 
   TScriptUnitAPI = class(TScriptCore3API)

@@ -156,8 +156,8 @@ var
 procedure Number27Timing;
 procedure ToggleBulletTime(TurnOn: Boolean; Duration: Integer = 30);
 procedure UpdateGameStats;
-function PointVisible(X, Y: Single; i: Integer): Boolean;
-function PointVisible2(X, Y: Single; i: Integer): Boolean;
+function  PointVisible(X, Y: Single; i: Integer): Boolean;
+function  PointVisible2(X, Y: Single; i: Integer): Boolean;
 procedure StartVote(StarterVote, TypeVote: Byte; TargetVote, ReasonVote: string);
 procedure StopVote;
 procedure TimerVote;
@@ -166,9 +166,9 @@ procedure CountVote(Voter: Byte);
 {$ENDIF}
 procedure ShowMapChangeScoreboard(); overload;
 procedure ShowMapChangeScoreboard(const NextMap: string); overload;
-function IsTeamGame(): Boolean;
+function  IsTeamGame(): Boolean;
 {$IFNDEF SERVER}
-function IsPointOnScreen(Point: TVector2): Boolean;
+function  IsPointOnScreen(Point: TVector2): Boolean;
 {$ENDIF}
 procedure ChangeMap;
 procedure SortPlayers;

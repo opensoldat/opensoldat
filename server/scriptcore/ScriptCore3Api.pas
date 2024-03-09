@@ -33,7 +33,7 @@ type
     procedure RuntimeRegisterVariables(Exec: TPascalExec); virtual;
     procedure BeforeExecute(Exec: TPascalExec); virtual;
     procedure AfterExecute(Exec: TPascalExec); virtual;
-    function CallEvent(const Event; const Params: array of Variant): Variant;
+    function  CallEvent(const Event; const Params: array of Variant): Variant;
   end;
 
 

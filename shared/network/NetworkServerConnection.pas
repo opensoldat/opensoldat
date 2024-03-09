@@ -44,7 +44,7 @@ procedure ServerHandlePlayerInfo(NetMessage: PSteamNetworkingMessage_t);
 procedure ServerSendPlayList({$IFDEF SERVER}Peer: HSteamNetConnection{$ENDIF});
 procedure ServerSendNewPlayerInfo(Num: Byte; JoinType: Byte);
 {$IFDEF SERVER}
-function GetBanStrForIndex(BanIndex: Integer; BanHW: Boolean = False): string; // TODO move?
+function  GetBanStrForIndex(BanIndex: Integer; BanHW: Boolean = False): string; // TODO move?
 procedure ServerSendUnAccepted(Peer: HSteamNetConnection; State: Byte; Message: string = '');
 procedure ServerDisconnect;
 procedure ServerPlayerDisconnect(Player: TPlayer; Why: Byte; Now: Boolean = False);

@@ -80,17 +80,17 @@ type
     x, y, z: Single;
   end;
 
-function Vector2(x, y: Single): TVector2;
+function  Vector2(x, y: Single): TVector2;
 
-function Vec2Length(v: TVector2): Single;
-function Vec2Length2(v: TVector2): Single;
-function Vec2Dot(v1, v2: TVector2): Single;
-function Vec2Add(v1, v2: TVector2): TVector2;
-function Vec2Subtract(v1, v2: TVector2): TVector2;
-function Vec2Scale(out vOut: TVector2; v: TVector2; s: Single): PVector2;
-function Vec2Normalize(out vOut: TVector2; v: TVector2): PVector2;
+function  Vec2Length(v: TVector2): Single;
+function  Vec2Length2(v: TVector2): Single;
+function  Vec2Dot(v1, v2: TVector2): Single;
+function  Vec2Add(v1, v2: TVector2): TVector2;
+function  Vec2Subtract(v1, v2: TVector2): TVector2;
+function  Vec2Scale(out vOut: TVector2; v: TVector2; s: Single): PVector2;
+function  Vec2Normalize(out vOut: TVector2; v: TVector2): PVector2;
 
-function Vec3Length(v: TVector3): Single;
+function  Vec3Length(v: TVector3): Single;
 
 
 implementation

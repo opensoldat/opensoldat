@@ -33,9 +33,9 @@ type
   TScriptObject = class(TObject)
   protected
     FObj: PThing;
-    function GetStyle: Byte; virtual; abstract;
-    function GetX: Single;
-    function GetY: Single;
+    function  GetStyle: Byte; virtual; abstract;
+    function  GetX: Single;
+    function  GetY: Single;
   public
     property Style: Byte read GetStyle;
     property X: Single read GetX;
@@ -44,7 +44,7 @@ type
 
   TScriptNewObject = class(TScriptObject)
   protected
-    function GetStyle: Byte; override;
+    function  GetStyle: Byte; override;
     procedure SetStyle(Style: Byte);
     procedure SetX(X: Single);
     procedure SetY(Y: Single);
@@ -59,9 +59,9 @@ type
   TScriptActiveObject = class(TScriptObject)
   protected
     FID: Byte;
-    function GetActive: Boolean;
-    function GetID: Byte;
-    function GetStyle: Byte; override;
+    function  GetActive: Boolean;
+    function  GetID: Byte;
+    function  GetStyle: Byte; override;
   public
     constructor CreateActive(ID: Byte; var Obj: TThing);
     procedure Kill;
@@ -71,7 +71,7 @@ type
 
   TScriptActiveFlag = class(TScriptActiveObject)
   private
-    function GetInBase: Boolean;
+    function  GetInBase: Boolean;
   public
     property InBase: Boolean read GetInBase;
   end;

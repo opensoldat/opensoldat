@@ -34,13 +34,13 @@ type
   public
     procedure Update;
     procedure Render;
-    function CheckMapCollision(X, Y: Single): Boolean;
+    function  CheckMapCollision(X, Y: Single): Boolean;
     procedure Kill;
     procedure CheckOutOfBounds;
   end;
 
-function CreateSpark(sPos, sVelocity: TVector2; sStyle, sOwner: Byte;
-    Life: Integer): Integer;
+function  CreateSpark(sPos, sVelocity: TVector2; sStyle, sOwner: Byte;
+  Life: Integer): Integer;
 
 var
   SparksCount: Integer;

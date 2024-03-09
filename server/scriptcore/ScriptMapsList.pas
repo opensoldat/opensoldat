@@ -34,14 +34,14 @@ type
 
   TScriptMapsList = class(TObject)
   private
-    function GetMap(Num: Integer): string;
-    function GetCurrentMapId: Integer;
+    function  GetMap(Num: Integer): string;
+    function  GetCurrentMapId: Integer;
     procedure SetCurrentMapId(NewNum: Integer);
-    function GetMapsCount: Integer;
+    function  GetMapsCount: Integer;
   public
     procedure AddMap(Name: string);
     procedure RemoveMap(Name: string);
-    function GetMapIdByName(Name: string): Integer;
+    function  GetMapIdByName(Name: string): Integer;
     property Map[i: Integer]: string read GetMap; default;
     property CurrentMapId: Integer read GetCurrentMapId write SetCurrentMapId;
     property MapsCount: Integer read GetMapsCount;

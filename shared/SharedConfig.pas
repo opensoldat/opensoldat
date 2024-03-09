@@ -17,9 +17,9 @@ uses
 
 
 {$IFDEF SERVER}
-function LoadBotConfig(const FilePath: string; var SpriteC: TSprite): Boolean;
+function  LoadBotConfig(const FilePath: string; var SpriteC: TSprite): Boolean;
 {$ENDIF}
-function LoadWeaponsConfig(const FilePath: string): Boolean;
+function  LoadWeaponsConfig(const FilePath: string): Boolean;
 
 
 implementation

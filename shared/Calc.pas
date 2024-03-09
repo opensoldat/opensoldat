@@ -22,18 +22,18 @@ type
     NumIntersections: Byte;
   end;
 
-function IsLineIntersectingCircle(Line1, Line2, CircleCenter: TVector2;
+function  IsLineIntersectingCircle(Line1, Line2, CircleCenter: TVector2;
     Radius: Single): TIntersectionResult;
-function LineCircleCollision(StartPoint, EndPoint, CircleCenter: TVector2;
+function  LineCircleCollision(StartPoint, EndPoint, CircleCenter: TVector2;
     Radius: Single; var CollisionPoint: TVector2): Boolean;
-function PointLineDistance(P1, P2, P3: TVector2): Single;
-function Angle2Points(const P1, P2: TVector2): Single;
-function Distance(X1, Y1, X2, Y2: Single): Single; overload;
-function SqrDist(X1, Y1, X2, Y2: Single): Single; overload;
-function SqrDist(P1, P2: TVector2): Single; overload;
-function Distance(P1, P2: TVector2): Single; overload;
-function GreaterPowerOf2(N: Integer): Integer;
-function RoundFair(Value: Single): Integer;
+function  PointLineDistance(P1, P2, P3: TVector2): Single;
+function  Angle2Points(const P1, P2: TVector2): Single;
+function  Distance(X1, Y1, X2, Y2: Single): Single; overload;
+function  SqrDist(X1, Y1, X2, Y2: Single): Single; overload;
+function  SqrDist(P1, P2: TVector2): Single; overload;
+function  Distance(P1, P2: TVector2): Single; overload;
+function  GreaterPowerOf2(N: Integer): Integer;
+function  RoundFair(Value: Single): Integer;
 
 
 implementation

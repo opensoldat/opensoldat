@@ -132,7 +132,7 @@ type
     //        "ScriptName.FunctionName"
     // @param DefaultReturn default return value in case script or function is not found
     // @return Value returned by foreign function or DefaultReturn if not found
-    function CallFunc(const Params: array of Variant; FuncName: string;
+    function  CallFunc(const Params: array of Variant; FuncName: string;
       DefaultReturn: Variant): Variant; override;
     // rest of the functions are scriptcore events. Not gonna bother to document it.
 
@@ -141,9 +141,9 @@ type
     procedure OnIdle; override;
     // procedure OnScriptShutdown(ServerShutdown: Boolean);
 
-    function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
+    function  OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer; override;
-    function OnBeforeJoinTeam(Id, Team, OldTeam: Byte): ShortInt; override;
+    function  OnBeforeJoinTeam(Id, Team, OldTeam: Byte): ShortInt; override;
     procedure OnJoinTeam(Id, Team, OldTeam: Byte; JoinGame: Boolean); override;
     procedure OnLeaveGame(Id: Byte; Kicked: Boolean); override;
 
@@ -161,9 +161,9 @@ type
 
     procedure OnKitPickup(Id, KitId: Byte); override;
 
-    function OnBeforePlayerRespawn(Id: Byte): TVector2; override;
+    function  OnBeforePlayerRespawn(Id: Byte): TVector2; override;
     procedure OnAfterPlayerRespawn(Id: Byte); override;
-    function OnPlayerDamage(Victim, Shooter: Byte; Damage: Single;
+    function  OnPlayerDamage(Victim, Shooter: Byte; Damage: Single;
       Weapon: Byte): Single; override;
     procedure OnPlayerKill(Killer, Victim, BulletID: Byte); override;
     procedure OnWeaponChange(Id, Primary, Secondary,
@@ -171,12 +171,12 @@ type
 
     function OnVoteMapStart(Id: Byte; Map: string): Boolean; override;
     function OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean; override;
-    procedure OnVoteMap(Id: Byte; Map: string); override;
-    procedure OnVoteKick(Id, Victim: Byte); override;
+    procedure  OnVoteMap(Id: Byte; Map: string); override;
+    procedure  OnVoteKick(Id, Victim: Byte); override;
 
     procedure OnPlayerSpeak(Id: Byte; Text: string); override;
-    function OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
-    function OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
+    function  OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
+    function  OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
       override;
   end;
 

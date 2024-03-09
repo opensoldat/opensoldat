@@ -36,18 +36,18 @@ type
   private
     FPlayers: array [1..MAX_SPRITES] of TScriptActivePlayer;
     FActivePlayers: TFPGList<TScriptActivePlayer>;
-    function GetPlayer(ID: Byte): TScriptActivePlayer;
+    function  GetPlayer(ID: Byte): TScriptActivePlayer;
   public
     constructor Create;
     destructor Destroy; override;
-    function Add(Player: TScriptNewPlayer; JoinType: TJoinType): TScriptActivePlayer;
+    function  Add(Player: TScriptNewPlayer; JoinType: TJoinType): TScriptActivePlayer;
     procedure WriteConsole(Text: string; Color: Longint);
     procedure BigText(Layer: Byte; Text: string; Delay: Integer;
       Color: Longint; Scale: Single; X, Y: Integer);
     procedure WorldText(Layer: Byte; Text: string; Delay: Integer;
       Color: Longint; Scale, X, Y: Single);
-    function GetByName(Name: string): TScriptActivePlayer;
-    function GetByIP(IP: string): TScriptActivePlayer;
+    function  GetByName(Name: string): TScriptActivePlayer;
+    function  GetByIP(IP: string): TScriptActivePlayer;
     procedure Tell(Text: string);
 
     property Player[ID: Byte]: TScriptActivePlayer read GetPlayer; default;

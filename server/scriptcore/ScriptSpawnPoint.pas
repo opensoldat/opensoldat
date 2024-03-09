@@ -28,13 +28,13 @@ type
   TScriptSpawnPoint = class(TObject)
   protected
     FSpawnPoint: PMapSpawnPoint;
-    function GetActive: Boolean;
+    function  GetActive: Boolean;
     procedure SetActive(Active: Boolean);
-    function GetX: Longint;
+    function  GetX: Longint;
     procedure SetX(X: Longint);
-    function GetY: Longint;
+    function  GetY: Longint;
     procedure SetY(Y: Longint);
-    function GetStyle: Byte;
+    function  GetStyle: Byte;
     procedure SetStyle(Style: Byte);
   public
     property Active: Boolean read GetActive write SetActive;

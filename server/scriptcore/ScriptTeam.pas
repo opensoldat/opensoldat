@@ -42,10 +42,10 @@ type
     FOnBeforeJoin: TOnBeforeJoinTeam;
     FOnJoin: TOnJoinTeam;
     FOnLeave: TOnLeaveTeam;
-    function GetScore: Byte;
+    function  GetScore: Byte;
     procedure SetScore(Score: Byte);
-    function GetPlayer(Num: Byte): TScriptActivePlayer;
-    function GetCount: Byte;
+    function  GetPlayer(Num: Byte): TScriptActivePlayer;
+    function  GetCount: Byte;
   public
     constructor Create(ID: Byte);
     destructor Destroy; override;

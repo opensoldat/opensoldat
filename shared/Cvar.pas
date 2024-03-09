@@ -159,7 +159,7 @@ type
 
 procedure CvarInit();
 procedure CvarCleanup();
-function DumpFlags(Cvar: TCvarBase): AnsiString;
+function  DumpFlags(Cvar: TCvarBase): AnsiString;
 procedure ResetSyncCvars;
 
 var

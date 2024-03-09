@@ -23,8 +23,8 @@ uses
 
 procedure CommandInit();
 procedure CommandCleanup();
-function ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
-function LoadConfig(ConfigName: AnsiString): Boolean;
+function  ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
+function  LoadConfig(ConfigName: AnsiString): Boolean;
 
 const
   MAX_COMMANDS = 1024;
