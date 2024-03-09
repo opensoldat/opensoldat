@@ -32,7 +32,7 @@ type
   TScriptTeam = class;
 
   TOnBeforeJoinTeam = function (Player: TScriptActivePlayer; Team, OldTeam: TScriptTeam): ShortInt of object;
-  TOnJoinTeam = procedure(Player: TScriptActivePlayer; Team: TScriptTeam) of object;
+  TOnJoinTeam  = procedure(Player: TScriptActivePlayer; Team: TScriptTeam) of object;
   TOnLeaveTeam = procedure(Player: TScriptActivePlayer; Team: TScriptTeam; Kicked: Boolean) of object;
 
   TScriptTeam = class(TObject)

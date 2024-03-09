@@ -39,7 +39,7 @@ uses
 
 type
   TOnBeforeMapChange = procedure(Next: string) of object;
-  TOnAfterMapChange = procedure(Next: string) of object;
+  TOnAfterMapChange  = procedure(Next: string) of object;
 
   TScriptMap = class(TObject)
   private

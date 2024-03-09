@@ -73,7 +73,7 @@ const
   POS_PRONE  = 4;
 
 type
-  TSpriteIndexes = array[1..MAX_SPRITES] of Integer;
+  TSpriteIndexes   = array[1..MAX_SPRITES] of Integer;
   TSpriteDistances = array[1..MAX_SPRITES] of Single;
 
   TControl = record
