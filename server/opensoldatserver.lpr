@@ -16,10 +16,10 @@ program opensoldatserver;
 
 uses
   {$IFNDEF WINDOWS}
-  cthreads, // needs to be first included unit in project
+    cthreads, // needs to be first included unit in project
   {$ENDIF}
   {$IFDEF AUTOUPDATER}
-  AutoUpdater,
+    AutoUpdater,
   {$ENDIF}
   Main in 'Main.pas';
 
