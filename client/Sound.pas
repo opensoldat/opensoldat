@@ -120,7 +120,7 @@ begin
   {$IFDEF STEAM}
   alGenBuffers(64, @VoiceChatBuffer);
   VoiceBufferQueue := TFPGLIST<LongWord>.Create;
-  for i := 0 to High(VoiceChatBuffer) do
+  for i := Low(VoiceChatBuffer) to High(VoiceChatBuffer) do
     VoiceBufferQueue.Add(VoiceChatBuffer[i]);
   {$ENDIF}
 end;
@@ -194,7 +194,7 @@ begin
   Result := -1;
   if High(ScriptSamp) < 0 then
     Exit;
-  for i := 0 to High(ScriptSamp) do
+  for i := Low(ScriptSamp) to High(ScriptSamp) do
     if UpperCase(ScriptSamp[i].Name) = UpperCase(Name) then
     begin
       Result := i;
