@@ -29,15 +29,13 @@ uses
   Constants;
 
 
-{
-  Cvar tags
-  sv_ - server cvar
-  cl_ - client cvar
-  mp_ - multiplayer cvars
-  r_  - renderer settings
-  ui_ - interface settings
-  fs_ - filesystem settings
-}
+// Cvar tags:
+// sv_ - server cvar
+// cl_ - client cvar
+// mp_ - multiplayer cvars
+// r_  - renderer settings
+// ui_ - interface settings
+// fs_ - filesystem settings
 
 const
     MAX_CVARS = 1024;
