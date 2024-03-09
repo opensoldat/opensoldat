@@ -55,10 +55,10 @@ var
   VoiceBufferQueue: TFPGList<LongWord>;
   {$ENDIF}
 
-function InitSound(): Boolean;
-function SoundNameToID(Name: string): ShortInt;
-function LoadSample(Name: PChar; samp: TSoundSample): TSoundSample;
-function ScaleVolumeSetting(VolumeSetting: Byte): Single;
+function  InitSound(): Boolean;
+function  SoundNameToID(Name: string): ShortInt;
+function  LoadSample(Name: PChar; samp: TSoundSample): TSoundSample;
+function  ScaleVolumeSetting(VolumeSetting: Byte): Single;
 procedure LoadSounds(ModDir: string);
 procedure CloseSound;
 procedure FPlaySound(SampleNum: Integer; ListenerX, ListenerY, EmitterX,
@@ -67,11 +67,11 @@ procedure PlaySound(Sample: Integer); overload;
 procedure PlaySound(Sample: Integer; Channel: Integer); overload;
 procedure PlaySound(Sample: Integer; var Emitter: TVector2); overload;
 procedure PlaySound(Sample: Integer; var Emitter: TVector2; var Channel: Integer); overload;
-function StopSound(Channel: Integer): Boolean;
+function  StopSound(Channel: Integer): Boolean;
 
-function SetSoundPaused(Channel: Integer; Paused: Boolean): Boolean;
+function  SetSoundPaused(Channel: Integer; Paused: Boolean): Boolean;
 
-function SetVolume(Channel: Integer; Volume: Single): Boolean;
+function  SetVolume(Channel: Integer; Volume: Single): Boolean;
 {$IFDEF STEAM}
 procedure PlayVoiceData(Data: Pointer; DataLength: Word; SpriteNum: Byte);
 {$ENDIF}
