@@ -3,7 +3,7 @@
 # This file converts gfx.inc.in into a pascal file gfx.inc
 
 # set current dir
-cd $(dirname "$0")
+cd "$(dirname "$0")" || exit
 
 # input/output files
 input="gfx.inc.in"
