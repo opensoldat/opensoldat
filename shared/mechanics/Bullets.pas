@@ -203,11 +203,11 @@ begin
   Bullet[i].Num := i;
   Bullet[i].Owner := sOwner;
   Bullet[i].TimeOut := Guns[WeaponIndex].Timeout;
-  {$IFNDEF SERVER} // TODO: Check if this should be used also in server
+  {$IFNDEF SERVER}  // TODO: Check if this should be used also in server
   Bullet[i].TimeOutPrev := Guns[WeaponIndex].Timeout;
   {$ENDIF}
   Bullet[i].HitMultiply := HitM;
-  {$IFNDEF SERVER} // TODO: Check if this should be used also in server
+  {$IFNDEF SERVER}  // TODO: Check if this should be used also in server
   Bullet[i].HitMultiplyPrev := HitM;
   {$ENDIF}
   Bullet[i].Whizzed := False;
@@ -227,7 +227,7 @@ begin
   Bullet[i].HitSpot.Y := 0;
   Bullet[i].Tracking := 0;
 
-  {$IFNDEF SERVER} // TODO: Check if this should be used also in server
+  {$IFNDEF SERVER}  // TODO: Check if this should be used also in server
   if Sprite[sOwner].AimDistCoef < DEFAULTAIMDIST then
     Bullet[i].Tracking := 255;
 

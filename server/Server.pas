@@ -281,7 +281,7 @@ var
   FloodIP: array[1..1000] of ShortString;
   FloodNum: array[1..1000] of Integer;
 
-  LastReqIP: array[0..3] of ShortString; // last 4 IP's to request game
+  LastReqIP: array[0..3] of ShortString;  // last 4 IP's to request game
   LastReqID: Byte = 0;
   DropIP: ShortString = '';
 
