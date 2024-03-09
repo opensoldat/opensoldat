@@ -163,7 +163,7 @@ function DumpFlags(Cvar: TCvarBase): AnsiString;
 procedure ResetSyncCvars;
 
 var
-  Cvars: TFPHashList;
+  Cvars:     TFPHashList;
   CvarsSync: TFPHashList;
   CvarsNeedSyncing: Boolean = False;
   CvarsInitialized: Boolean = False;
