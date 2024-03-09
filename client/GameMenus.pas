@@ -45,7 +45,7 @@ procedure InitGameMenus;
 procedure GameMenuShow(Menu: PGameMenu; Show: Boolean = True);
 function  GameMenuAction(Menu: PGameMenu; ButtonIndex: Integer): Boolean;
 procedure GameMenuMouseMove();
-function GameMenuClick(): Boolean;
+function  GameMenuClick(): Boolean;
 
 
 implementation
