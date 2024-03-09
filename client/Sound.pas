@@ -15,7 +15,7 @@ interface
 uses
   // Library units
   {$IFDEF STEAM}
-  fgl,
+    fgl,
   {$ENDIF}
   openal,
   PhysFS,

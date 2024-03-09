@@ -15,11 +15,11 @@ type
   PPInteger = ^PInteger;
 
 const
- {$IFDEF MSWINDOWS}
+  {$IFDEF MSWINDOWS}
   STBLIB = 'stb.dll';
- {$ELSE}
+  {$ELSE}
   STBLIB = 'stb.so';
- {$ENDIF}
+  {$ENDIF}
 
 // stb_image
 function stbi_xload_file(filename: PAnsiChar; w, h, f: PInteger; delays: PPInteger): PByte;
