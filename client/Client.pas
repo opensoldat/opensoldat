@@ -85,9 +85,9 @@ var
   GameLoopRun: Boolean;
   ProgReady: Boolean;
 
-  JoinPassword: String; // server password
-  JoinPort: String; // join port to server
-  JoinIP: String; // join ip to server
+  JoinPassword: String;  // server password
+  JoinPort: String;  // join port to server
+  JoinIP: String;  // join ip to server
 
   WindowReady: Boolean = False;
   GraphicsInitialized: Boolean = False;
@@ -211,9 +211,9 @@ var
   launcher_ipc_port: TIntegerCvar;
   launcher_ipc_reconnect_rate: TIntegerCvar;
 
-  sv_respawntime: TIntegerCvar; // TODO: Remove
-  sv_inf_redaward: TIntegerCvar; // TODO: Remove
-  net_contype: TIntegerCvar; // TODO: Remove
+  sv_respawntime: TIntegerCvar;  // TODO: Remove
+  sv_inf_redaward: TIntegerCvar;  // TODO: Remove
+  net_contype: TIntegerCvar;  // TODO: Remove
   net_allowdownload: TBooleanCvar;
 
   // syncable cvars
@@ -248,8 +248,8 @@ var
 
   Connection: Byte = INTERNET;
 
-  WeaponActive: array[1..MAIN_WEAPONS] of Byte; // sync
-  WeaponsInGame: Integer; // sync
+  WeaponActive: array[1..MAIN_WEAPONS] of Byte;  // sync
+  WeaponsInGame: Integer;  // sync
 
   Trails: Byte = 1;
   Spectator: Byte = 0;  // TODO: Remove
