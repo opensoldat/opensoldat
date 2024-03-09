@@ -428,7 +428,6 @@ var
   State: Integer = 0;
   //Pan: Single = 0.0;
 begin
-
   if not Samp[SampleNum].Loaded then
     Exit;
 
@@ -503,7 +502,6 @@ begin
     alSourcei(Sources[Chan], AL_BUFFER, Samp[SampleNum].Buffer);
     alSourcePlay(Sources[Chan]);
   end;
-
 end;
 
 procedure PlaySound(Sample: Integer);
