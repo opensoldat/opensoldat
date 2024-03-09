@@ -202,13 +202,12 @@ begin
     end;
 end;
 
-{ Takes a volume percentage (0-100) and converts it for internal use (0-1).
-  The result is exponentially scaled to improve volume control intuitiveness
-  and sensitivity at lower decibels.
+// Takes a volume percentage (0-100) and converts it for internal use (0-1).
+// The result is exponentially scaled to improve volume control intuitiveness
+// and sensitivity at lower decibels.
 
-  VolumeSetting the volume percentage to scale
-  return the volume scaled for internal use
-}
+// VolumeSetting the volume percentage to scale
+// return the volume scaled for internal use
 function ScaleVolumeSetting(VolumeSetting: Byte): Single;
 begin
   Result := (Power(1.0404, VolumeSetting) - 1) / (1.0404 - 1) / 1275;
