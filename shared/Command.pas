@@ -329,7 +329,11 @@ begin
   if UDP <> Nil then
     NetworkingUtil := UDP.NetworkingUtil
   else
+    {$IFDEF STEAM}
+    NetworkingUtil := SteamAPI_SteamNetworkingUtils_SteamAPI_v004();
+    {$ELSE}
     NetworkingUtil := SteamAPI_SteamNetworkingUtils_v003();
+    {$ENDIF}
 
   ConfigID := StrToIntDef(Args[1], -1);
   ConfigName := NetworkingUtil.GetConfigValueInfo(ESteamNetworkingConfigValue(ConfigID), @OutDataType, @OutScope);
