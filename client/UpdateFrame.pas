@@ -160,7 +160,7 @@ begin
   CursorText := '';
   CursorFriendly := False;
 
-  // TODO(helloer): While watching demos this code needs to use SpectNumber instead of MySprite
+  // TODO: While watching demos this code needs to use SpectNumber instead of MySprite
   if (MySprite > 0) and (not DemoPlayer.Active) then
     for j := 1 to MAX_SPRITES do
       if Sprite[j].Active and Sprite[j].IsNotSpectator() and

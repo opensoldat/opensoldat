@@ -134,7 +134,7 @@ begin
   if N = 255 then
   begin
     s := 1;
-    // FIXME (helloer): Check if this should be synced
+    // FIXME: Check if this should be synced
     {$IFNDEF SERVER}
     if sStyle = OBJECT_PARACHUTE then
       s := MAX_THINGS div 2;
@@ -319,7 +319,7 @@ begin
         Thing[i].Skeleton.VDamping := 0.994;
         Thing[i].Skeleton.GravityMultiplier := 1.15;
         Thing[i].Skeleton.Clone(RifleSkeleton28);
-        //FIXME (helloer): Check why Tex1 is different
+        //FIXME: Check why Tex1 is different
         {$IFNDEF SERVER}
         Thing[i].Tex1 := Guns[M79].TextureNum + k;
         {$ENDIF}
