@@ -307,6 +307,7 @@ function LoadMapFile(MapInfo: TMapInfo; var Map: TMapFile): Boolean;
 var
   bf: TFileBuffer;
   i, j, n, m: Integer;
+  S: String;
 begin
   Result := False;
 
@@ -346,11 +347,12 @@ begin
     Map.Polygons[i].Vertices[1]  := ReadVertex(bf);
     Map.Polygons[i].Vertices[2]  := ReadVertex(bf);
     Map.Polygons[i].Vertices[3]  := ReadVertex(bf);
-    Map.Polygons[i].Normals[1]   := ReadVec3(bf);
+    Map.Polygons[i].Normals[1].x := ReadSingle(bf);
+    Map.Polygons[i].Normals[1].y := ReadSingle(bf);
+    Map.Polygons[i].TextureIndex := ReadUint8(bf); Inc(bf.Pos, 3);
     Map.Polygons[i].Normals[2]   := ReadVec3(bf);
     Map.Polygons[i].Normals[3]   := ReadVec3(bf);
     Map.Polygons[i].PolyType     := ReadUint8(bf);
-    Map.Polygons[i].TextureIndex := 0;
   end;
 
   // sectors
@@ -403,19 +405,54 @@ begin
     Map.Props[i].Level    := ReadUint8(bf); Inc(bf.Pos, 3);
   end;
 
-  // scenery
+  // scenery + additional textures
 
   n := ReadInt32(bf);
 
-  if (n > MAX_PROPS) or (n < 0) then
+  // additional texture filenames are stored in scenery array for backwards compatibility
+  if (n > MAX_PROPS + MAX_TEXTURES) or (n < 0) then
     Exit;
 
   SetLength(Map.Scenery, n);
 
+  j := 0;
   for i := 0 to n - 1 do
   begin
-    Map.Scenery[i].Filename := ReadString(bf, 50);
-    Map.Scenery[i].Date     := ReadInt32(bf);
+    S := ReadString(bf, 50);
+
+    if Copy(S, 1, 10) = 'SOLDATTEX_' then
+    begin
+      SetLength(Map.Textures, Length(Map.Textures) + 1);
+      Map.Textures[Length(Map.Textures) - 1] := Copy(S, 11, Length(S));
+      Inc(bf.Pos, 4);
+    end
+    else
+    begin
+      Map.Scenery[j].Filename := S;
+      Map.Scenery[j].Date     := ReadInt32(bf);
+      Inc(j);
+    end
+  end;
+
+  SetLength(Map.Scenery, j);
+
+  if j > MAX_PROPS then
+    Exit;
+
+  if Length(Map.Textures) > MAX_TEXTURES then
+    Exit;
+
+  // if only one texture is used, zero TextureIndex for backwards compatibility
+  if Length(Map.Textures) = 1 then
+  begin
+    for i := 0 to High(Map.Polygons) do
+      Map.Polygons[i].TextureIndex := 0;
+  end
+  else
+  begin
+    for i := 0 to High(Map.Polygons) do
+      if Map.Polygons[i].TextureIndex >= Length(Map.Textures) then
+        Exit;
   end;
 
   // colliders
