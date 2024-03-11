@@ -374,16 +374,16 @@ type
   TMsg_HeartBeat = packed record
     Header: TMsgHeader;
     MapID: LongWord;
-    TeamScore: array[1..4] of Word;
-    Active: array[1..MAX_PLAYERS] of Boolean;
-    Kills: array[1..MAX_PLAYERS] of Word;
-    Caps: array[1..MAX_PLAYERS] of Byte;
-    Team: array[1..MAX_PLAYERS] of Byte;
-    Deaths: array[1..MAX_PLAYERS] of Word;
-    Ping: array[1..MAX_PLAYERS] of Byte;
-    RealPing: array[1..MAX_PLAYERS] of Word;
+    TeamScore:         array[1..4] of Word;
+    Active:            array[1..MAX_PLAYERS] of Boolean;
+    Kills:             array[1..MAX_PLAYERS] of Word;
+    Caps:              array[1..MAX_PLAYERS] of Byte;
+    Team:              array[1..MAX_PLAYERS] of Byte;
+    Deaths:            array[1..MAX_PLAYERS] of Word;
+    Ping:              array[1..MAX_PLAYERS] of Byte;
+    RealPing:          array[1..MAX_PLAYERS] of Word;
     ConnectionQuality: array[1..MAX_PLAYERS] of Byte;
-    Flags: array[1..MAX_PLAYERS] of Byte;
+    Flags:             array[1..MAX_PLAYERS] of Byte;
   end;
 
   // SERVERSPRITESNAPSHOT TYPE
@@ -859,12 +859,12 @@ var
 
   ServerTickCounter: Integer;
   NoClientUpdateTime: array[1..MAX_PLAYERS] of Integer;
-  MessagesASecNum: array[1..MAX_PLAYERS] of Integer;
-  FloodWarnings: array[1..MAX_PLAYERS] of Byte;
-  PingWarnings: array[1..MAX_PLAYERS] of Byte;
-  BulletTime: array[1..MAX_PLAYERS] of Integer;
-  GrenadeTime: array[1..MAX_PLAYERS] of Integer;
-  KnifeCan: array[1..MAX_PLAYERS] of Boolean;
+  MessagesASecNum:    array[1..MAX_PLAYERS] of Integer;
+  FloodWarnings:      array[1..MAX_PLAYERS] of Byte;
+  PingWarnings:       array[1..MAX_PLAYERS] of Byte;
+  BulletTime:         array[1..MAX_PLAYERS] of Integer;
+  GrenadeTime:        array[1..MAX_PLAYERS] of Integer;
+  KnifeCan:           array[1..MAX_PLAYERS] of Boolean;
   {$ENDIF}
 
   PlayersNum, BotsNum, SpectatorsNum: Integer;
