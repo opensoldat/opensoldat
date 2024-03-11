@@ -145,21 +145,21 @@ const
   CAPTUREBLUE = 4;
 
   // Kick/Ban Why's
-  KICK_UNKNOWN = 0;
-  KICK_NORESPONSE = 1;
-  KICK_NOCHEATRESPONSE = 2; // TODO remove?
-  KICK_CHANGETEAM = 3; // TODO remove?
-  KICK_PING = 4;
-  KICK_FLOODING = 5;
-  KICK_CONSOLE = 6;
-  KICK_CONNECTCHEAT = 7; // TODO remove?
-  KICK_CHEAT = 8;
-  KICK_LEFTGAME = 9;
-  KICK_VOTED = 10;
-  KICK_AC = 11;
-  KICK_SILENT = 12;
-  KICK_STEAMTICKET = 13;
-  _KICK_END = 14;
+  KICK_UNKNOWN         =  0;
+  KICK_NORESPONSE      =  1;
+  KICK_NOCHEATRESPONSE =  2; // TODO remove?
+  KICK_CHANGETEAM      =  3; // TODO remove?
+  KICK_PING            =  4;
+  KICK_FLOODING        =  5;
+  KICK_CONSOLE         =  6;
+  KICK_CONNECTCHEAT    =  7; // TODO remove?
+  KICK_CHEAT           =  8;
+  KICK_LEFTGAME        =  9;
+  KICK_VOTED           = 10;
+  KICK_AC              = 11;
+  KICK_SILENT          = 12;
+  KICK_STEAMTICKET     = 13;
+  _KICK_END            = 14;
 
   // Join types
   JOIN_NORMAL = 0;
