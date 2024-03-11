@@ -121,7 +121,7 @@ const
 
   // ControlMethod
   HUMAN = 1;
-  BOT = 2;
+  BOT   = 2;
 
   // Request Reply States
   OK                 =  1;
@@ -135,13 +135,13 @@ const
   ANTICHEAT_REJECTED = 11;
   STEAM_ONLY         = 12;
 
-  LAN = 1;
+  LAN      = 1;
   INTERNET = 0;
 
   // FLAG INFO
-  RETURNRED = 1;
-  RETURNBLUE = 2;
-  CAPTURERED = 3;
+  RETURNRED   = 1;
+  RETURNBLUE  = 2;
+  CAPTURERED  = 3;
   CAPTUREBLUE = 4;
 
   // Kick/Ban Why's
@@ -167,21 +167,21 @@ const
 
   // RECORD
   NETW = 0;
-  REC = 1;
+  REC  = 1;
 
   CLIENTPLAYERRECIEVED_TIME = 3 * 60;
 
-  FLOODIP_MAX = 18;
+  FLOODIP_MAX  = 18;
   MAX_FLOODIPS = 1000;
-  MAX_BANIPS = 1000;
+  MAX_BANIPS   = 1000;
 
   PLAYERNAME_CHARS = 24;
   PLAYERHWID_CHARS = 11;
-  MAPNAME_CHARS = 64;
-  REASON_CHARS = 26;
+  MAPNAME_CHARS    = 64;
+  REASON_CHARS     = 26;
 
   ACTYPE_NONE = 0;
-  ACTYPE_FAE = 1;
+  ACTYPE_FAE  = 1;
 
   MSGTYPE_CMD   = 0;
   MSGTYPE_PUB   = 1;
