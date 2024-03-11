@@ -124,16 +124,16 @@ const
   BOT = 2;
 
   // Request Reply States
-  OK = 1;
-  WRONG_VERSION = 2;
-  WRONG_PASSWORD = 3;
-  BANNED_IP = 4;
-  SERVER_FULL = 5;
-  INVALID_HANDSHAKE = 8;
-  WRONG_CHECKSUM = 9;
+  OK                 =  1;
+  WRONG_VERSION      =  2;
+  WRONG_PASSWORD     =  3;
+  BANNED_IP          =  4;
+  SERVER_FULL        =  5;
+  INVALID_HANDSHAKE  =  8;
+  WRONG_CHECKSUM     =  9;
   ANTICHEAT_REQUIRED = 10;
   ANTICHEAT_REJECTED = 11;
-  STEAM_ONLY = 12;
+  STEAM_ONLY         = 12;
 
   LAN = 1;
   INTERNET = 0;
