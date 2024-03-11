@@ -183,9 +183,9 @@ const
   ACTYPE_NONE = 0;
   ACTYPE_FAE = 1;
 
-  MSGTYPE_CMD = 0;
-  MSGTYPE_PUB = 1;
-  MSGTYPE_TEAM = 2;
+  MSGTYPE_CMD   = 0;
+  MSGTYPE_PUB   = 1;
+  MSGTYPE_TEAM  = 2;
   MSGTYPE_RADIO = 3;
 
 type
