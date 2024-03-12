@@ -564,9 +564,8 @@ begin
   WriteLn(StringOfChar('-', 79));
   WriteLn('');
   WriteLn('   Need help running your server?');
-  WriteLn('   Discord: https://discord.gg/6TqqtVpRdV');
-  WriteLn('');
-  WriteLn('   ---> https://forums.soldat.pl/');
+  WriteLn('    Discord: https://discord.gg/6TqqtVpRdV');
+  WriteLn('    Forum:   https://forums.soldat.pl/');
   WriteLn('');
   WriteLn('   Additional parameters:');
   WriteLn('    -net_port PORT');
