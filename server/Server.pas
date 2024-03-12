@@ -107,7 +107,7 @@ var
 
   demo_autorecord: TBooleanCvar;
 
-  sv_respawntime: TIntegerCvar;
+  sv_respawntime:         TIntegerCvar;
   sv_respawntime_minwave: TIntegerCvar;
   sv_respawntime_maxwave: TIntegerCvar;
 
@@ -116,11 +116,11 @@ var
   sv_tm_limit: TIntegerCvar;
   sv_rm_limit: TIntegerCvar;
 
-  sv_inf_redaward: TIntegerCvar;
-  sv_inf_limit: TIntegerCvar;
+  sv_inf_redaward:  TIntegerCvar;
+  sv_inf_limit:     TIntegerCvar;
   sv_inf_bluelimit: TIntegerCvar;
 
-  sv_htf_limit: TIntegerCvar;
+  sv_htf_limit:      TIntegerCvar;
   sv_htf_pointstime: TIntegerCvar;
 
   sv_ctf_limit: TIntegerCvar;
