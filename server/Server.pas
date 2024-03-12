@@ -570,9 +570,9 @@ begin
   WriteLn('');
   WriteLn('   Additional parameters:');
   WriteLn('   ./opensoldatserver -net_port PORT -sv_maxplayers MAXPLAYERS -sv_password PASSWORD');
-  WriteLn('   Example: ./opensoldatserver -net_port 23073 -sv_maxplayers 16 -sv_password "my pass"');
   WriteLn('');
-  WriteLn('');
+  WriteLn('   Example:');
+  WriteLn('    ./opensoldatserver -net_port 23073 -sv_maxplayers 16 -sv_password "mypass"');
   WriteLn('');
   WriteLn(StringOfChar('-', 79));
 
