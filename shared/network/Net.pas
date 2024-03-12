@@ -201,32 +201,32 @@ type
     NetworkingSockets: PISteamNetworkingSockets;
     NetworkingUtils: PISteamNetworkingUtils;
   public
-    property Active: Boolean read FActive write FActive;
+    property  Active: Boolean read FActive write FActive;
     constructor Create();
     destructor Destroy(); override;
 
-    function Disconnect(Now: Boolean): Boolean; virtual; abstract;
+    function  Disconnect(Now: Boolean): Boolean; virtual; abstract;
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); virtual; abstract;
 
-    function GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
-    function GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
+    function  GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
+    function  GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
     procedure SetConnectionName(hConn: HSteamNetConnection; Name: AnsiString);
-    function GetStringAddress(pAddress: PSteamNetworkingIPAddr; Port: Boolean): AnsiString;
+    function  GetStringAddress(pAddress: PSteamNetworkingIPAddr; Port: Boolean): AnsiString;
 
-    function SetGlobalConfigValueInt32(eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-    function SetGlobalConfigValueFloat(eValue: ESteamNetworkingConfigValue; val: Single): Boolean;
-    function SetGlobalConfigValueString(eValue: ESteamNetworkingConfigValue; val: PChar): Boolean;
-    function SetConnectionConfigValueInt32(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-    function SetConnectionConfigValueFloat(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-    function SetConnectionConfigValueString(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function  SetGlobalConfigValueInt32(eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function  SetGlobalConfigValueFloat(eValue: ESteamNetworkingConfigValue; val: Single): Boolean;
+    function  SetGlobalConfigValueString(eValue: ESteamNetworkingConfigValue; val: PChar): Boolean;
+    function  SetConnectionConfigValueInt32(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function  SetConnectionConfigValueFloat(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function  SetConnectionConfigValueString(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
 
     procedure SetDebugLevel(Level: ESteamNetworkingSocketsDebugOutputType);
 
-    property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
-    property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
+    property  NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
+    property  NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
 
-    property Port: Word read FAddress.m_port write FAddress.m_port;
-    property Address: SteamNetworkingIPAddr read FAddress;
+    property  Port: Word read FAddress.m_port write FAddress.m_port;
+    property  Address: SteamNetworkingIPAddr read FAddress;
   end;
 
   {$IFDEF SERVER}
@@ -237,12 +237,12 @@ type
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); override;
     constructor Create(Host: String; Port: Word);
     destructor Destroy; override;
-    function Disconnect(Now: Boolean): Boolean; override;
+    function  Disconnect(Now: Boolean): Boolean; override;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
-    function SendData(var Data; Size: Integer; peer: HSteamNetConnection; Flags: Integer): Boolean;
+    function  SendData(var Data; Size: Integer; peer: HSteamNetConnection; Flags: Integer): Boolean;
     procedure UpdateNetworkStats(Player: Byte);
-    property Host: HSteamListenSocket read FHost;
+    property  Host: HSteamListenSocket read FHost;
   end;
   {$ELSE}
   TClientNetwork = class(TNetwork)
@@ -252,13 +252,13 @@ type
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); override;
     constructor Create();
     destructor Destroy; override;
-    function Disconnect(Now: Boolean): Boolean; override;
-    function Connect(Host: String; Port: Word): Boolean;
+    function  Disconnect(Now: Boolean): Boolean; override;
+    function  Connect(Host: String; Port: Word): Boolean;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
-    function SendData(var Data; Size: Integer; Flags: Integer): Boolean;
+    function  SendData(var Data; Size: Integer; Flags: Integer): Boolean;
     procedure FlushMsg();
-    property Peer: HSteamNetConnection read FPeer;
+    property  Peer: HSteamNetConnection read FPeer;
   end;
   {$ENDIF}
 
