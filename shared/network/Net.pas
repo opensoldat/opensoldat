@@ -586,15 +586,15 @@ type
     MapName: array[0..MAPNAME_CHARS - 1] of Char;
     MapChecksum: TSHA1Digest;
     Players: Byte;
-    Name: array[1..MAX_PLAYERS] of array[0..PLAYERNAME_CHARS - 1] of Char;
-    ShirtColor, PantsColor, SkinColor, HairColor, JetColor: array[1..MAX_PLAYERS]
-      of LongWord;
-    Team: array[1..MAX_PLAYERS] of Byte;
+    Name:         array[1..MAX_PLAYERS] of array[0..PLAYERNAME_CHARS - 1] of Char;
+    ShirtColor, PantsColor, SkinColor, HairColor, JetColor:
+                  array[1..MAX_PLAYERS] of LongWord;
+    Team:         array[1..MAX_PLAYERS] of Byte;
     PredDuration: array[1..MAX_PLAYERS] of Byte;
-    Look: array[1..MAX_PLAYERS] of Byte;
-    Pos: array[1..MAX_PLAYERS] of TVector2;
-    Vel: array[1..MAX_PLAYERS] of TVector2;
-    SteamID: array[1..MAX_PLAYERS] of UInt64;
+    Look:         array[1..MAX_PLAYERS] of Byte;
+    Pos:          array[1..MAX_PLAYERS] of TVector2;
+    Vel:          array[1..MAX_PLAYERS] of TVector2;
+    SteamID:      array[1..MAX_PLAYERS] of UInt64;
     CurrentTime: Integer;
     ServerTicks: LongInt;
     AntiCheatRequired: Boolean;
