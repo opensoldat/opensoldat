@@ -229,8 +229,7 @@ begin
         ScrptDispatcher.Prepare;
       {$ENDIF}
 
-      WriteLn(
-        '----------------------------------------------------------------');
+      WriteLn(StringOfChar('-', 79));
 
       if ProgReady then
         StartServer;

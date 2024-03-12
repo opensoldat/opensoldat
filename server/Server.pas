@@ -559,9 +559,9 @@ begin
   WriteLnCenter('Compiled with FreePascal ' + {$I %FPCVERSION%});
   {$ENDIF}
   WriteLn('');
-  WriteLn('----------------------------------------------------------------');
+  WriteLn(StringOfChar('-', 79));
   WriteLnCenter('OpenSoldat Dedicated Server initializing...');
-  WriteLn('----------------------------------------------------------------');
+  WriteLn(StringOfChar('-', 79));
   WriteLn('');
   WriteLn('   Need help running your server?');
   WriteLn('   Discord: https://discord.gg/6TqqtVpRdV');
@@ -574,6 +574,7 @@ begin
   WriteLn('');
   WriteLn('');
   WriteLn('');
+  WriteLn(StringOfChar('-', 79));
 
   {$IFNDEF CPUARM}
   // Disable FPU exceptions
