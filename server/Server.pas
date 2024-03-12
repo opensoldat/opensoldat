@@ -555,6 +555,9 @@ begin
   WriteLn('');
   WriteLnCenter('-= OpenSoldat Dedicated Server ' + OPENSOLDAT_VERSION + ' - ' +
     DEDVERSION + ' (build ' + OPENSOLDAT_VERSION_LONG + ') =-');
+  {$IFDEF FPC}
+  WriteLnCenter('Compiled with FreePascal ' + {$I %FPCVERSION%});
+  {$ENDIF}
   WriteLn('');
   WriteLn('----------------------------------------------------------------');
   WriteLnCenter('OpenSoldat Dedicated Server initializing...');
@@ -570,8 +573,6 @@ begin
   WriteLn('   Example: ./opensoldatserver -net_port 23073 -sv_maxplayers 16 -sv_password "my pass"');
   WriteLn('');
   WriteLn('');
-
-  WriteLn(' Compiled with FreePascal ' + {$I %FPCVERSION%});
   WriteLn('');
 
   {$IFNDEF CPUARM}
