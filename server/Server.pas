@@ -569,7 +569,9 @@ begin
   WriteLn('   ---> https://forums.soldat.pl/');
   WriteLn('');
   WriteLn('   Additional parameters:');
-  WriteLn('   ./opensoldatserver -net_port PORT -sv_maxplayers MAXPLAYERS -sv_password PASSWORD');
+  WriteLn('    -net_port PORT');
+  WriteLn('    -sv_maxplayers MAXPLAYERS');
+  WriteLn('    -sv_password PASSWORD');
   WriteLn('');
   WriteLn('   Example:');
   WriteLn('    ./opensoldatserver -net_port 23073 -sv_maxplayers 16 -sv_password "mypass"');
