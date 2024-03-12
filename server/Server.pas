@@ -540,6 +540,11 @@ begin
 end;
 {$ENDIF}
 
+procedure WriteLnCenter(s: string);
+begin
+  WriteLn(StringOfChar(' ', (80 - Length(s)) div 2) + s);
+end;
+
 procedure ActivateServer;
 var
   i, j: Integer;
@@ -548,11 +553,11 @@ begin
   MainThreadID := GetThreadID;
 
   WriteLn('');
-  WriteLn('             -= OpenSoldat Dedicated Server ' + OPENSOLDAT_VERSION + ' - ' +
+  WriteLnCenter('-= OpenSoldat Dedicated Server ' + OPENSOLDAT_VERSION + ' - ' +
     DEDVERSION + ' (build ' + OPENSOLDAT_VERSION_LONG + ') =-');
   WriteLn('');
   WriteLn('----------------------------------------------------------------');
-  WriteLn('         OpenSoldat Dedicated Server initializing...');
+  WriteLnCenter('OpenSoldat Dedicated Server initializing...');
   WriteLn('----------------------------------------------------------------');
   WriteLn('');
   WriteLn('   Need help running your server?');
