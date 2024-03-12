@@ -556,7 +556,7 @@ begin
   WriteLn('----------------------------------------------------------------');
   WriteLn('');
   WriteLn('   Need help running your server?');
-  WriteLn('   Discord: https://discord.gg/a8BeCkue');
+  WriteLn('   Discord: https://discord.gg/6TqqtVpRdV');
   WriteLn('');
   WriteLn('   ---> https://forums.soldat.pl/');
   WriteLn('');
