@@ -206,13 +206,15 @@ begin
     Exit;
 
     // TODO: Add -r and --allow-root commandline option
-    {if not AllowRoot then
+    {
+    if not AllowRoot then
       Exit;
 
     WriteLn('You have been warned.' + #10 +
       'Hit CTRL+C now if you don''t want to run OpenSoldatServer as root.' + #10 +
       'OpenSoldatServer will start in 30 seconds.');
-    Sleep(30000);}
+    Sleep(30000);
+    }
   end;
 
   SetSigHooks;
