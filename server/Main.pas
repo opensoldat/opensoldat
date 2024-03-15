@@ -249,7 +249,7 @@ begin
         MainConsole.Console(E.Message, GAME_MESSAGE_COLOR);
       end;
     end;
-    {$ENDIF NOT DEBUG}
+    {$ENDIF}
   finally
     // Any needed cleanup code here
     ShutDown;
