@@ -376,9 +376,9 @@ begin
 
   for d := 1 to 16 do
     if (Round(DeathSnap.Pos[d].X) <> 0) and
-      (Round(DeathSnap.Pos[d].Y) <> 0) and
-      (Round(DeathSnap.OldPos[d].X) <> 0) and
-      (Round(DeathSnap.OldPos[d].Y) <> 0) then
+       (Round(DeathSnap.Pos[d].Y) <> 0) and
+       (Round(DeathSnap.OldPos[d].X) <> 0) and
+       (Round(DeathSnap.OldPos[d].Y) <> 0) then
     begin
       Sprite[i].Skeleton.Pos[d].X := DeathSnap.Pos[d].X;
       Sprite[i].Skeleton.Pos[d].Y := DeathSnap.Pos[d].Y;
@@ -476,7 +476,7 @@ begin
       KILLMESSAGEWAIT, KILL_MESSAGE_COLOR);
 
     if (Sprite[Deathsnap.Killer].MultiKills > 1) and
-      (Sprite[Deathsnap.Killer].MultiKills < 18) then
+       (Sprite[Deathsnap.Killer].MultiKills < 18) then
       BigMessage(MULTIKILL_MESSAGE[Sprite[Deathsnap.Killer].MultiKills],
         KILLMESSAGEWAIT, KILL_MESSAGE_COLOR);
     if (Sprite[Deathsnap.Killer].MultiKills > 17) then
@@ -550,7 +550,7 @@ begin
   if Deathsnap.KillBullet = 7 then // M79
     for j := MAX_BULLETS downto 1 do
       if (Bullet[j].Active) and (Bullet[j].Owner = Deathsnap.Killer) and
-        (Bullet[j].Style = Guns[M79].BulletStyle) then
+         (Bullet[j].Style = Guns[M79].BulletStyle) then
       begin
         Bulletparts.OldPos[j] := Sprite[i].Skeleton.Pos[8];
         Bulletparts.Pos[j] := Sprite[i].Skeleton.Pos[8];
@@ -562,7 +562,7 @@ begin
   if Deathsnap.KillBullet = 224 then {LAW}
     for j := MAX_BULLETS downto 1 do
       if (Bullet[j].Active) and (Bullet[j].Owner = Deathsnap.Killer) and
-        (Bullet[j].Style = Guns[LAW].BulletStyle) then
+         (Bullet[j].Style = Guns[LAW].BulletStyle) then
       begin
         Bulletparts.OldPos[j] := Sprite[i].Skeleton.Pos[8];
         Bulletparts.Pos[j] := Sprite[i].Skeleton.Pos[8];
@@ -574,7 +574,7 @@ begin
   if Deathsnap.KillBullet = 222 then {grenade}
     for j := MAX_BULLETS downto 1 do
       if (Bullet[j].Active) and (Bullet[j].Owner = Deathsnap.Killer) and
-        (Bullet[j].Style = Guns[FRAGGRENADE].BulletStyle) then
+         (Bullet[j].Style = Guns[FRAGGRENADE].BulletStyle) then
       begin
         Map.RayCast(Bulletparts.Pos[j], Sprite[i].Skeleton.Pos[8], hm, 351);
         if hm < AFTER_EXPLOSION_RADIUS then
