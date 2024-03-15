@@ -910,7 +910,8 @@
         <ShowHints Value="False"/>
       </Verbosity>
       <CustomOptions Value="-dDEBUG
--dDEVELOPMENT"/>
+-dDEVELOPMENT
+-dSTEAM_"/>
     </Other>
   </CompilerOptions>
   <Debugging>

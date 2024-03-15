@@ -64,7 +64,8 @@
             </Verbosity>
             <CustomOptions Value="-dSERVER
 -dSCRIPT
--dPS_USESSUPPORT"/>
+-dPS_USESSUPPORT
+-dSTEAM_"/>
           </Other>
         </CompilerOptions>
       </Item2>
@@ -940,7 +941,9 @@
 -dSERVER
 -dSCRIPT
 -dPS_USESSUPPORT
--dDEVELOPMENT"/>
+-dDEVELOPMENT
+-dSTEAM_
+-dENABLE_FAE_"/>
     </Other>
   </CompilerOptions>
   <Debugging>
