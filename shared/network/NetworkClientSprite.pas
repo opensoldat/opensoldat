@@ -359,7 +359,7 @@ var
   DeathSnap: TMsg_SpriteDeath;
   i, d, j, k: Integer;
   b: TVector2;
-  col, col2: Cardinal;
+  col1, col2: Cardinal;
   hm: Single = 0.0;
 begin
   if not VerifyPacket(sizeof(TMsg_SpriteDeath), NetMessage^.m_cbSize, MsgID_SpriteDeath) then
@@ -516,27 +516,27 @@ begin
     else   k := -255;
   end;
 
-  col := 0;
+  col1 := 0;
   col2 := 0;
   case Sprite[Deathsnap.Killer].Player.Team of
-    TEAM_NONE: col := KILLER_MESSAGE_COLOR;
-    TEAM_ALPHA: col := ALPHA_K_MESSAGE_COLOR;
-    TEAM_BRAVO: col := BRAVO_K_MESSAGE_COLOR;
-    TEAM_CHARLIE: col := CHARLIE_K_MESSAGE_COLOR;
-    TEAM_DELTA: col := DELTA_K_MESSAGE_COLOR;
+    TEAM_NONE:    col1 := KILLER_MESSAGE_COLOR;
+    TEAM_ALPHA:   col1 := ALPHA_K_MESSAGE_COLOR;
+    TEAM_BRAVO:   col1 := BRAVO_K_MESSAGE_COLOR;
+    TEAM_CHARLIE: col1 := CHARLIE_K_MESSAGE_COLOR;
+    TEAM_DELTA:   col1 := DELTA_K_MESSAGE_COLOR;
   end;
   case Sprite[i].Player.Team of
-    TEAM_NONE: col2 := DEATH_MESSAGE_COLOR;
-    TEAM_ALPHA: col2 := ALPHA_D_MESSAGE_COLOR;
-    TEAM_BRAVO: col2 := BRAVO_D_MESSAGE_COLOR;
+    TEAM_NONE:    col2 := DEATH_MESSAGE_COLOR;
+    TEAM_ALPHA:   col2 := ALPHA_D_MESSAGE_COLOR;
+    TEAM_BRAVO:   col2 := BRAVO_D_MESSAGE_COLOR;
     TEAM_CHARLIE: col2 := CHARLIE_D_MESSAGE_COLOR;
-    TEAM_DELTA: col2 := DELTA_D_MESSAGE_COLOR;
+    TEAM_DELTA:   col2 := DELTA_D_MESSAGE_COLOR;
   end;
 
   if Deathsnap.Killer <> i then
   begin
     KillConsole.consoleNum(WideString(Sprite[Deathsnap.Killer].Player.Name) + ' (' +
-      WideString(IntToStr(Sprite[Deathsnap.Killer].Player.Kills)) + ')', col, k);
+      WideString(IntToStr(Sprite[Deathsnap.Killer].Player.Kills)) + ')', col1, k);
     KillConsole.consoleNum(WideString(Sprite[i].Player.Name), col2, -255);
   end
   else
