@@ -444,7 +444,7 @@ begin
     ClientDisconnect
   else
     if Assigned(UDP) then
-      UDP.Disconnect(true);
+      UDP.Disconnect(True);
 
   StopSound(CHANNEL_WEATHER);
 

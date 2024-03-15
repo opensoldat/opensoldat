@@ -186,7 +186,7 @@ begin
     if FreeCamMsg.FreeCamOn = 1 then
     begin
       CameraFollowSprite := 0;
-      TargetMode := true;
+      TargetMode := True;
     end
     else
     begin
@@ -217,7 +217,7 @@ begin
 
   ClientDisconnect;
 
-  RedirectToServer := true;
+  RedirectToServer := True;
   RedirectIP := NetAddrToStr(in_addr(JoinServerMsg.IP));
   RedirectPort := JoinServerMsg.Port;
   RedirectMsg := Trim(PChar(@PMsg_JoinServer(NetMessage^.m_pData)^.ShowMsg));

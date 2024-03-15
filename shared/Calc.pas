@@ -68,7 +68,7 @@ begin
   // but nearly vertical would cause a havoc, as vertical line is not a function.
   if abs(diffy) > abs(diffx) then
   begin
-    flipped := true;
+    flipped := True;
     temp := Line1.x;
     Line1.x := Line1.y;
     Line1.y := temp;

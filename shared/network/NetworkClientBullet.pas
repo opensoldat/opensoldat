@@ -109,7 +109,7 @@ begin
   if Style = BULLET_STYLE_FRAGNADE then
     hm := Guns[FRAGGRENADE].HitMultiply;
 
-  i := CreateBullet(a, b, BulletSnap.WeaponNum, BulletSnap.Owner, 255, hm, False, true);
+  i := CreateBullet(a, b, BulletSnap.WeaponNum, BulletSnap.Owner, 255, hm, False, True);
 
     Bullet[i].OwnerPingTick := Sprite[BulletSnap.Owner].Player.PingTicks +
       PingTicksAdd;
@@ -203,7 +203,7 @@ begin
     if Style = BULLET_STYLE_M2 then
         for i := 1 to MAX_THINGS do
           if (Thing[i].Active) and (Thing[i].Style = OBJECT_STATIONARY_GUN) then
-            Thing[i].CheckStationaryGunCollision(true);
+            Thing[i].CheckStationaryGunCollision(True);
 
   OldBulletSnapshotMsg[BulletSnap.Owner] := BulletSnap;
 end;

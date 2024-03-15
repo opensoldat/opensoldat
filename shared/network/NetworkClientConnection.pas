@@ -182,7 +182,7 @@ begin
   PlayerInfo.CustomModChecksum := CustomModChecksum;
 
   UDP.SendData(PlayerInfo, sizeof(PlayerInfo), k_nSteamNetworkingSend_Reliable);
-  ClientPlayerSent := true;
+  ClientPlayerSent := True;
   ClientPlayerReceivedCounter := CLIENTPLAYERRECIEVED_TIME;
 end;
 
@@ -202,7 +202,7 @@ begin
     UDP.Disconnect(False);
   end else
   begin
-    UDP.Disconnect(true);
+    UDP.Disconnect(True);
     ExitToMenu;
   end;
 end;
@@ -498,7 +498,7 @@ begin
   my := GameHeightHalf;
   MousePrev.x := mx;
   MousePrev.y := my;
-  WindowReady := true;
+  WindowReady := True;
 end;
 
 procedure ClientHandleUnAccepted(NetMessage: PSteamNetworkingMessage_t);
@@ -601,7 +601,7 @@ begin
 
   VarsMsg := PMsg_ServerVars(NetMessage^.m_pData)^;
 
-  ClientVarsRecieved := true;
+  ClientVarsRecieved := True;
 
   WeaponsInGame := 0;
 

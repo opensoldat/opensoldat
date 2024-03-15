@@ -659,7 +659,7 @@ begin
 
   UDP.SendData(UnAccepted^, Size, Peer, k_nSteamNetworkingSend_Reliable);
 
-  UDP.NetworkingSocket.CloseConnection(Peer, 0, '', true);
+  UDP.NetworkingSocket.CloseConnection(Peer, 0, '', True);
 end;
 {$ENDIF}
 

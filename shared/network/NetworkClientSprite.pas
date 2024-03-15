@@ -274,7 +274,7 @@ begin
   if not Sprite[i].Active then
     Exit;
 
-  Sprite[i].DeadMeat := true;
+  Sprite[i].DeadMeat := True;
   Sprite[i].RespawnCounter := SkeletonSnap.RespawnCounter;
   Sprite[i].Weapon := Guns[NOWEAPON];
 
@@ -432,11 +432,11 @@ begin
     Sprite[i].Die(BRUTAL_DEATH, Deathsnap.Killer, DeathSnap.Where,
       Deathsnap.KillBullet, b);
 
-  Sprite[i].Skeleton.Constraints[2].Active := true;
-  Sprite[i].Skeleton.Constraints[4].Active := true;
-  Sprite[i].Skeleton.Constraints[20].Active := true;
-  Sprite[i].Skeleton.Constraints[21].Active := true;
-  Sprite[i].Skeleton.Constraints[23].Active := true;
+  Sprite[i].Skeleton.Constraints[2].Active := True;
+  Sprite[i].Skeleton.Constraints[4].Active := True;
+  Sprite[i].Skeleton.Constraints[20].Active := True;
+  Sprite[i].Skeleton.Constraints[21].Active := True;
+  Sprite[i].Skeleton.Constraints[23].Active := True;
   if Deathsnap.Constraints and B1 = B1 then
     Sprite[i].Skeleton.Constraints[2].Active := False;
   if Deathsnap.Constraints and B2 = B2 then

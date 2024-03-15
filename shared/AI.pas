@@ -165,7 +165,7 @@ begin
           Control.Right := False;
           Control.Left  := False;
           if t.x < m.x then
-            Control.Right := true
+            Control.Right := True
           else if t.x > m.x then
             Control.Left  := True;
         end;
@@ -290,7 +290,7 @@ begin
         {
         if Brain.Camper > 128 then
           if ColliderDistance < DIST_COLLIDE then
-            control.Prone := true;
+            control.Prone := True;
         }
       end;
 

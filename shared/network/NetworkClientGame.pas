@@ -150,7 +150,7 @@ begin
       CameraFollowSprite := MySprite;
 
     GameMenuShow(TeamMenu, False);
-    ClientPlayerReceived := true;
+    ClientPlayerReceived := True;
     ClientPlayerReceivedCounter := -1;
     BadMapIDCount := 2;
     HeartbeatTime := MainTickCounter;
@@ -470,7 +470,7 @@ begin
       PMsg_ServerFlagInfo(NetMessage^.m_pData)^.Who, 18);
 
     if sv_survivalmode.Value then
-      SurvivalEndRound := true;
+      SurvivalEndRound := True;
   end;
   if PMsg_ServerFlagInfo(NetMessage^.m_pData)^.Style = CAPTUREBLUE then
   begin
@@ -488,7 +488,7 @@ begin
       PMsg_ServerFlagInfo(NetMessage^.m_pData)^.Who, 18);
 
     if sv_survivalmode.Value then
-      SurvivalEndRound := true;
+      SurvivalEndRound := True;
   end;
 end;
 
