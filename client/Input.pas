@@ -104,7 +104,7 @@ const
   KEYID_MOUSEWHEEL_UP   = 513;
   KEYID_MOUSEWHEEL_DOWN = 514;
 
-function  BindKey(key, action, command: string; KeyMods: TKeyMods): Boolean;
+function  BindKey(Key, Action, Command: string; KeyMods: TKeyMods): Boolean;
 function  FindKeyBind(KeyMods: TKeyMods; KeyCode: TSDL_ScanCode; Exact: Boolean = False): PBind;
 function  KeyModsMatch(BindKeyMods, KeyMods: TKeyMods; Exclusive: Boolean = False): Boolean;
 procedure StartInput;
@@ -155,7 +155,7 @@ begin
   Result := Result or ((KeyMods and not (KM_CTRL or KM_ALT or KM_SHIFT)) shl 4);
 end;
 
-function BindKey(key, action, command: string; KeyMods: TKeyMods): Boolean;
+function BindKey(Key, Action, Command: string; KeyMods: TKeyMods): Boolean;
 var
   b: TBind;
   id: Integer;
@@ -166,30 +166,30 @@ begin
   // Clear unused modifier bits...
   KeyMods := KeyMods and KM_ALL;
 
-  if key = 'mousewheel up' then
+  if Key = 'mousewheel up' then
     b.KeyId := KEYID_MOUSEWHEEL_UP
-  else if key = 'mousewheel down' then
+  else if Key = 'mousewheel down' then
     b.KeyId := KEYID_MOUSEWHEEL_DOWN
-  else if AnsiContainsStr(key, 'mouse') = true then
+  else if AnsiContainsStr(Key, 'mouse') = true then
     b.KeyId := 300 + StrToIntDef(Copy(Key, 6, 1), 1)
   else
-    b.KeyId := SDL_GetScancodeFromName(Pchar(key));
+    b.KeyId := SDL_GetScancodeFromName(Pchar(Key));
 
   if b.KeyId = 0 then
   begin
-    Debug('[INPUT] Key ' + key + ' is invalid');
+    Debug('[INPUT] Key ' + Key + ' is invalid');
     Exit;
   end;
 
   if Assigned(FindKeyBind(KeyMods, b.KeyId, True)) then
   begin
-    Debug('[INPUT] Key ' + key + ' is already binded');
+    Debug('[INPUT] Key ' + Key + ' is already binded');
     Exit;
   end;
 
   for i := Ord(Low(TAction)) to Ord(High(TAction)) do
   begin
-     if LowerCase(action) = '+' + LowerCase(GetEnumName(TypeInfo(TAction), Ord(i))) then
+     if LowerCase(Action) = '+' + LowerCase(GetEnumName(TypeInfo(TAction), Ord(i))) then
        b.Action := TAction(Ord(i));
   end;
 
@@ -210,9 +210,9 @@ begin
     Binds[i + 1] := Binds[i];
   Binds[id] := b;
 
-  Debug('[INPUT] BindKey: Key: ' + key + ' (' +
+  Debug('[INPUT] BindKey: Key: ' + Key + ' (' +
         IntToStr(Binds[id].KeyId) + '), Mod: ' + IntToStr(Binds[id].KeyMod) +
-        ' Command: ' + command);
+        ' Command: ' + Command);
   Result := True;
 end;
 
