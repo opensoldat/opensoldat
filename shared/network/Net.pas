@@ -1119,7 +1119,7 @@ begin
         ClientRequestGame;
       end;
     else
-      //break;
+      //Break;
     end;
   end;
 end;
@@ -1468,7 +1468,7 @@ begin
       end;
     end;
   else
-    //break;
+    //Break;
   end;
 
 end;

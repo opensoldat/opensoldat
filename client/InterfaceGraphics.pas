@@ -182,7 +182,7 @@ begin
           if FirstOnly then
           begin
             ui_style.SetValue(Name);
-            break;
+            Break;
           end;
         end
         else

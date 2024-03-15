@@ -174,7 +174,7 @@ begin
                 BulletParts.DoEulerTimeStepFor(k);
                 Bullet[k].Update;
                 if not Bullet[k].Active then
-                  break;
+                  Break;
               end;
         end;
 
@@ -195,7 +195,7 @@ begin
         BulletParts.DoEulerTimeStepFor(i);
         Bullet[i].Update;
         if not Bullet[i].Active then
-          break;
+          Break;
       end;
 
   // stat gun

@@ -370,10 +370,10 @@ begin
           begin
             Inc(CursorPosition);
             if (CursorPosition = Len) then
-              break;
+              Break;
             if (ChatText[CursorPosition] = ' ')
               and (ChatText[CursorPosition + 1] <> ' ') then
-              break;
+              Break;
           end;
         end;
 
@@ -384,10 +384,10 @@ begin
           begin
             Dec(CursorPosition);
             if (CursorPosition = 0) then
-              break;
+              Break;
             if (ChatText[CursorPosition] = ' ')
               and (ChatText[CursorPosition + 1] <> ' ') then
-              break;
+              Break;
           end;
         end;
       else

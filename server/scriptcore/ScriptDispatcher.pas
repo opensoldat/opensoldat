@@ -305,7 +305,7 @@ begin
         begin
           TScript(Self.FScripts[I]).Free;
           Self.FScripts.Delete(I);
-          break;
+          Break;
         end;
     end;
     if FindFirst(Self.Dir + '/*', FaDirectory, DirInfo) = 0 then

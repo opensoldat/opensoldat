@@ -179,7 +179,7 @@ begin
       begin
         Self.FLastFlagObjs[ID] := TScriptActiveFlag.CreateActive(I, Thing[I]);
         Result := Self.FLastFlagObjs[ID];
-        break;
+        Break;
       end;
   end;
 end;
@@ -310,7 +310,7 @@ begin
           Map.SpawnPointsTeam[i] := 1;
       end;}
       Result := TScriptActiveSpawnPoint(FSpawnpoints[i]);
-      break;
+      Break;
     end;
 end;
 

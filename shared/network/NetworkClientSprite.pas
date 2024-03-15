@@ -556,7 +556,7 @@ begin
         Bulletparts.Pos[j] := Sprite[i].Skeleton.Pos[8];
         Bullet[j].Hit(3);
         Bullet[j].Kill;
-        break;
+        Break;
       end;
 
   if Deathsnap.KillBullet = 224 then {LAW}
@@ -568,7 +568,7 @@ begin
         Bulletparts.Pos[j] := Sprite[i].Skeleton.Pos[8];
         Bullet[j].Hit(3);
         Bullet[j].Kill;
-        break;
+        Break;
       end;
 
   if Deathsnap.KillBullet = 222 then {grenade}
