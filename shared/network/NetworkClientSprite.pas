@@ -706,6 +706,7 @@ procedure ClientHandleClientSpriteSnapshot_Dead(NetMessage: PSteamNetworkingMess
 begin
   if not VerifyPacket(sizeof(TMsg_ClientSpriteSnapshot_Dead), NetMessage^.m_cbSize, MsgID_ClientSpriteSnapshot_Dead) then
     Exit;
+
   if FreeCam = 0 then
     CameraFollowSprite := PMsg_ClientSpriteSnapshot_Dead(NetMessage^.m_pData)^.CameraFocus;
 end;

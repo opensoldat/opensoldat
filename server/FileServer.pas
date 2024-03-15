@@ -237,8 +237,9 @@ begin
       end;
     end;
   end else
+  begin
     AResponse.Free;
-
+  end;
 end;
 {$POP}
 
