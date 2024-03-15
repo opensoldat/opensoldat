@@ -109,7 +109,7 @@ begin
   if Style = BULLET_STYLE_FRAGNADE then
     hm := Guns[FRAGGRENADE].HitMultiply;
 
-  i := CreateBullet(a, b, BulletSnap.WeaponNum, BulletSnap.Owner, 255, hm, false, true);
+  i := CreateBullet(a, b, BulletSnap.WeaponNum, BulletSnap.Owner, 255, hm, False, true);
 
     Bullet[i].OwnerPingTick := Sprite[BulletSnap.Owner].Player.PingTicks +
       PingTicksAdd;

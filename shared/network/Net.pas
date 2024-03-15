@@ -1107,7 +1107,7 @@ begin
         // they already received the UnAccepted packet.
         if not ReceivedUnAccepted then
           RenderGameInfo('Network error: ' + WideString(pInfo.m_info.m_szEndDebug));
-        NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, nil, false);
+        NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, nil, False);
       end;
       k_ESteamNetworkingConnectionState_Connecting:
       begin

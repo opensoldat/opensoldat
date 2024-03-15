@@ -49,7 +49,7 @@ begin
 
   for j := 1 to MAX_PLAYERS do
   begin
-    HeartBeatMsg.Active[j] := false;
+    HeartBeatMsg.Active[j] := False;
     HeartBeatMsg.Kills[j] := 0;
     HeartBeatMsg.Caps[j] := 0;
     HeartBeatMsg.Team[j] := 0;

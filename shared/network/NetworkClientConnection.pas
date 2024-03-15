@@ -199,7 +199,7 @@ begin
 
     AddLineToLogFile(GameLog, 'Client Disconnect from ' + UDP.GetStringAddress(@UDP.Address, True), ConsoleLogFileName);
     UDP.ProcessLoop;
-    UDP.Disconnect(false);
+    UDP.Disconnect(False);
   end else
   begin
     UDP.Disconnect(true);

@@ -71,7 +71,7 @@ begin
 
   i := VoteOnMsg.Who;
 
-  StatsMenuShow := false;
+  StatsMenuShow := False;
 
   StartVote(i, VoteOnMsg.VoteType, VoteOnMsg.TargetName, VoteOnMsg.Reason);
 end;
@@ -191,7 +191,7 @@ begin
     else
     begin
       CameraFollowSprite := MySprite;
-      TargetMode := false;
+      TargetMode := False;
     end;
 
     if (FreeCamMsg.TargetPos.x <> 0.0) and

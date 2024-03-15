@@ -102,7 +102,7 @@ begin
     if Thing[i].HoldingSprite > 0 then
     begin
       Sprite[ThingSnap.Owner].HoldedThing := i;
-      Sprite[ThingSnap.Owner].OnGround := false;
+      Sprite[ThingSnap.Owner].OnGround := False;
     end;
 
     Thing[i].Color := Sprite[ThingSnap.Owner].Player.ShirtColor;
@@ -130,7 +130,7 @@ begin
         Thing[i].Skeleton.OldPos[d].Y := ThingSnap.OldPos[d].Y;
       end;
 
-  Thing[i].StaticType := false;
+  Thing[i].StaticType := False;
 
   if Thing[i].Style = OBJECT_RAMBO_BOW then
     GameThingTarget := i;
@@ -242,7 +242,7 @@ begin
     end;
 
   Thing[i].Timeout := ThingMustSnap.Timeout;
-  Thing[i].StaticType := false;
+  Thing[i].StaticType := False;
   if Thing[i].Style = OBJECT_RAMBO_BOW then
     GameThingTarget := i;
 end;

@@ -97,7 +97,7 @@ begin
     SpriteParts.Pos[i] := SpriteSnap.Pos;
   end;
 
-  Sprite[i].DeadMeat := false;
+  Sprite[i].DeadMeat := False;
 
   if i <> MySprite then
   begin
@@ -212,7 +212,7 @@ begin
     SpriteParts.Pos[i] := SpriteSnapMajor.Pos;
   end;
 
-  Sprite[i].DeadMeat := false;
+  Sprite[i].DeadMeat := False;
 
   if i <> MySprite then
   begin
@@ -438,15 +438,15 @@ begin
   Sprite[i].Skeleton.Constraints[21].Active := true;
   Sprite[i].Skeleton.Constraints[23].Active := true;
   if Deathsnap.Constraints and B1 = B1 then
-    Sprite[i].Skeleton.Constraints[2].Active := false;
+    Sprite[i].Skeleton.Constraints[2].Active := False;
   if Deathsnap.Constraints and B2 = B2 then
-    Sprite[i].Skeleton.Constraints[4].Active := false;
+    Sprite[i].Skeleton.Constraints[4].Active := False;
   if Deathsnap.Constraints and B3 = B3 then
-    Sprite[i].Skeleton.Constraints[20].Active := false;
+    Sprite[i].Skeleton.Constraints[20].Active := False;
   if Deathsnap.Constraints and B4 = B4 then
-    Sprite[i].Skeleton.Constraints[21].Active := false;
+    Sprite[i].Skeleton.Constraints[21].Active := False;
   if Deathsnap.Constraints and B5 = B5 then
-    Sprite[i].Skeleton.Constraints[23].Active := false;
+    Sprite[i].Skeleton.Constraints[23].Active := False;
 
   Sprite[i].Weapon := Guns[NOWEAPON];
   Sprite[i].RespawnCounter := DeathSnap.RespawnCounter;

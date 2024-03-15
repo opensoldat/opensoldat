@@ -285,7 +285,7 @@ begin
 
         if BodyAnimation.ID = HandsUpAim.ID then
           if BodyAnimation.CurrFrame <> 11 then
-            Control.Fire := false;
+            Control.Fire := False;
 
         {
         if Brain.Camper > 128 then
