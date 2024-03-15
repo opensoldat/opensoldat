@@ -77,10 +77,7 @@ end;
 
 procedure THTTPServer.CheckConnect(Sender: TObject; ASocket: LongInt; var Allow: Boolean);
 begin
-  if Self.ConnectionCount >= fileserver_maxconnections.Value then
-    Allow := False
-  else
-    Allow := True;
+  Allow := Self.ConnectionCount < fileserver_maxconnections.Value;
 end;
 {$POP}
 
