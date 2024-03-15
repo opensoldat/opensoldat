@@ -17,10 +17,7 @@ uses
 
   // Library units
   fpjson,
-  fphttpclient,
-
-  // Project units
-  Constants;
+  fphttpclient;
 
 
 type
