@@ -67,8 +67,8 @@ type
   PBind = ^TBind;
   TBind = record
     Action: TAction;
-    keyId: LongWord;
-    keyMod: TKeyMods;
+    KeyId: LongWord;
+    KeyMod: TKeyMods;
     Command: WideString;
     Specificity: UInt32;  // Used to sort/prioritize binds.
   end;
@@ -167,21 +167,21 @@ begin
   KeyMods := KeyMods and KM_ALL;
 
   if key = 'mousewheel up' then
-    b.keyId := KEYID_MOUSEWHEEL_UP
+    b.KeyId := KEYID_MOUSEWHEEL_UP
   else if key = 'mousewheel down' then
-    b.keyId := KEYID_MOUSEWHEEL_DOWN
+    b.KeyId := KEYID_MOUSEWHEEL_DOWN
   else if AnsiContainsStr(key, 'mouse') = true then
-    b.keyId := 300 + StrToIntDef(Copy(Key, 6, 1), 1)
+    b.KeyId := 300 + StrToIntDef(Copy(Key, 6, 1), 1)
   else
-    b.keyId := SDL_GetScancodeFromName(Pchar(key));
+    b.KeyId := SDL_GetScancodeFromName(Pchar(key));
 
-  if b.keyId = 0 then
+  if b.KeyId = 0 then
   begin
     Debug('[INPUT] Key ' + key + ' is invalid');
     Exit;
   end;
 
-  if Assigned(FindKeyBind(KeyMods, b.keyId, True)) then
+  if Assigned(FindKeyBind(KeyMods, b.KeyId, True)) then
   begin
     Debug('[INPUT] Key ' + key + ' is already binded');
     Exit;
@@ -211,7 +211,7 @@ begin
   Binds[id] := b;
 
   Debug('[INPUT] BindKey: Key: ' + key + ' (' +
-        IntToStr(Binds[id].keyId) + '), Mod: ' + IntToStr(Binds[id].keyMod) +
+        IntToStr(Binds[id].KeyId) + '), Mod: ' + IntToStr(Binds[id].KeyMod) +
         ' Command: ' + command);
   Result := True;
 end;
@@ -229,7 +229,7 @@ begin
   begin
     for i := Low(Binds) to High(Binds) do
     begin
-      if (Binds[i].KeyId = KeyCode) and (Binds[i].keymod = KeyMods) then
+      if (Binds[i].KeyId = KeyCode) and (Binds[i].KeyMod = KeyMods) then
       begin
         Result := @Binds[i];
         Exit;
@@ -240,7 +240,7 @@ begin
   begin
     for i := Low(Binds) to High(Binds) do
     begin
-      if (Binds[i].KeyId = KeyCode) and KeyModsMatch(Binds[i].keymod, KeyMods, False) then
+      if (Binds[i].KeyId = KeyCode) and KeyModsMatch(Binds[i].KeyMod, KeyMods, False) then
       begin
         Result := @Binds[i];
         Exit;
@@ -296,7 +296,7 @@ begin
   if Exclusive then
     Result := Result and ((BindKeyMods and $FFFF) = KeyMods)
   else
-    Result := Result and ((Keymods and BindKeyMods) = (BindKeyMods and $FFFF));
+    Result := Result and ((KeyMods and BindKeyMods) = (BindKeyMods and $FFFF));
 end;
 
 procedure UnbindAll;
