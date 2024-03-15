@@ -170,7 +170,7 @@ begin
     b.KeyId := KEYID_MOUSEWHEEL_UP
   else if Key = 'mousewheel down' then
     b.KeyId := KEYID_MOUSEWHEEL_DOWN
-  else if AnsiContainsStr(Key, 'mouse') = true then
+  else if AnsiContainsStr(Key, 'mouse') = True then
     b.KeyId := 300 + StrToIntDef(Copy(Key, 6, 1), 1)
   else
     b.KeyId := SDL_GetScancodeFromName(Pchar(Key));

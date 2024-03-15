@@ -139,7 +139,7 @@ begin
         a.x := a.x - Sign(BStraight.x) * Abs(BNorm.y) * 3.0;
         a.y := a.y + Sign(BStraight.y) * Abs(BNorm.x) * 3.0;
 
-        k := CreateBullet(a, bx, BulletSnap.WeaponNum, BulletSnap.Owner, 255, i, false, true);
+        k := CreateBullet(a, bx, BulletSnap.WeaponNum, BulletSnap.Owner, 255, i, False, True);
 
         if (MySprite > 0) and (BulletSnap.Owner > 0) then
           for c := 1 to pa do
