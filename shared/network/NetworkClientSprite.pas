@@ -379,6 +379,7 @@ begin
     Exit;
 
   for d := 1 to 16 do
+  begin
     if (Round(DeathSnap.Pos[d].X)    <> 0) and
        (Round(DeathSnap.Pos[d].Y)    <> 0) and
        (Round(DeathSnap.OldPos[d].X) <> 0) and
@@ -418,6 +419,7 @@ begin
         Sprite[i].Skeleton.OldPos[20].Y := DeathSnap.OldPos[16].Y;
       end;
     end;
+  end;
 
   b.x := 0;
   b.y := 0;
