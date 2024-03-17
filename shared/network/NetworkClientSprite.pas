@@ -134,7 +134,7 @@ begin
 
   // kill the bow
   if (Sprite[i].Weapon.Num = Guns[BOW].Num) or
-    (Sprite[i].Weapon.Num = Guns[BOW2].Num) then
+     (Sprite[i].Weapon.Num = Guns[BOW2].Num) then
     for j := 1 to MAX_THINGS do
       if (Thing[j].Active) and (Thing[j].Style = OBJECT_RAMBO_BOW) then
       begin
@@ -237,7 +237,7 @@ begin
 
   // kill the bow
   if (Sprite[i].Weapon.Num = Guns[BOW].Num) or
-    (Sprite[i].Weapon.Num = Guns[BOW2].Num) then
+     (Sprite[i].Weapon.Num = Guns[BOW2].Num) then
     for j := 1 to MAX_THINGS do
       if (Thing[j].Active) and (Thing[j].Style = OBJECT_RAMBO_BOW) then
       begin
@@ -295,10 +295,10 @@ begin
   ClientMsg.SecondaryWeaponNum := Sprite[MySprite].SecondaryWeapon.Num;
   ClientMsg.Position           := Sprite[MySprite].Position;
 
-  if (ClientMsg.AmmoCount = OldClientSnapshotMsg.AmmoCount) and
-     (ClientMsg.WeaponNum = OldClientSnapshotMsg.WeaponNum) and
+  if (ClientMsg.AmmoCount          = OldClientSnapshotMsg.AmmoCount) and
+     (ClientMsg.WeaponNum          = OldClientSnapshotMsg.WeaponNum) and
      (ClientMsg.SecondaryWeaponNum = OldClientSnapshotMsg.SecondaryWeaponNum) and
-     (ClientMsg.Position = OldClientSnapshotMsg.Position) then
+     (ClientMsg.Position           = OldClientSnapshotMsg.Position) then
     Exit;
 
   OldClientSnapshotMsg := ClientMsg;
@@ -379,8 +379,8 @@ begin
     Exit;
 
   for d := 1 to 16 do
-    if (Round(DeathSnap.Pos[d].X) <> 0) and
-       (Round(DeathSnap.Pos[d].Y) <> 0) and
+    if (Round(DeathSnap.Pos[d].X)    <> 0) and
+       (Round(DeathSnap.Pos[d].Y)    <> 0) and
        (Round(DeathSnap.OldPos[d].X) <> 0) and
        (Round(DeathSnap.OldPos[d].Y) <> 0) then
     begin
@@ -425,14 +425,14 @@ begin
 
   // death!
   if (Sprite[i].Health < 1) and
-    (Sprite[i].Health > HEADCHOPDEATHHEALTH) then
+     (Sprite[i].Health > HEADCHOPDEATHHEALTH) then
     Sprite[i].Die(NORMAL_DEATH, Deathsnap.Killer,
       DeathSnap.Where, Deathsnap.KillBullet, b)
-  else if (Sprite[i].Health<(HEADCHOPDEATHHEALTH + 1)) and
-    (Sprite[i].Health > BRUTALDEATHHEALTH) then
+  else if (Sprite[i].Health < (HEADCHOPDEATHHEALTH + 1)) and
+          (Sprite[i].Health > BRUTALDEATHHEALTH) then
     Sprite[i].Die(HEADCHOP_DEATH, Deathsnap.Killer, DeathSnap.Where,
       Deathsnap.KillBullet, b)
-  else if (Sprite[i].Health<(BRUTALDEATHHEALTH + 1)) then
+  else if (Sprite[i].Health < (BRUTALDEATHHEALTH + 1)) then
     Sprite[i].Die(BRUTAL_DEATH, Deathsnap.Killer, DeathSnap.Where,
       Deathsnap.KillBullet, b);
 
