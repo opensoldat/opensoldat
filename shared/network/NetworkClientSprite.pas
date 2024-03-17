@@ -598,9 +598,8 @@ begin
 
   // Older than Heartbeat Drop the Packet
   if not DemoPlayer.Active and (DeltaMov.ServerTick < LastHeartBeatCounter) then
-  begin
     Exit;
-  end;
+
   i := DeltaMov.Num;
 
   if (i < 1) or (i > MAX_SPRITES) then
@@ -631,6 +630,7 @@ begin
   DeltaMouse := PMsg_ServerSpriteDelta_MouseAim(NetMessage^.m_pData)^;
 
   i := DeltaMouse.Num;
+
   if (i < 1) or (i > MAX_SPRITES) then
     Exit;
   if not Sprite[i].Active then
