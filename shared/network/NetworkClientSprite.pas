@@ -61,7 +61,7 @@ uses
 
 
 var
-  OldClientSnapshotMsg: TMsg_ClientSpriteSnapshot;
+  OldClientSnapshotMsg:    TMsg_ClientSpriteSnapshot;
   OldClientSnapshotMovMsg: TMsg_ClientSpriteSnapshot_Mov;
 
 
