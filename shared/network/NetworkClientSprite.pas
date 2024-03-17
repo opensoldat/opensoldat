@@ -544,7 +544,7 @@ begin
   end;
 
   // Explode - lag compensate
-  if Deathsnap.KillBullet = 7 then // M79
+  if Deathsnap.KillBullet = 7 then  // M79
     for j := MAX_BULLETS downto 1 do
       if (Bullet[j].Active) and (Bullet[j].Owner = Deathsnap.Killer) and
          (Bullet[j].Style = Guns[M79].BulletStyle) then
@@ -556,7 +556,7 @@ begin
         Break;
       end;
 
-  if Deathsnap.KillBullet = 224 then {LAW}
+  if Deathsnap.KillBullet = 224 then  // LAW
     for j := MAX_BULLETS downto 1 do
       if (Bullet[j].Active) and (Bullet[j].Owner = Deathsnap.Killer) and
          (Bullet[j].Style = Guns[LAW].BulletStyle) then
@@ -568,7 +568,7 @@ begin
         Break;
       end;
 
-  if Deathsnap.KillBullet = 222 then {grenade}
+  if Deathsnap.KillBullet = 222 then  // grenade
     for j := MAX_BULLETS downto 1 do
       if (Bullet[j].Active) and (Bullet[j].Owner = Deathsnap.Killer) and
          (Bullet[j].Style = Guns[FRAGGRENADE].BulletStyle) then
