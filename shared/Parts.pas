@@ -42,11 +42,11 @@ type
   end;
 
   ParticleSystem = object
-    Active: array[1..NUM_PARTICLES] of Boolean;
-    Pos: array[1..NUM_PARTICLES] of TVector2;
-    Velocity: array[1..NUM_PARTICLES] of TVector2;
-    OldPos: array[1..NUM_PARTICLES] of TVector2;
-    Forces: array[1..NUM_PARTICLES] of TVector2;
+    Active:      array[1..NUM_PARTICLES] of Boolean;
+    Pos:         array[1..NUM_PARTICLES] of TVector2;
+    Velocity:    array[1..NUM_PARTICLES] of TVector2;
+    OldPos:      array[1..NUM_PARTICLES] of TVector2;
+    Forces:      array[1..NUM_PARTICLES] of TVector2;
     OneOverMass: array[1..NUM_PARTICLES] of Single;
     TimeStep: Single;
     GravityMultiplier, VDamping, EDamping: Single;
