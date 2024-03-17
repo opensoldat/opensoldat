@@ -89,12 +89,12 @@ begin
   // CLIENT RESPAWN
   if Sprite[i].DeadMeat then
   begin
-    SpriteParts.OldPos[i] := SpriteParts.Pos[i];
-    SpriteParts.Pos[i] := SpriteSnap.Pos;
+    SpriteParts.OldPos[i]   := SpriteParts.Pos[i];
+    SpriteParts.Pos[i]      := SpriteSnap.Pos;
     SpriteParts.Velocity[i] := SpriteSnap.Velocity;
     Sprite[i].Respawn;
-    Sprite[i].OldDeadMeat := Sprite[i].DeadMeat;
-    SpriteParts.Pos[i] := SpriteSnap.Pos;
+    Sprite[i].OldDeadMeat   := Sprite[i].DeadMeat;
+    SpriteParts.Pos[i]      := SpriteSnap.Pos;
   end;
 
   Sprite[i].DeadMeat := False;
@@ -103,8 +103,8 @@ begin
   begin
     if Sprite[i].Health = SpriteSnap.Health then
     begin
-      SpriteParts.OldPos[i] := SpriteParts.Pos[i];
-      SpriteParts.Pos[i] := SpriteSnap.Pos;
+      SpriteParts.OldPos[i]   := SpriteParts.Pos[i];
+      SpriteParts.Pos[i]      := SpriteSnap.Pos;
       SpriteParts.Velocity[i] := SpriteSnap.Velocity;
     end;
 
@@ -161,7 +161,7 @@ begin
   Sprite[i].TertiaryWeapon.AmmoCount := SpriteSnap.GrenadeCount;
 
   Sprite[i].Health := SpriteSnap.Health;
-  Sprite[i].Vest := SpriteSnap.Vest;
+  Sprite[i].Vest   := SpriteSnap.Vest;
   if Sprite[i].Vest > DEFAULTVEST then
     Sprite[i].Vest := DEFAULTVEST;
 
@@ -198,18 +198,18 @@ begin
     Exit;
   end;
 
-  ClientTickCount := SpriteSnapMajor.ServerTicks;
+  ClientTickCount      := SpriteSnapMajor.ServerTicks;
   LastHeartBeatCounter := SpriteSnapMajor.ServerTicks;
 
   // CLIENT RESPAWN
   if Sprite[i].DeadMeat then
   begin
-    SpriteParts.OldPos[i] := SpriteParts.Pos[i];
-    SpriteParts.Pos[i] := SpriteSnapMajor.Pos;
+    SpriteParts.OldPos[i]   := SpriteParts.Pos[i];
+    SpriteParts.Pos[i]      := SpriteSnapMajor.Pos;
     SpriteParts.Velocity[i] := SpriteSnapMajor.Velocity;
     Sprite[i].Respawn;
-    Sprite[i].OldDeadMeat := Sprite[i].DeadMeat;
-    SpriteParts.Pos[i] := SpriteSnapMajor.Pos;
+    Sprite[i].OldDeadMeat   := Sprite[i].DeadMeat;
+    SpriteParts.Pos[i]      := SpriteSnapMajor.Pos;
   end;
 
   Sprite[i].DeadMeat := False;
@@ -218,8 +218,8 @@ begin
   begin
     if Sprite[i].Health = SpriteSnapMajor.Health then
     begin
-      SpriteParts.OldPos[i] := SpriteParts.Pos[i];
-      SpriteParts.Pos[i] := SpriteSnapMajor.Pos;
+      SpriteParts.OldPos[i]   := SpriteParts.Pos[i];
+      SpriteParts.Pos[i]      := SpriteSnapMajor.Pos;
       SpriteParts.Velocity[i] := SpriteSnapMajor.Velocity;
     end;
 
@@ -249,7 +249,7 @@ begin
   begin
     if (not TargetMode) then
     begin
-      CameraFollowSprite := MySprite;
+      CameraFollowSprite      := MySprite;
       Sprite[i].Player.Camera := MySprite;
     end;
   end;
@@ -286,11 +286,11 @@ var
 begin
   ClientMsg.Header.ID := MsgID_ClientSpriteSnapshot;
 
-  ClientMsg.AmmoCount := Sprite[MySprite].Weapon.AmmoCount;
+  ClientMsg.AmmoCount          := Sprite[MySprite].Weapon.AmmoCount;
   ClientMsg.SecondaryAmmoCount := Sprite[MySprite].SecondaryWeapon.AmmoCount;
-  ClientMsg.WeaponNum := Sprite[MySprite].Weapon.Num;
+  ClientMsg.WeaponNum          := Sprite[MySprite].Weapon.Num;
   ClientMsg.SecondaryWeaponNum := Sprite[MySprite].SecondaryWeapon.Num;
-  ClientMsg.Position := Sprite[MySprite].Position;
+  ClientMsg.Position           := Sprite[MySprite].Position;
 
   if (ClientMsg.AmmoCount = OldClientSnapshotMsg.AmmoCount) and
      (ClientMsg.WeaponNum = OldClientSnapshotMsg.WeaponNum) and
@@ -311,8 +311,8 @@ var
 begin
   ClientMsg.Header.ID := MsgID_ClientSpriteSnapshot_Mov;
 
-  ClientMsg.Pos := SpriteParts.Pos[MySprite];
-  ClientMsg.Velocity := SpriteParts.Velocity[MySprite];
+  ClientMsg.Pos       := SpriteParts.Pos[MySprite];
+  ClientMsg.Velocity  := SpriteParts.Velocity[MySprite];
   ClientMsg.MouseAimX := Sprite[MySprite].Control.MouseAimX;
   ClientMsg.MouseAimY := Sprite[MySprite].Control.MouseAimY;
 
@@ -380,36 +380,36 @@ begin
        (Round(DeathSnap.OldPos[d].X) <> 0) and
        (Round(DeathSnap.OldPos[d].Y) <> 0) then
     begin
-      Sprite[i].Skeleton.Pos[d].X := DeathSnap.Pos[d].X;
-      Sprite[i].Skeleton.Pos[d].Y := DeathSnap.Pos[d].Y;
+      Sprite[i].Skeleton.Pos[d].X    := DeathSnap.Pos[d].X;
+      Sprite[i].Skeleton.Pos[d].Y    := DeathSnap.Pos[d].Y;
       Sprite[i].Skeleton.OldPos[d].X := DeathSnap.OldPos[d].X;
       Sprite[i].Skeleton.OldPos[d].Y := DeathSnap.OldPos[d].Y;
 
       if d = 1 then
       begin
-        Sprite[i].Skeleton.Pos[17].X := DeathSnap.Pos[1].X;
-        Sprite[i].Skeleton.Pos[17].Y := DeathSnap.Pos[1].Y;
+        Sprite[i].Skeleton.Pos[17].X    := DeathSnap.Pos[1].X;
+        Sprite[i].Skeleton.Pos[17].Y    := DeathSnap.Pos[1].Y;
         Sprite[i].Skeleton.OldPos[17].X := DeathSnap.OldPos[1].X;
         Sprite[i].Skeleton.OldPos[17].Y := DeathSnap.OldPos[1].Y;
       end;
       if d = 2 then
       begin
-        Sprite[i].Skeleton.Pos[18].X := DeathSnap.Pos[2].X;
-        Sprite[i].Skeleton.Pos[18].Y := DeathSnap.Pos[2].Y;
+        Sprite[i].Skeleton.Pos[18].X    := DeathSnap.Pos[2].X;
+        Sprite[i].Skeleton.Pos[18].Y    := DeathSnap.Pos[2].Y;
         Sprite[i].Skeleton.OldPos[18].X := DeathSnap.OldPos[2].X;
         Sprite[i].Skeleton.OldPos[18].Y := DeathSnap.OldPos[2].Y;
       end;
       if d = 15 then
       begin
-        Sprite[i].Skeleton.Pos[19].X := DeathSnap.Pos[15].X;
-        Sprite[i].Skeleton.Pos[19].Y := DeathSnap.Pos[15].Y;
+        Sprite[i].Skeleton.Pos[19].X    := DeathSnap.Pos[15].X;
+        Sprite[i].Skeleton.Pos[19].Y    := DeathSnap.Pos[15].Y;
         Sprite[i].Skeleton.OldPos[19].X := DeathSnap.OldPos[15].X;
         Sprite[i].Skeleton.OldPos[19].Y := DeathSnap.OldPos[15].Y;
       end;
       if d = 16 then
       begin
-        Sprite[i].Skeleton.Pos[20].X := DeathSnap.Pos[16].X;
-        Sprite[i].Skeleton.Pos[20].Y := DeathSnap.Pos[16].Y;
+        Sprite[i].Skeleton.Pos[20].X    := DeathSnap.Pos[16].X;
+        Sprite[i].Skeleton.Pos[20].Y    := DeathSnap.Pos[16].Y;
         Sprite[i].Skeleton.OldPos[20].X := DeathSnap.OldPos[16].X;
         Sprite[i].Skeleton.OldPos[20].Y := DeathSnap.OldPos[16].Y;
       end;
@@ -432,15 +432,15 @@ begin
     Sprite[i].Die(BRUTAL_DEATH, Deathsnap.Killer, DeathSnap.Where,
       Deathsnap.KillBullet, b);
 
-  Sprite[i].Skeleton.Constraints[2].Active := True;
-  Sprite[i].Skeleton.Constraints[4].Active := True;
+  Sprite[i].Skeleton.Constraints[2].Active  := True;
+  Sprite[i].Skeleton.Constraints[4].Active  := True;
   Sprite[i].Skeleton.Constraints[20].Active := True;
   Sprite[i].Skeleton.Constraints[21].Active := True;
   Sprite[i].Skeleton.Constraints[23].Active := True;
   if Deathsnap.Constraints and B1 = B1 then
-    Sprite[i].Skeleton.Constraints[2].Active := False;
+    Sprite[i].Skeleton.Constraints[2].Active  := False;
   if Deathsnap.Constraints and B2 = B2 then
-    Sprite[i].Skeleton.Constraints[4].Active := False;
+    Sprite[i].Skeleton.Constraints[4].Active  := False;
   if Deathsnap.Constraints and B3 = B3 then
     Sprite[i].Skeleton.Constraints[20].Active := False;
   if Deathsnap.Constraints and B4 = B4 then
@@ -488,7 +488,7 @@ begin
       ShotDistanceShow := KILLMESSAGEWAIT - 30;
       ShotDistance := Deathsnap.ShotDistance;
       ShotRicochet := Deathsnap.ShotRicochet;
-      ShotLife := Deathsnap.ShotLife;
+      ShotLife     := Deathsnap.ShotLife;
     end;
   end;
 
@@ -553,7 +553,7 @@ begin
          (Bullet[j].Style = Guns[M79].BulletStyle) then
       begin
         Bulletparts.OldPos[j] := Sprite[i].Skeleton.Pos[8];
-        Bulletparts.Pos[j] := Sprite[i].Skeleton.Pos[8];
+        Bulletparts.Pos[j]    := Sprite[i].Skeleton.Pos[8];
         Bullet[j].Hit(3);
         Bullet[j].Kill;
         Break;
@@ -565,7 +565,7 @@ begin
          (Bullet[j].Style = Guns[LAW].BulletStyle) then
       begin
         Bulletparts.OldPos[j] := Sprite[i].Skeleton.Pos[8];
-        Bulletparts.Pos[j] := Sprite[i].Skeleton.Pos[8];
+        Bulletparts.Pos[j]    := Sprite[i].Skeleton.Pos[8];
         Bullet[j].Hit(3);
         Bullet[j].Kill;
         Break;
@@ -580,7 +580,7 @@ begin
         if hm < AFTER_EXPLOSION_RADIUS then
         begin
           Bulletparts.OldPos[j] := Spriteparts.Pos[i];
-          Bulletparts.Pos[j] := Spriteparts.Pos[i];
+          Bulletparts.Pos[j]    := Spriteparts.Pos[i];
           Bullet[j].Hit(4);
           Bullet[j].Kill;
         end;
@@ -612,7 +612,7 @@ begin
 
   //a := Vec2Subtract(SpriteParts.Pos[i], DeltaMov.Pos);
 
-  SpriteParts.Pos[i] := DeltaMov.Pos;
+  SpriteParts.Pos[i]      := DeltaMov.Pos;
   SpriteParts.Velocity[i] := DeltaMov.Velocity;
 
   Sprite[i].Control.MouseAimY := DeltaMov.MouseAimY;
@@ -645,7 +645,7 @@ begin
   else
     Sprite[i].BodyApplyAnimation(Aim, 1);
 
-  Sprite[i].Weapon.FireIntervalPrev := 0;
+  Sprite[i].Weapon.FireIntervalPrev  := 0;
   Sprite[i].Weapon.FireIntervalCount := 0;
 end;
 
