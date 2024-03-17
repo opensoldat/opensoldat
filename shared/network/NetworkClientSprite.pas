@@ -70,7 +70,8 @@ var
   SpriteSnap: TMsg_ServerSpriteSnapshot;
   i, j: Integer;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerSpriteSnapshot), NetMessage^.m_cbSize, MsgID_ServerSpriteSnapshot) then
+  if not VerifyPacket(sizeof(TMsg_ServerSpriteSnapshot),
+    NetMessage^.m_cbSize, MsgID_ServerSpriteSnapshot) then
     Exit;
 
   SpriteSnap := PMsg_ServerSpriteSnapshot(NetMessage^.m_pData)^;
@@ -181,7 +182,8 @@ var
   SpriteSnapMajor: TMsg_ServerSpriteSnapshot_Major;
   i, j: Integer;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerSpriteSnapshot_Major), NetMessage^.m_cbSize, MsgID_ServerSpriteSnapshot_Major) then
+  if not VerifyPacket(sizeof(TMsg_ServerSpriteSnapshot_Major),
+    NetMessage^.m_cbSize, MsgID_ServerSpriteSnapshot_Major) then
     Exit;
 
   SpriteSnapMajor := PMsg_ServerSpriteSnapshot_Major(NetMessage^.m_pData)^;
@@ -261,7 +263,8 @@ var
   SkeletonSnap: TMsg_ServerSkeletonSnapshot;
   i: Integer;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerSkeletonSnapshot), NetMessage^.m_cbSize, MsgID_ServerSkeletonSnapshot) then
+  if not VerifyPacket(sizeof(TMsg_ServerSkeletonSnapshot),
+    NetMessage^.m_cbSize, MsgID_ServerSkeletonSnapshot) then
     Exit;
 
   SkeletonSnap := PMsg_ServerSkeletonSnapshot(NetMessage^.m_pData)^;
@@ -362,7 +365,8 @@ var
   col1, col2: Cardinal;
   hm: Single = 0.0;
 begin
-  if not VerifyPacket(sizeof(TMsg_SpriteDeath), NetMessage^.m_cbSize, MsgID_SpriteDeath) then
+  if not VerifyPacket(sizeof(TMsg_SpriteDeath),
+    NetMessage^.m_cbSize, MsgID_SpriteDeath) then
     Exit;
 
   DeathSnap := PMsg_SpriteDeath(NetMessage^.m_pData)^;
@@ -593,7 +597,8 @@ var
   i: Integer;
   //a: TVector2;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerSpriteDelta_Movement), NetMessage^.m_cbSize, MsgID_Delta_Movement) then
+  if not VerifyPacket(sizeof(TMsg_ServerSpriteDelta_Movement),
+    NetMessage^.m_cbSize, MsgID_Delta_Movement) then
     Exit;
 
   DeltaMov := PMsg_ServerSpriteDelta_Movement(NetMessage^.m_pData)^;
@@ -626,7 +631,8 @@ var
   i: Integer;
   DeltaMouse: TMsg_ServerSpriteDelta_MouseAim;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerSpriteDelta_MouseAim), NetMessage^.m_cbSize, MsgID_Delta_MouseAim) then
+  if not VerifyPacket(sizeof(TMsg_ServerSpriteDelta_MouseAim),
+    NetMessage^.m_cbSize, MsgID_Delta_MouseAim) then
     Exit;
 
   DeltaMouse := PMsg_ServerSpriteDelta_MouseAim(NetMessage^.m_pData)^;
@@ -653,7 +659,8 @@ procedure ClientHandleDelta_Weapons(NetMessage: PSteamNetworkingMessage_t);
 var
   i: Integer;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerSpriteDelta_Weapons), NetMessage^.m_cbSize, MsgID_Delta_Weapons) then
+  if not VerifyPacket(sizeof(TMsg_ServerSpriteDelta_Weapons),
+    NetMessage^.m_cbSize, MsgID_Delta_Weapons) then
     Exit;
 
   i := PMsg_ServerSpriteDelta_Weapons(NetMessage^.m_pData)^.Num;
@@ -679,7 +686,8 @@ var
   DeltaHelmet: TMsg_ServerSpriteDelta_Helmet;
   i: Integer;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerSpriteDelta_Helmet), NetMessage^.m_cbSize, MsgID_Delta_Helmet) then
+  if not VerifyPacket(sizeof(TMsg_ServerSpriteDelta_Helmet),
+    NetMessage^.m_cbSize, MsgID_Delta_Helmet) then
     Exit;
 
   DeltaHelmet := PMsg_ServerSpriteDelta_Helmet(NetMessage^.m_pData)^;
@@ -704,7 +712,8 @@ end;
 
 procedure ClientHandleClientSpriteSnapshot_Dead(NetMessage: PSteamNetworkingMessage_t);
 begin
-  if not VerifyPacket(sizeof(TMsg_ClientSpriteSnapshot_Dead), NetMessage^.m_cbSize, MsgID_ClientSpriteSnapshot_Dead) then
+  if not VerifyPacket(sizeof(TMsg_ClientSpriteSnapshot_Dead),
+    NetMessage^.m_cbSize, MsgID_ClientSpriteSnapshot_Dead) then
     Exit;
 
   if FreeCam = 0 then
