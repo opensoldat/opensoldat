@@ -429,21 +429,11 @@ begin
     Sprite[i].Die(BRUTAL_DEATH, Deathsnap.Killer, DeathSnap.Where,
       Deathsnap.KillBullet, b);
 
-  Sprite[i].Skeleton.Constraints[2].Active  := True;
-  Sprite[i].Skeleton.Constraints[4].Active  := True;
-  Sprite[i].Skeleton.Constraints[20].Active := True;
-  Sprite[i].Skeleton.Constraints[21].Active := True;
-  Sprite[i].Skeleton.Constraints[23].Active := True;
-  if Deathsnap.Constraints and B1 = B1 then
-    Sprite[i].Skeleton.Constraints[2].Active  := False;
-  if Deathsnap.Constraints and B2 = B2 then
-    Sprite[i].Skeleton.Constraints[4].Active  := False;
-  if Deathsnap.Constraints and B3 = B3 then
-    Sprite[i].Skeleton.Constraints[20].Active := False;
-  if Deathsnap.Constraints and B4 = B4 then
-    Sprite[i].Skeleton.Constraints[21].Active := False;
-  if Deathsnap.Constraints and B5 = B5 then
-    Sprite[i].Skeleton.Constraints[23].Active := False;
+  Sprite[i].Skeleton.Constraints[ 2].Active := (Deathsnap.Constraints and B1) <> B1;
+  Sprite[i].Skeleton.Constraints[ 4].Active := (Deathsnap.Constraints and B2) <> B2;
+  Sprite[i].Skeleton.Constraints[20].Active := (Deathsnap.Constraints and B3) <> B3;
+  Sprite[i].Skeleton.Constraints[21].Active := (Deathsnap.Constraints and B4) <> B4;
+  Sprite[i].Skeleton.Constraints[23].Active := (Deathsnap.Constraints and B5) <> B5;
 
   Sprite[i].Weapon := Guns[NOWEAPON];
   Sprite[i].RespawnCounter := DeathSnap.RespawnCounter;
