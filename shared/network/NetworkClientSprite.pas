@@ -389,37 +389,28 @@ begin
       Sprite[i].Skeleton.Pos[d].Y    := DeathSnap.Pos[d].Y;
       Sprite[i].Skeleton.OldPos[d].X := DeathSnap.OldPos[d].X;
       Sprite[i].Skeleton.OldPos[d].Y := DeathSnap.OldPos[d].Y;
-
-      if d = 1 then
-      begin
-        Sprite[i].Skeleton.Pos[17].X    := DeathSnap.Pos[1].X;
-        Sprite[i].Skeleton.Pos[17].Y    := DeathSnap.Pos[1].Y;
-        Sprite[i].Skeleton.OldPos[17].X := DeathSnap.OldPos[1].X;
-        Sprite[i].Skeleton.OldPos[17].Y := DeathSnap.OldPos[1].Y;
-      end;
-      if d = 2 then
-      begin
-        Sprite[i].Skeleton.Pos[18].X    := DeathSnap.Pos[2].X;
-        Sprite[i].Skeleton.Pos[18].Y    := DeathSnap.Pos[2].Y;
-        Sprite[i].Skeleton.OldPos[18].X := DeathSnap.OldPos[2].X;
-        Sprite[i].Skeleton.OldPos[18].Y := DeathSnap.OldPos[2].Y;
-      end;
-      if d = 15 then
-      begin
-        Sprite[i].Skeleton.Pos[19].X    := DeathSnap.Pos[15].X;
-        Sprite[i].Skeleton.Pos[19].Y    := DeathSnap.Pos[15].Y;
-        Sprite[i].Skeleton.OldPos[19].X := DeathSnap.OldPos[15].X;
-        Sprite[i].Skeleton.OldPos[19].Y := DeathSnap.OldPos[15].Y;
-      end;
-      if d = 16 then
-      begin
-        Sprite[i].Skeleton.Pos[20].X    := DeathSnap.Pos[16].X;
-        Sprite[i].Skeleton.Pos[20].Y    := DeathSnap.Pos[16].Y;
-        Sprite[i].Skeleton.OldPos[20].X := DeathSnap.OldPos[16].X;
-        Sprite[i].Skeleton.OldPos[20].Y := DeathSnap.OldPos[16].Y;
-      end;
     end;
   end;
+
+  Sprite[i].Skeleton.Pos[17].X    := DeathSnap.Pos[1].X;
+  Sprite[i].Skeleton.Pos[17].Y    := DeathSnap.Pos[1].Y;
+  Sprite[i].Skeleton.OldPos[17].X := DeathSnap.OldPos[1].X;
+  Sprite[i].Skeleton.OldPos[17].Y := DeathSnap.OldPos[1].Y;
+
+  Sprite[i].Skeleton.Pos[18].X    := DeathSnap.Pos[2].X;
+  Sprite[i].Skeleton.Pos[18].Y    := DeathSnap.Pos[2].Y;
+  Sprite[i].Skeleton.OldPos[18].X := DeathSnap.OldPos[2].X;
+  Sprite[i].Skeleton.OldPos[18].Y := DeathSnap.OldPos[2].Y;
+
+  Sprite[i].Skeleton.Pos[19].X    := DeathSnap.Pos[15].X;
+  Sprite[i].Skeleton.Pos[19].Y    := DeathSnap.Pos[15].Y;
+  Sprite[i].Skeleton.OldPos[19].X := DeathSnap.OldPos[15].X;
+  Sprite[i].Skeleton.OldPos[19].Y := DeathSnap.OldPos[15].Y;
+
+  Sprite[i].Skeleton.Pos[20].X    := DeathSnap.Pos[16].X;
+  Sprite[i].Skeleton.Pos[20].Y    := DeathSnap.Pos[16].Y;
+  Sprite[i].Skeleton.OldPos[20].X := DeathSnap.OldPos[16].X;
+  Sprite[i].Skeleton.OldPos[20].Y := DeathSnap.OldPos[16].Y;
 
   b.x := 0;
   b.y := 0;
