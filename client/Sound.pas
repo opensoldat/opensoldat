@@ -540,6 +540,8 @@ end;
 
 function StopSound(Channel: Integer): Boolean;
 begin
+  Assert(Channel < High(Sources));
+
   alSourceStop(Sources[Channel]);
 
   Result := False;
@@ -549,6 +551,8 @@ function SetSoundPaused(Channel: Integer; Paused: Boolean): Boolean;
 var
   State: Integer = 0;
 begin
+  Assert(Channel < High(Sources));
+
   alGetSourcei(Sources[Channel], AL_SOURCE_STATE, State);
   if (State = AL_PLAYING) and (Paused) then
     alSourcePause(Sources[Channel])
@@ -562,6 +566,8 @@ function SetVolume(Channel: Integer; Volume: Single): Boolean;
 var
   i: Integer;
 begin
+  Assert(Channel < High(Sources));
+
   if Channel = -1 then
     for i := 0 to MAX_SOURCES - 1 do
       alSourcef(Sources[i], AL_GAIN, Volume)
@@ -582,6 +588,8 @@ var
   BufferHolder: array[0..64] of ALuint;
 begin
   Channel := 64 + SpriteNum;  // use reserved chan
+
+  Assert(Channel < High(Sources));
 
   alGetSourcei(Sources[Channel], AL_BUFFERS_PROCESSED, BuffersProcessed);
   if BuffersProcessed > 0 then
