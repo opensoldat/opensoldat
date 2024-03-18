@@ -41,6 +41,7 @@ const
   RESERVED_SOURCES = 128;
   MAX_SAMPLES = 163;
   CHANNEL_WEATHER = 127;
+  MAX_VOICE_CHAT_BUFFER = 64;
 
 var
   Samp: array[1..MAX_SAMPLES] of TSoundSample;
@@ -51,7 +52,7 @@ var
   Sources: array[0..MAX_SOURCES - 1] of ALuint;
   DefaultChannel: LongInt = -1;
   {$IFDEF STEAM}
-  VoiceChatBuffer: array[0..64] of ALuint;
+  VoiceChatBuffer: array[0..MAX_VOICE_CHAT_BUFFER - 1] of ALuint;
   VoiceBufferQueue: TFPGList<LongWord>;
   {$ENDIF}
 
@@ -118,7 +119,7 @@ begin
   Result := True;
 
   {$IFDEF STEAM}
-  alGenBuffers(64, @VoiceChatBuffer);
+  alGenBuffers(MAX_VOICE_CHAT_BUFFER, @VoiceChatBuffer);
   VoiceBufferQueue := TFPGLIST<LongWord>.Create;
   for i := Low(VoiceChatBuffer) to High(VoiceChatBuffer) do
     VoiceBufferQueue.Add(VoiceChatBuffer[i]);
