@@ -101,9 +101,11 @@ begin
   ALDevice := alcOpenDevice(nil);
   if ALDevice = nil then
     Exit;
+
   ALContext := alcCreateContext(ALDevice, nil);
   if ALContext = nil then
     Exit;
+
   if not alcMakeContextCurrent(ALContext) then
     Exit;
 
@@ -539,6 +541,7 @@ end;
 function StopSound(Channel: Integer): Boolean;
 begin
   alSourceStop(Sources[Channel]);
+
   Result := False;
 end;
 
@@ -564,6 +567,7 @@ begin
       alSourcef(Sources[i], AL_GAIN, Volume)
   else
     alSourcef(Sources[Channel], AL_GAIN, Volume);
+
   Result := True;
 end;
 
