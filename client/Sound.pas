@@ -551,8 +551,8 @@ var
 begin
   alGetSourcei(Sources[Channel], AL_SOURCE_STATE, State);
   if (State = AL_PLAYING) and (Paused) then
-    alSourcePause(Sources[Channel]);
-  if (State = AL_PAUSED) and (not Paused) then
+    alSourcePause(Sources[Channel])
+  else if (State = AL_PAUSED) and (not Paused) then
     alSourcePlay(Sources[Channel]);
 
   Result := False;
