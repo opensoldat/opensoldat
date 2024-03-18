@@ -329,7 +329,7 @@ begin
       if not LauncherIPC.ThreadAlive and (MainTickCounter mod launcher_ipc_reconnect_rate.Value = 0) then
          LauncherIPC.Connect(launcher_ipc_port.Value);
 
-      //UDP.FlushMsg;
+    //UDP.FlushMsg;  // TODO: is this necessary?
   end;
 end;
 
