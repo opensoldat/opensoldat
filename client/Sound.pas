@@ -115,7 +115,7 @@ begin
   if alGetError <> AL_NO_ERROR then
     Exit;
 
-  for I := 1 to MAX_SAMPLES do
+  for I := Low(Samp) to High(Samp) do
     Samp[I].Loaded := False;
 
   Result := True;
