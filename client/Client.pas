@@ -457,14 +457,14 @@ begin
   MapChangeCounter := -60;
   //WindowReady := False;
 
-  for i := 1 to MAX_SPRITES do
+  for i := Low(Sprite) to High(Sprite) do
     if Sprite[i].Active then
       Sprite[i].Kill;
-  for i := 1 to MAX_BULLETS do
+  for i := Low(Bullet) to High(Bullet) do
       Bullet[i].Kill;
-  for i := 1 to MAX_SPARKS do
+  for i := Low(Spark) to High(Spark) do
       Spark[i].Kill;
-  for i := 1 to MAX_THINGS do
+  for i := Low(Thing) to High(Thing) do
       Thing[i].Kill;
 
   // Reset World and Big Texts
