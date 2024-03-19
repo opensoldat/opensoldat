@@ -26,6 +26,7 @@ uses
   StrUtils,
   SysUtils,
   Types,
+  Math,
 
   // Library units
   {$IFDEF STEAM}
@@ -111,6 +112,7 @@ end;
 procedure CommandConnect(Args: array of AnsiString; Sender: Byte);
 var
   S: String;
+  PortPos, PassPos: Integer;
 begin
   if Length(Args) <= 1 then
   begin
@@ -121,14 +123,19 @@ begin
   if Args[0] = 'joinurl' then
   begin
     S := Args[1];
-    JoinIP := GetPiece(S, '//', 2);
-    JoinIP := GetPiece(JoinIP, ':', 1);
+    S := GetPiece(S, '//', 2);
 
-    JoinPort := GetPiece(S, ':', 3);
-    JoinPort := GetPiece(JoinPort, '/', 1);
-    JoinPort := AnsiReplaceStr(JoinPort, '/', '');
+    JoinPassword := '';
+    PassPos := S.IndexOf('/');
+    if PassPos >= 0 then
+    begin
+       JoinPassword := S.Substring(PassPos + 1);
+       S := S.Substring(0, PassPos);
+    end;
 
-    JoinPassword := GetPiece(S, '/', 4);
+    PortPos  := Max(S.IndexOf(']') + 1, S.LastIndexOf(':'));
+    JoinIP   := S.Substring(0, PortPos);
+    JoinPort := S.Substring(PortPos + 1);
   end else
   begin
     JoinIP := Args[1];
