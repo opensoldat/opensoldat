@@ -781,7 +781,11 @@ begin
   RenderHeight := r_renderheight.Value;
   RenderWidth  := r_renderwidth.Value;
 
-  SDL_Init(SDL_INIT_VIDEO);
+  if SDL_Init(SDL_INIT_VIDEO) < 0 then
+  begin
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, 'Failed', SDL_GetError, nil);
+    Exit;
+  end;
   SDL_GetCurrentDisplayMode(0, @currentDisplay);
 
   if (ScreenWidth = 0) or (ScreenHeight = 0) then
