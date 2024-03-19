@@ -146,13 +146,13 @@ begin
     if Length(Args) > 3 then
       JoinPassword := Args[3];
   end;
-  JoinServer();
+  JoinServer;
 end;
 
 procedure CommandRetry(Args: array of AnsiString; Sender: Byte);
 begin
   ExitToMenu;
-  JoinServer();
+  JoinServer;
 end;
 
 procedure CommandDisconnect(Args: array of AnsiString; Sender: Byte);

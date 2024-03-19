@@ -413,7 +413,7 @@ begin
   begin
     JoinIP := RedirectIP;
     JoinPort := IntToStr(RedirectPort);
-    JoinServer();
+    JoinServer;
   end else
   begin
     RedirectIP := '';
