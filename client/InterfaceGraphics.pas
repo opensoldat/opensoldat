@@ -1204,7 +1204,6 @@ begin
         3: GfxDrawText(_('Charlie team wins'), fragx + 50, y);
         4: GfxDrawText(_('Delta team wins'), fragx + 50, y);
       end;
-
     end;
 
     GfxTextVerticalAlign(GFX_TOP);
@@ -1470,7 +1469,6 @@ begin
           4: GfxDrawText(_('Delta'), Lines[i].x, Lines[i].y);
           5: GfxDrawText(_('Spectator'), Lines[i].x, Lines[i].y);
         end;
-
 
         if j < 5 then
         begin
