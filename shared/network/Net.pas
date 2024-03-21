@@ -1160,7 +1160,7 @@ var
   ShouldRelease: Boolean;
 begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
-    Exit; // truncated packet
+    Exit;  // truncated packet
 
   PacketHeader := PMsgHeader(IncomingMsg^.m_pData);
 
@@ -1486,7 +1486,7 @@ begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
   begin
     IncomingMsg.Release();
-    Exit; // truncated packet
+    Exit;  // truncated packet
   end;
 
   if IncomingMsg^.m_nConnUserData = 0 then
