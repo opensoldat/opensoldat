@@ -491,23 +491,23 @@ var
 begin
   Color := RGBA($FFFFFF, 127);
 
-  StartX := CameraX - (GameWidthHalf * Exp(ActualZoom));
+  StartX := CameraX - (GameWidthHalf  * Exp(ActualZoom));
   StartY := CameraY - (GameHeightHalf * Exp(ActualZoom));
-  EndX := CameraX + (GameWidthHalf * Exp(ActualZoom));
-  EndY := CameraY + (GameHeightHalf * Exp(ActualZoom));
+  EndX   := CameraX + (GameWidthHalf  * Exp(ActualZoom));
+  EndY   := CameraY + (GameHeightHalf * Exp(ActualZoom));
 
   WorldToMinimap(StartX, StartY, StartX, StartY);
   WorldToMinimap(EndX, EndY, EndX, EndY);
 
   MinX := PixelAlignX(ui_minimap_posx.Value * _rscala.x);
   MinY := PixelAlignY(ui_minimap_posy.Value);
-  MaxX := MinX + MapGfx.Minimap.Width * MapGfx.Minimap.Scale;
+  MaxX := MinX + MapGfx.Minimap.Width  * MapGfx.Minimap.Scale;
   MaxY := MinY + MapGfx.Minimap.Height * MapGfx.Minimap.Scale;
 
   StartX := Max(MinX, PixelAlignX(ui_minimap_posx.Value * _rscala.x + StartX));
   StartY := Max(MinY, PixelAlignY(ui_minimap_posy.Value + StartY));
-  EndX := Min(MaxX, PixelAlignX(ui_minimap_posx.Value * _rscala.x + EndX));
-  EndY := Min(MaxY, PixelAlignY(ui_minimap_posy.Value + EndY));
+  EndX   := Min(MaxX, PixelAlignX(ui_minimap_posx.Value * _rscala.x + EndX));
+  EndY   := Min(MaxY, PixelAlignY(ui_minimap_posy.Value + EndY));
 
   DrawBox(StartX, StartY, EndX, EndY, 0.5, Color);
 end;
