@@ -77,8 +77,8 @@ begin
 
     for d := 1 to 4 do
     begin
-      Thing[i].Skeleton.Pos[d].X := ThingSnap.Pos[d].X;
-      Thing[i].Skeleton.Pos[d].Y := ThingSnap.Pos[d].Y;
+      Thing[i].Skeleton.Pos[d].X    := ThingSnap.Pos[d].X;
+      Thing[i].Skeleton.Pos[d].Y    := ThingSnap.Pos[d].Y;
       Thing[i].Skeleton.OldPos[d].X := ThingSnap.OldPos[d].X;
       Thing[i].Skeleton.OldPos[d].Y := ThingSnap.OldPos[d].Y;
     end;
@@ -102,7 +102,7 @@ begin
     if Thing[i].HoldingSprite > 0 then
     begin
       Sprite[ThingSnap.Owner].HoldedThing := i;
-      Sprite[ThingSnap.Owner].OnGround := False;
+      Sprite[ThingSnap.Owner].OnGround    := False;
     end;
 
     Thing[i].Color := Sprite[ThingSnap.Owner].Player.ShirtColor;
@@ -113,8 +113,8 @@ begin
       and (Distance(Thing[i].Skeleton.Pos[2], ThingSnap.Pos[2]) > 10) then
       for d := 1 to 4 do
       begin
-        Thing[i].Skeleton.Pos[d].X := ThingSnap.Pos[d].X;
-        Thing[i].Skeleton.Pos[d].Y := ThingSnap.Pos[d].Y;
+        Thing[i].Skeleton.Pos[d].X    := ThingSnap.Pos[d].X;
+        Thing[i].Skeleton.Pos[d].Y    := ThingSnap.Pos[d].Y;
         Thing[i].Skeleton.OldPos[d].X := ThingSnap.OldPos[d].X;
         Thing[i].Skeleton.OldPos[d].Y := ThingSnap.OldPos[d].Y;
       end;
@@ -124,8 +124,8 @@ begin
       Spriteparts.Pos[Thing[i].HoldingSprite]) > 330 then
       for d := 1 to 4 do
       begin
-        Thing[i].Skeleton.Pos[d].X := ThingSnap.Pos[d].X;
-        Thing[i].Skeleton.Pos[d].Y := ThingSnap.Pos[d].Y;
+        Thing[i].Skeleton.Pos[d].X    := ThingSnap.Pos[d].X;
+        Thing[i].Skeleton.Pos[d].Y    := ThingSnap.Pos[d].Y;
         Thing[i].Skeleton.OldPos[d].X := ThingSnap.OldPos[d].X;
         Thing[i].Skeleton.OldPos[d].Y := ThingSnap.OldPos[d].Y;
       end;
@@ -168,8 +168,8 @@ begin
 
     for d := 1 to 4 do
     begin
-      Thing[i].Skeleton.Pos[d].X := ThingMustSnap.Pos[d].X;
-      Thing[i].Skeleton.Pos[d].Y := ThingMustSnap.Pos[d].Y;
+      Thing[i].Skeleton.Pos[d].X    := ThingMustSnap.Pos[d].X;
+      Thing[i].Skeleton.Pos[d].Y    := ThingMustSnap.Pos[d].Y;
       Thing[i].Skeleton.OldPos[d].X := ThingMustSnap.OldPos[d].X;
       Thing[i].Skeleton.OldPos[d].Y := ThingMustSnap.OldPos[d].Y;
     end;
@@ -206,7 +206,7 @@ begin
     end;
   end;
 
-  Thing[i].Owner := ThingMustSnap.Owner;
+  Thing[i].Owner         := ThingMustSnap.Owner;
   Thing[i].HoldingSprite := ThingMustSnap.HoldingSprite;
 
   // is not holded anymore
@@ -235,8 +235,8 @@ begin
   if (Thing[i].HoldingSprite = 0) and (not Thing[i].Style = OBJECT_STATIONARY_GUN) then
     for d := 1 to 4 do
     begin
-      Thing[i].Skeleton.Pos[d].X := ThingMustSnap.Pos[d].X;
-      Thing[i].Skeleton.Pos[d].Y := ThingMustSnap.Pos[d].Y;
+      Thing[i].Skeleton.Pos[d].X    := ThingMustSnap.Pos[d].X;
+      Thing[i].Skeleton.Pos[d].Y    := ThingMustSnap.Pos[d].Y;
       Thing[i].Skeleton.OldPos[d].X := ThingMustSnap.OldPos[d].X;
       Thing[i].Skeleton.OldPos[d].Y := ThingMustSnap.OldPos[d].Y;
     end;

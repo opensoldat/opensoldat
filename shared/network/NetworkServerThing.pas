@@ -74,14 +74,14 @@ begin
       ThingMsg.Num := i;
       for j := 1 to 4 do
       begin
-        ThingMsg.Pos[j].X := Thing[i].Skeleton.Pos[j].X;
-        ThingMsg.Pos[j].Y := Thing[i].Skeleton.Pos[j].Y;
+        ThingMsg.Pos[j].X    := Thing[i].Skeleton.Pos[j].X;
+        ThingMsg.Pos[j].Y    := Thing[i].Skeleton.Pos[j].Y;
         ThingMsg.OldPos[j].X := Thing[i].Skeleton.OldPos[j].X;
         ThingMsg.OldPos[j].Y := Thing[i].Skeleton.OldPos[j].Y;
       end;
 
-      ThingMsg.Owner := Thing[i].Owner;
-      ThingMsg.Style := Thing[i].Style;
+      ThingMsg.Owner         := Thing[i].Owner;
+      ThingMsg.Style         := Thing[i].Style;
       ThingMsg.HoldingSprite := Thing[i].HoldingSprite;
 
       // send only if moving
@@ -121,16 +121,16 @@ begin
   ThingMsg.Num := i;
   for j := 1 to 4 do
   begin
-    ThingMsg.Pos[j].X := Thing[i].Skeleton.Pos[j].X;
-    ThingMsg.Pos[j].Y := Thing[i].Skeleton.Pos[j].Y;
+    ThingMsg.Pos[j].X    := Thing[i].Skeleton.Pos[j].X;
+    ThingMsg.Pos[j].Y    := Thing[i].Skeleton.Pos[j].Y;
     ThingMsg.OldPos[j].X := Thing[i].Skeleton.OldPos[j].X;
     ThingMsg.OldPos[j].Y := Thing[i].Skeleton.OldPos[j].Y;
   end;
   ThingMsg.Timeout := Thing[i].Timeout;
   if Thing[i].Timeout < 1 then
     ThingMsg.Timeout := 1;
-  ThingMsg.Owner := Thing[i].Owner;
-  ThingMsg.Style := Thing[i].Style;
+  ThingMsg.Owner         := Thing[i].Owner;
+  ThingMsg.Style         := Thing[i].Style;
   ThingMsg.HoldingSprite := Thing[i].HoldingSprite;
 
   for i := 1 to MAX_PLAYERS do
@@ -154,16 +154,16 @@ begin
         ThingMsg.Num := i;
         for j := 1 to 4 do
         begin
-          ThingMsg.Pos[j].X := Thing[i].Skeleton.Pos[j].X;
-          ThingMsg.Pos[j].Y := Thing[i].Skeleton.Pos[j].Y;
+          ThingMsg.Pos[j].X    := Thing[i].Skeleton.Pos[j].X;
+          ThingMsg.Pos[j].Y    := Thing[i].Skeleton.Pos[j].Y;
           ThingMsg.OldPos[j].X := Thing[i].Skeleton.OldPos[j].X;
           ThingMsg.OldPos[j].Y := Thing[i].Skeleton.OldPos[j].Y;
         end;
         ThingMsg.Timeout := SmallInt(Thing[i].Timeout);
         if Thing[i].Timeout < 1 then
           ThingMsg.Timeout := 1;
-        ThingMsg.Owner := Thing[i].Owner;
-        ThingMsg.Style := Thing[i].Style;
+        ThingMsg.Owner         := Thing[i].Owner;
+        ThingMsg.Style         := Thing[i].Style;
         ThingMsg.HoldingSprite := Thing[i].HoldingSprite;
 
         {$IFDEF SERVER}
@@ -188,16 +188,16 @@ begin
   ThingMsg.Num := i;
   for j := 1 to 4 do
   begin
-    ThingMsg.Pos[j].X := Thing[i].Skeleton.Pos[j].X;
-    ThingMsg.Pos[j].Y := Thing[i].Skeleton.Pos[j].Y;
+    ThingMsg.Pos[j].X    := Thing[i].Skeleton.Pos[j].X;
+    ThingMsg.Pos[j].Y    := Thing[i].Skeleton.Pos[j].Y;
     ThingMsg.OldPos[j].X := Thing[i].Skeleton.OldPos[j].X;
     ThingMsg.OldPos[j].Y := Thing[i].Skeleton.OldPos[j].Y;
   end;
   ThingMsg.Timeout := Thing[i].Timeout;
   if Thing[i].Timeout < 1 then
     ThingMsg.Timeout := 1;
-  ThingMsg.Owner := Thing[i].Owner;
-  ThingMsg.Style := Thing[i].Style;
+  ThingMsg.Owner         := Thing[i].Owner;
+  ThingMsg.Style         := Thing[i].Style;
   ThingMsg.HoldingSprite := Thing[i].HoldingSprite;
 
   UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[ToNum].Player.peer, k_nSteamNetworkingSend_Unreliable);
@@ -211,7 +211,7 @@ begin
   ThingMsg.Num := Thing[i].Num;
   ThingMsg.Who := w;
 
-  ThingMsg.Style := Thing[i].Style;
+  ThingMsg.Style     := Thing[i].Style;
   ThingMsg.AmmoCount := Thing[i].AmmoCount;
 
   for i := 1 to MAX_PLAYERS do
