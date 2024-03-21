@@ -1003,8 +1003,8 @@ begin
     1:
     begin  // Predator
       Self.FSpritePtr^.Alpha      := PREDATORALPHA;
-      Self.FSpritePtr^.BonusTime  := PREDATORBONUSTIME;
       Self.FSpritePtr^.BonusStyle := BONUS_PREDATOR;
+      Self.FSpritePtr^.BonusTime  := PREDATORBONUSTIME;
       Self.FSpritePtr^.Health     := STARTHEALTH;
       PStyle := 20;
     end;
