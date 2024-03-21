@@ -391,6 +391,7 @@ begin
   Buttons[0].flags := SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
   Buttons[0].buttonid := 0;
   Buttons[0].text := 'Yes';
+
   Buttons[1].flags := SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT;
   Buttons[1].buttonid := 1;
   Buttons[1].text := 'No';

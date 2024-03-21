@@ -338,12 +338,16 @@ begin
   begin
     relinfo.HealthBar_Rel_X := Int.HealthIco_X;
     relinfo.HealthBar_Rel_Y := Int.HealthIco_Y;
+
     relinfo.JetBar_Rel_X    := Int.HealthIco_X;
     relinfo.JetBar_Rel_Y    := Int.HealthIco_Y;
+
     relinfo.AmmoBar_Rel_X   := Int.HealthIco_X;
     relinfo.AmmoBar_Rel_Y   := Int.HealthIco_Y;
+
     relinfo.FireBar_Rel_X   := Int.HealthIco_X;
     relinfo.FireBar_Rel_Y   := Int.HealthIco_Y;
+
     relinfo.NadesBar_Rel_X  := Int.HealthIco_X;
     relinfo.NadesBar_Rel_Y  := Int.HealthIco_Y;
   end;
@@ -353,12 +357,16 @@ begin
   begin
     relinfo.HealthBar_Rel_X := Int.JetIco_X;
     relinfo.HealthBar_Rel_Y := Int.JetIco_Y;
+
     relinfo.JetBar_Rel_X    := Int.JetIco_X;
     relinfo.JetBar_Rel_Y    := Int.JetIco_Y;
+
     relinfo.AmmoBar_Rel_X   := Int.JetIco_X;
     relinfo.AmmoBar_Rel_Y   := Int.JetIco_Y;
+
     relinfo.FireBar_Rel_X   := Int.JetIco_X;
     relinfo.FireBar_Rel_Y   := Int.JetIco_Y;
+
     relinfo.NadesBar_Rel_X  := Int.JetIco_X;
     relinfo.NadesBar_Rel_Y  := Int.JetIco_Y;
   end;
@@ -368,12 +376,16 @@ begin
   begin
     relinfo.HealthBar_Rel_X := Int.AmmoIco_X;
     relinfo.HealthBar_Rel_Y := Int.AmmoIco_Y;
+
     relinfo.JetBar_Rel_X    := Int.AmmoIco_X;
     relinfo.JetBar_Rel_Y    := Int.AmmoIco_Y;
+
     relinfo.AmmoBar_Rel_X   := Int.AmmoIco_X;
     relinfo.AmmoBar_Rel_Y   := Int.AmmoIco_Y;
+
     relinfo.FireBar_Rel_X   := Int.AmmoIco_X;
     relinfo.FireBar_Rel_Y   := Int.AmmoIco_Y;
+
     relinfo.NadesBar_Rel_X  := Int.AmmoIco_X;
     relinfo.NadesBar_Rel_Y  := Int.AmmoIco_Y;
   end;
