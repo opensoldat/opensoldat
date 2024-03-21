@@ -1092,10 +1092,10 @@ begin
     Result := False;
     Exit;
   end;
-  {  TKickReason = (TKickNoResponse, TKickNoCheatResponse,
-    TKickChangeTeam, TKickPing, TKickFlooding, TKickConsole,
-    TKickConnectionCheat, TKickCheat, TKickLeft, TKickVoted,
-    TKickAC); }
+  // TKickReason = (TKickNoResponse, TKickNoCheatResponse,
+  //                TKickChangeTeam, TKickPing, TKickFlooding, TKickConsole,
+  //                TKickConnectionCheat, TKickCheat, TKickLeft, TKickVoted,
+  //                TKickAC);
   case Reason of
     TKickNoResponse: Result := KickPlayer(Self.Id, False, KICK_NORESPONSE, 0);
     TKickNoCheatResponse: Result := KickPlayer(Self.Id, False, KICK_NOCHEATRESPONSE, 0);
