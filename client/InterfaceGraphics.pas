@@ -22,21 +22,21 @@ uses
 var
   // Chat stuff
   ChatMessage: array[1..MAX_SPRITES] of WideString;
-  ChatTeam: array[1..MAX_SPRITES] of Boolean;
-  ChatDelay: array[1..MAX_SPRITES] of Integer;
+  ChatTeam:    array[1..MAX_SPRITES] of Boolean;
+  ChatDelay:   array[1..MAX_SPRITES] of Integer;
 
   // Big Text
-  BigText: array[0..MAX_BIG_MESSAGES] of WideString;
+  BigText:  array[0..MAX_BIG_MESSAGES] of WideString;
   BigDelay: array[0..MAX_BIG_MESSAGES] of Integer;
-  BigX: array[0..MAX_BIG_MESSAGES] of Integer;
+  BigX:     array[0..MAX_BIG_MESSAGES] of Integer;
   BigScale: array[0..MAX_BIG_MESSAGES] of Single;
   BigColor: array[0..MAX_BIG_MESSAGES] of LongWord;
   BigPosX, BigPosY: array[0..MAX_BIG_MESSAGES] of Single;
 
   // World Text
-  WorldText: array[0..MAX_BIG_MESSAGES] of WideString;
+  WorldText:  array[0..MAX_BIG_MESSAGES] of WideString;
   WorldDelay: array[0..MAX_BIG_MESSAGES] of Integer;
-  WorldX: array[0..MAX_BIG_MESSAGES] of Integer;
+  WorldX:     array[0..MAX_BIG_MESSAGES] of Integer;
   WorldScale: array[0..MAX_BIG_MESSAGES] of Single;
   WorldColor: array[0..MAX_BIG_MESSAGES] of LongInt;
   WorldPosX, WorldPosY: array[0..MAX_BIG_MESSAGES] of Single;
