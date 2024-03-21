@@ -2354,7 +2354,7 @@ begin
         RGBA(CursorColor, Alfa));
 
       {$IFDEF DEBUGCURSORS}
-      for i := 1 to 32 do
+      for i := Low(Sprite) to High(Sprite) do
       begin
          // debug cursors
          if (Sprite[i].Active) and not (Sprite[i].DeadMeat) then
