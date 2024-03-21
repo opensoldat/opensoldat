@@ -989,7 +989,7 @@ begin
 
   // Network cvars
   net_port := TIntegerCvar.Add('net_port', 'The port your server runs on, and player have to connect to', 23073, [CVAR_SERVER], nil, 0, 65535);
-  net_ip := TStringCvar.Add('net_ip', 'Binds server ports to specific ip address', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
+  net_ip := TStringCvar.Add('net_ip', 'Binds server ports to specific ip address', '', [CVAR_SERVER], nil, 0, 15);
   net_adminip := TStringCvar.Add('net_adminip', 'Binds admin port to specific ip address', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
   net_lan := TIntegerCvar.Add('net_lan', 'Set to 1 to set server to LAN mode', 0, [CVAR_SERVER], nil, 0, 1);
   net_allowdownload := TBooleanCvar.Add('net_allowdownload', 'Enables/Disables file transfers', True, [CVAR_SERVER], nil);

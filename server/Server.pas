@@ -719,9 +719,6 @@ begin
   ScrptDispatcher.SafeMode := sc_safemode.Value;
   {$ENDIF}
 
-  if net_ip.Value = '' then
-    net_ip.ParseAndSetValue('0.0.0.0');
-
   {$IFDEF STEAM}
   SteamAPI := TSteamGS.Init(
       0, // The IP address you are going to bind to

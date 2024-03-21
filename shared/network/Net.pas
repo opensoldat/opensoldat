@@ -1332,7 +1332,12 @@ begin
   begin
     Players := TFPGObjectList<TPlayer>.Create;
     ServerAddress.Clear;
-    ServerAddress.ParseString(PChar(Host + ':' + IntToStr(Port)));
+
+    if Host = '' then
+      ServerAddress.m_port := Port
+    else
+      ServerAddress.ParseString(PChar(Host + ':' + IntToStr(Port)));
+
     InitSettings.m_eValue := k_ESteamNetworkingConfig_IP_AllowWithoutAuth;
     InitSettings.m_eDataType := k_ESteamNetworkingConfig_Int32;
     InitSettings.m_int32 := 1;
