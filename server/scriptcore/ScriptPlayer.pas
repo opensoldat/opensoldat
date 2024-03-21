@@ -1002,17 +1002,17 @@ begin
   case BType of
     1:
     begin  // Predator
-      Self.FSpritePtr^.Alpha := PREDATORALPHA;
-      Self.FSpritePtr^.BonusTime := PREDATORBONUSTIME;
+      Self.FSpritePtr^.Alpha      := PREDATORALPHA;
+      Self.FSpritePtr^.BonusTime  := PREDATORBONUSTIME;
       Self.FSpritePtr^.BonusStyle := BONUS_PREDATOR;
-      Self.FSpritePtr^.Health := STARTHEALTH;
+      Self.FSpritePtr^.Health     := STARTHEALTH;
       PStyle := 20;
     end;
     2:
     begin  // Berserker
       Self.FSpritePtr^.BonusStyle := BONUS_BERSERKER;
-      Self.FSpritePtr^.BonusTime := BERSERKERBONUSTIME;
-      Self.FSpritePtr^.Health := STARTHEALTH;
+      Self.FSpritePtr^.BonusTime  := BERSERKERBONUSTIME;
+      Self.FSpritePtr^.Health     := STARTHEALTH;
       PStyle := 21;
     end;
     3:
@@ -1035,8 +1035,8 @@ begin
     6:
     begin  // Flame god
       Self.FSpritePtr^.BonusStyle := BONUS_FLAMEGOD;
-      Self.FSpritePtr^.BonusTime := FLAMERBONUSTIME;
-      Self.FSpritePtr^.Health := STARTHEALTH;
+      Self.FSpritePtr^.BonusTime  := FLAMERBONUSTIME;
+      Self.FSpritePtr^.Health     := STARTHEALTH;
       PStyle := 18;
     end;
     else
