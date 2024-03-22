@@ -161,34 +161,38 @@ begin
   {$ENDIF}
 
   for i := Low(Thing) to High(Thing) do
-    if Thing[i].Active then
-      if ((Thing[i].Style < OBJECT_USSOCOM) or (Thing[i].Style > OBJECT_MINIGUN)) and
-        (Thing[i].Style <> OBJECT_PARACHUTE) then
-      begin
-        ThingMsg.Header.ID := MsgID_ServerThingMustSnapshot;
-        // assign thing values to ThingMsg
-        ThingMsg.Num := i;
-        for j := 1 to 4 do
-        begin
-          ThingMsg.Pos[j].X    := Thing[i].Skeleton.Pos[j].X;
-          ThingMsg.Pos[j].Y    := Thing[i].Skeleton.Pos[j].Y;
-          ThingMsg.OldPos[j].X := Thing[i].Skeleton.OldPos[j].X;
-          ThingMsg.OldPos[j].Y := Thing[i].Skeleton.OldPos[j].Y;
-        end;
-        ThingMsg.Timeout := SmallInt(Thing[i].Timeout);
-        if Thing[i].Timeout < 1 then
-          ThingMsg.Timeout := 1;
-        ThingMsg.Owner         := Thing[i].Owner;
-        ThingMsg.Style         := Thing[i].Style;
-        ThingMsg.HoldingSprite := Thing[i].HoldingSprite;
+  begin
+    if not Thing[i].Active then
+      Continue;
 
-        {$IFDEF SERVER}
-        UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[ToNum].Player.peer,
-          k_nSteamNetworkingSend_Unreliable);
-        {$ELSE}
-        DemoRecorder.SaveRecord(ThingMsg, sizeof(ThingMsg));
-        {$ENDIF}
-      end;
+    if ((Thing[i].Style < OBJECT_USSOCOM) or (Thing[i].Style > OBJECT_MINIGUN)) and
+        (Thing[i].Style <> OBJECT_PARACHUTE) then
+    begin
+     ThingMsg.Header.ID := MsgID_ServerThingMustSnapshot;
+     // assign thing values to ThingMsg
+     ThingMsg.Num := i;
+     for j := 1 to 4 do
+     begin
+       ThingMsg.Pos[j].X    := Thing[i].Skeleton.Pos[j].X;
+       ThingMsg.Pos[j].Y    := Thing[i].Skeleton.Pos[j].Y;
+       ThingMsg.OldPos[j].X := Thing[i].Skeleton.OldPos[j].X;
+       ThingMsg.OldPos[j].Y := Thing[i].Skeleton.OldPos[j].Y;
+     end;
+     ThingMsg.Timeout := SmallInt(Thing[i].Timeout);
+     if Thing[i].Timeout < 1 then
+       ThingMsg.Timeout := 1;
+     ThingMsg.Owner         := Thing[i].Owner;
+     ThingMsg.Style         := Thing[i].Style;
+     ThingMsg.HoldingSprite := Thing[i].HoldingSprite;
+
+     {$IFDEF SERVER}
+     UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[ToNum].Player.peer,
+       k_nSteamNetworkingSend_Unreliable);
+     {$ELSE}
+     DemoRecorder.SaveRecord(ThingMsg, sizeof(ThingMsg));
+     {$ENDIF}
+    end;
+  end;
 end;
 
 {$IFDEF SERVER}
