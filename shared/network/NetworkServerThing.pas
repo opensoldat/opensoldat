@@ -71,11 +71,9 @@ begin
     if Thing[i].Style = OBJECT_PARACHUTE then
       Continue;
 
-    if ((not Thing[i].StaticType) or ((Thing[i].Style < OBJECT_USSOCOM) or
-      (Thing[i].Style = OBJECT_STATIONARY_GUN))) and
-      ((PointVisible(Thing[i].Skeleton.Pos[1].X,
-      Thing[i].Skeleton.Pos[1].Y, ToNum)) or
-      (Thing[i].Style < OBJECT_USSOCOM)) then
+    if (Thing[i].Style < OBJECT_USSOCOM) or  // always snapshot flags
+      (((not Thing[i].StaticType) or (Thing[i].Style = OBJECT_STATIONARY_GUN)) and
+      (PointVisible(Thing[i].Skeleton.Pos[1].X, Thing[i].Skeleton.Pos[1].Y, ToNum))) then
     begin
       ThingMsg.Header.ID := MsgID_ServerThingSnapshot;
       // assign thing values to ThingMsg
