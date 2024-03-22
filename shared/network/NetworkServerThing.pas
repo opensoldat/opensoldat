@@ -61,6 +61,9 @@ var
   i, j: Integer;
   Send: Boolean;
 begin
+  if ToNum > High(Sprite) then
+    Exit;
+
   for i := Low(Thing) to High(Thing) do
     if (Thing[i].Active) and (Thing[i].Style <> OBJECT_PARACHUTE) and
       ((not Thing[i].StaticType) or ((Thing[i].Style < OBJECT_USSOCOM) or
