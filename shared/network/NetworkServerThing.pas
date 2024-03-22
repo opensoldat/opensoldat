@@ -61,7 +61,7 @@ var
   i, j: Integer;
   Send: Boolean;
 begin
-  for i := 1 to MAX_THINGS do
+  for i := Low(Thing) to High(Thing) do
     if (Thing[i].Active) and (Thing[i].Style <> OBJECT_PARACHUTE) and
       ((not Thing[i].StaticType) or ((Thing[i].Style < OBJECT_USSOCOM) or
       (Thing[i].Style = OBJECT_STATIONARY_GUN))) and
@@ -225,7 +225,7 @@ begin
   ThingMsg.Style     := Thing[i].Style;
   ThingMsg.AmmoCount := Thing[i].AmmoCount;
 
-  for i := 1 to MAX_PLAYERS do
+  for i := Low(Sprite) to High(Sprite) do
     if (Sprite[i].Active) and (Sprite[i].Player.ControlMethod = HUMAN) then
       UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[i].Player.peer,
         k_nSteamNetworkingSend_Unreliable);
