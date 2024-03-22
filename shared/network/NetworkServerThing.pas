@@ -32,7 +32,7 @@ procedure ServerThingMustSnapshot(i: Byte);
 procedure ServerThingMustSnapshotOnConnect({$IFDEF SERVER}ToNum: Byte{$ENDIF});
 {$IFDEF SERVER}
 procedure ServerThingMustSnapshotOnConnectTo(i, ToNum: Byte);
-procedure ServerThingTaken(i, w: Byte);
+procedure ServerThingTaken(ThingNum, Who: Byte);
 procedure ServerHandleRequestThing(NetMessage: PSteamNetworkingMessage_t);
 {$ENDIF}
 
@@ -229,21 +229,22 @@ begin
     k_nSteamNetworkingSend_Unreliable);
 end;
 
-procedure ServerThingTaken(i, w: Byte);
+procedure ServerThingTaken(ThingNum, Who: Byte);
 var
   ThingMsg: TMsg_ServerThingTaken;
+  i: Byte;
 begin
-  if i > High(Thing) then
+  if ThingNum > High(Thing) then
     Exit;
-  if (w <> 255) and (w > High(Sprite)) then
+  if (Who <> 255) and (Who > High(Sprite)) then
     Exit;
 
   ThingMsg.Header.ID := MsgID_ThingTaken;
-  ThingMsg.Num := Thing[i].Num;
-  ThingMsg.Who := w;
+  ThingMsg.Num := Thing[ThingNum].Num;
+  ThingMsg.Who := Who;
 
-  ThingMsg.Style     := Thing[i].Style;
-  ThingMsg.AmmoCount := Thing[i].AmmoCount;
+  ThingMsg.Style     := Thing[ThingNum].Style;
+  ThingMsg.AmmoCount := Thing[ThingNum].AmmoCount;
 
   for i := Low(Sprite) to High(Sprite) do
     if (Sprite[i].Active) and (Sprite[i].Player.ControlMethod = HUMAN) then
