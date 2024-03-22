@@ -27,7 +27,7 @@ uses
 
 {$IFDEF SERVER}
 procedure ServerThingSnapshot(ToNum: Byte);
-procedure ServerThingMustSnapshot(i: Byte);
+procedure ServerThingMustSnapshot(ThingNum: Byte);
 {$ENDIF}
 procedure ServerThingMustSnapshotOnConnect({$IFDEF SERVER}ToNum: Byte{$ENDIF});
 {$IFDEF SERVER}
@@ -115,20 +115,20 @@ begin
   end;
 end;
 
-procedure ServerThingMustSnapshot(i: Byte);
+procedure ServerThingMustSnapshot(ThingNum: Byte);
 var
   ThingMsg: TMsg_ServerThingMustSnapshot;
-  j: Integer;
+  i, j: Integer;
 begin
-  if i > High(Thing) then
+  if ThingNum > High(Thing) then
     Exit;
-  if (Thing[i].Style = OBJECT_PARACHUTE) then
+  if (Thing[ThingNum].Style = OBJECT_PARACHUTE) then
     Exit;
 
   ThingMsg := Default(TMsg_ServerThingMustSnapshot);
   ThingMsg.Header.ID := MsgID_ServerThingMustSnapshot;
   // assign thing values to ThingMsg
-  ThingMsg.Num := i;
+  ThingMsg.Num := ThingNum;
   for j := 1 to 4 do
   begin
     ThingMsg.Pos[j].X    := Thing[i].Skeleton.Pos[j].X;
@@ -137,11 +137,11 @@ begin
     ThingMsg.OldPos[j].Y := Thing[i].Skeleton.OldPos[j].Y;
   end;
   ThingMsg.Timeout := Thing[i].Timeout;
-  if Thing[i].Timeout < 1 then
+  if Thing[ThingNum].Timeout < 1 then
     ThingMsg.Timeout := 1;
-  ThingMsg.Owner         := Thing[i].Owner;
-  ThingMsg.Style         := Thing[i].Style;
-  ThingMsg.HoldingSprite := Thing[i].HoldingSprite;
+  ThingMsg.Owner         := Thing[ThingNum].Owner;
+  ThingMsg.Style         := Thing[ThingNum].Style;
+  ThingMsg.HoldingSprite := Thing[ThingNum].HoldingSprite;
 
   for i := Low(Sprite) to High(Sprite) do
     if (Sprite[i].Active) and (Sprite[i].Player.ControlMethod = HUMAN) then
