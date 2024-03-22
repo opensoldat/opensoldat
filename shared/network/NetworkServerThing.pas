@@ -225,6 +225,11 @@ procedure ServerThingTaken(i, w: Byte);
 var
   ThingMsg: TMsg_ServerThingTaken;
 begin
+  if i > High(Thing) then
+    Exit;
+  if (w <> 255) and (w > High(Sprite)) then
+    Exit;
+
   ThingMsg.Header.ID := MsgID_ThingTaken;
   ThingMsg.Num := Thing[i].Num;
   ThingMsg.Who := w;
