@@ -197,6 +197,10 @@ var
   ThingMsg: TMsg_ServerThingMustSnapshot;
   j: Integer;
 begin
+  if i > High(Thing) then
+    Exit;
+  if ToNum > High(Sprite) then
+    Exit;
   if (Thing[i].Style = OBJECT_PARACHUTE) then
     Exit;
 
