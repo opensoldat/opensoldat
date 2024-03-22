@@ -127,7 +127,7 @@ begin
   i := 0;
   // Remove flag if a new one is created
   if sStyle < OBJECT_USSOCOM then
-    for k := 1 to MAX_THINGS do
+    for k := Low(Thing) to High(Thing) do
       if (Thing[k].Active) and (Thing[k].Style = sStyle) then
         Thing[k].Kill;
 

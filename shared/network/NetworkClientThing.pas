@@ -212,7 +212,7 @@ begin
   // is not holded anymore
   if Thing[i].HoldingSprite = 0 then
   begin
-    for d := 1 to MAX_SPRITES do
+    for d := Low(Sprite) to High(Sprite) do
       if Sprite[d].Active then
       begin
         if Sprite[d].HoldedThing = i then

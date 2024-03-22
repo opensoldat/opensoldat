@@ -140,7 +140,7 @@ begin
       end;
 
     if MainTickCounter mod 1000 = 0 then
-      for j := 1 to MAX_PLAYERS do
+      for j := Low(Sprite) to High(Sprite) do
         if Sprite[j].Active then
           Sprite[j].Player.KnifeWarnings := 0;
 
@@ -360,7 +360,7 @@ begin
         if Sprite[j].IsNotSpectator() then
           SpriteParts.DoEulerTimeStepFor(j);  // integrate sprite particles
 
-    for j := 1 to MAX_SPRITES do
+    for j := Low(Sprite) to High(Sprite) do
       if Sprite[j].Active then
         Sprite[j].Update;  // update sprite
 
