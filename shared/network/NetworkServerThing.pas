@@ -199,7 +199,7 @@ end;
 procedure ServerThingMustSnapshotOnConnectTo(ThingNum, ToNum: Byte);
 var
   ThingMsg: TMsg_ServerThingMustSnapshot;
-  j: Integer;
+  i: Integer;
 begin
   if ThingNum > High(Thing) then
     Exit;
@@ -211,12 +211,12 @@ begin
   ThingMsg.Header.ID := MsgID_ServerThingMustSnapshot;
   // assign thing values to ThingMsg
   ThingMsg.Num := ThingNum;
-  for j := 1 to 4 do
+  for i := 1 to 4 do
   begin
-    ThingMsg.Pos[j].X    := Thing[ThingNum].Skeleton.Pos[j].X;
-    ThingMsg.Pos[j].Y    := Thing[ThingNum].Skeleton.Pos[j].Y;
-    ThingMsg.OldPos[j].X := Thing[ThingNum].Skeleton.OldPos[j].X;
-    ThingMsg.OldPos[j].Y := Thing[ThingNum].Skeleton.OldPos[j].Y;
+    ThingMsg.Pos[i].X    := Thing[ThingNum].Skeleton.Pos[i].X;
+    ThingMsg.Pos[i].Y    := Thing[ThingNum].Skeleton.Pos[i].Y;
+    ThingMsg.OldPos[i].X := Thing[ThingNum].Skeleton.OldPos[i].X;
+    ThingMsg.OldPos[i].Y := Thing[ThingNum].Skeleton.OldPos[i].Y;
   end;
   ThingMsg.Timeout := Thing[ThingNum].Timeout;
   if Thing[ThingNum].Timeout < 1 then
