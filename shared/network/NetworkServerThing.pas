@@ -146,6 +146,11 @@ var
   ThingMsg: TMsg_ServerThingMustSnapshot;
   i, j: Integer;
 begin
+  {$IFDEF SERVER}
+  if ToNum > High(Sprite) then
+    Exit;
+  {$ENDIF}
+
   for i := Low(Thing) to High(Thing) do
     if Thing[i].Active then
       if ((Thing[i].Style < OBJECT_USSOCOM) or (Thing[i].Style > OBJECT_MINIGUN)) and
