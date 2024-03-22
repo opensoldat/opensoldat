@@ -267,8 +267,8 @@ var
   MuteName: array[1..MAX_PLAYERS] of string;
 
   // TK array
-  TKList: array[1..MAX_PLAYERS] of ShortString;  // IP
-  TKListKills: array[1..MAX_PLAYERS] of Byte;    // TK Warnings
+  TKList:      array[1..MAX_PLAYERS] of ShortString;  // IP
+  TKListKills: array[1..MAX_PLAYERS] of Byte;         // TK Warnings
 
   TCPBytesSent: Int64;
   TCPBytesReceived: Int64;
