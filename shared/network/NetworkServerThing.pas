@@ -65,8 +65,13 @@ begin
     Exit;
 
   for i := Low(Thing) to High(Thing) do
-    if (Thing[i].Active) and (Thing[i].Style <> OBJECT_PARACHUTE) and
-      ((not Thing[i].StaticType) or ((Thing[i].Style < OBJECT_USSOCOM) or
+  begin
+    if not Thing[i].Active then
+      Continue;
+    if Thing[i].Style = OBJECT_PARACHUTE then
+      Continue;
+
+    if ((not Thing[i].StaticType) or ((Thing[i].Style < OBJECT_USSOCOM) or
       (Thing[i].Style = OBJECT_STATIONARY_GUN))) and
       ((PointVisible(Thing[i].Skeleton.Pos[1].X,
       Thing[i].Skeleton.Pos[1].Y, ToNum)) or
@@ -109,6 +114,7 @@ begin
           k_nSteamNetworkingSend_Unreliable);
       end;
     end;
+  end;
 end;
 
 procedure ServerThingMustSnapshot(i: Byte);
