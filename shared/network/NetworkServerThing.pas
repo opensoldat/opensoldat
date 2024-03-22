@@ -102,7 +102,8 @@ begin
 
       if Send then
       begin
-        UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[ToNum].Player.peer, k_nSteamNetworkingSend_Unreliable);
+        UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[ToNum].Player.peer,
+          k_nSteamNetworkingSend_Unreliable);
       end;
     end;
 end;
@@ -137,7 +138,8 @@ begin
 
   for i := Low(Sprite) to High(Sprite) do
     if (Sprite[i].Active) and (Sprite[i].Player.ControlMethod = HUMAN) then
-      UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[i].Player.peer, k_nSteamNetworkingSend_Unreliable);
+      UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[i].Player.peer,
+        k_nSteamNetworkingSend_Unreliable);
 end;
 {$ENDIF}
 
@@ -174,7 +176,8 @@ begin
         ThingMsg.HoldingSprite := Thing[i].HoldingSprite;
 
         {$IFDEF SERVER}
-        UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[ToNum].Player.peer, k_nSteamNetworkingSend_Unreliable);
+        UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[ToNum].Player.peer,
+          k_nSteamNetworkingSend_Unreliable);
         {$ELSE}
         DemoRecorder.SaveRecord(ThingMsg, sizeof(ThingMsg));
         {$ENDIF}
@@ -207,7 +210,8 @@ begin
   ThingMsg.Style         := Thing[i].Style;
   ThingMsg.HoldingSprite := Thing[i].HoldingSprite;
 
-  UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[ToNum].Player.peer, k_nSteamNetworkingSend_Unreliable);
+  UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[ToNum].Player.peer,
+    k_nSteamNetworkingSend_Unreliable);
 end;
 
 procedure ServerThingTaken(i, w: Byte);
@@ -223,7 +227,8 @@ begin
 
   for i := 1 to MAX_PLAYERS do
     if (Sprite[i].Active) and (Sprite[i].Player.ControlMethod = HUMAN) then
-      UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[i].Player.peer, k_nSteamNetworkingSend_Unreliable);
+      UDP.SendData(ThingMsg, sizeof(ThingMsg), Sprite[i].Player.peer,
+        k_nSteamNetworkingSend_Unreliable);
 end;
 
 procedure ServerHandleRequestThing(NetMessage: PSteamNetworkingMessage_t);
@@ -231,8 +236,10 @@ var
   Msg: PMsg_RequestThing;
   Player: TPlayer;
 begin
-  if not VerifyPacket(sizeof(TMsg_RequestThing), NetMessage^.m_cbSize, MsgID_RequestThing) then
+  if not VerifyPacket(sizeof(TMsg_RequestThing), NetMessage^.m_cbSize,
+    MsgID_RequestThing) then
     Exit;
+
   Msg := PMsg_RequestThing(NetMessage^.m_pData);
   Player := TPlayer(NetMessage^.m_nConnUserData);
   ServerThingMustSnapshotOnConnectTo(Msg.ThingID, Player.SpriteNum);
