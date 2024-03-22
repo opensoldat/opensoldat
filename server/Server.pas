@@ -812,9 +812,9 @@ begin
   AdminIPs.Add('127.0.0.1');
 
   // Flood IP stuff
-  for i := 1 to MAX_FLOODIPS do
+  for i := Low(FloodIP) to High(FloodIP) do
     FloodIP[i] := ' ';
-  for i := 1 to MAX_FLOODIPS do
+  for i := Low(FloodNum) to High(FloodNum) do
     FloodNum[i] := 0;
 
   WeaponsInGame := 0;

@@ -323,7 +323,7 @@ var
   i: Integer;
 begin
   Result := 0;
-  for i := 1 to MAX_FLOODIPS do
+  for i := Low(FloodIP) to High(FloodIP) do
     if FloodIP[i] = SrcIP then
     begin
       Result := i;
@@ -340,7 +340,7 @@ const
   FLOOD_ID_NOT_FOUND = 0;
 begin
   Result := FLOOD_ID_NOT_FOUND;
-  for i := 1 to MAX_FLOODIPS do
+  for i := Low(FloodIP) to High(FloodIP) do
     if FloodIP[i] = ' ' then
     begin
       FloodIP[i] := SrcIP;

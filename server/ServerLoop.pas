@@ -125,7 +125,7 @@ begin
 
     // Flood Nums Cancel
     if MainTickCounter mod 1000 = 0 then
-      for j := 1 to MAX_FLOODIPS do
+      for j := Low(FloodNum) to High(FloodNum) do
         FloodNum[j] := 0;
 
     // Warnings Cancel
