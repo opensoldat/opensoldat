@@ -490,7 +490,7 @@ begin
   end;
 
   if ((Thing[i].Style > OBJECT_POINTMATCH_FLAG) and (Thing[i].Style < OBJECT_RAMBO_BOW)) or
-     ((Thing[i].Style > OBJECT_PARACHUTE) and (Thing[i].Style < OBJECT_STATIONARY_GUN)) then
+     ((Thing[i].Style > OBJECT_PARACHUTE)       and (Thing[i].Style < OBJECT_STATIONARY_GUN)) then
   begin
     PlaySound(SFX_PICKUPGUN, Thing[i].Skeleton.Pos[1]);
     Sprite[ThingTakenSnap.Who].Weapon.FireIntervalPrev :=

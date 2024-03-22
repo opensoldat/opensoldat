@@ -309,8 +309,8 @@ begin
     Exit;
 
   if ((Sprite[i].Weapon.Num = Guns[BOW].Num)    and (sv_gamemode.Value <> GAMESTYLE_RAMBO)) or
-      ((Sprite[i].Weapon.Num = Guns[BOW2].Num)   and (sv_gamemode.Value <> GAMESTYLE_RAMBO)) or
-      ((Sprite[i].Weapon.Num = Guns[FLAMER].Num) and (sv_bonus_flamer.Value)) then
+     ((Sprite[i].Weapon.Num = Guns[BOW2].Num)   and (sv_gamemode.Value <> GAMESTYLE_RAMBO)) or
+     ((Sprite[i].Weapon.Num = Guns[FLAMER].Num) and (sv_bonus_flamer.Value)) then
     Exit;
 
   Result := False;
