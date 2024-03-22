@@ -112,10 +112,10 @@ var
   ThingMsg: TMsg_ServerThingMustSnapshot;
   j: Integer;
 begin
-  ThingMsg := Default(TMsg_ServerThingMustSnapshot);
   if (Thing[i].Style = OBJECT_PARACHUTE) then
     Exit;
 
+  ThingMsg := Default(TMsg_ServerThingMustSnapshot);
   ThingMsg.Header.ID := MsgID_ServerThingMustSnapshot;
   // assign thing values to ThingMsg
   ThingMsg.Num := i;
