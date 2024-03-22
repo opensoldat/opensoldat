@@ -278,8 +278,8 @@ var
 
   RemoteIPs, AdminIPs: TStrings;
 
-  FloodIP: array[1..1000] of ShortString;
-  FloodNum: array[1..1000] of Integer;
+  FloodIP:  array[1..MAX_FLOODIPS] of ShortString;
+  FloodNum: array[1..MAX_FLOODIPS] of Integer;
 
   LastReqIP: array[0..3] of ShortString;  // last 4 IP's to request game
   LastReqID: Byte = 0;
