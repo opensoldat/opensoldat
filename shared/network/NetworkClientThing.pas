@@ -57,7 +57,8 @@ var
   i, d: Integer;
   a: TVector2;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerThingSnapshot), NetMessage^.m_cbSize, MsgID_ServerThingSnapshot) then
+  if not VerifyPacket(sizeof(TMsg_ServerThingSnapshot), NetMessage^.m_cbSize,
+    MsgID_ServerThingSnapshot) then
     Exit;
 
   ThingSnap := PMsg_ServerThingSnapshot(NetMessage^.m_pData)^;
@@ -144,7 +145,8 @@ var
   SpriteThingOwner: ^TSprite;
   WeaponThing: Integer;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerThingMustSnapshot), NetMessage^.m_cbSize, MsgID_ServerThingMustSnapshot) then
+  if not VerifyPacket(sizeof(TMsg_ServerThingMustSnapshot), NetMessage^.m_cbSize,
+    MsgID_ServerThingMustSnapshot) then
     Exit;
 
   ThingMustSnap := PMsg_ServerThingMustSnapshot(NetMessage^.m_pData)^;
