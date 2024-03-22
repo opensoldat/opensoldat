@@ -4058,7 +4058,7 @@ begin
   a.y := Skeleton.Pos[15].Y - (b.y * 4) - 2;
 
   {$IFNDEF SERVER}
-  // TODO(skoskav): Make bink and self-bink sprite-specific so bots can also use it
+  // TODO: Make bink and self-bink sprite-specific so bots can also use it
   if Num = MySprite then
   begin
     // Bink & self-bink
@@ -4579,7 +4579,7 @@ begin
   if BurstCount < 255 then
     Inc(BurstCount);
 
-  // TODO(skoskav): Make bink and self-bink sprite-specific so bots can also use it
+  // TODO: Make bink and self-bink sprite-specific so bots can also use it
   {$IFNDEF SERVER}
   if Num = MySprite then
   begin

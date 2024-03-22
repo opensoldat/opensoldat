@@ -461,7 +461,7 @@ begin
   Gun.FireStyle        := GFX_WEAPONS_AK74_FIRE;
   Gun.FireMode         := 0;
 
-  // TODO(skoskav): Add a proper entry for cluster nade and thrown knife
+  // TODO: Add a proper entry for cluster nade and thrown knife
   // Cluster grenade
   Gun := @Guns[CLUSTERGRENADE];
   Gun.Name             := 'Frag Grenade';
@@ -1274,7 +1274,7 @@ var
   Gun: ^TGun;
   WeaponIndex: Integer;
 begin
-  // TODO(skoskav): Add a proper entry for cluster nade and thrown knife
+  // TODO: Add a proper entry for cluster nade and thrown knife
   // Cluster grenade
   Gun := @Guns[CLUSTERGRENADE];
   Gun.HitMultiply       := Guns[FRAGGRENADE].HitMultiply;
