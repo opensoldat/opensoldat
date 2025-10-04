@@ -21,15 +21,6 @@ unit sdl2_mixer;
   3. This notice may not be removed or altered from any source distribution.
 *}
 
-{* ChangeLog: (Header Translation)
-   ----------
-
-   v.1.72-stable; 29.09.2013: fixed bug with procedures without parameters
-                              (they must have brackets)  
-   v.1.70-stable; 16.09.2013: Initial Commit
-
-*}
-
 interface
 
 {$I jedi.inc}
@@ -65,7 +56,7 @@ const
 const
   SDL_MIXER_MAJOR_VERSION = 2;
   SDL_MIXER_MINOR_VERSION = 0;
-  SDL_MIXER_PATCHLEVEL    = 0;
+  SDL_MIXER_PATCHLEVEL    = 4;
 
   {* This macro can be used to fill a version structure with the compile-time
    * version of the SDL_mixer library.
@@ -89,12 +80,17 @@ function Mix_Linked_Version: PSDL_Version cdecl; external MIX_LibName {$IFDEF DE
 const
   MIX_INIT_FLAC        = $00000001;
   MIX_INIT_MOD         = $00000002;
-  MIX_INIT_MODPLUG     = $00000004;
   MIX_INIT_MP3         = $00000008;
   MIX_INIT_OGG         = $00000010;
+  MIX_INIT_MID         = $00000020;
+  MIX_INIT_OPUS        = $00000040;
+
+{ // Removed in SDL2_mixer 2.0.2
+  MIX_INIT_MODPLUG     = $00000004;
   MIX_INIT_FLUIDSYNTH  = $00000020;
+}
 type
-  TMIX_InitFlags = Byte;
+  TMIX_InitFlags = Integer;
 
   {* Loads dynamic libraries and prepares them for use.  Flags should be
      one or more flags from MIX_InitFlags OR'd together.
@@ -116,7 +112,7 @@ const
 const
   MIX_DEFAULT_FREQUENCY = 22050;
   MIX_DEFAULT_CHANNELS = 2;
-  MIX_MAX_VOLUME       = 128; {* Volume of a chunk *}
+  MIX_MAX_VOLUME       = SDL2.SDL_MIX_MAXVOLUME; {* Volume of a chunk *}
 
 {$IFDEF FPC}
    {$IF DEFINED(ENDIAN_LITTLE)}
@@ -142,16 +138,19 @@ type
 type
   TMix_Fading = (MIX_NO_FADING, MIX_FADING_OUT, MIX_FADING_IN);
 
-  TMix_MusicType = (MUS_NONE,
-                    MUS_CMD,
-                    MUS_WAV,
-                    MUS_MOD,
-                    MUS_MID,
-                    MUS_OGG,
-                    MUS_MP3,
-                    MUS_MP3_MAD,
-                    MUS_FLAC,
-                    MUS_MODPLUG);
+  TMix_MusicType = (
+    MUS_NONE,
+    MUS_CMD,
+    MUS_WAV,
+    MUS_MOD,
+    MUS_MID,
+    MUS_OGG,
+    MUS_MP3,
+    MUS_MP3_MAD_UNUSED,
+    MUS_FLAC,
+    MUS_MODPLUG_UNUSED,
+    MUS_OPUS
+  );
 
   {* The internal format for a music chunk interpreted via mikmod *}
   PMix_Music = ^TMix_Music;
@@ -213,10 +212,18 @@ procedure Mix_FreeMusic(music: PMix_Music) cdecl; external MIX_LibName {$IFDEF D
      These return values are static, read-only data; do not modify or free it.
      The pointers remain valid until you call Mix_CloseAudio().
   *}
-function Mix_GetNumChunkDecoders: Integer cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_GetNumChunkDecoders' {$ENDIF} {$ENDIF};
-function Mix_GetChunkDecoder(index: Integer): PAnsiChar cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_GetChunkDecoder' {$ENDIF} {$ENDIF};
-function Mix_GetNumMusicDecoders: Integer cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_GetNumMusicDecoders' {$ENDIF} {$ENDIF};
-function Mix_GetMusicDecoder(index: Integer): PAnsiChar cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_GetMusicDecoder' {$ENDIF} {$ENDIF};
+function Mix_GetNumChunkDecoders: Integer cdecl;
+  external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_GetNumChunkDecoders' {$ENDIF} {$ENDIF};
+function Mix_GetChunkDecoder(index: Integer): PAnsiChar cdecl;
+  external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_GetChunkDecoder' {$ENDIF} {$ENDIF};
+function Mix_HasChunkDecoder(const name: PAnsiChar): TSDL_Bool cdecl;
+  external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_HasChunkDecoder' {$ENDIF} {$ENDIF};
+function Mix_GetNumMusicDecoders: Integer cdecl;
+  external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_GetNumMusicDecoders' {$ENDIF} {$ENDIF};
+function Mix_GetMusicDecoder(index: Integer): PAnsiChar cdecl;
+  external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_GetMusicDecoder' {$ENDIF} {$ENDIF};
+function Mix_HasMusicDecoder(const name: PAnsiChar): TSDL_Bool cdecl;
+  external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_HasMusicDecoder' {$ENDIF} {$ENDIF};
 
   {* Find out the music format of a mixer music, or the currently playing
      music, if 'music' is NULL.
@@ -228,7 +235,7 @@ function Mix_GetMusicType(music: TMix_Music): TMix_MusicType cdecl; external MIX
      or add a custom mixer filter for the stream data.
   *}
 type
-  TMix_Func = procedure(udata: Pointer; stream: PUInt8; len: Integer);
+  TMix_Func = procedure(udata: Pointer; stream: PUInt8; len: Integer) cdecl;
 
 procedure Mix_SetPostMix(func: TMix_Func; arg: Pointer) cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_SetPostMix' {$ENDIF} {$ENDIF};
 
@@ -237,12 +244,13 @@ procedure Mix_SetPostMix(func: TMix_Func; arg: Pointer) cdecl; external MIX_LibN
    *}
 procedure Mix_HookMusic(func: TMix_Func; arg: Pointer) cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_HookMusic' {$ENDIF} {$ENDIF};
 
-  {* Add your own callback when the music has finished playing.
-     This callback is only called if the music finishes naturally.
+  {* Add your own callback when the music has finished playing
+   *  or when it is stopped from a call to Mix_HaltMusic.
    *}
 type
   PMix_Music_Finished = ^TMix_Music_Finished;
-  TMix_Music_Finished = procedure();
+  TMix_Music_Finished = procedure() cdecl;
+
 procedure Mix_HookMusicFinished(music_finished: PMix_Music_Finished) cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_HookMusicFinished' {$ENDIF} {$ENDIF};
 
   {* Get a pointer to the user data for the current music hook *}
@@ -257,7 +265,8 @@ function Mix_GetMusicHookData: Pointer cdecl; external MIX_LibName {$IFDEF DELPH
    *  before calling your callback.
    *}
 type
-  TMix_Channel_Finished = procedure(channel: Integer);
+  TMix_Channel_Finished = procedure(channel: Integer) cdecl;
+
 procedure Mix_ChannelFinished(channel_finished: TMix_Channel_Finished) cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_ChannelFinished' {$ENDIF} {$ENDIF};
 
   {* Special Effects API by ryan c. gordon. (icculus@icculus.org) *}
@@ -282,7 +291,7 @@ const
    * DO NOT EVER call SDL_LockAudio() from your callback function!
    *}
 type
-  TMix_EffectFunc_t = procedure(chan: Integer; stream: Pointer; len: Integer; udata: Pointer);
+  TMix_EffectFunc_t = procedure(chan: Integer; stream: Pointer; len: Integer; udata: Pointer) cdecl;
 
   {*
    * This is a callback that signifies that a channel has finished all its
@@ -294,7 +303,7 @@ type
    * DO NOT EVER call SDL_LockAudio() from your callback function!
    *}
 type
-  TMix_EffectDone_t = procedure(chan: Integer; udata: Pointer);
+  TMix_EffectDone_t = procedure(chan: Integer; udata: Pointer) cdecl;
 
   {* Register a special effect function. At mixing time, the channel data is
    *  copied into a buffer and passed through each registered effect function.
@@ -615,8 +624,8 @@ function Mix_PausedMusic: Integer cdecl; external MIX_LibName {$IFDEF DELPHI} {$
   {* Set the current position in the music stream.
      This returns 0 if successful, or -1 if it failed or isn't implemented.
      This function is only implemented for MOD music formats (set pattern
-     order number) and for OGG, FLAC, MP3_MAD, and MODPLUG music (set
-     position in seconds), at the moment.
+     order number) and for OGG, FLAC, MP3_MAD, MP3_MPG and MODPLUG music
+     (set position in seconds), at the moment.
   *}
 function Mix_SetMusicPosition(position: Double): Integer cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_SetMusicPosition' {$ENDIF} {$ENDIF};
 
@@ -638,7 +647,7 @@ function Mix_SetSoundFonts(paths: PAnsiChar): Integer cdecl; external MIX_LibNam
 function Mix_GetSoundFonts: PAnsiChar cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_GetSoundFonts' {$ENDIF} {$ENDIF};
 
 type
-  TMix_SoundFunc = function(c: PAnsiChar; p: Pointer): Integer;
+  TMix_SoundFunc = function(c: PAnsiChar; p: Pointer): Integer cdecl;
 
 function Mix_EachSoundFont(func: TMix_SoundFunc; data: Pointer): Integer cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_EachSoundFont' {$ENDIF} {$ENDIF};
 
@@ -653,6 +662,7 @@ procedure Mix_CloseAudio cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MAC
 {* We'll use SDL for reporting errors *}
 function Mix_SetError(const fmt: PAnsiChar): SInt32; cdecl;
 function Mix_GetError: PAnsiChar; cdecl;
+procedure Mix_ClearError(); cdecl;
 
 implementation
 
@@ -691,6 +701,11 @@ end;
 function Mix_GetError: PAnsiChar; cdecl;
 begin
   Result := SDL_GetError();
+end;
+
+procedure Mix_ClearError; cdecl;
+begin
+  SDL_ClearError()
 end;
 
 end.

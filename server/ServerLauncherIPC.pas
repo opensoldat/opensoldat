@@ -1,9 +1,18 @@
+{*************************************************************}
+{                                                             }
+{       ServerLauncherIPC Unit for OpenSoldat                 }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ServerLauncherIPC;
 
 interface
 
 uses
   LauncherIPC, fpjson;
+
 
 type
   TServerLauncherIPC = class(TLauncherIPC)
@@ -13,6 +22,7 @@ type
   public
     procedure SendReadyForClientsMessage;
   end;
+
 
 implementation
 
@@ -44,5 +54,3 @@ begin
 end;
 
 end.
-
-

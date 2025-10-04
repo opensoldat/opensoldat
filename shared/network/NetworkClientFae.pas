@@ -3,9 +3,11 @@ unit NetworkClientFae;
 interface
 
 uses
-  Steam,
+  // Library units
   FaeBase,
-  FaeClient;
+  FaeClient,
+  Steam;
+
 
 var
   FaePendingAuth: Pointer;
@@ -13,17 +15,24 @@ var
 procedure ClientSendFaeResponse(Response: TFaeResponseBox);
 procedure ClientHandleFaeChallenge(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
+  // System units
   SysUtils,
+
+  // Helper units
+  LogFile,
+  TraceLog,
+
+  // Project units
   Constants,
   Game,
-  LogFile,
   Net,
   NetworkUtils,
-  TraceLog,
   Unit1;
+
 
 procedure ClientSendFaeResponse(Response: TFaeResponseBox);
 var

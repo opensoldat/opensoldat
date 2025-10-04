@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       ScriptCore script unit for OPENSOLDAT           }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptCore Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit ScriptCore;
 
@@ -13,12 +14,21 @@ unit ScriptCore;
 interface
 
 uses
-  Classes, PascalCore, ScriptCoreInterface, syncobjs,
-  // pascal script units
+  // System units
+  Classes,
+  syncobjs,
   SysUtils,
-  // critical section
-  uPSComponent, uPSRuntime, uPSUtils;
-  // scriptcore units
+
+  // Library units
+  uPSComponent,
+  uPSRuntime,
+  uPSUtils,
+
+  // Project units
+  PascalCore,
+  ScriptCoreInterface;
+
+
 type
   // ScriptCore class
   TScriptCore = class(TPascalCore)
@@ -41,23 +51,24 @@ type
     procedure OnExecute(Script: TPSScript);
     // called after successful compilation, registers all pointer variables
     procedure OnAfterCompile;
-    {$push}{$warn 3018 off} // Hide "Constructor should be public"
+    {$PUSH}
+    {$WARN 3018 OFF} // Hide "Constructor should be public"
     constructor Create(Dir: string);
-    {$pop}
+    {$POP}
   public
     destructor Destroy; override;
     // Compiles ScriptCore instance
-    function Prepare: Boolean; override;
+    function  Prepare: Boolean; override;
     // Does nothing, yet
     procedure Launch; override;
     // CrossFunc implementation, used also by all the event calls
-    function CallFunc(const Params: array of Variant; FuncName: string;
+    function  CallFunc(const Params: array of Variant; FuncName: string;
       DefaultReturn: Variant): Variant; override;
     procedure OnClockTick; override;
     procedure OnIdle; override;
     //procedure OnScriptShutdown(ServerShutdown: Boolean);
 
-    function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
+    function  OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer; override;
     procedure OnJoinTeam(Id, Team, OldTeam: Byte; JoinGame: Boolean); override;
     procedure OnLeaveGame(Id: Byte; Kicked: Boolean); override;
@@ -80,14 +91,14 @@ type
     procedure OnWeaponChange(Id, Primary, Secondary,
       PrimaryAmmo, SecondaryAmmo: Byte); override;
 
-    function OnVoteMapStart(Id: Byte; Map: string): Boolean; override;
-    function OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean;
+    function  OnVoteMapStart(Id: Byte; Map: string): Boolean; override;
+    function  OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean;
       override;
     procedure OnVoteMap(Id: Byte; Map: string); override;
     procedure OnVoteKick(Id, Victim: Byte); override;
     procedure OnPlayerSpeak(Id: Byte; Text: string); override;
-    function OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
-    function OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
+    function  OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
+    function  OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
       override;
   end;
 
@@ -95,23 +106,25 @@ type
 
 // @param dir Directory to check
 // @return TScriptCore instance if Includes.txt is found, null otherwise
-function CheckFunction(Dir: string): TScriptCore;
+function  CheckFunction(Dir: string): TScriptCore;
 
 
 implementation
 
 uses
-  Net,
-  NetworkUtils,
-  // OnScriptCrash var
-  ScriptDispatcher, strutils,
-  // Main tick counter
-  Server,
-  Game,
+  // System units
+  StrUtils,
+
+  // Project units
   Command,
   Constants,
-  //OnPlayerKill
+  Game,
+  Net,
+  NetworkUtils,
+  ScriptDispatcher,
+  Server,
   Weapons;
+
 
 constructor TScriptCore.Create(Dir: string);
 var
@@ -299,7 +312,8 @@ end;
 
 function TScriptCore.OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
   Forwarded: Boolean; Password: string): Integer;
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
   begin
@@ -310,10 +324,11 @@ begin
   end;
   Result := State;
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnJoinTeam(Id, Team, OldTeam: Byte; JoinGame: Boolean);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then begin
     if JoinGame and (Sprite[Id].Player.ControlMethod = Net.HUMAN) then
@@ -321,7 +336,7 @@ begin
     Self.CallFunc([Id, Team], 'OnJoinTeam', 0);
   end;
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnLeaveGame(Id: Byte; Kicked: Boolean);
 begin
@@ -330,12 +345,13 @@ begin
 end;
 
 procedure TScriptCore.OnBeforeMapChange(Map: string);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
     Self.CallFunc([], 'OnGameEnd', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnAfterMapChange(Map: string);
 begin
@@ -344,28 +360,31 @@ begin
 end;
 
 procedure TScriptCore.OnAdminConnect(Ip: string; Port: Word);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
     Self.CallFunc([Ip], 'OnAdminConnect', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnAdminDisconnect(Ip: string; Port: Word);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
     Self.CallFunc([Ip], 'OnAdminDisconnect', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnAdminMessage(Ip: string; Port: Word; Msg: string);
 begin
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
   if not Self.FDisabled then
     Self.CallFunc([Ip, Msg], 'OnAdminMessage', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCore.OnFlagGrab(Id, TeamFlag: Byte; GrabbedInBase: Boolean);
 begin
@@ -420,12 +439,13 @@ end;
 
 procedure TScriptCore.OnWeaponChange(Id, Primary, Secondary,
   PrimaryAmmo, SecondaryAmmo: Byte);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.FDisabled then
     Self.CallFunc([Id, WeaponNumInternalToExternal(Primary), WeaponNumInternalToExternal(Secondary)], 'OnWeaponChange', 0);
 end;
-{$pop}
+{$POP}
 
 function TScriptCore.OnVoteMapStart(Id: Byte; Map: string): Boolean;
 begin
@@ -472,12 +492,13 @@ begin
 end;
 
 function TScriptCore.OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   Result := False;
   if not Self.FDisabled then
     Result := Self.CallFunc([255, Command], 'OnCommand', False);
 end;
-{$pop}
+{$POP}
 
 end.

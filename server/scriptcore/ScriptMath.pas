@@ -1,44 +1,61 @@
+{*************************************************************}
+{                                                             }
+{       ScriptMath Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptMath;
 
-{$mode delphi}
+{$IFDEF FPC}{$mode delphi}{$ENDIF}
 
 interface
 
 uses
-  Classes, SysUtils, Math, ScriptCore3Api, PascalCompiler, PascalExec;
+  // System units
+  Classes,
+  Math,
+  SysUtils,
+
+  // Project units
+  PascalCompiler,
+  PascalExec,
+  ScriptCore3Api;
+
 
 type
   TScriptMath = class
   private
-    function GetE: Extended;
-    function GetPi: Extended;
+    function  GetE: Extended;
+    function  GetPi: Extended;
   public
-    function Sin(A: Extended): Extended;
-    function Cos(A: Extended): Extended;
-    function Tan(A: Extended): Extended;
-    function Cotan(A: Extended): Extended;
-    function Pow(A, B: Extended): Extended;
-    function LogN(A, B: Extended): Extended;
-    function Ln(A: Extended): Extended;
-    function ArcSin(A: Extended): Extended;
-    function ArcCos(A: Extended): Extended;
-    function ArcTan(A: Extended): Extended;
-    function ArcCotan(A: Extended): Extended;
-    function ArcTan2(A, B: Extended): Extended;
-    function Min(A, B: Extended): Extended;
-    function Max(A, B: Extended): Extended;
-    function Abs(A: Extended): Extended;
-    function Exp(A: Extended): Extended;
-    function Sign(A: Extended): TValueSign;
-    function IsNaN(A: Extended): Boolean;
-    function Round(A: Extended): Integer;
-    function RoundTo(A: Extended; B: TRoundToRange): Extended;
-    function DegToRad(A: Extended): Extended;
-    function RadToDeg(A: Extended): Extended;
-    function DegNormalize(A: Extended): Extended;
-    function InRange(const A, B, C: Double): Boolean;
-    function EnsureRange(const AValue, AMin, AMax: Double): Double;
-    function Random(Min, Max: Extended): Extended;
+    function  Sin(A: Extended): Extended;
+    function  Cos(A: Extended): Extended;
+    function  Tan(A: Extended): Extended;
+    function  Cotan(A: Extended): Extended;
+    function  Pow(A, B: Extended): Extended;
+    function  LogN(A, B: Extended): Extended;
+    function  Ln(A: Extended): Extended;
+    function  ArcSin(A: Extended): Extended;
+    function  ArcCos(A: Extended): Extended;
+    function  ArcTan(A: Extended): Extended;
+    function  ArcCotan(A: Extended): Extended;
+    function  ArcTan2(A, B: Extended): Extended;
+    function  Min(A, B: Extended): Extended;
+    function  Max(A, B: Extended): Extended;
+    function  Abs(A: Extended): Extended;
+    function  Exp(A: Extended): Extended;
+    function  Sign(A: Extended): TValueSign;
+    function  IsNaN(A: Extended): Boolean;
+    function  Round(A: Extended): Integer;
+    function  RoundTo(A: Extended; B: TRoundToRange): Extended;
+    function  DegToRad(A: Extended): Extended;
+    function  RadToDeg(A: Extended): Extended;
+    function  DegNormalize(A: Extended): Extended;
+    function  InRange(const A, B, C: Double): Boolean;
+    function  EnsureRange(const AValue, AMin, AMax: Double): Double;
+    function  Random(Min, Max: Extended): Extended;
     procedure Sincos(theta : extended;out sinus,cosinus : extended);
     property E: Extended read GetE;
     property Pi: Extended read GetPi;
@@ -54,7 +71,9 @@ type
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
   end;
 
+
 implementation
+
 
 function TScriptMath.GetE: Extended;
 begin
@@ -302,4 +321,3 @@ begin
 end;
 
 end.
-

@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       PascalExec unit for OPENSOLDAT                  }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       PascalExec Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit PascalExec;
@@ -14,10 +15,16 @@ unit PascalExec;
 interface
 
 uses
-  // general
-  Classes, SysUtils,
-  // pascal script
-  uPSR_dll, uPSR_std, uPSRuntime, uPSUtils;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  uPSR_dll,
+  uPSR_std,
+  uPSRuntime,
+  uPSUtils;
+
 
 // just so that api units doesn't have to import uPSUtils unit
 const
@@ -59,8 +66,7 @@ const
   btExtClass = uPSUtils.btExtClass;
 
 type
-
-  // just so that api units doesn't have to import uPSRuntime unit
+  // Just so that api units doesn't have to import uPSRuntime unit
   TPascalRuntimeClass = uPSRuntime.TPSRuntimeClass;
 
   TUnableToLoadException = class(Exception)
@@ -141,7 +147,9 @@ type
     procedure AfterExecute(Exec: TPascalExec);
   end;
 
+
 implementation
+
 
 procedure OnException(Sender: TPSExec; ExError: TPSError; const ExParam: tbtstring;
   ExObject: TObject; ProcNo, Position: Cardinal);

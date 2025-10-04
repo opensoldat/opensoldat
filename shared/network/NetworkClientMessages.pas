@@ -1,26 +1,48 @@
+{*************************************************************}
+{                                                             }
+{       NetworkClientMessages Unit for OpenSoldat             }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkClientMessages;
 
 interface
 
 uses
+  // System units
+  Classes,
+  SysUtils,
 
-  // delphi and system units
-  SysUtils, Classes,
+  // Library units
+  Steam,
 
-  // helper units
-  Vector, Util,
+  // Helper units
+  Util,
+  Vector,
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Constants, GameStrings;
+  // Project units
+  Constants,
+  GameStrings,
+  Net,
+  Sprites;
+
 
 procedure ClientSendStringMessage(Text: WideString; MsgType: Byte);
 procedure ClientHandleChatMessage(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleSpecialMessage(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
-  Client, Game, InterfaceGraphics, NetworkUtils;
+  // Project units
+  Client,
+  Game,
+  InterfaceGraphics,
+  NetworkUtils;
+
 
 procedure ClientSendStringMessage(Text: WideString; MsgType: Byte);
 var

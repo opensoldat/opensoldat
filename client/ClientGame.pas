@@ -1,18 +1,34 @@
+{*************************************************************}
+{                                                             }
+{       ClientGame Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ClientGame;
 
 interface
 
 uses
-  SDL2, Constants, Vector;
+  // Library units
+  SDL2,
+
+  // Helper units
+  Vector,
+
+  // Project units
+  Constants;
+
 
 procedure ResetFrameTiming;
 procedure GameLoop;
-function GetGameFps: Integer;
-function GetCurrentTime: Extended;
+function  GetGameFps: Integer;
+function  GetCurrentTime: Extended;
 procedure TabComplete;
 procedure ResetWeaponStats;
 procedure BigMessage(Text: WideString; Delay: Integer; Col: Cardinal);
-function GetCameraTarget(Backwards: Boolean = False): Byte;
+function  GetCameraTarget(Backwards: Boolean = False): Byte;
 {$IFDEF STEAM}
 procedure GetMicData;
 {$ENDIF}
@@ -20,7 +36,7 @@ procedure GetMicData;
 var
   MousePrev: TVector2;
   mx, my: Single;
-  MapChanged: Boolean = False;
+  MapChanged:  Boolean = False;
   ChatChanged: Boolean = True;  // used for blinking chat input
   ShouldRenderFrames: Boolean;  // false during game request phase
 
@@ -33,11 +49,11 @@ var
 
   // resolution
   IsFullscreen: Boolean;
-  ScreenWidth: Integer = DEFAULT_WIDTH;
+  ScreenWidth:  Integer = DEFAULT_WIDTH;
   ScreenHeight: Integer = DEFAULT_HEIGHT;
-  RenderWidth: Integer = 0;
+  RenderWidth:  Integer = 0;
   RenderHeight: Integer = 0;
-  WindowWidth: Integer = 0;
+  WindowWidth:  Integer = 0;
   WindowHeight: Integer = 0;
 
   // chat stuff
@@ -59,58 +75,89 @@ var
 implementation
 
 uses
-  SysUtils, StrUtils, Math, Classes,
-  Client, Game, Sprites, GameStrings, Demo,
-  Net, NetworkClientSprite, NetworkClientConnection,
-  {$IFDEF ENABLE_FAE}FaeBase, FaeClient, NetworkClientFae,{$ENDIF}
-  {$IFDEF STEAM}Steam, NetworkClientGame,{$ENDIF}
-  GameRendering, Gfx, UpdateFrame, GameMenus, Util, InterfaceGraphics;
+  // System units
+  Classes,
+  Math,
+  StrUtils,
+  SysUtils,
+
+  // Library units
+  {$IFDEF ENABLE_FAE}
+    FaeBase,
+    FaeClient,
+    NetworkClientFae,
+  {$ENDIF}
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Helper units
+  Util,
+
+  // Project units
+  Client,
+  Demo,
+  Game,
+  GameMenus,
+  GameRendering,
+  GameStrings,
+  Gfx,
+  Input,
+  InterfaceGraphics,
+  Net,
+  NetworkClientConnection,
+  {$IFDEF STEAM}
+    NetworkClientGame,
+  {$ENDIF}
+  NetworkClientSprite,
+  Sprites,
+  UpdateFrame;
+
 
 type
   TFrameTiming = record
-    Frequency: Int64;
-    StartTime: Int64;
-    PrevTime: Extended;
+    Frequency:      Int64;
+    StartTime:      Int64;
+    PrevTime:       Extended;
     PrevRenderTime: Extended;
-    Accumulator: Extended;
-    MinDeltaTime: Extended;
-    Elapsed: Extended;
-    Counter: Integer;
-    Fps: Integer;
-    FpsAccum: Extended;
+    Accumulator:    Extended;
+    MinDeltaTime:   Extended;
+    Elapsed:        Extended;
+    FpsAccum:       Extended;
+    Fps:            Integer;
+    Counter:        Integer;
   end;
 
 var
   FrameTiming: TFrameTiming;
+
 
 procedure ResetFrameTiming;
 begin
   FrameTiming.Frequency := SDL_GetPerformanceFrequency;
   FrameTiming.StartTime := SDL_GetPerformanceCounter;
 
-  FrameTiming.PrevTime := GetCurrentTime;
+  FrameTiming.PrevTime       := GetCurrentTime;
   FrameTiming.PrevRenderTime := FrameTiming.PrevTime;
-  FrameTiming.Accumulator := 0;
-  FrameTiming.MinDeltaTime := 0;
-  FrameTiming.Elapsed := 0;
 
+  FrameTiming.Accumulator  := 0.0;
+  FrameTiming.MinDeltaTime := 0.0;
+  FrameTiming.Elapsed      := 0.0;
+  FrameTiming.FpsAccum     := 0.0;
+
+  FrameTiming.Fps     := 0;
   FrameTiming.Counter := 0;
-  FrameTiming.Fps := 0;
-  FrameTiming.FpsAccum := 0;
 
   if r_fpslimit.Value then
     FrameTiming.MinDeltaTime := 1.0 / r_maxfps.Value;
 
-  TickTime := 0;
+  TickTime     := 0;
   TickTimeLast := 0;
 end;
 
 function GetCurrentTime: Extended;
-var
-  x: Int64;
 begin
-  x := SDL_GetPerformanceCounter;
-  Result := (x - FrameTiming.StartTime) / FrameTiming.Frequency;
+  Result := (SDL_GetPerformanceCounter - FrameTiming.StartTime) / FrameTiming.Frequency;
 end;
 
 procedure BigMessage(Text: WideString; Delay: Integer; Col: Cardinal);
@@ -200,11 +247,11 @@ var
 begin
   for i := 0 to 20 do
   begin
-    WepStats[i].Shots := 0;
-    WepStats[i].Hits := 0;
-    WepStats[i].Kills := 0;
+    WepStats[i].Shots     := 0;
+    WepStats[i].Hits      := 0;
+    WepStats[i].Kills     := 0;
     WepStats[i].Headshots := 0;
-    WepStats[i].Accuracy := 0;
+    WepStats[i].Accuracy  := 0;
   end;
 end;
 
@@ -288,6 +335,23 @@ begin
         DemoPlayer.ProcessDemo;
     end;
 
+    // Mousewheel events do not have a guaranteed inverse (like keyup/keydown).
+    // So instead, mousewheel "pressed" state lasts 1 frame. This must happen
+    // after `UpdateFrame()` is called.
+    if MouseWheelUpCounter > 0 then
+    begin
+      Dec(MouseWheelUpCounter);
+      if MouseWheelUpCounter = 0 then
+        KeyStatus[KEYID_MOUSEWHEEL_UP] := False;
+    end;
+
+    if MouseWheelDownCounter > 0 then
+    begin
+      Dec(MouseWheelDownCounter);
+      if MouseWheelDownCounter = 0 then
+        KeyStatus[KEYID_MOUSEWHEEL_DOWN] := False;
+    end;
+
     // Radio Cooldown
     if (MainTickCounter mod SECOND = 0) and
       (RadioCooldown > 0) and (sv_radio.Value) then
@@ -310,11 +374,11 @@ begin
 
     if (MySprite > 0) and (not DemoPlayer.Active) then
     begin
-      // connection problems
+      // Connection problems
       if (MapChangeCounter < 0) and not EscMenu.Active then
         Inc(NoHeartbeatTime);
 
-      if NoHeartbeatTime > CONNECTIONPROBLEM_TIME then
+      if NoHeartbeatTime > CONNECTIONPROBLEM_TIME_SMALL then
       begin
         if MainTickCounter mod 120 = 0 then
           if NoHeartbeatTime > DISCONNECTION_TIME then
@@ -376,7 +440,7 @@ begin
       end;
 
       ForceClientSpriteSnapshotMov := False;
-    end;  // playing
+    end;  // Playing
 
     // Launcher connection
     if launcher_ipc_enable.Value then
@@ -386,7 +450,7 @@ begin
         LauncherIPC.SendJoinServerMessage(ServerIP, ServerPort);
       end;
 
-    //UDP.FlushMsg;
+    UDP.FlushMsg;  // TODO: is this necessary?
   end;  // Client
 
   // this shouldn't happen but still done for safety
@@ -504,7 +568,8 @@ begin
   if (AvailableVoice = k_EVoiceResultOK) and (AvailableVoiceBytes > 0) then
   begin
     SetLength(VoiceData, AvailableVoiceBytes);
-    AvailableVoice := SteamAPI.User.GetVoice(True, VoiceData, AvailableVoiceBytes, @AvailableVoiceBytes, false, nil, 0, nil, 0);
+    AvailableVoice := SteamAPI.User.GetVoice(True, VoiceData, AvailableVoiceBytes,
+      @AvailableVoiceBytes, False, nil, 0, nil, 0);
 
     if (AvailableVoice = k_EVoiceResultOK) and (AvailableVoiceBytes > 0) then
       ClientSendVoiceData(VoiceData, AvailableVoiceBytes);

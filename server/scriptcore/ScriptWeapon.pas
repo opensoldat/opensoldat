@@ -1,10 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptWeapon unit for OPENSOLDAT                }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptWeapon Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptWeapon;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}
@@ -12,14 +14,18 @@ unit ScriptWeapon;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   NetworkServerFunctions,
   PascalCompiler,
   PascalExec,
-  Sprites,
   ScriptCore3Api,
-  SysUtils,
+  Sprites,
   Weapons;
+
 
 type
   PGun = ^TGun;
@@ -28,11 +34,11 @@ type
   TScriptWeapon = class(TObject)
   protected
     FWeapon: PGun;
-    function GetGun: TGun;
-    function GetType: Byte;
-    function GetName: string;
-    function GetBulletStyle: Byte;
-    function GetAmmo: Byte;
+    function  GetGun: TGun;
+    function  GetType: Byte;
+    function  GetName: string;
+    function  GetBulletStyle: Byte;
+    function  GetAmmo: Byte;
     procedure SetAmmo(Ammo: Byte); virtual; abstract;
   public
     property Gun: TGun read GetGun;
@@ -90,7 +96,9 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
+
 
 constructor TScriptNewWeapon.Create;
 begin

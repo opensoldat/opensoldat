@@ -1,39 +1,60 @@
+{*************************************************************}
+{                                                             }
+{       Cvar Unit for OPENSOLDAT                              }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{                                                             }
+{  For reference see:                                         }
+{  https://developer.valvesoftware.com/wiki/ConVar            }
+{                                                             }
+{*************************************************************}
+
 unit Cvar;
 
 interface
 
 uses
-  Classes, Contnrs, Sysutils, Variants, Command, Constants, Util;
-{
-  Cvar tags
-  sv_ - server cvar
-  cl_ - client cvar
-  mp_ - multiplayer cvars
-  r_  - renderer settings
-  ui_ - interface settings
-  fs_ - filesystem settings
-}
+  // System units
+  Classes,
+  Contnrs,
+  SysUtils,
+  Variants,
+
+  // Helper units
+  Util,
+
+  // Project units
+  Command,
+  Constants;
+
+
+// Cvar tags:
+// sv_ - server cvar
+// cl_ - client cvar
+// mp_ - multiplayer cvars
+// r_  - renderer settings
+// ui_ - interface settings
+// fs_ - filesystem settings
 
 const
     MAX_CVARS = 1024;
 
 type
-  {
-    CVAR_IMMUTABLE       - can't be changed after set
-    CVAR_ARCHIVE         - save cvar to cfg file
-    CVAR_SPONLY          - only in singleplayer mode
-    CVAR_NOTIFY          - notify players after change
-    CVAR_MODIFIED        - this flag is set after cvar changed initial value
-    CVAR_CLIENT          - client cvar
-    CVAR_SERVER          - server cvar
-    CVAR_SYNC            - sync cvar to client cvar
-    CVAR_SCRIPT          - cvar set by script
-    CVAR_INITONLY        - cvar can be changed only at startup
-    CVAR_SERVER_INITONLY - cvar can be changed only at startup by the server
-  }
-  TCvarFlag = (CVAR_IMMUTABLE, CVAR_ARCHIVE, CVAR_SPONLY, CVAR_NOTIFY,
-      CVAR_MODIFIED, CVAR_CLIENT, CVAR_SERVER, CVAR_SYNC, CVAR_SCRIPT,
-      CVAR_INITONLY, CVAR_SERVER_INITONLY, CVAR_TOSYNC);
+  TCvarFlag = (
+    CVAR_IMMUTABLE,        // can't be changed after set
+    CVAR_ARCHIVE,          // save cvar to cfg file
+    CVAR_SPONLY,           // only in singleplayer mode
+    CVAR_NOTIFY,           // notify players after change
+    CVAR_MODIFIED,         // this flag is set after cvar changed initial value
+    CVAR_CLIENT,           // client cvar
+    CVAR_SERVER,           // server cvar
+    CVAR_SYNC,             // sync cvar to client cvar
+    CVAR_SCRIPT,           // cvar set by script
+    CVAR_INITONLY,         // cvar can be changed only at startup
+    CVAR_SERVER_INITONLY,  // cvar can be changed only at startup by the server
+    CVAR_TOSYNC            // TODO: explain what this is for
+  );
   TCvarFlags = set of TCvarFlag;
 
   TCvarBase = class
@@ -136,17 +157,36 @@ type
 
 procedure CvarInit();
 procedure CvarCleanup();
-function DumpFlags(Cvar: TCvarBase): AnsiString;
+function  DumpFlags(Cvar: TCvarBase): AnsiString;
 procedure ResetSyncCvars;
 
 var
-  Cvars: TFPHashList;
+  Cvars:     TFPHashList;
   CvarsSync: TFPHashList;
   CvarsNeedSyncing: Boolean = False;
   CvarsInitialized: Boolean = False;
 
+
 implementation
-  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} TraceLog, Math, Game {$IFNDEF SERVER}, Sound, Demo {$ENDIF};
+
+uses
+  // System units
+  Math,
+
+  // Helper units
+  TraceLog,
+
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+    Demo,
+    Sound,
+  {$ENDIF}
+  Game,
+  Things;
+
 
 {$IFNDEF SERVER}
 function snd_volumeChange(Cvar: TCvarBase; NewValue: Integer): Boolean;
@@ -159,7 +199,12 @@ end;
 
 function r_zoomChange(Cvar: TCvarBase; NewValue: Single): Boolean;
 begin
-  if (not Sprite[MySprite].IsSpectator) and (not IsZero(NewValue)) then
+  if MySprite = 0 then
+  begin
+    Cvar.FErrorMessage := 'You need to be in-game to set zoom.';
+    Result := False;
+  end
+  else if (not Sprite[MySprite].IsSpectator) and (not IsZero(NewValue)) then
   begin
     Cvar.FErrorMessage := 'You need to be in the spectators team';
     Result := False;
@@ -169,6 +214,13 @@ end;
 
 function cl_player_wepChange(Cvar: TCvarBase; NewValue: Integer): Boolean;
 begin
+  if MySprite = 0 then
+  begin
+    Cvar.FErrorMessage := 'You need to be in-game to set cl_player_wep.';
+    Result := False;
+    Exit;
+  end;
+
   if WeaponActive[NewValue] = 1 then
     Sprite[MySprite].SelWeapon := NewValue;
   Cvar.FErrorMessage := '';
@@ -228,13 +280,16 @@ end;
 {$POP}
 
 function sv_gravityChange(Cvar: TCvarBase; NewValue: Single): Boolean;
+var
+  i: Integer;
 begin
   Cvar := Cvar;
-  GRAV := NewValue;
-  SpriteParts.Gravity := GRAV;
-  GostekSkeleton.Gravity := 1.06 * GRAV;
-  BulletParts.Gravity := GRAV * 2.25;
-  SparkParts.Gravity := GRAV / 1.4;
+  Grav := NewValue;
+
+  for i := Low(Thing) to High(Thing) do
+    if Thing[i].Active then
+      Thing[i].StaticType := False;
+
   Result := True;
 end;
 
@@ -288,6 +343,8 @@ begin
     CvarFlags := CvarFlags + ' SC';
   if CVAR_INITONLY in Cvar.FFlags then
     CvarFlags := CvarFlags + ' INITONLY';
+  if CVAR_SERVER_INITONLY in Cvar.FFlags then
+    CvarFlags := CvarFlags + ' SERVER_INITONLY';
 
   Result := CvarFlags;
 end;
@@ -304,7 +361,9 @@ begin
     Include(FFlags, CVAR_TOSYNC);
     CvarsNeedSyncing := True;
   end else
+  begin
     Exclude(Self.FFlags, CVAR_TOSYNC);
+  end;
 end;
 
 constructor TCvar<T>.Create(Name, Description: AnsiString; DefaultValue: T; Flags: TCvarFlags; OnChange: TCallback);
@@ -734,7 +793,9 @@ begin
     {$ENDIF}
   {$ENDIF}
 
+  {$IFNDEF SERVER}
   fs_localmount := TBooleanCvar.Add('fs_localmount', 'Mount game directory as game mod', False, [CVAR_CLIENT, CVAR_INITONLY], @CommandLineOnlyChange);
+  {$ENDIF}
   fs_mod := TStringCvar.Add('fs_mod', 'File name of mod placed in mods directory (without .smod extension)', '', [CVAR_INITONLY], nil, 0, 255);
   fs_portable := TBooleanCvar.Add('fs_portable', 'Enables portable mode', True, [CVAR_CLIENT, CVAR_INITONLY], @CommandLineOnlyChange);
   fs_basepath := TStringCvar.Add('fs_basepath', 'Path to base game directory', '', [CVAR_INITONLY], @CommandLineOnlyChange, 0, 255);
@@ -751,7 +812,7 @@ begin
   // Render Cvars
   r_fullscreen := TIntegerCvar.Add('r_fullscreen', 'Set mode of fullscreen', 0, [CVAR_CLIENT], nil, 0, 2);
   r_weathereffects := TBooleanCvar.Add('r_weathereffects', 'Weather effects', True, [CVAR_CLIENT], nil);
-  r_dithering := TBooleanCvar.Add('r_dithering', 'Dithering', False, [CVAR_CLIENT], nil);
+  r_dithering := TBooleanCvar.Add('r_dithering', 'Dithering', True, [CVAR_CLIENT], nil);
   r_swapeffect := TIntegerCvar.Add('r_swapeffect', 'Swap interval, 0 for immediate updates, 1 for updates synchronized with the vertical retrace, -1 for late swap tearing', 0, [CVAR_CLIENT], nil, -1, 1);
   r_compatibility := TBooleanCvar.Add('r_compatibility', 'OpenGL compatibility mode (use fixed pipeline)', False, [CVAR_CLIENT], nil);
   r_texturefilter := TIntegerCvar.Add('r_texturefilter', 'Texture filter (1 = nearest, 2 = linear)', 2, [CVAR_CLIENT], nil, 1, 2);
@@ -764,10 +825,10 @@ begin
   r_maxsparks := TIntegerCvar.Add('r_maxsparks', '', 557, [CVAR_CLIENT], nil, 0, 557);
   r_animations := TBooleanCvar.Add('r_animations', '', True, [CVAR_CLIENT], nil);
   r_renderbackground := TBooleanCvar.Add('r_renderbackground', '', True, [CVAR_CLIENT], nil);
-  r_maxfps := TIntegerCvar.Add('r_maxfps', '', 60, [CVAR_CLIENT], nil, 0, 9999);
+  r_maxfps := TIntegerCvar.Add('r_maxfps', '', 500, [CVAR_CLIENT], nil, 0, 9999);
   r_fpslimit := TBooleanCvar.Add('r_fpslimit', '', True, [CVAR_CLIENT], nil);
   r_resizefilter := TIntegerCvar.Add('r_resizefilter', '', 2, [CVAR_CLIENT], nil, 0, 2);
-  r_sleeptime := TIntegerCvar.Add('r_sleeptime', '', 0, [CVAR_CLIENT], nil, 0, 100);
+  r_sleeptime := TIntegerCvar.Add('r_sleeptime', 'Amount of time to sleep after rendering a frame (avoids busylooping)', 1, [CVAR_CLIENT], nil, 0, 100);
   r_screenwidth := TIntegerCvar.Add('r_screenwidth', '', 0, [CVAR_CLIENT], nil, 0, MaxInt);
   r_screenheight := TIntegerCvar.Add('r_screenheight', '', 0, [CVAR_CLIENT], nil, 0, MaxInt);
   r_renderwidth := TIntegerCvar.Add('r_renderwidth', '', 0, [CVAR_CLIENT, CVAR_INITONLY], nil, 0, MaxInt);
@@ -798,7 +859,7 @@ begin
   cl_sensitivity := TSingleCvar.Add('cl_sensitivity', 'Mouse sensitivity', 1.0, [CVAR_CLIENT], nil, 0.0, 1.0);
   cl_endscreenshot := TBooleanCvar.Add('cl_endscreenshot', 'Take screenshot when game ends', False, [CVAR_CLIENT], nil);
   cl_actionsnap := TBooleanCvar.Add('cl_actionsnap', 'Enables action snap', False, [CVAR_CLIENT], nil);
-  cl_screenshake := TBooleanCvar.Add('cl_screenshake', 'Enables screen shake from enemy fire', True, [CVAR_CLIENT], nil);
+  cl_screenshake := TBooleanCvar.Add('cl_screenshake', 'Enables screen shake from enemy fire', False, [CVAR_CLIENT], nil);
   cl_servermods := TBooleanCvar.Add('cl_servermods', 'Enables server mods feature', True, [CVAR_CLIENT], nil);
 
   {$IFDEF STEAM}
@@ -928,7 +989,7 @@ begin
 
   // Network cvars
   net_port := TIntegerCvar.Add('net_port', 'The port your server runs on, and player have to connect to', 23073, [CVAR_SERVER], nil, 0, 65535);
-  net_ip := TStringCvar.Add('net_ip', 'Binds server ports to specific ip address', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
+  net_ip := TStringCvar.Add('net_ip', 'Binds server ports to specific ip address', '', [CVAR_SERVER], nil, 0, 15);
   net_adminip := TStringCvar.Add('net_adminip', 'Binds admin port to specific ip address', '0.0.0.0', [CVAR_SERVER], nil, 0, 15);
   net_lan := TIntegerCvar.Add('net_lan', 'Set to 1 to set server to LAN mode', 0, [CVAR_SERVER], nil, 0, 1);
   net_allowdownload := TBooleanCvar.Add('net_allowdownload', 'Enables/Disables file transfers', True, [CVAR_SERVER], nil);
@@ -992,7 +1053,7 @@ begin
   sv_advancemode_amount := TIntegerCvar.Add('sv_advancemode_amount', 'Number of kills required in Advance Mode to gain a weapon.', 2, [CVAR_SERVER, CVAR_SYNC], nil, 1, 9999);
   sv_minimap_locations := TBooleanCvar.Add('sv_minimap_locations', 'Enables/disables drawing player and object location indicators on minimap', True, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_advancedspectator := TBooleanCvar.Add('sv_advancedspectator', 'Enables/disables advanced spectator mode', True, [CVAR_SERVER, CVAR_SYNC], nil);
-  sv_radio := TBooleanCvar.Add('sv_radio', 'Enables/disables radio chat', False, [CVAR_SERVER, CVAR_SYNC], nil);
+  sv_radio := TBooleanCvar.Add('sv_radio', 'Enables/disables radio chat', True, [CVAR_SERVER, CVAR_SYNC], nil);
   sv_info := TStringCvar.Add('sv_info', 'A website or e-mail address, or any other short text describing your server', '', [CVAR_SERVER, CVAR_SYNC], nil, 0, 60);
   sv_gravity := TSingleCvar.Add('sv_gravity', 'Gravity', 0.06, [CVAR_SERVER, CVAR_SYNC], @sv_gravityChange, -MaxSingle, MaxSingle);
   sv_hostname := TStringCvar.Add('sv_hostname', 'Name of the server', 'OpenSoldat Server', [CVAR_SERVER, CVAR_SYNC], nil, 0, 24);

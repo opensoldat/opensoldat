@@ -1,11 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptBanLists unit for OPENSOLDAT              }
-{                                                       }
-{       Copyright (c) 2015 Tomasz Kolosowski            }
-{                          and  Umut Karakas            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptBanLists Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2015      Tomasz Kolosowski             }
+{       Copyright (c) 2015      Umut Karakas                  }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit ScriptBanLists;
@@ -15,16 +16,19 @@ unit ScriptBanLists;
 interface
 
 uses
-  BanSystem,
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  BanSystem,
   PascalCompiler,
   PascalExec,
   Server,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
+
 
 type
-
   TScriptBanLists = class;
 
   TScriptBanLists = class(TObject)
@@ -54,7 +58,9 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
+
 
 procedure TScriptBanLists.AddHWBan(HW, Reason: string; Duration: Integer);
 begin
@@ -183,4 +189,3 @@ begin
 end;
 
 end.
-

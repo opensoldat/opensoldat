@@ -12,7 +12,7 @@ MESSAGE(STATUS "***  GameNetworkingSockets -- START --")
     # Set in command line like shown below or with CMakeSettings.json or in cmake-gui
     # e.g.: -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
 ## 2. Set the path to your vcpkg installation
-SET(VCPKG_ROOT "C:/vcpkg" CACHE PATH "Path to your vcpkg installation." FORCE) 
+SET(VCPKG_ROOT "C:/vcpkg" CACHE PATH "Path to your vcpkg installation." FORCE)
 ## 3. Set Directories
 # Project Root
 SET(PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR}/build)

@@ -1,26 +1,42 @@
-{*******************************************************}
-{                                                       }
-{       WeatherEffects Unit for OPENSOLDAT              }
-{                                                       }
-{       Copyright (c) 2003 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       WeatherEffects Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2003      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit WeatherEffects;
 
 interface
 
 uses
-  Game, Weapons, Vector, Sprites, Net, Sparks;
+  // Helper units
+  Vector,
+
+  // Project units
+  Game,
+  Net,
+  Sparks,
+  Sprites,
+  Weapons;
+
 
 procedure MakeRain;
 procedure MakeSandStorm;
 procedure MakeSnow;
 
+
 implementation
 
 uses
-  Client, Cvar, Sound, Constants;
+  // Project units
+  Client,
+  Constants,
+  Cvar,
+  Sound;
+
 
 // Backgorund animation and sound for rain
 procedure MakeRain;

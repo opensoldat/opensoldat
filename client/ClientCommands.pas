@@ -1,18 +1,56 @@
+{*************************************************************}
+{                                                             }
+{       ClientCommands Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2003      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ClientCommands;
-{$push}
-{$warn 5024 off}
+
+{$PUSH}
+{$WARN 5024 OFF}
 
 interface
 
+
 procedure InitClientCommands();
+
 
 implementation
 
 uses
-  {$IFDEF STEAM}Steam,{$ENDIF}
-  Client, Command, Util, strutils, Game, ClientGame, Sound,
-  GameRendering, NetworkClientMessages, Demo, GameStrings, Net,
-  Sprites, Constants, classes, sysutils, Input;
+  // System units
+  Classes,
+  StrUtils,
+  SysUtils,
+  Types,
+  Math,
+
+  // Library units
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Helper units
+  Util,
+
+  // Project units
+  Client,
+  ClientGame,
+  Command,
+  Constants,
+  Demo,
+  Game,
+  GameRendering,
+  GameStrings,
+  Input,
+  Net,
+  NetworkClientMessages,
+  Sound,
+  Sprites;
+
 
 var
   ScreenShotsInARow: Byte = 0;
@@ -21,7 +59,9 @@ procedure CommandBind(Args: array of AnsiString; Sender: Byte);
 var
   BindKeyName: AnsiString;
   CommandString: AnsiString;
-  Modifier: Word;
+  Keys: TStringDynArray;
+  i: Integer;
+  Modifier: TKeyMods;
 begin
   if Length(Args) < 3 then
   begin
@@ -29,19 +69,38 @@ begin
     Exit;
   end;
 
-  BindKeyName := LowerCase(Args[1]);
+  Keys := SplitString(LowerCase(Args[1]), '+');
   CommandString := Args[2];
   Modifier := KM_NONE;
 
-  if AnsiContainsStr(BindKeyName, '+') then
+  BindKeyName := '';
+  for i := Low(Keys) to High(Keys) do
   begin
-    if AnsiContainsText(BindKeyName, 'ctrl') then
-      Modifier := Modifier or KM_CTRL;
-    if AnsiContainsText(BindKeyName, 'shift') then
-      Modifier := Modifier or KM_SHIFT;
-    if AnsiContainsText(BindKeyName, 'alt') then
-      Modifier := Modifier or KM_ALT;
-    BindKeyName := StringsReplace(BindKeyName, ['ctrl', 'shift', 'alt', '+'], ['', '', '', ''], [rfReplaceAll]);
+    if Keys[i] = 'shift' then
+      Modifier := Modifier or KM_SHIFT
+    else if Keys[i] = 'ctrl' then
+      Modifier := Modifier or KM_CTRL
+    else if Keys[i] = 'alt' then
+      Modifier := Modifier or KM_ALT
+    else if BindKeyName = '' then
+      BindKeyName := Keys[i];  // First specific key (can be a specific modifier, like 'left shift') is allowed to be trigger key.
+
+    if Keys[i] = 'left shift' then
+      Modifier := Modifier or KM_LSHIFT
+    else if Keys[i] = 'right shift' then
+      Modifier := Modifier or KM_RSHIFT
+    else if Keys[i] = 'left ctrl' then
+      Modifier := Modifier or KM_LCTRL
+    else if Keys[i] = 'right ctrl' then
+      Modifier := Modifier or KM_RCTRL
+    else if Keys[i] = 'left alt' then
+      Modifier := Modifier or KM_LALT
+    else if Keys[i] = 'right alt' then
+      Modifier := Modifier or KM_RALT
+    else if Keys[i] = 'alt gr' then
+      Modifier := Modifier or KM_RALT
+    else
+      BindKeyName := Keys[i];  // Last non-modifier key is the trigger key.
   end;
 
   if Args[2][1] = '+' then
@@ -53,6 +112,7 @@ end;
 procedure CommandConnect(Args: array of AnsiString; Sender: Byte);
 var
   S: String;
+  PortPos, PassPos: Integer;
 begin
   if Length(Args) <= 1 then
   begin
@@ -63,14 +123,19 @@ begin
   if Args[0] = 'joinurl' then
   begin
     S := Args[1];
-    JoinIP := GetPiece(S, '//', 2);
-    JoinIP := GetPiece(JoinIP, ':', 1);
+    S := GetPiece(S, '//', 2);
 
-    JoinPort := GetPiece(S, ':', 3);
-    JoinPort := GetPiece(JoinPort, '/', 1);
-    JoinPort := AnsiReplaceStr(JoinPort, '/', '');
+    JoinPassword := '';
+    PassPos := S.IndexOf('/');
+    if PassPos >= 0 then
+    begin
+       JoinPassword := S.Substring(PassPos + 1);
+       S := S.Substring(0, PassPos);
+    end;
 
-    JoinPassword := GetPiece(S, '/', 4);
+    PortPos  := Max(S.IndexOf(']') + 1, S.LastIndexOf(':'));
+    JoinIP   := S.Substring(0, PortPos);
+    JoinPort := S.Substring(PortPos + 1);
   end else
   begin
     JoinIP := Args[1];
@@ -81,13 +146,13 @@ begin
     if Length(Args) > 3 then
       JoinPassword := Args[3];
   end;
-  JoinServer();
+  JoinServer;
 end;
 
 procedure CommandRetry(Args: array of AnsiString; Sender: Byte);
 begin
   ExitToMenu;
-  JoinServer();
+  JoinServer;
 end;
 
 procedure CommandDisconnect(Args: array of AnsiString; Sender: Byte);
@@ -102,6 +167,7 @@ begin
     MainConsole.Console('Usage: say "text"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   ClientSendStringMessage(WideString(Args[1]), MSGTYPE_PUB);
 end;
 
@@ -112,6 +178,7 @@ begin
     MainConsole.Console('Usage: say_team "text"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   ClientSendStringMessage(WideString(Args[1]), MSGTYPE_TEAM);
 end;
 
@@ -237,6 +304,7 @@ begin
     MainConsole.Console('Usage: switchcam "id"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   if not Sprite[MySprite].IsSpectator then
   begin
     MainConsole.Console('You are not a spectator', DEBUG_MESSAGE_COLOR);
@@ -261,6 +329,7 @@ begin
     MainConsole.Console('Usage: switchcamflag "id"', GAME_MESSAGE_COLOR);
     Exit;
   end;
+
   if Sprite[MySprite].IsSpectator then
   begin
     for i := 1 to MAX_THINGS do
@@ -295,25 +364,26 @@ end;
 
 procedure InitClientCommands();
 begin
-  CommandAdd('bind', CommandBind, 'Binds command to key', []);
-  CommandAdd('connect', CommandConnect, 'connect to server', [CMD_DEFERRED]);
-  CommandAdd('join', CommandConnect, 'connect to server', [CMD_DEFERRED]);
-  CommandAdd('joinurl', CommandConnect, 'connect to server using url', [CMD_DEFERRED]);
-  CommandAdd('disconnect', CommandDisconnect, 'disconnect from server', [CMD_DEFERRED]);
-  CommandAdd('retry', CommandRetry, 'retry connect to last server', [CMD_DEFERRED]);
-  CommandAdd('screenshot', CommandScreenshot, 'take a screenshot of game', [CMD_DEFERRED]);
-  CommandAdd('say', CommandSay, 'send chat message', []);
-  CommandAdd('say_team', CommandSayTeam, 'send team chat message', []);
-  CommandAdd('record', CommandRecord, 'record demo', []);
-  CommandAdd('mute', CommandMute, 'mute specific nick or id', []);
-  CommandAdd('unbindall', CommandUnbindall, 'Unbinds all binds', []);
-  CommandAdd('unmute', CommandUnmute, 'unmute specific nick or id', []);
-  CommandAdd('stop', CommandStop, 'stop recording demo', []);
-  CommandAdd('shutdown', CommandShutdown, 'shutdown game', []);
-  CommandAdd('switchcam', CommandSwitchCam, 'switches camera to specific player', []);
-  CommandAdd('switchcamflag', CommandSwitchCamFlag, 'switches camera to specific flag', []);
-  CommandAdd('demo_tick', CommandDemoTick, 'skips to a tick in demo', []);
-  CommandAdd('demo_tick_r', CommandDemoTick, 'skips to a tick (relatively) in demo', []);
+  CommandAdd('bind',          CommandBind,          'bind command to key', []);
+  CommandAdd('connect',       CommandConnect,       'connect to server', [CMD_DEFERRED]);
+  CommandAdd('join',          CommandConnect,       'connect to server', [CMD_DEFERRED]);
+  CommandAdd('joinurl',       CommandConnect,       'connect to server using url', [CMD_DEFERRED]);
+  CommandAdd('disconnect',    CommandDisconnect,    'disconnect from server', [CMD_DEFERRED]);
+  CommandAdd('retry',         CommandRetry,         'retry connect to last server', [CMD_DEFERRED]);
+  CommandAdd('screenshot',    CommandScreenshot,    'take a screenshot of game', [CMD_DEFERRED]);
+  CommandAdd('say',           CommandSay,           'send chat message', [CMD_INGAMEONLY]);
+  CommandAdd('say_team',      CommandSayTeam,       'send team chat message', [CMD_INGAMEONLY]);
+  CommandAdd('record',        CommandRecord,        'record demo', []);
+  CommandAdd('mute',          CommandMute,          'mute specific nick or id', []);
+  CommandAdd('unbindall',     CommandUnbindall,     'unbind all binds', []);
+  CommandAdd('unmute',        CommandUnmute,        'unmute specific nick or id', []);
+  CommandAdd('stop',          CommandStop,          'stop recording demo', []);
+  CommandAdd('shutdown',      CommandShutdown,      'shutdown game', []);
+  CommandAdd('switchcam',     CommandSwitchCam,     'switch camera to specific player', [CMD_INGAMEONLY]);
+  CommandAdd('switchcamflag', CommandSwitchCamFlag, 'switch camera to specific flag', [CMD_INGAMEONLY]);
+  CommandAdd('demo_tick',     CommandDemoTick,      'skip to a tick in demo', []);
+  CommandAdd('demo_tick_r',   CommandDemoTick,      'skip to a tick (relatively) in demo', []);
 end;
-{$pop}
+{$POP}
+
 end.

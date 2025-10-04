@@ -1,17 +1,20 @@
-{*******************************************************}
-{                                                       }
-{       Calc Unit for OPENSOLDAT                        }
-{                                                       }
-{       Copyright (c) 2001 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Calc Unit for OpenSoldat                              }
+{                                                             }
+{       Copyright (c) 2001      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Calc;
 
 interface
 
 uses
+  // Helper units
   Vector;
+
 
 type
   TIntersectionResult = record
@@ -19,23 +22,26 @@ type
     NumIntersections: Byte;
   end;
 
-function IsLineIntersectingCircle(Line1, Line2, CircleCenter: TVector2;
+function  IsLineIntersectingCircle(Line1, Line2, CircleCenter: TVector2;
     Radius: Single): TIntersectionResult;
-function LineCircleCollision(StartPoint, EndPoint, CircleCenter: TVector2;
+function  LineCircleCollision(StartPoint, EndPoint, CircleCenter: TVector2;
     Radius: Single; var CollisionPoint: TVector2): Boolean;
-function PointLineDistance(P1, P2, P3: TVector2): Single;
-function Angle2Points(const P1, P2: TVector2): Single;
-function Distance(X1, Y1, X2, Y2: Single): Single; overload;
-function SqrDist(X1, Y1, X2, Y2: Single): Single; overload;
-function SqrDist(P1, P2: TVector2): Single; overload;
-function Distance(P1, P2: TVector2): Single; overload;
-function GreaterPowerOf2(N: Integer): Integer;
-function RoundFair(Value: Single): Integer;
+function  PointLineDistance(P1, P2, P3: TVector2): Single;
+function  Angle2Points(const P1, P2: TVector2): Single;
+function  Distance(X1, Y1, X2, Y2: Single): Single; overload;
+function  SqrDist(X1, Y1, X2, Y2: Single): Single; overload;
+function  SqrDist(P1, P2: TVector2): Single; overload;
+function  Distance(P1, P2: TVector2): Single; overload;
+function  GreaterPowerOf2(N: Integer): Integer;
+function  RoundFair(Value: Single): Integer;
+
 
 implementation
 
 uses
+  // System units
   Math;
+
 
 function IsLineIntersectingCircle(Line1, Line2, CircleCenter: TVector2;
     Radius: Single): TIntersectionResult;
@@ -56,13 +62,13 @@ begin
     // On a more serious note, let's not test the limit of floating point
     Exit;
 
-  // if the angle of the bullet is bigger than 45 degrees,
+  // If the angle of the bullet is bigger than 45 degrees,
   // flip the coordinate system.
   // This algorithm deals with lines being nearly horizontal just fine,
   // but nearly vertical would cause a havoc, as vertical line is not a function.
   if abs(diffy) > abs(diffx) then
   begin
-    flipped := true;
+    flipped := True;
     temp := Line1.x;
     Line1.x := Line1.y;
     Line1.y := temp;
@@ -80,11 +86,11 @@ begin
     diffy := temp;
   end
   else
-    flipped := false;
+    flipped := False;
 
   // Line equation: ax + b - y = 0. given x1, y1, x2, y2, let's calculate a and b
   // a = (y1 - y2)/(x1 - x2)
-  a := diffy/diffx;
+  a := diffy / diffx;
   // b := y - ax
   b := Line1.y - a * Line1.x;
   // Circle equation: (x - x1)^2 + (y - y1)^2 - r^2 = 0

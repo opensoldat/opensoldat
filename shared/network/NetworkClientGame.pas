@@ -1,17 +1,35 @@
+{*************************************************************}
+{                                                             }
+{       NetworkClientGame Unit for OpenSoldat                 }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkClientGame;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+
+  // Helper units
   Vector,
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Weapons, Sound,
-  Constants, GameStrings;
+  // Project units
+  Constants,
+  GameRendering,
+  GameStrings,
+  Net,
+  Sound,
+  Sprites,
+  Weapons;
+
 
 procedure ClientHandleNewPlayer(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientVoteKick(Num: Byte; Ban: Boolean; Reason: string);
@@ -27,11 +45,20 @@ procedure ClientSendVoiceData(Data: Pointer; DataSize: Word);
 procedure ClientHandleVoiceData(NetMessage: PSteamNetworkingMessage_t);
 {$ENDIF}
 
+
 implementation
 
 uses
-  Client, NetworkUtils, Game, Demo, ClientGame, Sparks, GameMenus,
-  InterfaceGraphics;
+  // Project units
+  Client,
+  ClientGame,
+  Demo,
+  Game,
+  GameMenus,
+  InterfaceGraphics,
+  NetworkUtils,
+  Sparks;
+
 
 procedure ClientHandleNewPlayer(NetMessage: PSteamNetworkingMessage_t);
 var
@@ -123,13 +150,14 @@ begin
       CameraFollowSprite := MySprite;
 
     GameMenuShow(TeamMenu, False);
-    ClientPlayerReceived := true;
+    ClientPlayerReceived := True;
     ClientPlayerReceivedCounter := -1;
     BadMapIDCount := 2;
     HeartbeatTime := MainTickCounter;
     HeartbeatTimeWarnings := 0;
 
     r_zoom.SetValue(0.0);  // Reset zoom
+    ActualZoom := 0.0;
 
     if MapChangeCounter < 999999999 then
       MapChangeCounter := -60;
@@ -442,7 +470,7 @@ begin
       PMsg_ServerFlagInfo(NetMessage^.m_pData)^.Who, 18);
 
     if sv_survivalmode.Value then
-      SurvivalEndRound := true;
+      SurvivalEndRound := True;
   end;
   if PMsg_ServerFlagInfo(NetMessage^.m_pData)^.Style = CAPTUREBLUE then
   begin
@@ -460,7 +488,7 @@ begin
       PMsg_ServerFlagInfo(NetMessage^.m_pData)^.Who, 18);
 
     if sv_survivalmode.Value then
-      SurvivalEndRound := true;
+      SurvivalEndRound := True;
   end;
 end;
 

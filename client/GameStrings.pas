@@ -1,27 +1,37 @@
-{*******************************************************}
-{                                                       }
-{       GameStrings Unit for OPENSOLDAT                 }
-{                                                       }
-{       Copyright (c) 2003 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       GameStrings Unit for OpenSoldat                       }
+{                                                             }
+{       Copyright (c) 2003      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit GameStrings;
 
 interface
 
+
+function  InitTranslation(Filename: String): Boolean;
+function  _(InputText: WideString): WideString; overload;
+function  _(InputText: AnsiString): WideString; overload;
+procedure DeInitTranslation();
+
+
+implementation
+
 uses
-  GetText, Classes, PhysFS;
+  // System units
+  Classes,
+
+  // Library units
+  GetText,
+  PhysFS;
+
 
 var
   TranslationFile: TMOFile;
 
-function InitTranslation(Filename: String): Boolean;
-function _(InputText: WideString): WideString; overload;
-function _(InputText: AnsiString): WideString; overload;
-procedure DeInitTranslation();
-
-implementation
 
 function InitTranslation(Filename: String): Boolean;
 var

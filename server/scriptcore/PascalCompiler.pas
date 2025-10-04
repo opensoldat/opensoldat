@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       PascalCompiler unit for OPENSOLDAT              }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       PascalCompiler Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit PascalCompiler;
@@ -14,10 +15,17 @@ unit PascalCompiler;
 interface
 
 uses
-  // general
-  Classes, SysUtils,
-  // pascal script
-  uPSC_dll, uPSCompiler, uPSC_std, uPSPreProcessor, uPSUtils;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  uPSC_dll,
+  uPSC_std,
+  uPSCompiler,
+  uPSPreProcessor,
+  uPSUtils;
+
 
 // just so that api units doesn't have to import uPSCompiler unit
 const
@@ -26,7 +34,6 @@ const
   iptW = uPSCompiler.iptW;
 
 type
-
   // same as above, import buster
   TPascalCompiletimeClass = uPSCompiler.TPSCompileTimeClass;
   TPascalInterface = uPSCompiler.TPSInterface;
@@ -88,6 +95,7 @@ type
     ['{b82ef0d6-a05f-4f68-9d18-ab15f9073c8f}']
     procedure CompilerRegister(Compiler: TPascalCompiler);
   end;
+
 
 implementation
 

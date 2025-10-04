@@ -1,10 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptMap unit for OPENSOLDAT                   }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptMap Unit for OpenSoldat                         }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptMap;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}
@@ -12,27 +14,32 @@ unit ScriptMap;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Helper units
   Vector,
+
+  // Project units
+  Game,
   PascalCompiler,
   PascalExec,
   PolyMap,
+  ScriptBullet,
   ScriptCore3Api,
   ScriptObject,
-  ScriptBullet,
-  ScriptSpawnPoint,
   ScriptPlayer,
+  ScriptSpawnPoint,
+  Server,
   Sprites,
   Things,
-  SysUtils,
-  Server,
-  Game,
   Weapons;
 
-type
 
+type
   TOnBeforeMapChange = procedure(Next: string) of object;
-  TOnAfterMapChange = procedure(Next: string) of object;
+  TOnAfterMapChange  = procedure(Next: string) of object;
 
   TScriptMap = class(TObject)
   private
@@ -42,25 +49,25 @@ type
     FLastFlagObjs: array [1..3] of TScriptActiveFlag;
     FOnBeforeMapChange: TOnBeforeMapChange;
     FOnAfterMapChange: TOnAfterMapChange;
-    function GetObject(ID: Byte): TScriptActiveObject;
-    function GetBullet(ID: Byte): TScriptActiveBullet;
-    function GetSpawn(ID: Byte): TScriptSpawnPoint;
+    function  GetObject(ID: Byte): TScriptActiveObject;
+    function  GetBullet(ID: Byte): TScriptActiveBullet;
+    function  GetSpawn(ID: Byte): TScriptSpawnPoint;
     procedure SetSpawn(ID: Byte; const Spawn: TScriptSpawnPoint);
-    function GetName: string;
+    function  GetName: string;
   public
     constructor Create;
     destructor Destroy; override;
-    function GetFlag(ID: Integer): TScriptActiveFlag;
-    function RayCast(x1, y1, x2, y2: Single; Player: Boolean = False;
+    function  GetFlag(ID: Integer): TScriptActiveFlag;
+    function  RayCast(x1, y1, x2, y2: Single; Player: Boolean = False;
       Flag: Boolean = False; Bullet: Boolean = True; CheckCollider: Boolean = False;
       Team: Byte = 0): Boolean;
-    function RayCastVector(A, B: TVector2; Player: Boolean = False;
+    function  RayCastVector(A, B: TVector2; Player: Boolean = False;
       Flag: Boolean = False; Bullet: Boolean = True; CheckCollider: Boolean = False;
       Team: Byte = 0): Boolean;
-    function CreateBulletVector(A, B: TVector2; HitM: Single; sStyle: Byte; Owner: TScriptActivePlayer): Integer;
-    function CreateBullet(X, Y, VelX, VelY, HitM: Single; sStyle: Byte; Owner: TScriptActivePlayer): Integer;
-    function AddObject(Obj: TScriptNewObject): TScriptActiveObject;
-    function AddSpawnPoint(Spawn: TScriptNewSpawnPoint): TScriptActiveSpawnPoint;
+    function  CreateBulletVector(A, B: TVector2; HitM: Single; sStyle: Byte; Owner: TScriptActivePlayer): Integer;
+    function  CreateBullet(X, Y, VelX, VelY, HitM: Single; sStyle: Byte; Owner: TScriptActivePlayer): Integer;
+    function  AddObject(Obj: TScriptNewObject): TScriptActiveObject;
+    function  AddSpawnPoint(Spawn: TScriptNewSpawnPoint): TScriptActiveSpawnPoint;
     procedure NextMap;
     procedure SetMap(NewMap: string);
     property Objects[ID: Byte]: TScriptActiveObject read GetObject;
@@ -88,11 +95,14 @@ type
     property Map: TScriptMap read FMap;
   end;
 
+
 implementation
 
 uses
+  // Project units
   Bullets,
   Constants;
+
 
 constructor TScriptMap.Create;
 var
@@ -169,7 +179,7 @@ begin
       begin
         Self.FLastFlagObjs[ID] := TScriptActiveFlag.CreateActive(I, Thing[I]);
         Result := Self.FLastFlagObjs[ID];
-        break;
+        Break;
       end;
   end;
 end;
@@ -300,7 +310,7 @@ begin
           Map.SpawnPointsTeam[i] := 1;
       end;}
       Result := TScriptActiveSpawnPoint(FSpawnpoints[i]);
-      break;
+      Break;
     end;
 end;
 

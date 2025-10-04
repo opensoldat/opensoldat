@@ -1,13 +1,14 @@
-{*******************************************************}
-{                                                       }
-{       PascalCore unit for OPENSOLDAT                  }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{ PascalCore defines a class that should be extended by }
-{ any script using PascalScript                         }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       PascalCore Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{  PascalCore defines a class that should be extended by any  }
+{  script using PascalScript                                  }
+{                                                             }
+{*************************************************************}
 unit PascalCore;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}
@@ -15,7 +16,16 @@ unit PascalCore;
 interface
 
 uses
-  Classes, Script, SysUtils, uPSComponent;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  uPSComponent,
+
+  // Project units
+  Script;
+
 
 type
   TPascalCore = class(TScript)
@@ -34,7 +44,6 @@ type
     procedure ThreadFunc(const Parameters: array of Variant; FuncName: string);
   end;
 
-type
   TThreadScript = class(TThread)
   private
     FFuncName: string;
@@ -47,10 +56,13 @@ type
       FuncName: string);
   end;
 
+
 implementation
 
 uses
+  // Project units
   ScriptDispatcher;
+
 
 constructor TPascalCore.Create(Dir: string);
 begin

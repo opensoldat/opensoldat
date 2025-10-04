@@ -33,7 +33,7 @@ Exec=opensoldat -joinurl %u
 Icon=opensoldat
 StartupNotify=false
 Terminal=false
-MimeType=x-scheme-handler/soldat;
+MimeType=x-scheme-handler/opensoldat;
 EOF
 
   # Generate main run script

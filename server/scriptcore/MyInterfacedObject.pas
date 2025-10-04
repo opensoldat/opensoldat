@@ -1,6 +1,15 @@
+{*************************************************************}
+{                                                             }
+{       MyInterfacedObject Unit for OpenSoldat                }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit MyInterfacedObject;
 
 interface
+
 
 type
   TMyInterfacedObject = class(TObject, IInterface)
@@ -10,7 +19,9 @@ type
       function _Release: Integer; stdcall;
     end;
 
+
 implementation
+
 
 function TMyInterfacedObject.QueryInterface(const IID: TGUID; out Obj): HRESULT;
 const

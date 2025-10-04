@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       CoreFunctions unit for OPENSOLDAT               }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptCoreFunctions Unit for OpenSoldat               }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit ScriptCoreFunctions;
@@ -14,11 +15,15 @@ unit ScriptCoreFunctions;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
+
 
 type
   // TODO: GetTickCount, MaskCheck, RegExps, RGB, Round,
@@ -34,14 +39,22 @@ type
 implementation
 
 uses
-  Constants,
-  Weapons,
-  ScriptExceptions,
-  math,
+  // System units
+  Math,
+
+  // Library units
   RegExpr,
-  Server,
+
+  // Helper units
+  Calc,
   Util,
-  Calc;
+
+  // Project units
+  Constants,
+  ScriptExceptions,
+  Server,
+  Weapons;
+
 
 procedure SWriteLn(Text: string);
 begin

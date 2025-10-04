@@ -1,32 +1,45 @@
-{*******************************************************}
-{                                                       }
-{       Main Unit for OPENSOLDAT                        }
-{                                                       }
-{       Copyright (c) 2012 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Main Unit for OpenSoldat                              }
+{                                                             }
+{       Copyright (c) 2012      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Main;
 
 interface
 
 uses
+  // System units
+  Classes,
+  SysUtils,
   {$IFDEF MSWINDOWS}
-  Windows,
+    Windows,
   {$ELSE}
-  Baseunix,
+    Baseunix,
   {$ENDIF}
 
-  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
+  // Project units
+  Constants,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  Server,
+  ServerHelper,
+  ServerLoop;
 
-  Server, Constants, SysUtils, Classes, ServerHelper, ServerLoop;
 
 procedure RunServer;
 
+
 implementation
+
 
 var
   CtrlCHit: Boolean = False;
+
 
 {$IFDEF MSWINDOWS}
 // The windows server needs a hook to make OpenSoldatServer exit normally
@@ -193,13 +206,15 @@ begin
     Exit;
 
     // TODO: Add -r and --allow-root commandline option
-    {if not AllowRoot then
+    {
+    if not AllowRoot then
       Exit;
 
     WriteLn('You have been warned.' + #10 +
       'Hit CTRL+C now if you don''t want to run OpenSoldatServer as root.' + #10 +
       'OpenSoldatServer will start in 30 seconds.');
-    Sleep(30000);}
+    Sleep(30000);
+    }
   end;
 
   SetSigHooks;
@@ -216,8 +231,7 @@ begin
         ScrptDispatcher.Prepare;
       {$ENDIF}
 
-      WriteLn(
-        '----------------------------------------------------------------');
+      WriteLn(StringOfChar('-', 79));
 
       if ProgReady then
         StartServer;
@@ -235,7 +249,7 @@ begin
         MainConsole.Console(E.Message, GAME_MESSAGE_COLOR);
       end;
     end;
-    {$ENDIF NOT DEBUG}
+    {$ENDIF}
   finally
     // Any needed cleanup code here
     ShutDown;

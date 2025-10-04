@@ -1,11 +1,30 @@
+{*************************************************************}
+{                                                             }
+{       Sparks Unit for OpenSoldat                            }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit Sparks;
 
 interface
 
 uses
-  Parts, MapFile, PolyMap, Net, Constants, Vector, Sprites;
+  // Helper units
+  Vector,
 
-type TSpark = object
+  // Project units
+  Constants,
+  MapFile,
+  Net,
+  Parts,
+  PolyMap,
+  Sprites;
+
+
+type
+  TSpark = object
     Active: Boolean;
     Num: SmallInt;
     LifeReal: Single;
@@ -15,12 +34,13 @@ type TSpark = object
   public
     procedure Update;
     procedure Render;
-    function CheckMapCollision(X, Y: Single): Boolean;
+    function  CheckMapCollision(X, Y: Single): Boolean;
     procedure Kill;
     procedure CheckOutOfBounds;
   end;
-  function CreateSpark(sPos, sVelocity: TVector2; sStyle, sOwner: Byte;
-    Life: Integer): Integer;
+
+function  CreateSpark(sPos, sVelocity: TVector2; sStyle, sOwner: Byte;
+  Life: Integer): Integer;
 
 var
   SparksCount: Integer;
@@ -29,8 +49,21 @@ var
 implementation
 
 uses
-  Gfx, Sound, Demo, GameRendering,
-  Client, Util, SysUtils, Math, Game;
+  // System units
+  Math,
+  SysUtils,
+
+  // Helper units
+  Util,
+
+  // Project units
+  Client,
+  Demo,
+  Game,
+  GameRendering,
+  Gfx,
+  Sound;
+
 
 function CreateSpark(sPos, sVelocity: TVector2; sStyle, sOwner: Byte; Life: Integer): Integer;
 var

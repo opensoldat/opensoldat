@@ -1,14 +1,16 @@
-{*******************************************************}
-{                                                       }
-{       Waypoints Unit for OPENSOLDAT                   }
-{                                                       }
-{       Copyright (c) 2002 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Waypoints Unit for OpenSoldat                         }
+{                                                             }
+{       Copyright (c) 2002      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Waypoints;
 
 interface
+
 
 const
   MAX_WAYPOINTS = 5000;
@@ -28,16 +30,21 @@ type
     Connections: array[1..MAX_CONNECTIONS] of Integer;
   end;
 
-type
   TWaypoints = object
     Waypoint: array[1..MAX_WAYPOINTS] of TWaypoint;
     function FindClosest(X, Y: Single; Radius, CurrWaypoint: Integer): Integer;
   end;
 
+
 implementation
 
 uses
-  Calc, SysUtils;
+  // System units
+  SysUtils,
+
+  // Helper units
+  Calc;
+
 
 function TWaypoints.FindClosest(X, Y: Single; Radius, CurrWaypoint: Integer):
   Integer;

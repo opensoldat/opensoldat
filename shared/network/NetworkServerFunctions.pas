@@ -1,16 +1,34 @@
+{*************************************************************}
+{                                                             }
+{       NetworkServerFunctions Unit for OpenSoldat            }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkServerFunctions;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes, sockets,
+  // System units
+  Classes,
+  Sockets,
+  SysUtils,
 
-  // helper units
-  Vector, Util,
+  // Library units
+  Steam,
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Weapons, Constants;
+  // Helper units
+  Util,
+  Vector,
+
+  // Project units
+  Constants,
+  Net,
+  Sprites,
+  Weapons;
+
 
 procedure SetWeaponActive(ID, WeaponNum: Byte; State: Boolean);
 procedure ForceWeapon(ID, Primary, Secondary, Ammo, SecAmmo: Byte);
@@ -20,10 +38,15 @@ procedure ForwardClient(ID: Byte; TargetIP: string; TargetPort: Integer; ShowMsg
 procedure PlaySound(ID: Byte; Name: string; X, Y: Single);
 procedure ServerHandleClientFreeCam(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
-  Server, Game, NetworkUtils;
+  // Project units
+  Game,
+  NetworkUtils,
+  Server;
+
 
 procedure ServerSendFreeCam(ToNum: Byte; FreeCam: Boolean; Pos: TVector2);
 var

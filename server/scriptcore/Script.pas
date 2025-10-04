@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       Abstract script unit for OPENSOLDAT             }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Script Unit for OpenSoldat                            }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Script;
 
@@ -13,7 +14,16 @@ unit Script;
 interface
 
 uses
-  Classes, syncobjs, SysUtils, Vector;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  syncobjs,
+
+  // Helper units
+  Vector;
+
 
 type
   // Abstract script class.
@@ -104,10 +114,13 @@ type
     property Lock: TSynchroObject read FLock;
   end;
 
+
 implementation
 
 uses
+  // Project units
   Game;
+
 
 constructor TScript.Create;
 begin
@@ -256,6 +269,5 @@ begin
   Result := False;
 end;
 {$POP}
+
 end.
-
-

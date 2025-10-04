@@ -1,18 +1,19 @@
-{******************************************************************}
-{                                                                  }
-{             Script dispatcher unit for OPENSOLDAT                }
-{                                                                  }
-{             Copyright (c) 2012 Tomasz Kolosowski                 }
-{                                                                  }
-{ This is an entry scriptcore unit.                                }
-{ No other script unit should be imported in the rest of the code. }
-{ I've tried to implement it using slots & signals pattern         }
-{ but I've failed miserabley while trying to port it to pascal.    }
-{ Implemnted as observer instead, resulting in a big code          }
-{ redundancy. The good news though is that most of the errors will }
-{ be most likely caught during compilation time.                   }
-{                                                                  }
-{******************************************************************}
+{********************************************************************}
+{                                                                    }
+{       ScriptDispatcher Unit for OpenSoldat                         }
+{                                                                    }
+{       Copyright (c) 2012      Tomasz Kolosowski                    }
+{       Copyright (c) 2020-2023 OpenSoldat contributors              }
+{                                                                    }
+{  This is an entry scriptcore unit.                                 }
+{  No other script unit should be imported in the rest of the code.  }
+{  I've tried to implement it using slots & signals pattern          }
+{  but I've failed miserabley while trying to port it to pascal.     }
+{  Implemnted as observer instead, resulting in a big code           }
+{  redundancy. The good news though is that most of the errors will  }
+{  be most likely caught during compilation time.                    }
+{                                                                    }
+{********************************************************************}
 
 unit ScriptDispatcher;
 
@@ -21,10 +22,16 @@ unit ScriptDispatcher;
 interface
 
 uses
+  // System units
   Classes,
-  Script,
+  SysUtils,
+
+  // Helper units
   Vector,
-  SysUtils;
+
+  // Project units
+  Script;
+
 
 type
   TCheckFunction = function(Dir: string): TScript;
@@ -49,9 +56,10 @@ type
     function GetScriptNames: TStringList;
 
     // private constructor
-    {$push}{$warn 3018 off} // Hide "Constructor should be public"
+    {$PUSH}
+    {$WARN 3018 OFF} // Hide "Constructor should be public"
     constructor Instantiate;
-    {$pop}
+    {$POP}
     procedure ProcessUnregisterQueue;
     procedure DoUnregisterScript(Script: TScript);
     procedure DoLock;
@@ -124,7 +132,7 @@ type
     //        "ScriptName.FunctionName"
     // @param DefaultReturn default return value in case script or function is not found
     // @return Value returned by foreign function or DefaultReturn if not found
-    function CallFunc(const Params: array of Variant; FuncName: string;
+    function  CallFunc(const Params: array of Variant; FuncName: string;
       DefaultReturn: Variant): Variant; override;
     // rest of the functions are scriptcore events. Not gonna bother to document it.
 
@@ -133,9 +141,9 @@ type
     procedure OnIdle; override;
     // procedure OnScriptShutdown(ServerShutdown: Boolean);
 
-    function OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
+    function  OnRequestGame(Ip, Hw: string; Port: Word; State: Byte;
       Forwarded: Boolean; Password: string): Integer; override;
-    function OnBeforeJoinTeam(Id, Team, OldTeam: Byte): ShortInt; override;
+    function  OnBeforeJoinTeam(Id, Team, OldTeam: Byte): ShortInt; override;
     procedure OnJoinTeam(Id, Team, OldTeam: Byte; JoinGame: Boolean); override;
     procedure OnLeaveGame(Id: Byte; Kicked: Boolean); override;
 
@@ -153,9 +161,9 @@ type
 
     procedure OnKitPickup(Id, KitId: Byte); override;
 
-    function OnBeforePlayerRespawn(Id: Byte): TVector2; override;
+    function  OnBeforePlayerRespawn(Id: Byte): TVector2; override;
     procedure OnAfterPlayerRespawn(Id: Byte); override;
-    function OnPlayerDamage(Victim, Shooter: Byte; Damage: Single;
+    function  OnPlayerDamage(Victim, Shooter: Byte; Damage: Single;
       Weapon: Byte): Single; override;
     procedure OnPlayerKill(Killer, Victim, BulletID: Byte); override;
     procedure OnWeaponChange(Id, Primary, Secondary,
@@ -163,27 +171,32 @@ type
 
     function OnVoteMapStart(Id: Byte; Map: string): Boolean; override;
     function OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean; override;
-    procedure OnVoteMap(Id: Byte; Map: string); override;
-    procedure OnVoteKick(Id, Victim: Byte); override;
+    procedure  OnVoteMap(Id: Byte; Map: string); override;
+    procedure  OnVoteKick(Id, Victim: Byte); override;
 
     procedure OnPlayerSpeak(Id: Byte; Text: string); override;
-    function OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
-    function OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
+    function  OnPlayerCommand(Id: Byte; Command: string): Boolean; override;
+    function  OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
       override;
   end;
 
 var
   ScrptDispatcher: TScriptDispatcher;
 
+
 implementation
 
 uses
+  // System units
+  StrUtils,
+
+  // Project units
   Constants,
+  Game,
   ScriptCore,
   ScriptCore3,
-  StrUtils,
-  Game,
   Server;
+
 
 constructor TScriptDispatcher.Instantiate;
 begin
@@ -292,7 +305,7 @@ begin
         begin
           TScript(Self.FScripts[I]).Free;
           Self.FScripts.Delete(I);
-          break;
+          Break;
         end;
     end;
     if FindFirst(Self.Dir + '/*', FaDirectory, DirInfo) = 0 then
@@ -855,4 +868,5 @@ initialization
   ScrptDispatcher := TScriptDispatcher.Instantiate;
   ScrptDispatcher.registerCheckFunction(@ScriptCore.CheckFunction);
   ScrptDispatcher.registerCheckFunction(@ScriptCore3.CheckFunction);
+
 end.

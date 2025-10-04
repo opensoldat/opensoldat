@@ -586,6 +586,18 @@ function SDL_RenderClear(renderer: PSDL_Renderer): SInt32 cdecl; external SDL_Li
 function SDL_RenderDrawPoint(renderer: PSDL_Renderer; x: SInt32; y: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawPoint' {$ENDIF} {$ENDIF};
 
   {**
+   *  Draw a point on the current rendering target.
+   *
+   *    renderer The renderer which should draw a point.
+   *    x        The x coordinate of the point.
+   *    y        The y coordinate of the point.
+   *
+   *    0 on success, or -1 on error
+   *}
+function SDL_RenderDrawPointF(renderer: PSDL_Renderer; x, y: single): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawPointF' {$ENDIF} {$ENDIF};
+
+  {**
    *  Draw multiple points on the current rendering target.
    *
    *   renderer The renderer which should draw multiple points.
@@ -595,6 +607,18 @@ function SDL_RenderDrawPoint(renderer: PSDL_Renderer; x: SInt32; y: SInt32): SIn
    *   0 on success, or -1 on error
    *}
 function SDL_RenderDrawPoints(renderer: PSDL_Renderer; points: PSDL_Point; count: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawPoints' {$ENDIF} {$ENDIF};
+
+  {**
+   *  Draw multiple points on the current rendering target.
+   *
+   *    renderer The renderer which should draw multiple points.
+   *    points   The points to draw
+   *    count    The number of points to draw
+   *
+   *    0 on success, or -1 on error
+   *}
+function SDL_RenderDrawPointsF(renderer: PSDL_Renderer; points: PSDL_FPoint; count: SInt32): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawPointsF' {$ENDIF} {$ENDIF};
 
   {**
    *  Draw a line on the current rendering target.
@@ -610,6 +634,20 @@ function SDL_RenderDrawPoints(renderer: PSDL_Renderer; points: PSDL_Point; count
 function SDL_RenderDrawLine(renderer: PSDL_Renderer; x1: SInt32; y1: SInt32; x2: SInt32; y2: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawLine' {$ENDIF} {$ENDIF};
 
   {**
+   *  Draw a line on the current rendering target.
+   *
+   *    renderer The renderer which should draw a line.
+   *    x1       The x coordinate of the start point.
+   *    y1       The y coordinate of the start point.
+   *    x2       The x coordinate of the end point.
+   *    y2       The y coordinate of the end point.
+   *
+   *  0 on success, or -1 on error
+   *}
+function SDL_RenderDrawLineF(renderer: PSDL_Renderer; x1, y1, x2, y2: single): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawLineF' {$ENDIF} {$ENDIF};
+
+  {**
    *  \brief Draw a series of connected lines on the current rendering target.
    *
    *  \param renderer The renderer which should draw multiple lines.
@@ -621,6 +659,18 @@ function SDL_RenderDrawLine(renderer: PSDL_Renderer; x1: SInt32; y1: SInt32; x2:
 function SDL_RenderDrawLines(renderer: PSDL_Renderer; points: PSDL_Point; count: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawLines' {$ENDIF} {$ENDIF};
 
   {**
+   *  Draw a series of connected lines on the current rendering target.
+   *
+   *    renderer The renderer which should draw multiple lines.
+   *    points   The points along the lines
+   *    count    The number of points, drawing count-1 lines
+   *
+   *    0 on success, or -1 on error
+   *}
+function SDL_RenderDrawLinesF(renderer: PSDL_Renderer; points: PSDL_FPoint; count: SInt32): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawLinesF' {$ENDIF} {$ENDIF};
+
+  {**
    *  Draw a rectangle on the current rendering target.
    *
    *   renderer The renderer which should draw a rectangle.
@@ -629,6 +679,17 @@ function SDL_RenderDrawLines(renderer: PSDL_Renderer; points: PSDL_Point; count:
    *   0 on success, or -1 on error
    *}
 function SDL_RenderDrawRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawRect' {$ENDIF} {$ENDIF};
+
+  {**
+   *  Draw a rectangle on the current rendering target.
+   *
+   *    renderer The renderer which should draw a rectangle.
+   *    rect     A pointer to the destination rectangle, or NULL to outline the entire rendering target.
+   *
+   *    0 on success, or -1 on error
+   *}
+function SDL_RenderDrawRectF(renderer: PSDL_Renderer; rect: PSDL_FRect): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawRectF' {$ENDIF} {$ENDIF};
 
   {**
    *  Draw some number of rectangles on the current rendering target.
@@ -642,6 +703,18 @@ function SDL_RenderDrawRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32 cd
 function SDL_RenderDrawRects(renderer: PSDL_Renderer; rects: PSDL_Rect; count: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawRects' {$ENDIF} {$ENDIF};
 
   {**
+   *  Draw some number of rectangles on the current rendering target.
+   *
+   *    renderer The renderer which should draw multiple rectangles.
+   *    rects    A pointer to an array of destination rectangles.
+   *    count    The number of rectangles.
+   *
+   *    0 on success, or -1 on error
+   *}
+function SDL_RenderDrawRectsF(renderer: PSDL_Renderer; rects: PSDL_FRect; count: SInt32): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderDrawRectsF' {$ENDIF} {$ENDIF};
+
+  {**
    *  Fill a rectangle on the current rendering target with the drawing color.
    *
    *   renderer The renderer which should fill a rectangle.
@@ -653,6 +726,17 @@ function SDL_RenderDrawRects(renderer: PSDL_Renderer; rects: PSDL_Rect; count: S
 function SDL_RenderFillRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderFillRect' {$ENDIF} {$ENDIF};
 
   {**
+   *  Fill a rectangle on the current rendering target with the drawing color.
+   *
+   *    renderer The renderer which should fill a rectangle.
+   *    rect     A pointer to the destination rectangle, or NULL for the entire rendering target.
+   *
+   *    0 on success, or -1 on error
+   *}
+function SDL_RenderFillRectF(renderer: PSDL_Renderer; rect: PSDL_FRect): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderFillRectF' {$ENDIF} {$ENDIF};
+
+  {**
    *  Fill some number of rectangles on the current rendering target with the drawing color.
    *
    *   renderer The renderer which should fill multiple rectangles.
@@ -662,6 +746,18 @@ function SDL_RenderFillRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32 cd
    *   0 on success, or -1 on error
    *}
 function SDL_RenderFillRects(renderer: PSDL_Renderer; rects: PSDL_Rect; count: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderFillRects' {$ENDIF} {$ENDIF};
+
+  {**
+   *  Fill some number of rectangles on the current rendering target with the drawing color.
+   *
+   *    renderer The renderer which should fill multiple rectangles.
+   *    rects    A pointer to an array of destination rectangles.
+   *    count    The number of rectangles.
+   *
+   *    0 on success, or -1 on error
+   *}
+function SDL_RenderFillRectsF(renderer: PSDL_Renderer; rects: PSDL_FRect; count: SInt32): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderFillRectsF' {$ENDIF} {$ENDIF};
 
   {**
    *  Copy a portion of the texture to the current rendering target.
@@ -676,6 +772,19 @@ function SDL_RenderFillRects(renderer: PSDL_Renderer; rects: PSDL_Rect; count: S
    *   0 on success, or -1 on error
    *}
 function SDL_RenderCopy(renderer: PSDL_Renderer; texture: PSDL_Texture; srcrect: PSDL_Rect; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderCopy' {$ENDIF} {$ENDIF};
+
+  {**
+   *  Copy a portion of the texture to the current rendering target.
+   *
+   *    renderer The renderer which should copy parts of a texture.
+   *    texture  The source texture.
+   *    srcrect  A pointer to the source rectangle, or NIL for the entire texture.
+   *    dstrect  A pointer to the destination rectangle, or NIL for the entire rendering target.
+   *
+   *    0 on success, or -1 on error
+   *}
+function SDL_RenderCopyF(renderer: PSDL_Renderer; texture: PSDL_Texture; srcrect: PSDL_Rect; dstrect: PSDL_FRect): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderCopyF' {$ENDIF} {$ENDIF};
 
   {**
    *  Copy a portion of the source texture to the current rendering target, rotating it by angle around the given center
@@ -693,6 +802,22 @@ function SDL_RenderCopy(renderer: PSDL_Renderer; texture: PSDL_Texture; srcrect:
    *   0 on success, or -1 on error
    *}
 function SDL_RenderCopyEx(renderer: PSDL_Renderer; texture: PSDL_Texture; const srcrect: PSDL_Rect; dstrect: PSDL_Rect; angle: Double; center: PSDL_Point; flip: Integer): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderCopyEx' {$ENDIF} {$ENDIF};
+
+  {**
+   *  Copy a portion of the source texture to the current rendering target, rotating it by angle around the given center
+   *
+   *    renderer The renderer which should copy parts of a texture.
+   *    texture  The source texture.
+   *    srcrect  A pointer to the source rectangle, or NIL for the entire texture.
+   *    dstrect  A pointer to the destination rectangle, or NIL for the entire rendering target.
+   *    angle    An angle in degrees that indicates the rotation that will be applied to dstrect, rotating it in a clockwise direction
+   *    center   A pointer to a point indicating the point around which dstrect will be rotated (if NIL, rotation will be done around dstrect.w/2, dstrect.h/2).
+   *    flip     An SDL_RendererFlip value stating which flipping actions should be performed on the texture
+   *
+   *    0 on success, or -1 on error
+   *}
+function SDL_RenderCopyExF(renderer: PSDL_Renderer; texture: PSDL_Texture; const srcrect: PSDL_Rect; dstrect: PSDL_FRect; angle: Double; center: PSDL_FPoint; flip: Integer): SInt32 cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderCopyExF' {$ENDIF} {$ENDIF};
 
   {**
    *  Read pixels from the current rendering target.
@@ -771,5 +896,5 @@ function SDL_GL_UnbindTexture(texture: PSDL_Texture): SInt32 cdecl; external SDL
    *  a contiguous block of Y and U/V planes in the proper order, but
    *  this function is available if your pixel data is not contiguous.
    *}
-function SDL_UpdateYUVTexture(texture: PSDL_Texture; rect: PSDL_Rect; Yplane: PUInt8; Ypitch: SInt32; Uplane: PUInt8; UPitch: SInt32; Vplane: UInt8; VPitch: SInt32):SInt32;
+function SDL_UpdateYUVTexture(texture: PSDL_Texture; rect: PSDL_Rect; Yplane: PUInt8; Ypitch: SInt32; Uplane: PUInt8; UPitch: SInt32; Vplane: PUInt8; VPitch: SInt32):SInt32;
    cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_UpdateYUVTexture' {$ENDIF} {$ENDIF};

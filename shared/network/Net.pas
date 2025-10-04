@@ -1,105 +1,120 @@
-{*******************************************************}
-{                                                       }
-{       Net Unit for OPENSOLDAT                         }
-{                                                       }
-{       Copyright (c) 2002-03 Michal Marcinkowski       }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Net Unit for OPENSOLDAT                               }
+{                                                             }
+{       Copyright (c) 2002-2003 Michal Marcinkowski           }
+{       Copyright (c) 2020-2024 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Net;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes, fgl, {$IFDEF DEVELOPMENT}Util,{$ENDIF}
+  // System units
+  Classes,
+  fgl,
+  SysUtils,
 
-  // helper units
-  Vector, Sha1,
-
-  // anti-cheat
-  {$IFDEF SERVER}
-    {$IFDEF ENABLE_FAE}FaeBase, FaeRemoteAttestation, NetworkServerFae,{$ENDIF}
-  {$ELSE}
-    {$IFDEF ENABLE_FAE}FaeBase, FaeRemoteAttestation, NetworkClientFae,{$ENDIF}
-    GameRendering,
+  // Library units
+  sha1,
+  Steam,
+  {$IFDEF ENABLE_FAE}
+    // Anti-Cheat
+    FaeBase,
+    FaeRemoteAttestation,
+    {$IFDEF SERVER}
+      NetworkServerFae,
+    {$ELSE}
+      NetworkClientFae,
+    {$ENDIF}
   {$ENDIF}
 
-  Steam,
+  // Helper units
+  {$IFDEF DEVELOPMENT}
+    Util,
+  {$ENDIF}
+  Vector,
 
-  // OpenSoldat units
-  Weapons, Constants;
+  // Project units
+  Constants,
+  {$IFNDEF SERVER}
+    GameRendering,
+  {$ENDIF}
+  Weapons;
+
 
 const
   // Binary ops
-  B1 = 1;
-  B2 = 2;
-  B3 = 4;
-  B4 = 8;
-  B5 = 16;
-  B6 = 32;
-  B7 = 64;
-  B8 = 128;
-  B9 = 256;
-  B10 = 512;
-  B11 = 1024;
-  B12 = 2048;
-  B13 = 4096;
-  B14 = 8192;
+  B1  =     1;
+  B2  =     2;
+  B3  =     4;
+  B4  =     8;
+  B5  =    16;
+  B6  =    32;
+  B7  =    64;
+  B8  =   128;
+  B9  =   256;
+  B10 =   512;
+  B11 =  1024;
+  B12 =  2048;
+  B13 =  4096;
+  B14 =  8192;
   B15 = 16384;
   B16 = 32768;
 
   // MESSAGE IDs
-  MsgID_Custom = 0;
-  MsgID_HeartBeat = MsgID_Custom + 2;
-  MsgID_ServerSpriteSnapshot = MsgID_Custom + 3;
-  MsgID_ClientSpriteSnapshot = MsgID_Custom + 4;
-  MsgID_BulletSnapshot = MsgID_Custom + 5;
-  MsgID_ChatMessage = MsgID_Custom + 6;
-  MsgID_ServerSkeletonSnapshot = MsgID_Custom + 7;
-  MsgID_MapChange = MsgID_Custom + 8;
-  MsgID_ServerThingSnapshot = MsgID_Custom + 9;
-  MsgID_ThingTaken = MsgID_Custom + 12;
-  MsgID_SpriteDeath = MsgID_Custom + 13;
-  MsgID_PlayerInfo = MsgID_Custom + 15;
-  MsgID_PlayersList = MsgID_Custom + 16;
-  MsgID_NewPlayer = MsgID_Custom + 17;
-  MsgID_ServerDisconnect = MsgID_Custom + 18;
-  MsgID_PlayerDisconnect = MsgID_Custom + 19;
-  MsgID_Delta_Movement = MsgID_Custom + 21;
-  MsgID_Delta_Weapons = MsgID_Custom + 25;
-  MsgID_Delta_Helmet = MsgID_Custom + 26;
-  MsgID_Delta_MouseAim = MsgID_Custom + 29;
-  MsgID_Ping = MsgID_Custom + 30;
-  MsgID_Pong = MsgID_Custom + 31;
-  MsgID_FlagInfo = MsgID_Custom + 32;
-  MsgID_ServerThingMustSnapshot = MsgID_Custom + 33;
-  MsgID_IdleAnimation = MsgID_Custom + 37;
+  MsgID_Custom                     = 0;
+  MsgID_HeartBeat                  = MsgID_Custom +  2;
+  MsgID_ServerSpriteSnapshot       = MsgID_Custom +  3;
+  MsgID_ClientSpriteSnapshot       = MsgID_Custom +  4;
+  MsgID_BulletSnapshot             = MsgID_Custom +  5;
+  MsgID_ChatMessage                = MsgID_Custom +  6;
+  MsgID_ServerSkeletonSnapshot     = MsgID_Custom +  7;
+  MsgID_MapChange                  = MsgID_Custom +  8;
+  MsgID_ServerThingSnapshot        = MsgID_Custom +  9;
+  MsgID_ThingTaken                 = MsgID_Custom + 12;
+  MsgID_SpriteDeath                = MsgID_Custom + 13;
+  MsgID_PlayerInfo                 = MsgID_Custom + 15;
+  MsgID_PlayersList                = MsgID_Custom + 16;
+  MsgID_NewPlayer                  = MsgID_Custom + 17;
+  MsgID_ServerDisconnect           = MsgID_Custom + 18;
+  MsgID_PlayerDisconnect           = MsgID_Custom + 19;
+  MsgID_Delta_Movement             = MsgID_Custom + 21;
+  MsgID_Delta_Weapons              = MsgID_Custom + 25;
+  MsgID_Delta_Helmet               = MsgID_Custom + 26;
+  MsgID_Delta_MouseAim             = MsgID_Custom + 29;
+  MsgID_Ping                       = MsgID_Custom + 30;
+  MsgID_Pong                       = MsgID_Custom + 31;
+  MsgID_FlagInfo                   = MsgID_Custom + 32;
+  MsgID_ServerThingMustSnapshot    = MsgID_Custom + 33;
+  MsgID_IdleAnimation              = MsgID_Custom + 37;
   MsgID_ServerSpriteSnapshot_Major = MsgID_Custom + 41;
-  MsgID_ClientSpriteSnapshot_Mov = MsgID_Custom + 42;
-  MsgID_ClientSpriteSnapshot_Dead = MsgID_Custom + 43;
-  MsgID_UnAccepted = MsgID_Custom + 44;
-  MsgID_VoteOn = MsgID_Custom + 45;
-  MsgID_VoteMap = MsgID_Custom + 46;
-  MsgID_VoteMapReply = MsgID_Custom + 47;
-  MsgID_VoteKick = MsgID_Custom + 48;
-  MsgID_RequestThing = MsgID_Custom + 51;
-  MsgID_ServerVars = MsgID_Custom + 52;
-  MsgID_ServerSyncMsg = MsgID_Custom + 54;
-  MsgID_ClientFreeCam = MsgID_Custom + 55;
-  MsgID_VoteOff = MsgID_Custom + 56;
-  MsgID_FaeData = MsgID_Custom + 57;
-  MsgID_RequestGame = MsgID_Custom + 58;
-  MsgID_ForcePosition = MsgID_Custom + 60;
-  MsgID_ForceVelocity = MsgID_Custom + 61;
-  MsgID_ForceWeapon = MsgID_Custom + 62;
-  MsgID_ChangeTeam = MsgID_Custom + 63;
-  MsgID_SpecialMessage = MsgID_Custom + 64;
-  MsgID_WeaponActiveMessage = MsgID_Custom + 65;
-  MsgID_JoinServer = MsgID_Custom + 68;
-  MsgID_PlaySound = MsgID_Custom + 70;
-  MsgID_SyncCvars = MsgID_Custom + 71;
-  MsgID_VoiceData = MsgID_Custom + 72;
+  MsgID_ClientSpriteSnapshot_Mov   = MsgID_Custom + 42;
+  MsgID_ClientSpriteSnapshot_Dead  = MsgID_Custom + 43;
+  MsgID_UnAccepted                 = MsgID_Custom + 44;
+  MsgID_VoteOn                     = MsgID_Custom + 45;
+  MsgID_VoteMap                    = MsgID_Custom + 46;
+  MsgID_VoteMapReply               = MsgID_Custom + 47;
+  MsgID_VoteKick                   = MsgID_Custom + 48;
+  MsgID_RequestThing               = MsgID_Custom + 51;
+  MsgID_ServerVars                 = MsgID_Custom + 52;
+  MsgID_ServerSyncMsg              = MsgID_Custom + 54;
+  MsgID_ClientFreeCam              = MsgID_Custom + 55;
+  MsgID_VoteOff                    = MsgID_Custom + 56;
+  MsgID_FaeData                    = MsgID_Custom + 57;
+  MsgID_RequestGame                = MsgID_Custom + 58;
+  MsgID_ForcePosition              = MsgID_Custom + 60;
+  MsgID_ForceVelocity              = MsgID_Custom + 61;
+  MsgID_ForceWeapon                = MsgID_Custom + 62;
+  MsgID_ChangeTeam                 = MsgID_Custom + 63;
+  MsgID_SpecialMessage             = MsgID_Custom + 64;
+  MsgID_WeaponActiveMessage        = MsgID_Custom + 65;
+  MsgID_JoinServer                 = MsgID_Custom + 68;
+  MsgID_PlaySound                  = MsgID_Custom + 70;
+  MsgID_SyncCvars                  = MsgID_Custom + 71;
+  MsgID_VoiceData                  = MsgID_Custom + 72;
 
   MAX_PLAYERS = 32;
 
@@ -107,45 +122,45 @@ const
 
   // ControlMethod
   HUMAN = 1;
-  BOT = 2;
+  BOT   = 2;
 
   // Request Reply States
-  OK = 1;
-  WRONG_VERSION = 2;
-  WRONG_PASSWORD = 3;
-  BANNED_IP = 4;
-  SERVER_FULL = 5;
-  INVALID_HANDSHAKE = 8;
-  WRONG_CHECKSUM = 9;
+  OK                 =  1;
+  WRONG_VERSION      =  2;
+  WRONG_PASSWORD     =  3;
+  BANNED_IP          =  4;
+  SERVER_FULL        =  5;
+  INVALID_HANDSHAKE  =  8;
+  WRONG_CHECKSUM     =  9;
   ANTICHEAT_REQUIRED = 10;
   ANTICHEAT_REJECTED = 11;
-  STEAM_ONLY = 12;
+  STEAM_ONLY         = 12;
 
-  LAN = 1;
+  LAN      = 1;
   INTERNET = 0;
 
   // FLAG INFO
-  RETURNRED = 1;
-  RETURNBLUE = 2;
-  CAPTURERED = 3;
+  RETURNRED   = 1;
+  RETURNBLUE  = 2;
+  CAPTURERED  = 3;
   CAPTUREBLUE = 4;
 
   // Kick/Ban Why's
-  KICK_UNKNOWN = 0;
-  KICK_NORESPONSE = 1;
-  KICK_NOCHEATRESPONSE = 2; // TODO remove?
-  KICK_CHANGETEAM = 3; // TODO remove?
-  KICK_PING = 4;
-  KICK_FLOODING = 5;
-  KICK_CONSOLE = 6;
-  KICK_CONNECTCHEAT = 7; // TODO remove?
-  KICK_CHEAT = 8;
-  KICK_LEFTGAME = 9;
-  KICK_VOTED = 10;
-  KICK_AC = 11;
-  KICK_SILENT = 12;
-  KICK_STEAMTICKET = 13;
-  _KICK_END = 14;
+  KICK_UNKNOWN         =  0;
+  KICK_NORESPONSE      =  1;
+  KICK_NOCHEATRESPONSE =  2; // TODO remove?
+  KICK_CHANGETEAM      =  3; // TODO remove?
+  KICK_PING            =  4;
+  KICK_FLOODING        =  5;
+  KICK_CONSOLE         =  6;
+  KICK_CONNECTCHEAT    =  7; // TODO remove?
+  KICK_CHEAT           =  8;
+  KICK_LEFTGAME        =  9;
+  KICK_VOTED           = 10;
+  KICK_AC              = 11;
+  KICK_SILENT          = 12;
+  KICK_STEAMTICKET     = 13;
+  _KICK_END            = 14;
 
   // Join types
   JOIN_NORMAL = 0;
@@ -153,25 +168,25 @@ const
 
   // RECORD
   NETW = 0;
-  REC = 1;
+  REC  = 1;
 
   CLIENTPLAYERRECIEVED_TIME = 3 * 60;
 
-  FLOODIP_MAX = 18;
+  FLOODIP_MAX  = 18;
   MAX_FLOODIPS = 1000;
-  MAX_BANIPS = 1000;
+  MAX_BANIPS   = 1000;
 
   PLAYERNAME_CHARS = 24;
   PLAYERHWID_CHARS = 11;
-  MAPNAME_CHARS = 64;
-  REASON_CHARS = 26;
+  MAPNAME_CHARS    = 64;
+  REASON_CHARS     = 26;
 
   ACTYPE_NONE = 0;
-  ACTYPE_FAE = 1;
+  ACTYPE_FAE  = 1;
 
-  MSGTYPE_CMD = 0;
-  MSGTYPE_PUB = 1;
-  MSGTYPE_TEAM = 2;
+  MSGTYPE_CMD   = 0;
+  MSGTYPE_PUB   = 1;
+  MSGTYPE_TEAM  = 2;
   MSGTYPE_RADIO = 3;
 
 type
@@ -187,32 +202,32 @@ type
     NetworkingSockets: PISteamNetworkingSockets;
     NetworkingUtils: PISteamNetworkingUtils;
   public
-    property Active: Boolean read FActive write FActive;
+    property  Active: Boolean read FActive write FActive;
     constructor Create();
     destructor Destroy(); override;
 
-    function Disconnect(Now: Boolean): Boolean; virtual; abstract;
+    function  Disconnect(Now: Boolean): Boolean; virtual; abstract;
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); virtual; abstract;
 
-    function GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
-    function GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
+    function  GetDetailedConnectionStatus(hConn: HSteamNetConnection): String;
+    function  GetConnectionRealTimeStatus(hConn: HSteamNetConnection): SteamNetConnectionRealTimeStatus_t;
     procedure SetConnectionName(hConn: HSteamNetConnection; Name: AnsiString);
-    function GetStringAddress(pAddress: PSteamNetworkingIPAddr; Port: Boolean): AnsiString;
+    function  GetStringAddress(pAddress: PSteamNetworkingIPAddr; Port: Boolean): AnsiString;
 
-    function SetGlobalConfigValueInt32(eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-    function SetGlobalConfigValueFloat(eValue: ESteamNetworkingConfigValue; val: Single): Boolean;
-    function SetGlobalConfigValueString(eValue: ESteamNetworkingConfigValue; val: PChar): Boolean;
-    function SetConnectionConfigValueInt32(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-    function SetConnectionConfigValueFloat(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
-    function SetConnectionConfigValueString(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function  SetGlobalConfigValueInt32(eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function  SetGlobalConfigValueFloat(eValue: ESteamNetworkingConfigValue; val: Single): Boolean;
+    function  SetGlobalConfigValueString(eValue: ESteamNetworkingConfigValue; val: PChar): Boolean;
+    function  SetConnectionConfigValueInt32(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function  SetConnectionConfigValueFloat(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
+    function  SetConnectionConfigValueString(hConn: HSteamNetConnection; eValue: ESteamNetworkingConfigValue; val: int32): Boolean;
 
     procedure SetDebugLevel(Level: ESteamNetworkingSocketsDebugOutputType);
 
-    property NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
-    property NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
+    property  NetworkingSocket: PISteamNetworkingSockets read NetworkingSockets;
+    property  NetworkingUtil: PISteamNetworkingUtils read NetworkingUtils;
 
-    property Port: Word read FAddress.m_port write FAddress.m_port;
-    property Address: SteamNetworkingIPAddr read FAddress;
+    property  Port: Word read FAddress.m_port write FAddress.m_port;
+    property  Address: SteamNetworkingIPAddr read FAddress;
   end;
 
   {$IFDEF SERVER}
@@ -223,12 +238,12 @@ type
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); override;
     constructor Create(Host: String; Port: Word);
     destructor Destroy; override;
-    function Disconnect(Now: Boolean): Boolean; override;
+    function  Disconnect(Now: Boolean): Boolean; override;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
-    function SendData(var Data; Size: Integer; peer: HSteamNetConnection; Flags: Integer): Boolean;
+    function  SendData(var Data; Size: Integer; peer: HSteamNetConnection; Flags: Integer): Boolean;
     procedure UpdateNetworkStats(Player: Byte);
-    property Host: HSteamListenSocket read FHost;
+    property  Host: HSteamListenSocket read FHost;
   end;
   {$ELSE}
   TClientNetwork = class(TNetwork)
@@ -238,13 +253,13 @@ type
     procedure ProcessEvents(pInfo: PSteamNetConnectionStatusChangedCallback_t); override;
     constructor Create();
     destructor Destroy; override;
-    function Disconnect(Now: Boolean): Boolean; override;
-    function Connect(Host: String; Port: Word): Boolean;
+    function  Disconnect(Now: Boolean): Boolean; override;
+    function  Connect(Host: String; Port: Word): Boolean;
     procedure ProcessLoop;
     procedure HandleMessages(IncomingMsg: PSteamNetworkingMessage_t);
-    function SendData(var Data; Size: Integer; Flags: Integer): Boolean;
+    function  SendData(var Data; Size: Integer; Flags: Integer): Boolean;
     procedure FlushMsg();
-    property Peer: HSteamNetConnection read FPeer;
+    property  Peer: HSteamNetConnection read FPeer;
   end;
   {$ENDIF}
 
@@ -360,16 +375,16 @@ type
   TMsg_HeartBeat = packed record
     Header: TMsgHeader;
     MapID: LongWord;
-    TeamScore: array[1..4] of Word;
-    Active: array[1..MAX_PLAYERS] of Boolean;
-    Kills: array[1..MAX_PLAYERS] of Word;
-    Caps: array[1..MAX_PLAYERS] of Byte;
-    Team: array[1..MAX_PLAYERS] of Byte;
-    Deaths: array[1..MAX_PLAYERS] of Word;
-    Ping: array[1..MAX_PLAYERS] of Byte;
-    RealPing: array[1..MAX_PLAYERS] of Word;
+    TeamScore:         array[1..4] of Word;
+    Active:            array[1..MAX_PLAYERS] of Boolean;
+    Kills:             array[1..MAX_PLAYERS] of Word;
+    Caps:              array[1..MAX_PLAYERS] of Byte;
+    Team:              array[1..MAX_PLAYERS] of Byte;
+    Deaths:            array[1..MAX_PLAYERS] of Word;
+    Ping:              array[1..MAX_PLAYERS] of Byte;
+    RealPing:          array[1..MAX_PLAYERS] of Word;
     ConnectionQuality: array[1..MAX_PLAYERS] of Byte;
-    Flags: array[1..MAX_PLAYERS] of Byte;
+    Flags:             array[1..MAX_PLAYERS] of Byte;
   end;
 
   // SERVERSPRITESNAPSHOT TYPE
@@ -544,18 +559,18 @@ type
   PMsg_RequestGame = ^TMsg_RequestGame;
   TMsg_RequestGame = packed record
     Header: TMsgHeader;
-    Version: array[0..VERSION_PACKET_CHARS - 1] of char;
+    Version: array[0..VERSION_PACKET_CHARS - 1] of Char;
     Forwarded: Byte;
     HaveAntiCheat: Byte;
     HardwareID: string[PLAYERHWID_CHARS];
-    Password: array[0..24] of char;
+    Password: array[0..24] of Char;
   end;
 
   // PLAYER INFO TYPE
   PMsg_PlayerInfo = ^TMsg_PlayerInfo;
   TMsg_PlayerInfo = packed record
     Header: TMsgHeader;
-    Name: array[0..PLAYERNAME_CHARS - 1] of char;
+    Name: array[0..PLAYERNAME_CHARS - 1] of Char;
     Look: Byte;
     Team: Byte;
     ShirtColor, PantsColor, SkinColor, HairColor, JetColor: LongWord;
@@ -567,20 +582,20 @@ type
   PMsg_PlayersList = ^TMsg_PlayersList;
   TMsg_PlayersList = packed record
     Header: TMsgHeader;
-    ModName: array[0..MAPNAME_CHARS - 1] of char;
+    ModName: array[0..MAPNAME_CHARS - 1] of Char;
     ModChecksum: TSHA1Digest;
-    MapName: array[0..MAPNAME_CHARS - 1] of char;
+    MapName: array[0..MAPNAME_CHARS - 1] of Char;
     MapChecksum: TSHA1Digest;
     Players: Byte;
-    Name: array[1..MAX_PLAYERS] of array[0..PLAYERNAME_CHARS - 1] of char;
-    ShirtColor, PantsColor, SkinColor, HairColor, JetColor: array[1..MAX_PLAYERS]
-      of LongWord;
-    Team: array[1..MAX_PLAYERS] of Byte;
+    Name:         array[1..MAX_PLAYERS] of array[0..PLAYERNAME_CHARS - 1] of Char;
+    ShirtColor, PantsColor, SkinColor, HairColor, JetColor:
+                  array[1..MAX_PLAYERS] of LongWord;
+    Team:         array[1..MAX_PLAYERS] of Byte;
     PredDuration: array[1..MAX_PLAYERS] of Byte;
-    Look: array[1..MAX_PLAYERS] of Byte;
-    Pos: array[1..MAX_PLAYERS] of TVector2;
-    Vel: array[1..MAX_PLAYERS] of TVector2;
-    SteamID: array[1..MAX_PLAYERS] of UInt64;
+    Look:         array[1..MAX_PLAYERS] of Byte;
+    Pos:          array[1..MAX_PLAYERS] of TVector2;
+    Vel:          array[1..MAX_PLAYERS] of TVector2;
+    SteamID:      array[1..MAX_PLAYERS] of UInt64;
     CurrentTime: Integer;
     ServerTicks: LongInt;
     AntiCheatRequired: Boolean;
@@ -591,8 +606,8 @@ type
   TMsg_UnAccepted = packed record
     Header: TMsgHeader;
     State: Byte;
-    Version: array[0..VERSION_PACKET_CHARS - 1] of char;
-    Text: array[0..0] of char;
+    Version: array[0..VERSION_PACKET_CHARS - 1] of Char;
+    Text: array[0..0] of Char;
   end;
 
   // NEW PLAYER TYPE
@@ -602,7 +617,7 @@ type
     Num: Byte;
     AdoptSpriteID: Byte;
     JoinType: Byte;
-    Name: array[0..PLAYERNAME_CHARS - 1] of char;
+    Name: array[0..PLAYERNAME_CHARS - 1] of Char;
     ShirtColor, PantsColor, SkinColor, HairColor, JetColor: LongWord;
     Team: Byte;
     Look: Byte;
@@ -742,8 +757,8 @@ type
     VoteType: Byte;
     Timer: Word;
     Who: Byte;
-    TargetName: array[0..MAPNAME_CHARS - 1] of char;
-    Reason: array[0..REASON_CHARS - 1] of char;
+    TargetName: array[0..MAPNAME_CHARS - 1] of Char;
+    Reason: array[0..REASON_CHARS - 1] of Char;
   end;
 
   // VOTING OFF TYPE
@@ -773,7 +788,7 @@ type
     Header: TMsgHeader;
     Ban: Byte;
     Num: Byte;
-    Reason: array[0..REASON_CHARS - 1] of char;
+    Reason: array[0..REASON_CHARS - 1] of Char;
   end;
 
   // MESSAGE PACKET
@@ -802,13 +817,13 @@ type
     Header: TMsgHeader;
     IP: LongWord;
     Port: Word;
-    ShowMsg: array[0..50] of char;
+    ShowMsg: array[0..50] of Char;
   end;
 
   PMsg_PlaySound = ^TMsg_PlaySound;
   TMsg_PlaySound = packed record  // Server -> Client
     Header: TMsgHeader;
-    Name: array[0..26] of char;
+    Name: array[0..26] of Char;
     Emitter: TVector2;
   end;
 
@@ -845,12 +860,12 @@ var
 
   ServerTickCounter: Integer;
   NoClientUpdateTime: array[1..MAX_PLAYERS] of Integer;
-  MessagesASecNum: array[1..MAX_PLAYERS] of Integer;
-  FloodWarnings: array[1..MAX_PLAYERS] of Byte;
-  PingWarnings: array[1..MAX_PLAYERS] of Byte;
-  BulletTime: array[1..MAX_PLAYERS] of Integer;
-  GrenadeTime: array[1..MAX_PLAYERS] of Integer;
-  KnifeCan: array[1..MAX_PLAYERS] of Boolean;
+  MessagesASecNum:    array[1..MAX_PLAYERS] of Integer;
+  FloodWarnings:      array[1..MAX_PLAYERS] of Byte;
+  PingWarnings:       array[1..MAX_PLAYERS] of Byte;
+  BulletTime:         array[1..MAX_PLAYERS] of Integer;
+  GrenadeTime:        array[1..MAX_PLAYERS] of Integer;
+  KnifeCan:           array[1..MAX_PLAYERS] of Boolean;
   {$ENDIF}
 
   PlayersNum, BotsNum, SpectatorsNum: Integer;
@@ -862,20 +877,37 @@ var
   ForceWeaponCalled: Boolean;
   {$ENDIF}
 
+
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Game, TraceLog, Demo,
-  {$IFNDEF SERVER}
-  NetworkClientSprite, NetworkClientConnection, NetworkClientThing,
-  NetworkClientGame, NetworkClientFunctions, NetworkClientHeartbeat,
-  NetworkClientMessages, NetworkClientBullet
+  // Helper units
+  TraceLog,
+
+  // Project units
+  {$IFDEF SERVER}
+    NetworkServerBullet,
+    NetworkServerConnection,
+    NetworkServerFunctions,
+    NetworkServerGame,
+    NetworkServerMessages,
+    NetworkServerSprite,
+    NetworkServerThing,
+    Server,
   {$ELSE}
-  NetworkServerSprite, NetworkServerThing, NetworkServerMessages,
-  NetworkServerBullet, NetworkServerConnection, NetworkServerGame,
-  NetworkServerFunctions
+    Client,
+    NetworkClientBullet,
+    NetworkClientConnection,
+    NetworkClientFunctions,
+    NetworkClientGame,
+    NetworkClientHeartbeat,
+    NetworkClientMessages,
+    NetworkClientSprite,
+    NetworkClientThing,
   {$ENDIF}
-  ;
+  Demo,
+  Game;
+
 
 procedure ProcessEventsCallback(pInfo: PSteamNetConnectionStatusChangedCallback_t); cdecl;
 begin
@@ -1075,7 +1107,7 @@ begin
         // they already received the UnAccepted packet.
         if not ReceivedUnAccepted then
           RenderGameInfo('Network error: ' + WideString(pInfo.m_info.m_szEndDebug));
-        NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, nil, false);
+        NetworkingSockets.CloseConnection(pInfo.m_hConn, 0, nil, False);
       end;
       k_ESteamNetworkingConnectionState_Connecting:
       begin
@@ -1087,7 +1119,7 @@ begin
         ClientRequestGame;
       end;
     else
-      //break;
+      //Break;
     end;
   end;
 end;
@@ -1128,7 +1160,7 @@ var
   ShouldRelease: Boolean;
 begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
-    Exit; // truncated packet
+    Exit;  // truncated packet
 
   PacketHeader := PMsgHeader(IncomingMsg^.m_pData);
 
@@ -1300,7 +1332,12 @@ begin
   begin
     Players := TFPGObjectList<TPlayer>.Create;
     ServerAddress.Clear;
-    ServerAddress.ParseString(PChar(Host + ':' + IntToStr(Port)));
+
+    if Host = '' then
+      ServerAddress.m_port := Port
+    else
+      ServerAddress.ParseString(PChar(Host + ':' + IntToStr(Port)));
+
     InitSettings.m_eValue := k_ESteamNetworkingConfig_IP_AllowWithoutAuth;
     InitSettings.m_eDataType := k_ESteamNetworkingConfig_Int32;
     InitSettings.m_int32 := 1;
@@ -1436,7 +1473,7 @@ begin
       end;
     end;
   else
-    //break;
+    //Break;
   end;
 
 end;
@@ -1449,7 +1486,7 @@ begin
   if IncomingMsg^.m_cbSize < SizeOf(TMsgHeader) then
   begin
     IncomingMsg.Release();
-    Exit; // truncated packet
+    Exit;  // truncated packet
   end;
 
   if IncomingMsg^.m_nConnUserData = 0 then

@@ -1,9 +1,28 @@
+{*************************************************************}
+{                                                             }
+{       Rcon Unit for OpenSoldat                              }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit Rcon;
 
 interface
 
 uses
-  Classes, SysUtils, Sockets, Ssockets, Constants, Net;
+  // System units
+  Classes,
+  SysUtils,
+  Sockets,
+
+  // Library units
+  Ssockets,
+
+  // Project units
+  Constants,
+  Net;
+
 
 const
   REFRESHX_HEADER_CHARS = 10;
@@ -96,16 +115,39 @@ type
     NextMap: string[16];
   end;
 
-  procedure BroadcastMsg(Text: string);
-  procedure SendMessageToAdmin(ToIP, Text: string);
+procedure BroadcastMsg(Text: string);
+procedure SendMessageToAdmin(ToIP, Text: string);
+
 
 implementation
 
 uses
-  {$IFDEF STEAM}Steam,{$ENDIF}
-  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
-  {$IFDEF UNIX}BaseUnix,{$ENDIF}
-  Server, Util, TraceLog, Command, Game, ServerHelper, Cvar, Version, Math;
+  // System units
+  Math,
+  {$IFDEF UNIX}
+    BaseUnix,
+  {$ENDIF}
+
+  // Library units
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Helper units
+  TraceLog,
+  Util,
+  Version,
+
+  // Project units
+  Command,
+  Cvar,
+  Game,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  Server,
+  ServerHelper;
+
 
 {$PUSH}
 {$WARN 5024 OFF}  // Parameter "$1" not used

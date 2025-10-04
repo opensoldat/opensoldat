@@ -1,32 +1,67 @@
-{*******************************************************}
-{                                                       }
-{       UpdateFrame Unit for OPENSOLDAT                 }
-{                                                       }
-{       Copyright (c) 2003 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       UpdateFrame Unit for OpenSoldat                       }
+{                                                             }
+{       Copyright (c) 2003      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit UpdateFrame;
 
 interface
 
 uses
-  {$IFDEF STEAM}Steam,{$ENDIF}
-  Sound, Demo, Classes, GameStrings, GameRendering, Sprites, Vector, Weapons, Net,
-  NetworkClientConnection, Constants,
-  Polymap, Game, Client, Util, SysUtils, Calc, LogFile, WeatherEffects, Sparks
-  {$IFDEF ENABLE_FAE}, FaeClient{$ENDIF}
-  ;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  {$IFDEF ENABLE_FAE}
+    FaeClient,
+  {$ENDIF}
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Helper units
+  Calc,
+  LogFile,
+  Util,
+  Vector,
+
+  // Project units
+  Client,
+  Constants,
+  Demo,
+  Game,
+  GameRendering,
+  GameStrings,
+  Net,
+  NetworkClientConnection,
+  Polymap,
+  Sound,
+  Sparks,
+  Sprites,
+  Weapons,
+  WeatherEffects;
+
 
 procedure Update_Frame;
+
 
 implementation
 
 uses
-  ClientGame, InterfaceGraphics, GameMenus;
+  // Project units
+  ClientGame,
+  GameMenus,
+  InterfaceGraphics;
+
 
 var
   IdleCounter, OldMouseX: Integer;
+
 
 procedure Update_Frame;
 var
@@ -125,7 +160,7 @@ begin
   CursorText := '';
   CursorFriendly := False;
 
-  // TODO(helloer): While watching demos this code needs to use SpectNumber instead of MySprite
+  // TODO: While watching demos this code needs to use SpectNumber instead of MySprite
   if (MySprite > 0) and (not DemoPlayer.Active) then
     for j := 1 to MAX_SPRITES do
       if Sprite[j].Active and Sprite[j].IsNotSpectator() and
@@ -313,6 +348,8 @@ begin
       ChatTimeCounter := ChatTimeCounter - 1;
   end;  // bullettime off
 
+  ActualZoom := EaseZoom(ActualZoom, r_zoom.Value);
+
   // MOVE -=CAMERA=-
   if (CameraFollowSprite > 0) and (CameraFollowSprite < MAX_SPRITES + 1) then
   begin
@@ -321,11 +358,11 @@ begin
       // FIXME(skoskav): Scope zoom and non-default resolution makes this a bit complicated. Why
       // does the magic number ~6.8 work so well?
 
-      M.X := exp(r_zoom.Value) * ((mx - GameWidthHalf) / Sprite[CameraFollowSprite].AimDistCoef *
+      M.X := exp(ActualZoom) * ((mx - GameWidthHalf) / Sprite[CameraFollowSprite].AimDistCoef *
         ((2 * 640 / GameWidth - 1) +
         (GameWidth - 640) / GameWidth * (DEFAULTAIMDIST - Sprite[CameraFollowSprite].AimDistCoef) / 6.8));
 
-      M.Y := exp(r_zoom.Value) * ((my - GameHeightHalf) / Sprite[CameraFollowSprite].AimDistCoef);
+      M.Y := exp(ActualZoom) * ((my - GameHeightHalf) / Sprite[CameraFollowSprite].AimDistCoef);
       CamV.X := CameraX;
       CamV.Y := CameraY;
       P.X := SpriteParts.Pos[CameraFollowSprite].X;
@@ -352,8 +389,8 @@ begin
     end
     else
     begin
-      M.X := (mx - GameWidthHalf) / SPECTATORAIMDIST;
-      M.Y := (my - GameHeightHalf) / SPECTATORAIMDIST;
+      M.X := exp(ActualZoom) * (mx - GameWidthHalf) / SPECTATORAIMDIST;
+      M.Y := exp(ActualZoom) * (my - GameHeightHalf) / SPECTATORAIMDIST;
     end;
     CamV.X := CameraX;
     CamV.Y := CameraY;

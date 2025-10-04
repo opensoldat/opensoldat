@@ -163,17 +163,18 @@ procedure SDL_GameControllerUpdate() cdecl; external SDL_LibName {$IFDEF DELPHI}
    *  The list of axes available from a controller
    *}
 
-const
-  SDL_CONTROLLER_AXIS_INVALID = -1;
-  SDL_CONTROLLER_AXIS_LEFTX = 0;
-  SDL_CONTROLLER_AXIS_LEFTY = 1;
-  SDL_CONTROLLER_AXIS_RIGHTX = 2;
-  SDL_CONTROLLER_AXIS_RIGHTY = 3;
-  SDL_CONTROLLER_AXIS_TRIGGERLEFT = 4;
-  SDL_CONTROLLER_AXIS_TRIGGERRIGHT = 5;
-  SDL_CONTROLLER_AXIS_MAX = 6;
 type
-  TSDL_GameControllerAxis = Byte;
+  PSDL_GameControllerAxis = ^TSDL_GameControllerAxis;
+  TSDL_GameControllerAxis = type Byte;
+const
+  SDL_CONTROLLER_AXIS_INVALID = TSDL_GameControllerAxis(-1);
+  SDL_CONTROLLER_AXIS_LEFTX = TSDL_GameControllerAxis(0);
+  SDL_CONTROLLER_AXIS_LEFTY = TSDL_GameControllerAxis(1);
+  SDL_CONTROLLER_AXIS_RIGHTX = TSDL_GameControllerAxis(2);
+  SDL_CONTROLLER_AXIS_RIGHTY = TSDL_GameControllerAxis(3);
+  SDL_CONTROLLER_AXIS_TRIGGERLEFT = TSDL_GameControllerAxis(4);
+  SDL_CONTROLLER_AXIS_TRIGGERRIGHT = TSDL_GameControllerAxis(5);
+  SDL_CONTROLLER_AXIS_MAX = TSDL_GameControllerAxis(6);
 
   {**
    *  turn this string into a axis mapping
@@ -202,26 +203,27 @@ function SDL_GameControllerGetAxis(gamecontroller: PSDL_GameController; axis: TS
   {**
    *  The list of buttons available from a controller
    *}
-const
-  SDL_CONTROLLER_BUTTON_INVALID = -1;
-  SDL_CONTROLLER_BUTTON_A = 0;
-  SDL_CONTROLLER_BUTTON_B = 1;
-  SDL_CONTROLLER_BUTTON_X = 2;
-  SDL_CONTROLLER_BUTTON_Y = 3;
-  SDL_CONTROLLER_BUTTON_BACK = 4;
-  SDL_CONTROLLER_BUTTON_GUIDE = 5;
-  SDL_CONTROLLER_BUTTON_START = 6;
-  SDL_CONTROLLER_BUTTON_LEFTSTICK = 7;
-  SDL_CONTROLLER_BUTTON_RIGHTSTICK = 8;
-  SDL_CONTROLLER_BUTTON_LEFTSHOULDER = 9;
-  SDL_CONTROLLER_BUTTON_RIGHTSHOULDER = 10;
-  SDL_CONTROLLER_BUTTON_DPAD_UP = 11;
-  SDL_CONTROLLER_BUTTON_DPAD_DOWN = 12;
-  SDL_CONTROLLER_BUTTON_DPAD_LEFT = 13;
-  SDL_CONTROLLER_BUTTON_DPAD_RIGHT = 14;
-  SDL_CONTROLLER_BUTTON_MAX = 15;
 type
-  TSDL_GameControllerButton = Byte;
+  PSDL_GameControllerButton = ^TSDL_GameControllerButton;
+  TSDL_GameControllerButton = type Byte;
+const
+  SDL_CONTROLLER_BUTTON_INVALID = TSDL_GameControllerButton(-1);
+  SDL_CONTROLLER_BUTTON_A = TSDL_GameControllerButton(0);
+  SDL_CONTROLLER_BUTTON_B = TSDL_GameControllerButton(1);
+  SDL_CONTROLLER_BUTTON_X = TSDL_GameControllerButton(2);
+  SDL_CONTROLLER_BUTTON_Y = TSDL_GameControllerButton(3);
+  SDL_CONTROLLER_BUTTON_BACK = TSDL_GameControllerButton(4);
+  SDL_CONTROLLER_BUTTON_GUIDE = TSDL_GameControllerButton(5);
+  SDL_CONTROLLER_BUTTON_START = TSDL_GameControllerButton(6);
+  SDL_CONTROLLER_BUTTON_LEFTSTICK = TSDL_GameControllerButton(7);
+  SDL_CONTROLLER_BUTTON_RIGHTSTICK = TSDL_GameControllerButton(8);
+  SDL_CONTROLLER_BUTTON_LEFTSHOULDER = TSDL_GameControllerButton(9);
+  SDL_CONTROLLER_BUTTON_RIGHTSHOULDER = TSDL_GameControllerButton(10);
+  SDL_CONTROLLER_BUTTON_DPAD_UP = TSDL_GameControllerButton(11);
+  SDL_CONTROLLER_BUTTON_DPAD_DOWN = TSDL_GameControllerButton(12);
+  SDL_CONTROLLER_BUTTON_DPAD_LEFT = TSDL_GameControllerButton(13);
+  SDL_CONTROLLER_BUTTON_DPAD_RIGHT = TSDL_GameControllerButton(14);
+  SDL_CONTROLLER_BUTTON_MAX = TSDL_GameControllerButton(15);
 
   {**
    *  turn this string into a button mapping

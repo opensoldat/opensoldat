@@ -1,20 +1,41 @@
+{*************************************************************}
+{                                                             }
+{       NetworkServerHeartbeat Unit for OpenSoldat            }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkServerHeartbeat;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // OpenSoldat units
-  Net, Sprites, Weapons, Constants;
+  // Project units
+  Constants,
+  Net,
+  Sprites,
+  Weapons;
+
 
 procedure ServerHeartbeat;
+
 
 implementation
 
 uses
-  Server, Game, Demo, Steam;
+  // Library units
+  Steam,
+
+  // Project units
+  Demo,
+  Game,
+  Server;
+
 
 // HEARTBEAT
 procedure ServerHeartbeat;
@@ -28,7 +49,7 @@ begin
 
   for j := 1 to MAX_PLAYERS do
   begin
-    HeartBeatMsg.Active[j] := false;
+    HeartBeatMsg.Active[j] := False;
     HeartBeatMsg.Kills[j] := 0;
     HeartBeatMsg.Caps[j] := 0;
     HeartBeatMsg.Team[j] := 0;

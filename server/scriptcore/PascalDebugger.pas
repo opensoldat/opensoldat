@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       PascalDebugger unit for OPENSOLDAT              }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       PascalDebugger Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit PascalDebugger;
@@ -14,11 +15,19 @@ unit PascalDebugger;
 interface
 
 uses
-  Classes, PascalExec, SysUtils,
-  uPSDebugger, uPSRuntime;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  uPSDebugger,
+  uPSRuntime,
+
+  // Project units
+  PascalExec;
+
 
 type
-
   TPascalError = uPSRuntime.TPSError;
 
   TPascalDebugger = class(TPascalExec)
@@ -38,7 +47,9 @@ type
     property LastError: TPascalError read GetLastError;
   end;
 
+
 implementation
+
 
 procedure TPascalDebugger.CreateExec;
 begin

@@ -1,11 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptMapsList unit for OPENSOLDAT              }
-{                                                       }
-{       Copyright (c) 2014 Tomasz Kolosowski            }
-{                          and  Umut Karakas            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptMapsList Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2014      Tomasz Kolosowski             }
+{       Copyright (c) 2014      Umut Karakas                  }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit ScriptMapsList;
@@ -15,29 +16,32 @@ unit ScriptMapsList;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  Command,
+  Game,
   PascalCompiler,
   PascalExec,
-  Server,
-  Game,
-  Command,
   ScriptCore3Api,
-  SysUtils;
+  Server;
+
 
 type
-
   TScriptMapsList = class;
 
   TScriptMapsList = class(TObject)
   private
-    function GetMap(Num: Integer): string;
-    function GetCurrentMapId: Integer;
+    function  GetMap(Num: Integer): string;
+    function  GetCurrentMapId: Integer;
     procedure SetCurrentMapId(NewNum: Integer);
-    function GetMapsCount: Integer;
+    function  GetMapsCount: Integer;
   public
     procedure AddMap(Name: string);
     procedure RemoveMap(Name: string);
-    function GetMapIdByName(Name: string): Integer;
+    function  GetMapIdByName(Name: string): Integer;
     property Map[i: Integer]: string read GetMap; default;
     property CurrentMapId: Integer read GetCurrentMapId write SetCurrentMapId;
     property MapsCount: Integer read GetMapsCount;
@@ -49,7 +53,9 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
+
 
 procedure TScriptMapsList.AddMap(Name: string);
 begin

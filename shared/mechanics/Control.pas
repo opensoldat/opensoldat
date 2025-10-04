@@ -11,14 +11,51 @@ unit Control;
 interface
 
 uses
+  // System units
+  Math,
+  SysUtils,
+
+  // Helper units
+  Calc,
+  Util,
+  Vector,
+
+  // Library units
   {$IFNDEF SERVER}
-  SDL2, Sound, Demo, ClientGame, Input, GameMenus, Sparks,
+    SDL2,
   {$ENDIF}
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Util, SysUtils, Calc, Math, Game, Sprites, Bullets,
-  Vector, Weapons, Constants, Net
-  {$IFDEF SERVER}, NetworkServerGame, NetworkServerSprite, AI {$ENDIF}
-  {$IFNDEF SERVER}, NetworkClientMessages, NetworkClientSprite, NetworkClientGame{$ENDIF};
-  procedure ControlSprite(var SpriteC: TSprite);
+
+  // Project units
+  {$IFDEF SERVER}
+    AI,
+    NetworkServerGame,
+    NetworkServerSprite,
+  {$ELSE}
+    NetworkClientGame,
+    NetworkClientMessages,
+    NetworkClientSprite,
+  {$ENDIF}
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+    ClientGame,
+    Demo,
+    GameMenus,
+    Input,
+    Sound,
+    Sparks,
+  {$ENDIF}
+  Bullets,
+  Constants,
+  Game,
+  Net,
+  Sprites,
+  Weapons;
+
+
+procedure ControlSprite(var SpriteC: TSprite);
+
 
 implementation
 
@@ -110,9 +147,9 @@ begin
             begin
               if ChatText = '' then
               begin
-                for i := Low(Binds) to High(Binds) - 1 do
+                for i := Low(Binds) to High(Binds) do
                 begin
-                  if KeyStatus[Binds[i].keyId] and ((Binds[i].keymod = 0) or (Binds[i].keyMod and SDL_GetModState() <> 0)) then
+                  if KeyStatus[Binds[i].keyId] and KeyModsMatch(Binds[i].keymod, SDL_GetModState()) then
                   begin
                     if Binds[i].action = TAction.Left then SpriteC.Control.Left := True;
                     if Binds[i].action = TAction.Right then SpriteC.Control.Right := True;
@@ -325,16 +362,16 @@ begin
           begin
             if SpriteC.OnGround then
               Spriteparts.Forces[SpriteC.Num].Y :=
-                -2.5 * iif(GRAV > 0.05, JETSPEED, Grav * 2);
+                -2.5 * iif(Grav > 0.05, JETSPEED, Grav * 2);
 
             if not SpriteC.OnGround then
             begin
               if SpriteC.Position <> POS_PRONE then
                 Spriteparts.Forces[SpriteC.Num].Y :=
-                  Spriteparts.Forces[SpriteC.Num].Y - iif(GRAV > 0.05, JETSPEED, Grav * 2)
+                  Spriteparts.Forces[SpriteC.Num].Y - iif(Grav > 0.05, JETSPEED, Grav * 2)
               else
                 Spriteparts.Forces[SpriteC.Num].X := Spriteparts.Forces[SpriteC.Num].X +
-                  (SpriteC.Direction * iif(GRAV > 0.05, JETSPEED, Grav * 2) / 2);
+                  (SpriteC.Direction * iif(Grav > 0.05, JETSPEED, Grav * 2) / 2);
             end;
 
             if (SpriteC.LegsAnimation.ID <> GetUp.ID) and
@@ -1726,7 +1763,10 @@ begin
 
               if (SpriteC.LegsAnimation.ID = CrouchRun.ID) or
                  (SpriteC.LegsAnimation.ID = CrouchRunBack.ID) then
-                Spriteparts.Forces[SpriteC.Num].X := -CROUCHRUNSPEED;
+                Spriteparts.Forces[SpriteC.Num].X := -CROUCHRUNSPEED
+              else if (SpriteC.LegsAnimation.ID = Roll.ID) or
+                      (SpriteC.LegsAnimation.ID = RollBack.ID) then
+                Spriteparts.Forces[SpriteC.Num].X := 2 * -CROUCHRUNSPEED;
             end;
           end
           // Proning

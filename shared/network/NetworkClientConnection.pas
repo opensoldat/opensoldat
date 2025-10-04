@@ -1,20 +1,43 @@
+{*************************************************************}
+{                                                             }
+{       NetworkClientConnection Unit for OpenSoldat           }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkClientConnection;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
-  Vector, Util, Version, BitStream,
+  // Library units
+  {$IFDEF ENABLE_FAE}
+    // Anti-Cheat
+    FaeClient,
+  {$ENDIF}
+  PhysFS,
+  Steam,
 
-  // anti-cheat units
-  {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
+  // Helper units
+  BitStream,
+  LogFile,
+  Util,
+  Vector,
+  Version,
 
-  // OpenSoldat units
-  LogFile, Steam, Net, Sprites, Weapons, Constants, GameStrings,
-  Cvar, PhysFS;
+  // Project units
+  Constants,
+  Cvar,
+  GameStrings,
+  Net,
+  Sprites,
+  Weapons;
+
 
 procedure ClientRequestGame;
 procedure ClientSendPlayerInfo;
@@ -27,11 +50,29 @@ procedure ClientHandlePing(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleServerVars(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleSyncCvars(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
-  GameRendering, Client, Game, Demo, ClientGame, GameMenus, strutils,
-  NetworkUtils, NetworkClientSprite, FileClient, Sha1, Anims, Sound;
+  // System units
+  StrUtils,
+
+  // Library units
+  sha1,
+
+  // Project units
+  Anims,
+  Client,
+  ClientGame,
+  Demo,
+  FileClient,
+  Game,
+  GameMenus,
+  GameRendering,
+  NetworkClientSprite,
+  NetworkUtils,
+  Sound;
+
 
 // REQUEST GAME FROM SERVER
 procedure ClientRequestGame;
@@ -48,10 +89,7 @@ begin
   RequestMsg := PMsg_RequestGame(SendBuffer);
 
   RequestMsg.Header.ID := MsgID_RequestGame;
-  if OPENSOLDAT_VERSION_LONG <> '' then
-    RequestMsg.Version := OPENSOLDAT_VERSION_LONG
-  else
-    RequestMsg.Version := OPENSOLDAT_VERSION;
+  RequestMsg.Version := OPENSOLDAT_VERSION_LONG;
 
   RequestMsg.HaveAntiCheat := ACTYPE_NONE;
 
@@ -144,7 +182,7 @@ begin
   PlayerInfo.CustomModChecksum := CustomModChecksum;
 
   UDP.SendData(PlayerInfo, sizeof(PlayerInfo), k_nSteamNetworkingSend_Reliable);
-  ClientPlayerSent := true;
+  ClientPlayerSent := True;
   ClientPlayerReceivedCounter := CLIENTPLAYERRECIEVED_TIME;
 end;
 
@@ -161,10 +199,10 @@ begin
 
     AddLineToLogFile(GameLog, 'Client Disconnect from ' + UDP.GetStringAddress(@UDP.Address, True), ConsoleLogFileName);
     UDP.ProcessLoop;
-    UDP.Disconnect(false);
+    UDP.Disconnect(False);
   end else
   begin
-    UDP.Disconnect(true);
+    UDP.Disconnect(True);
     ExitToMenu;
   end;
 end;
@@ -460,7 +498,7 @@ begin
   my := GameHeightHalf;
   MousePrev.x := mx;
   MousePrev.y := my;
-  WindowReady := true;
+  WindowReady := True;
 end;
 
 procedure ClientHandleUnAccepted(NetMessage: PSteamNetworkingMessage_t);
@@ -563,7 +601,7 @@ begin
 
   VarsMsg := PMsg_ServerVars(NetMessage^.m_pData)^;
 
-  ClientVarsRecieved := true;
+  ClientVarsRecieved := True;
 
   WeaponsInGame := 0;
 

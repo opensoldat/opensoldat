@@ -1,28 +1,42 @@
+{*************************************************************}
+{                                                             }
+{       InterfaceGraphics Unit for OpenSoldat                 }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit InterfaceGraphics;
 
 interface
 
 uses
-  Vector, Sprites, Constants;
+  // Helper units
+  Vector,
+
+  // Project units
+  Constants,
+  Sprites;
+
 
 var
   // Chat stuff
   ChatMessage: array[1..MAX_SPRITES] of WideString;
-  ChatTeam: array[1..MAX_SPRITES] of Boolean;
-  ChatDelay: array[1..MAX_SPRITES] of Integer;
+  ChatTeam:    array[1..MAX_SPRITES] of Boolean;
+  ChatDelay:   array[1..MAX_SPRITES] of Integer;
 
   // Big Text
-  BigText: array[0..MAX_BIG_MESSAGES] of WideString;
+  BigText:  array[0..MAX_BIG_MESSAGES] of WideString;
   BigDelay: array[0..MAX_BIG_MESSAGES] of Integer;
-  BigX: array[0..MAX_BIG_MESSAGES] of Integer;
+  BigX:     array[0..MAX_BIG_MESSAGES] of Integer;
   BigScale: array[0..MAX_BIG_MESSAGES] of Single;
   BigColor: array[0..MAX_BIG_MESSAGES] of LongWord;
   BigPosX, BigPosY: array[0..MAX_BIG_MESSAGES] of Single;
 
   // World Text
-  WorldText: array[0..MAX_BIG_MESSAGES] of WideString;
+  WorldText:  array[0..MAX_BIG_MESSAGES] of WideString;
   WorldDelay: array[0..MAX_BIG_MESSAGES] of Integer;
-  WorldX: array[0..MAX_BIG_MESSAGES] of Integer;
+  WorldX:     array[0..MAX_BIG_MESSAGES] of Integer;
   WorldScale: array[0..MAX_BIG_MESSAGES] of Single;
   WorldColor: array[0..MAX_BIG_MESSAGES] of LongInt;
   WorldPosX, WorldPosY: array[0..MAX_BIG_MESSAGES] of Single;
@@ -40,18 +54,45 @@ var
   fragx, fragy: Integer;
 
 procedure LoadInterfaceArchives(Path: AnsiString; FirstOnly: Boolean = False);
-function LoadInterfaceData(InterfaceName: string): Boolean;
+function  LoadInterfaceData(InterfaceName: string): Boolean;
 procedure RenderInterface(TimeElapsed: Single; Width, Height: Single);
 procedure RenderActionSnapText(t: Extended);
-function IsDefaultInterface(const InterfaceName: string): Boolean;
+function  IsDefaultInterface(const InterfaceName: string): Boolean;
+
 
 implementation
 
 uses
-  Client, SysUtils, Types, TraceLog,
-  Game, Math, Calc, Version, Util, PolyMap,
-  Demo, Weapons, GameStrings, Net, GameMenus, Gfx, GameRendering, PhysFS,
-  ClientGame, Console, MapGraphics, Steam;
+  // System units
+  Math,
+  SysUtils,
+  Types,
+
+  // Library units
+  PhysFS,
+  Steam,
+
+  // Helper units
+  Calc,
+  TraceLog,
+  Util,
+  Version,
+
+  // Project units
+  Client,
+  ClientGame,
+  Console,
+  Demo,
+  Game,
+  GameMenus,
+  GameRendering,
+  GameStrings,
+  Gfx,
+  MapGraphics,
+  Net,
+  PolyMap,
+  Weapons;
+
 
 type
   TInterfaceRelInfo = record
@@ -122,6 +163,7 @@ var
     VestBar: Byte;
   end;
 
+
 procedure LoadInterfaceArchives(Path: AnsiString; FirstOnly: Boolean = False);
 var
  Sr: TSearchRec;
@@ -140,7 +182,7 @@ begin
           if FirstOnly then
           begin
             ui_style.SetValue(Name);
-            break;
+            Break;
           end;
         end
         else
@@ -291,67 +333,79 @@ begin
   AddrRec := PInterface(@AddrFile[0])^;
   Int := AddrRec;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/health.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/health.bmp'))) then
   begin
     relinfo.HealthBar_Rel_X := Int.HealthIco_X;
     relinfo.HealthBar_Rel_Y := Int.HealthIco_Y;
-    relinfo.JetBar_Rel_X := Int.HealthIco_X;
-    relinfo.JetBar_Rel_Y := Int.HealthIco_Y;
-    relinfo.AmmoBar_Rel_X := Int.HealthIco_X;
-    relinfo.AmmoBar_Rel_Y := Int.HealthIco_Y;
-    relinfo.FireBar_Rel_X := Int.HealthIco_X;
-    relinfo.FireBar_Rel_Y := Int.HealthIco_Y;
-    relinfo.NadesBar_Rel_X := Int.HealthIco_X;
-    relinfo.NadesBar_Rel_Y := Int.HealthIco_Y;
+
+    relinfo.JetBar_Rel_X    := Int.HealthIco_X;
+    relinfo.JetBar_Rel_Y    := Int.HealthIco_Y;
+
+    relinfo.AmmoBar_Rel_X   := Int.HealthIco_X;
+    relinfo.AmmoBar_Rel_Y   := Int.HealthIco_Y;
+
+    relinfo.FireBar_Rel_X   := Int.HealthIco_X;
+    relinfo.FireBar_Rel_Y   := Int.HealthIco_Y;
+
+    relinfo.NadesBar_Rel_X  := Int.HealthIco_X;
+    relinfo.NadesBar_Rel_Y  := Int.HealthIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/jet.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/jet.bmp'))) then
   begin
     relinfo.HealthBar_Rel_X := Int.JetIco_X;
     relinfo.HealthBar_Rel_Y := Int.JetIco_Y;
-    relinfo.JetBar_Rel_X := Int.JetIco_X;
-    relinfo.JetBar_Rel_Y := Int.JetIco_Y;
-    relinfo.AmmoBar_Rel_X := Int.JetIco_X;
-    relinfo.AmmoBar_Rel_Y := Int.JetIco_Y;
-    relinfo.FireBar_Rel_X := Int.JetIco_X;
-    relinfo.FireBar_Rel_Y := Int.JetIco_Y;
-    relinfo.NadesBar_Rel_X := Int.JetIco_X;
-    relinfo.NadesBar_Rel_Y := Int.JetIco_Y;
+
+    relinfo.JetBar_Rel_X    := Int.JetIco_X;
+    relinfo.JetBar_Rel_Y    := Int.JetIco_Y;
+
+    relinfo.AmmoBar_Rel_X   := Int.JetIco_X;
+    relinfo.AmmoBar_Rel_Y   := Int.JetIco_Y;
+
+    relinfo.FireBar_Rel_X   := Int.JetIco_X;
+    relinfo.FireBar_Rel_Y   := Int.JetIco_Y;
+
+    relinfo.NadesBar_Rel_X  := Int.JetIco_X;
+    relinfo.NadesBar_Rel_Y  := Int.JetIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/ammo.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/ammo.bmp'))) then
   begin
     relinfo.HealthBar_Rel_X := Int.AmmoIco_X;
     relinfo.HealthBar_Rel_Y := Int.AmmoIco_Y;
-    relinfo.JetBar_Rel_X := Int.AmmoIco_X;
-    relinfo.JetBar_Rel_Y := Int.AmmoIco_Y;
-    relinfo.AmmoBar_Rel_X := Int.AmmoIco_X;
-    relinfo.AmmoBar_Rel_Y := Int.AmmoIco_Y;
-    relinfo.FireBar_Rel_X := Int.AmmoIco_X;
-    relinfo.FireBar_Rel_Y := Int.AmmoIco_Y;
-    relinfo.NadesBar_Rel_X := Int.AmmoIco_X;
-    relinfo.NadesBar_Rel_Y := Int.AmmoIco_Y;
+
+    relinfo.JetBar_Rel_X    := Int.AmmoIco_X;
+    relinfo.JetBar_Rel_Y    := Int.AmmoIco_Y;
+
+    relinfo.AmmoBar_Rel_X   := Int.AmmoIco_X;
+    relinfo.AmmoBar_Rel_Y   := Int.AmmoIco_Y;
+
+    relinfo.FireBar_Rel_X   := Int.AmmoIco_X;
+    relinfo.FireBar_Rel_Y   := Int.AmmoIco_Y;
+
+    relinfo.NadesBar_Rel_X  := Int.AmmoIco_X;
+    relinfo.NadesBar_Rel_Y  := Int.AmmoIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/health.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/health.bmp'))) then
   begin
     relinfo.HealthBar_Rel_X := Int.HealthIco_X;
     relinfo.HealthBar_Rel_Y := Int.HealthIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/jet.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/jet.bmp'))) then
   begin
     relinfo.JetBar_Rel_X := Int.JetIco_X;
     relinfo.JetBar_Rel_Y := Int.JetIco_Y;
   end;
 
-  if PHYSFS_exists(PChar(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
-    '/ammo.bmp')) then
+  if PHYSFS_exists(PChar(FindImagePath(ModDir + CUSTOM_INTERFACE_DIR + InterfaceName +
+    '/ammo.bmp'))) then
   begin
     relinfo.AmmoBar_Rel_X := Int.AmmoIco_X;
     relinfo.AmmoBar_Rel_Y := Int.AmmoIco_Y;
@@ -363,6 +417,11 @@ function IsInteractiveInterface: Boolean;
 begin
   Result := Sprite[MySprite].IsNotSpectator or
     ((CameraFollowSprite > 0) and (sv_advancedspectator.Value));
+end;
+
+function WorldToInterface(x: Single): Single;
+begin
+  Result := x / Exp(ActualZoom);
 end;
 
 function PixelAlignX(x: Single): Single;
@@ -390,6 +449,67 @@ begin
     GfxVertex(x1, y1, 0, 0, Color),
     GfxVertex(x0, y1, 0, 0, Color)
   );
+end;
+
+procedure DrawBox(StartX, StartY, EndX, EndY, Thickness: Single; Color: TGfxColor);
+begin
+  GfxDrawQuad(
+    Nil,
+    GfxVertex(StartX - Thickness, StartY - Thickness, 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, StartY - Thickness, 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, StartY            , 0.0, 0.0, Color),
+    GfxVertex(StartX - Thickness, StartY            , 0.0, 0.0, Color)
+  );
+  GfxDrawQuad(
+    Nil,
+    GfxVertex(EndX              , StartY            , 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, StartY            , 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, EndY              , 0.0, 0.0, Color),
+    GfxVertex(EndX              , EndY              , 0.0, 0.0, Color)
+  );
+  GfxDrawQuad(
+    Nil,
+    GfxVertex(StartX - Thickness, EndY              , 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, EndY              , 0.0, 0.0, Color),
+    GfxVertex(EndX   + Thickness, EndY   + Thickness, 0.0, 0.0, Color),
+    GfxVertex(StartX - Thickness, EndY   + Thickness, 0.0, 0.0, Color)
+  );
+  GfxDrawQuad(
+    Nil,
+    GfxVertex(StartX - Thickness, StartY            , 0.0, 0.0, Color),
+    GfxVertex(StartX            , StartY            , 0.0, 0.0, Color),
+    GfxVertex(StartX            , EndY              , 0.0, 0.0, Color),
+    GfxVertex(StartX - Thickness, EndY              , 0.0, 0.0, Color)
+  );
+end;
+
+procedure RenderMinimapSquare;
+var
+  MinX, MinY, MaxX, MaxY: Single;
+  StartX, StartY, EndX, EndY: Single;
+  Color: TGfxColor;
+begin
+  Color := RGBA($FFFFFF, 127);
+
+  StartX := CameraX - (GameWidthHalf  * Exp(ActualZoom));
+  StartY := CameraY - (GameHeightHalf * Exp(ActualZoom));
+  EndX   := CameraX + (GameWidthHalf  * Exp(ActualZoom));
+  EndY   := CameraY + (GameHeightHalf * Exp(ActualZoom));
+
+  WorldToMinimap(StartX, StartY, StartX, StartY);
+  WorldToMinimap(EndX, EndY, EndX, EndY);
+
+  MinX := PixelAlignX(ui_minimap_posx.Value * _rscala.x);
+  MinY := PixelAlignY(ui_minimap_posy.Value);
+  MaxX := MinX + MapGfx.Minimap.Width  * MapGfx.Minimap.Scale;
+  MaxY := MinY + MapGfx.Minimap.Height * MapGfx.Minimap.Scale;
+
+  StartX := Max(MinX, PixelAlignX(ui_minimap_posx.Value * _rscala.x + StartX));
+  StartY := Max(MinY, PixelAlignY(ui_minimap_posy.Value + StartY));
+  EndX   := Min(MaxX, PixelAlignX(ui_minimap_posx.Value * _rscala.x + EndX));
+  EndY   := Min(MaxY, PixelAlignY(ui_minimap_posy.Value + EndY));
+
+  DrawBox(StartX, StartY, EndX, EndY, 0.5, Color);
 end;
 
 function ToMinimap(const Pos: TVector2; Scale: Single = 1): TVector2;
@@ -1084,7 +1204,6 @@ begin
         3: GfxDrawText(_('Charlie team wins'), fragx + 50, y);
         4: GfxDrawText(_('Delta team wins'), fragx + 50, y);
       end;
-
     end;
 
     GfxTextVerticalAlign(GFX_TOP);
@@ -1350,7 +1469,6 @@ begin
           4: GfxDrawText(_('Delta'), Lines[i].x, Lines[i].y);
           5: GfxDrawText(_('Spectator'), Lines[i].x, Lines[i].y);
         end;
-
 
         if j < 5 then
         begin
@@ -1779,12 +1897,12 @@ var
   rc: TGfxRect;
   x, y, w, h, dx, dy: Single;
 begin
-  dy := iif(OnlyOffscreen, -10, 5) + 15;
+  dy := (iif(OnlyOffscreen, -10, 5) + 15) / Max(1, ActualZoom);
   rc := GfxTextMetrics(WideString(Sprite[i].Player.Name));
   w  := RectWidth(rc);
   h  := RectHeight(rc);
-  x  := (Sprite[i].Skeleton.Pos[7].x - CameraX + 0.5 * GameWidth) * _rscala.x;
-  y  := (Sprite[i].Skeleton.Pos[7].y - CameraY + 0.5 * GameHeight + dy) * _rscala.y;
+  x  := WorldToInterface(Sprite[i].Skeleton.Pos[7].x - CameraX) + 0.5 * GameWidth * _rscala.x;
+  y  := WorldToInterface(Sprite[i].Skeleton.Pos[7].y - CameraY) + 0.5 * GameHeight + dy * _rscala.y;
 
   if not OnlyOffscreen or (x < 0) or (x > Width) or (y < 0) or (y > Height) then
   begin
@@ -2246,7 +2364,7 @@ begin
         RGBA(CursorColor, Alfa));
 
       {$IFDEF DEBUGCURSORS}
-      for i := 1 to 32 do
+      for i := Low(Sprite) to High(Sprite) do
       begin
          // debug cursors
          if (Sprite[i].Active) and not (Sprite[i].DeadMeat) then
@@ -2264,8 +2382,8 @@ begin
     // Player indicator
     if ui_playerindicator.Value and SpriteMe.IsNotSpectator then
     begin
-      CharacterOffset.x := GameWidthHalf  - camerax + SpriteMe.Skeleton.Pos[12].x;
-      CharacterOffset.y := GameHeightHalf - cameray + SpriteMe.Skeleton.Pos[12].y;
+      CharacterOffset.x := GameWidthHalf  + WorldToInterface(-camerax + SpriteMe.Skeleton.Pos[12].x);
+      CharacterOffset.y := GameHeightHalf + WorldToInterface(-cameray + SpriteMe.Skeleton.Pos[12].y);
 
       x := T^[GFX_INTERFACE_ARROW].Width * T^[GFX_INTERFACE_ARROW].Scale;
       y := T^[GFX_INTERFACE_ARROW].Height * T^[GFX_INTERFACE_ARROW].Scale;
@@ -2463,6 +2581,9 @@ begin
       end;
     end;
   end;
+
+  if MiniMapShow and (MySprite > 0) and Sprite[MySprite].IsSpectator then
+    RenderMinimapSquare();
 
   // Background for self Weapon Stats
   if StatsMenuShow and not FragsMenuShow then

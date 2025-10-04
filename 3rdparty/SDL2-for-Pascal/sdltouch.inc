@@ -2,10 +2,10 @@
 
 type
   PSDL_TouchID  = ^TSDL_TouchID;
-  TSDL_TouchID  = SInt64;
+  TSDL_TouchID  = type SInt64;
 
   PSDL_FingerID = ^TSDL_FingerID;
-  TSDL_FingerID = SInt64;
+  TSDL_FingerID = type SInt64;
 
   PSDL_Finger = ^TSDL_Finger;
   TSDL_Finger = record

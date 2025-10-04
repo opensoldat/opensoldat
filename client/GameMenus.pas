@@ -1,20 +1,23 @@
-{*******************************************************}
-{                                                       }
-{       Game Menus Unit for OPENSOLDAT                  }
-{                                                       }
-{       Copyright (c) 2002 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       GameMenus Unit for OpenSoldat                         }
+{                                                             }
+{       Copyright (c) 2002      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit GameMenus;
 
 interface
 
+
 type
   PGameButton = ^TGameButton;
   TGameButton = record
     Active: Boolean;
-    x1, y1, x2, y2: Integer;
+    x1, y1: Integer;
+    x2, y2: Integer;
     Caption: WideString;
   end;
 
@@ -37,23 +40,48 @@ var
   KickMenu:  PGameMenu;
   MapMenu:   PGameMenu;
   KickMenuIndex: Integer = 0;
-  MapMenuIndex: Integer = 0;
+  MapMenuIndex:  Integer = 0;
 
 procedure InitGameMenus;
 procedure GameMenuShow(Menu: PGameMenu; Show: Boolean = True);
-function GameMenuAction(Menu: PGameMenu; ButtonIndex: Integer): Boolean;
+function  GameMenuAction(Menu: PGameMenu; ButtonIndex: Integer): Boolean;
 procedure GameMenuMouseMove();
-function GameMenuClick(): Boolean;
+function  GameMenuClick(): Boolean;
+
 
 implementation
 
 uses
-  SDL2, SysUtils, Client, Weapons, Game, GameStrings, ClientGame, Sound, InterfaceGraphics,
-  Constants, Net, NetworkClientConnection, NetworkClientSprite, Sprites, Cvar,
-  NetworkClientGame, NetworkClientMessages{$IFDEF STEAM}, Steam{$ENDIF};
+  // System units
+  SysUtils,
+
+  // Library units
+  SDL2,
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Project units
+  Client,
+  ClientGame,
+  Constants,
+  Cvar,
+  Game,
+  GameStrings,
+  InterfaceGraphics,
+  Net,
+  NetworkClientConnection,
+  NetworkClientGame,
+  NetworkClientMessages,
+  NetworkClientSprite,
+  Sound,
+  Sprites,
+  Weapons;
+
 
 var
   LimboWasActive: Boolean;
+
 
 procedure InitButton(Menu: PGameMenu; Button: Integer; Caption: WideString;
   x, y, w, h: Integer; Active: Boolean = True);
@@ -89,20 +117,20 @@ begin
 
   if r_scaleinterface.Value then
   begin
-    EscMenu.x := Round((GameWidth - EscMenu.w) / 2);
+    EscMenu.x := Round((GameWidth  - EscMenu.w) / 2);
     EscMenu.y := Round((GameHeight - EscMenu.h) / 2);
   end
   else
   begin
-    EscMenu.x := Round((RenderWidth - EscMenu.w) / 2);
+    EscMenu.x := Round((RenderWidth  - EscMenu.w) / 2);
     EscMenu.y := Round((RenderHeight - EscMenu.h) / 2);
   end;
 
   SetLength(EscMenu.Button, {$IFDEF STEAM}5{$ELSE}4{$ENDIF});
   InitButton(EscMenu, 0, '1 ' + _('Exit to menu'), 5, 1 * 25, 240, 25);
-  InitButton(EscMenu, 1, '2 ' + _('Change map'), 5, 2 * 25, 240, 25);
-  InitButton(EscMenu, 2, '3 ' + _('Kick player'), 5, 3 * 25, 240, 25);
-  InitButton(EscMenu, 3, '4 ' + _('Change team'), 5, 4 * 25, 240, 25);
+  InitButton(EscMenu, 1, '2 ' + _('Change map'),   5, 2 * 25, 240, 25);
+  InitButton(EscMenu, 2, '3 ' + _('Kick player'),  5, 3 * 25, 240, 25);
+  InitButton(EscMenu, 3, '4 ' + _('Change team'),  5, 4 * 25, 240, 25);
   {$IFDEF STEAM}
   InitButton(EscMenu, 4, _('Server Website'), 5, 7 * 25, 240, 15);
   {$ENDIF}
@@ -115,12 +143,12 @@ begin
   TeamMenu.y := 0;
 
   SetLength(TeamMenu.Button, 6);
-  InitButton(TeamMenu, 0, '0 ' + _('0 Player'), 40, 140 + 40 * 1, 215, 35);
-  InitButton(TeamMenu, 1, '1 ' + _('Alpha Team'), 40, 140 + 40 * 1, 215, 35);
-  InitButton(TeamMenu, 2, '2 ' + _('Bravo Team'), 40, 140 + 40 * 2, 215, 35);
+  InitButton(TeamMenu, 0, '0 ' + _('0 Player'),     40, 140 + 40 * 1, 215, 35);
+  InitButton(TeamMenu, 1, '1 ' + _('Alpha Team'),   40, 140 + 40 * 1, 215, 35);
+  InitButton(TeamMenu, 2, '2 ' + _('Bravo Team'),   40, 140 + 40 * 2, 215, 35);
   InitButton(TeamMenu, 3, '3 ' + _('Charlie Team'), 40, 140 + 40 * 3, 215, 35);
-  InitButton(TeamMenu, 4, '4 ' + _('Delta Team'), 40, 140 + 40 * 4, 215, 35);
-  InitButton(TeamMenu, 5, '5 ' + _('Spectator'), 40, 140 + 40 * 5, 215, 35);
+  InitButton(TeamMenu, 4, '4 ' + _('Delta Team'),   40, 140 + 40 * 4, 215, 35);
+  InitButton(TeamMenu, 5, '5 ' + _('Spectator'),    40, 140 + 40 * 5, 215, 35);
 
   // limbo menu
 
@@ -149,10 +177,10 @@ begin
   KickMenu.y := 355;
 
   SetLength(KickMenu.Button, 4);
-  InitButton(KickMenu, 0, '<<<<',  15, 35, 90, 25);
-  InitButton(KickMenu, 1, '>>>>', 265, 35, 90, 25);
+  InitButton(KickMenu, 0, '<<<<',     15, 35, 90, 25);
+  InitButton(KickMenu, 1, '>>>>',    265, 35, 90, 25);
   InitButton(KickMenu, 2, _('Kick'), 105, 55, 90, 25);
-  InitButton(KickMenu, 3, _('Ban'), 195, 55, 80, 25);
+  InitButton(KickMenu, 3, _('Ban'),  195, 55, 80, 25);
 
   KickMenu.Button[3].Active := False;  // TODO: ban not supported for now
 
@@ -164,8 +192,8 @@ begin
   MapMenu.y := 355;
 
   SetLength(MapMenu.Button, 3);
-  InitButton(MapMenu, 0, '<<<<',  15, 35, 90, 25);
-  InitButton(MapMenu, 1, '>>>>', 265, 35, 90, 25);
+  InitButton(MapMenu, 0, '<<<<',       15, 35, 90, 25);
+  InitButton(MapMenu, 1, '>>>>',      265, 35, 90, 25);
   InitButton(MapMenu, 2, _('Select'), 120, 55, 90, 25);
 end;
 
@@ -221,7 +249,9 @@ begin
     HideAll;
 
     if Show then case sv_gamemode.Value of
-      GAMESTYLE_CTF, GAMESTYLE_INF, GAMESTYLE_HTF: begin
+      GAMESTYLE_CTF,
+      GAMESTYLE_INF,
+      GAMESTYLE_HTF: begin
         Menu.Button[0].Active := False;
         Menu.Button[1].Active := True;
         Menu.Button[2].Active := True;
@@ -292,7 +322,7 @@ begin
 
           Halt(0);
         end;
-        1: GameMenuShow(MapMenu, not MapMenu.Active);
+        1: GameMenuShow(MapMenu,  not MapMenu.Active);
         2: GameMenuShow(KickMenu, not KickMenu.Active);
         3: begin
           Result := (MySprite > 0) and (MapChangeCounter < 0);
@@ -312,7 +342,8 @@ begin
         {$IFDEF STEAM}
         4: begin
           if sv_website.Value <> '' then
-            SteamAPI.Friends.ActivateGameOverlayToWebPage(PChar(sv_website.Value), k_EActivateGameOverlayToWebPageMode_Default);
+            SteamAPI.Friends.ActivateGameOverlayToWebPage(PChar(sv_website.Value),
+              k_EActivateGameOverlayToWebPageMode_Default);
         end;
         {$ENDIF}
       end;
@@ -325,7 +356,7 @@ begin
 
       if (MySprite = 0) or (ButtonIndex <> Sprite[MySprite].Player.Team) then
       begin
-        // NOTE this actually sends a change team request
+        // NOTE: this actually sends a change team request
         ClientSendPlayerInfo;
       end;
     end
@@ -500,7 +531,8 @@ begin
     // Clicking off of the Limbo menu hides it. Allows players who leave the
     // weapons menu active to begin moving quickly without having to press the
     // right weapon button, or worse yet click on it.
-    if (MySprite > 0) and (Sprite[MySprite].SelWeapon <> 0) and (LimboMenu <> nil) and (LimboMenu.Active) then
+    if (MySprite > 0) and (Sprite[MySprite].SelWeapon <> 0) and
+      (LimboMenu <> nil) and (LimboMenu.Active) then
     begin
       GameMenuShow(LimboMenu, False);
       Result := True;

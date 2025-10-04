@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       stb Unit for OPENSOLDAT                         }
-{                                                       }
-{       Copyright (c) 2015 Mariano Cuatrin              }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       stb Unit for OpenSoldat                               }
+{                                                             }
+{       Copyright (c) 2015      Mariano Cuatrin               }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit stb;
 
@@ -14,11 +15,11 @@ type
   PPInteger = ^PInteger;
 
 const
- {$IFDEF MSWINDOWS}
+  {$IFDEF MSWINDOWS}
   STBLIB = 'stb.dll';
- {$ELSE}
+  {$ELSE}
   STBLIB = 'stb.so';
- {$ENDIF}
+  {$ENDIF}
 
 // stb_image
 function stbi_xload_file(filename: PAnsiChar; w, h, f: PInteger; delays: PPInteger): PByte;
@@ -53,6 +54,7 @@ function stbi_write_hdr(filename: PAnsiChar; w, h, comp: Integer; data: Pointer)
 function stbir_resize_uint8(in_data: PByte; in_w, in_h, in_stride: Integer;
   out_data: PByte; out_w, out_h, out_stride, num_channels: Integer): Integer;
   cdecl; external STBLIB;
+
 
 implementation
 

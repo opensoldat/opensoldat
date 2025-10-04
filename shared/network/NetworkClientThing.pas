@@ -1,27 +1,55 @@
+{*************************************************************}
+{                                                             }
+{       NetworkClientThing Unit for OpenSoldat                }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkClientThing;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
-  Vector, Util,
+  // Library units
+  Steam,
 
-  // OpenSoldat units
-  Calc, LogFile, Steam, Net, Sprites, Weapons, Sound,
-  Constants, GameStrings;
+  // Helper units
+  Calc,
+  LogFile,
+  Util,
+  Vector,
+
+  // Project units
+  Constants,
+  GameStrings,
+  Net,
+  Sound,
+  Sprites,
+  Weapons;
+
 
 procedure ClientHandleServerThingSnapshot(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleServerThingMustSnapshot(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleThingTaken(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
-  Client, NetworkUtils, NetworkClientSprite, Game,
-  Demo, ClientGame, Things;
+  // Project units
+  Client,
+  ClientGame,
+  Demo,
+  Game,
+  NetworkClientSprite,
+  NetworkUtils,
+  Things;
+
 
 procedure ClientHandleServerThingSnapshot(NetMessage: PSteamNetworkingMessage_t);
 var
@@ -29,7 +57,8 @@ var
   i, d: Integer;
   a: TVector2;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerThingSnapshot), NetMessage^.m_cbSize, MsgID_ServerThingSnapshot) then
+  if not VerifyPacket(sizeof(TMsg_ServerThingSnapshot), NetMessage^.m_cbSize,
+    MsgID_ServerThingSnapshot) then
     Exit;
 
   ThingSnap := PMsg_ServerThingSnapshot(NetMessage^.m_pData)^;
@@ -49,8 +78,8 @@ begin
 
     for d := 1 to 4 do
     begin
-      Thing[i].Skeleton.Pos[d].X := ThingSnap.Pos[d].X;
-      Thing[i].Skeleton.Pos[d].Y := ThingSnap.Pos[d].Y;
+      Thing[i].Skeleton.Pos[d].X    := ThingSnap.Pos[d].X;
+      Thing[i].Skeleton.Pos[d].Y    := ThingSnap.Pos[d].Y;
       Thing[i].Skeleton.OldPos[d].X := ThingSnap.OldPos[d].X;
       Thing[i].Skeleton.OldPos[d].Y := ThingSnap.OldPos[d].Y;
     end;
@@ -74,7 +103,7 @@ begin
     if Thing[i].HoldingSprite > 0 then
     begin
       Sprite[ThingSnap.Owner].HoldedThing := i;
-      Sprite[ThingSnap.Owner].OnGround := false;
+      Sprite[ThingSnap.Owner].OnGround    := False;
     end;
 
     Thing[i].Color := Sprite[ThingSnap.Owner].Player.ShirtColor;
@@ -85,8 +114,8 @@ begin
       and (Distance(Thing[i].Skeleton.Pos[2], ThingSnap.Pos[2]) > 10) then
       for d := 1 to 4 do
       begin
-        Thing[i].Skeleton.Pos[d].X := ThingSnap.Pos[d].X;
-        Thing[i].Skeleton.Pos[d].Y := ThingSnap.Pos[d].Y;
+        Thing[i].Skeleton.Pos[d].X    := ThingSnap.Pos[d].X;
+        Thing[i].Skeleton.Pos[d].Y    := ThingSnap.Pos[d].Y;
         Thing[i].Skeleton.OldPos[d].X := ThingSnap.OldPos[d].X;
         Thing[i].Skeleton.OldPos[d].Y := ThingSnap.OldPos[d].Y;
       end;
@@ -96,13 +125,13 @@ begin
       Spriteparts.Pos[Thing[i].HoldingSprite]) > 330 then
       for d := 1 to 4 do
       begin
-        Thing[i].Skeleton.Pos[d].X := ThingSnap.Pos[d].X;
-        Thing[i].Skeleton.Pos[d].Y := ThingSnap.Pos[d].Y;
+        Thing[i].Skeleton.Pos[d].X    := ThingSnap.Pos[d].X;
+        Thing[i].Skeleton.Pos[d].Y    := ThingSnap.Pos[d].Y;
         Thing[i].Skeleton.OldPos[d].X := ThingSnap.OldPos[d].X;
         Thing[i].Skeleton.OldPos[d].Y := ThingSnap.OldPos[d].Y;
       end;
 
-  Thing[i].StaticType := false;
+  Thing[i].StaticType := False;
 
   if Thing[i].Style = OBJECT_RAMBO_BOW then
     GameThingTarget := i;
@@ -116,7 +145,8 @@ var
   SpriteThingOwner: ^TSprite;
   WeaponThing: Integer;
 begin
-  if not VerifyPacket(sizeof(TMsg_ServerThingMustSnapshot), NetMessage^.m_cbSize, MsgID_ServerThingMustSnapshot) then
+  if not VerifyPacket(sizeof(TMsg_ServerThingMustSnapshot), NetMessage^.m_cbSize,
+    MsgID_ServerThingMustSnapshot) then
     Exit;
 
   ThingMustSnap := PMsg_ServerThingMustSnapshot(NetMessage^.m_pData)^;
@@ -140,8 +170,8 @@ begin
 
     for d := 1 to 4 do
     begin
-      Thing[i].Skeleton.Pos[d].X := ThingMustSnap.Pos[d].X;
-      Thing[i].Skeleton.Pos[d].Y := ThingMustSnap.Pos[d].Y;
+      Thing[i].Skeleton.Pos[d].X    := ThingMustSnap.Pos[d].X;
+      Thing[i].Skeleton.Pos[d].Y    := ThingMustSnap.Pos[d].Y;
       Thing[i].Skeleton.OldPos[d].X := ThingMustSnap.OldPos[d].X;
       Thing[i].Skeleton.OldPos[d].Y := ThingMustSnap.OldPos[d].Y;
     end;
@@ -178,13 +208,13 @@ begin
     end;
   end;
 
-  Thing[i].Owner := ThingMustSnap.Owner;
+  Thing[i].Owner         := ThingMustSnap.Owner;
   Thing[i].HoldingSprite := ThingMustSnap.HoldingSprite;
 
   // is not holded anymore
   if Thing[i].HoldingSprite = 0 then
   begin
-    for d := 1 to MAX_SPRITES do
+    for d := Low(Sprite) to High(Sprite) do
       if Sprite[d].Active then
       begin
         if Sprite[d].HoldedThing = i then
@@ -207,14 +237,14 @@ begin
   if (Thing[i].HoldingSprite = 0) and (not Thing[i].Style = OBJECT_STATIONARY_GUN) then
     for d := 1 to 4 do
     begin
-      Thing[i].Skeleton.Pos[d].X := ThingMustSnap.Pos[d].X;
-      Thing[i].Skeleton.Pos[d].Y := ThingMustSnap.Pos[d].Y;
+      Thing[i].Skeleton.Pos[d].X    := ThingMustSnap.Pos[d].X;
+      Thing[i].Skeleton.Pos[d].Y    := ThingMustSnap.Pos[d].Y;
       Thing[i].Skeleton.OldPos[d].X := ThingMustSnap.OldPos[d].X;
       Thing[i].Skeleton.OldPos[d].Y := ThingMustSnap.OldPos[d].Y;
     end;
 
   Thing[i].Timeout := ThingMustSnap.Timeout;
-  Thing[i].StaticType := false;
+  Thing[i].StaticType := False;
   if Thing[i].Style = OBJECT_RAMBO_BOW then
     GameThingTarget := i;
 end;
@@ -462,7 +492,7 @@ begin
   end;
 
   if ((Thing[i].Style > OBJECT_POINTMATCH_FLAG) and (Thing[i].Style < OBJECT_RAMBO_BOW)) or
-     ((Thing[i].Style > OBJECT_PARACHUTE) and (Thing[i].Style < OBJECT_STATIONARY_GUN)) then
+     ((Thing[i].Style > OBJECT_PARACHUTE)       and (Thing[i].Style < OBJECT_STATIONARY_GUN)) then
   begin
     PlaySound(SFX_PICKUPGUN, Thing[i].Skeleton.Pos[1]);
     Sprite[ThingTakenSnap.Who].Weapon.FireIntervalPrev :=

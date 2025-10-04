@@ -1,10 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptExceptions unit for OPENSOLDAT            }
-{                                                       }
-{       Copyright (c) 2013 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptExceptions Unit for OpenSoldat                  }
+{                                                             }
+{       Copyright (c) 2013      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptExceptions;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}
@@ -12,7 +14,10 @@ unit ScriptExceptions;
 interface
 
 uses
-  Classes, SysUtils;
+  // System units
+  Classes,
+  SysUtils;
+
 
 // those types do not begin with "T" because Exception class clearly doesn't.
 type
@@ -43,7 +48,9 @@ type
   ENotImplemented = class (ScriptException)
   end;
 
+
 implementation
+
 
 constructor EScriptRecompile.Create(Message: String; Force: Boolean);
 begin
@@ -68,4 +75,3 @@ begin
 end;
 
 end.
-

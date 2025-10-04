@@ -50,10 +50,10 @@ CMake 3.14+ is required.
 
 #### Build steps for macOS
 
-1. `brew install openssl@1.1 protobuf fpc cmake sdl2 physfs freetype2`
+1. `brew install openssl@3 protobuf fpc cmake sdl2 physfs freetype2`
 2. `mkdir build && cd build`
-3. `export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@1.1/lib/pkgconfig`
-4. `cmake -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@1.1) ..`
+3. `export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@3/lib/pkgconfig`
+4. `cmake -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@3) ..`
 5. `make`
 
 #### Available flags

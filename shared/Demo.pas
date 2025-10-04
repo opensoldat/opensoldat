@@ -1,29 +1,42 @@
-{*******************************************************}
-{                                                       }
-{       Demo Unit for OPENSOLDAT                        }
-{                                                       }
-{       Copyright (c) 2002 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Demo Unit for OpenSoldat                              }
+{                                                             }
+{       Copyright (c) 2002      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Demo;
 
 interface
 
 uses
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
   {$IFNDEF SERVER}
-  GameStrings, ClientGame,
+    Steam,
   {$ENDIF}
-  SysUtils, Classes, Vector, Sprites,
-  {$IFNDEF SERVER}Steam,{$ENDIF}
-  Net;
+
+  // Helper units
+  Vector,
+
+  // Project units
+  {$IFNDEF SERVER}
+    ClientGame,
+    GameStrings,
+  {$ENDIF}
+  Net,
+  Sprites;
 
 
 const
   DEMO_MAGIC: array[1..6] of Char = 'SOLDEM';
 
 type
-
   TDemoHeader = record
     Header: array[1..6] of Char;
     Version: Word;
@@ -48,21 +61,22 @@ type
   TDemoRecorder = class(TDemo)
   private
     FTicksNum: Integer;
-    function CreateDemoPlayer: Integer;
+
+    function  CreateDemoPlayer: Integer;
     {$IFNDEF SERVER}
     procedure SaveCamera;
     {$ENDIF}
   public
-    function StartRecord(Filename: string): Boolean;
+    function  StartRecord(Filename: string): Boolean;
     procedure StopRecord;
     procedure SaveRecord(var R; Size: Integer);
     procedure SaveNextFrame;
     {$IFNDEF SERVER}
     procedure SavePosition;
     {$ENDIF}
-    property Name: AnsiString read FName;
-    property Active: Boolean read FActive write FActive;
-    property TicksNum: Integer read FTicksNum;
+    property  Name: AnsiString read FName;
+    property  Active: Boolean read FActive write FActive;
+    property  TicksNum: Integer read FTicksNum;
   end;
 
   {$IFNDEF SERVER}
@@ -70,11 +84,11 @@ type
   private
     FSkipTo: Integer;
   public
-    function OpenDemo(Filename: string): Boolean;
+    function  OpenDemo(Filename: string): Boolean;
     procedure StopDemo;
     procedure ProcessDemo;
     procedure Position(Ticks: Integer);
-    property SkipTo: Integer read FSkipTo;
+    property  SkipTo: Integer read FSkipTo;
   end;
   {$ENDIF}
 
@@ -91,8 +105,25 @@ var
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Game, PolyMap, Constants, Version, NetworkUtils, DateUtils,
-  NetworkServerConnection, NetworkServerThing {$IFNDEF SERVER}, InterfaceGraphics {$ENDIF};
+  // Library units
+  DateUtils,
+
+  // Helper units
+  Version,
+
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+    InterfaceGraphics,
+  {$ENDIF}
+  Constants,
+  Game,
+  NetworkServerConnection,
+  NetworkServerThing,
+  NetworkUtils,
+  PolyMap;
 
 
 function TDemoRecorder.StartRecord(Filename: string): Boolean;

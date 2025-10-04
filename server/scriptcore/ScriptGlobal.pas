@@ -1,11 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       ScriptGlobal unit for OPENSOLDAT                }
-{                                                       }
-{       Copyright (c) 2014 Tomasz Kolosowski            }
-{                          and  Umut Karakas            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptGlobal Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2014      Tomasz Kolosowski             }
+{       Copyright (c) 2014      Umut Karakas                  }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // Unit for stuff that is not only used by this specific script.
 // TODO: Documentation.
@@ -16,20 +17,23 @@ unit ScriptGlobal;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   Script,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
+
 
 type
-
   TScriptGlobal = class(TObject)
   private
-    function GetDateSeparator: Char;
+    function  GetDateSeparator: Char;
     procedure SetDateSeparator(Separator: Char);
-    function GetShortDateFormat: string;
+    function  GetShortDateFormat: string;
     procedure SetShortDateFormat(Format: string);
   public
     property ScriptDateSeparator: Char read GetDateSeparator write SetDateSeparator;
@@ -47,7 +51,9 @@ type
     procedure RuntimeRegisterVariables(Exec: TPascalExec); override;
   end;
 
+
 implementation
+
 
 function TScriptGlobal.GetDateSeparator: Char;
 begin

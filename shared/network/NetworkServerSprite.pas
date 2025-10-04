@@ -1,20 +1,36 @@
+{*************************************************************}
+{                                                             }
+{       NetworkServerSprite Unit for OpenSoldat               }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkServerSprite;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+
+  // Helper units
   Vector,
 
+  // Project units
+  Constants,
+  Net,
+  PolyMap,
   {$IFDEF SCRIPT}
-  ScriptDispatcher,
+    ScriptDispatcher,
   {$ENDIF}
+  Sprites,
+  Weapons;
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Weapons, Constants, PolyMap;
 
 procedure ServerSpriteSnapshot(r: Byte);
 procedure ServerSpriteSnapshotMajor(r: Byte);
@@ -36,10 +52,16 @@ var
   Time_SpriteSnapshot: array[1..MAX_SPRITES] of Integer;
   Time_SpriteSnapshot_Mov: array[1..MAX_SPRITES] of Integer;
 
+
 implementation
 
 uses
-  Server, NetworkUtils, Game, Demo;
+  // Project units
+  Demo,
+  Game,
+  NetworkUtils,
+  Server;
+
 
 // SERVER SNAPSHOT
 procedure ServerSpriteSnapshot(r: Byte);

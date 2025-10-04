@@ -1,31 +1,51 @@
+{*************************************************************}
+{                                                             }
+{       NetworkServerMessages Unit for OpenSoldat             }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkServerMessages;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+
+  // Helper units
   Util,
 
+  // Project units
+  Command,
+  Constants,
+  Net,
   {$IFDEF SCRIPT}
-  ScriptDispatcher,
+    ScriptDispatcher,
   {$ENDIF}
+  Sprites;
 
-  // OpenSoldat units
-  Net, Steam, Sprites, Command, Constants;
 
-  procedure ServerSendStringMessage(Text: WideString; ToNum: Byte; From: Byte; MsgType: Byte);
-  procedure ServerHandleChatMessage(NetMessage: PSteamNetworkingMessage_t);
-  procedure ServerSendSpecialMessage(Text: string; MsgType: Byte;
-    LayerId: Byte; Delay: Integer; Scale: Single; Color: UInt32;
-    X: Single; Y: Single; ToNum: Byte);
+procedure ServerSendStringMessage(Text: WideString; ToNum: Byte; From: Byte; MsgType: Byte);
+procedure ServerHandleChatMessage(NetMessage: PSteamNetworkingMessage_t);
+procedure ServerSendSpecialMessage(Text: string; MsgType: Byte;
+  LayerId: Byte; Delay: Integer; Scale: Single; Color: UInt32;
+  X: Single; Y: Single; ToNum: Byte);
+
 
 implementation
 
 uses
-  Server, Game, Demo;
+  // Project units
+  Demo,
+  Game,
+  Server;
+
 
 procedure ServerSendStringMessage(Text: WideString; ToNum: Byte; From: Byte; MsgType: Byte);
 var

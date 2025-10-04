@@ -2,7 +2,10 @@ unit BitStream;
 
 interface
 
-uses fgl;
+uses
+  // Library units
+  fgl;
+
 
 type
   TBitReader = class
@@ -49,9 +52,14 @@ type
     property BitPos: Longint read FBitPos;
   end;
 
+
 implementation
 
-uses Math, SysUtils;
+uses
+  // System units
+  Math,
+  SysUtils;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Read/Write helper functions

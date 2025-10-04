@@ -1,3 +1,11 @@
+{*************************************************************}
+{                                                             }
+{       LauncherIPC Unit for OpenSoldat                       }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit LauncherIPC;
 
 interface
@@ -27,6 +35,7 @@ type
     destructor Destroy; override;
     property ThreadAlive: Boolean read FThreadAlive;
   end;
+
 
 implementation
 
@@ -130,7 +139,8 @@ end;
 
 destructor TLauncherIPC.Destroy;
 begin
-  if FThreadAlive then begin
+  if FThreadAlive then
+  begin
     Debug('[LauncherIPC] Killing thread...');
     FConnectionThread.Terminate;
     FConnectionThread.WaitFor;

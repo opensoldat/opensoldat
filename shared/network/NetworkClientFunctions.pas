@@ -1,19 +1,35 @@
+{*************************************************************}
+{                                                             }
+{       NetworkClientFunctions Unit for OpenSoldat            }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkClientFunctions;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes, sockets,
+  // System units
+  Classes,
+  Sockets,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+
+  // Helper units
+  LogFile,
   Vector,
 
-  // Sound unit
+  // Project units
+  Constants,
+  Net,
   Sound,
+  Sprites,
+  Weapons;
 
-  // OpenSoldat units
-  LogFile, Steam, Net, Sprites, Weapons, Constants;
 
 procedure ClientHandleVoteOn(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleVoteOff;
@@ -26,11 +42,22 @@ procedure ClientHandleClientFreeCam(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandleJoinServer(NetMessage: PSteamNetworkingMessage_t);
 procedure ClientHandlePlaySound(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
-  Client, Game, Demo, GameMenus, NetworkClientConnection, PhysFS,
-  InterfaceGraphics, NetworkUtils;
+  // Library units
+  PhysFS,
+
+  // Project units
+  Client,
+  Demo,
+  Game,
+  GameMenus,
+  InterfaceGraphics,
+  NetworkClientConnection,
+  NetworkUtils;
+
 
 procedure ClientHandleVoteOn(NetMessage: PSteamNetworkingMessage_t);
 var
@@ -44,7 +71,7 @@ begin
 
   i := VoteOnMsg.Who;
 
-  StatsMenuShow := false;
+  StatsMenuShow := False;
 
   StartVote(i, VoteOnMsg.VoteType, VoteOnMsg.TargetName, VoteOnMsg.Reason);
 end;
@@ -159,12 +186,12 @@ begin
     if FreeCamMsg.FreeCamOn = 1 then
     begin
       CameraFollowSprite := 0;
-      TargetMode := true;
+      TargetMode := True;
     end
     else
     begin
       CameraFollowSprite := MySprite;
-      TargetMode := false;
+      TargetMode := False;
     end;
 
     if (FreeCamMsg.TargetPos.x <> 0.0) and
@@ -190,7 +217,7 @@ begin
 
   ClientDisconnect;
 
-  RedirectToServer := true;
+  RedirectToServer := True;
   RedirectIP := NetAddrToStr(in_addr(JoinServerMsg.IP));
   RedirectPort := JoinServerMsg.Port;
   RedirectMsg := Trim(PChar(@PMsg_JoinServer(NetMessage^.m_pData)^.ShowMsg));

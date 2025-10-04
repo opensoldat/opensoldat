@@ -1,8 +1,24 @@
+{*************************************************************}
+{                                                             }
+{       MapGraphics Unit for OpenSoldat                       }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit MapGraphics;
 
 interface
 
-uses Gfx, MapFile, Vector, Util;
+uses
+  // Helper units
+  Util,
+  Vector,
+
+  // Project units
+  Gfx,
+  MapFile;
+
 
 type
   TMapGraphics = record
@@ -41,10 +57,24 @@ procedure RenderMinimap(x, y: Single; Alpha: Byte);
 procedure WorldToMinimap(x, y: Single; var ox, oy: Single);
 procedure SetTextureFilter(Texture: TGfxTexture; AllowMipmaps: Boolean);
 
+
 implementation
 
 uses
-  Client, Math, SysUtils, PhysFS, GameRendering, Game, ClientGame, PolyMap;
+  // System units
+  Math,
+  SysUtils,
+
+  // Library units
+  PhysFS,
+
+  // Project units
+  Client,
+  ClientGame,
+  Game,
+  GameRendering,
+  PolyMap;
+
 
 function LoadMapTexture(TexName: string; ColorKey: TGfxColor): TGfxImage;
 var
@@ -875,10 +905,13 @@ begin
 
       mg.AnimationsBuffer[vbIndex + 0].u := Sprite.TexCoords.Left;
       mg.AnimationsBuffer[vbIndex + 0].v := Sprite.TexCoords.Top;
+
       mg.AnimationsBuffer[vbIndex + 1].u := Sprite.TexCoords.Right;
       mg.AnimationsBuffer[vbIndex + 1].v := Sprite.TexCoords.Top;
+
       mg.AnimationsBuffer[vbIndex + 2].u := Sprite.TexCoords.Right;
       mg.AnimationsBuffer[vbIndex + 2].v := Sprite.TexCoords.Bottom;
+
       mg.AnimationsBuffer[vbIndex + 3].u := Sprite.TexCoords.Left;
       mg.AnimationsBuffer[vbIndex + 3].v := Sprite.TexCoords.Bottom;
 

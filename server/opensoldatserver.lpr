@@ -1,10 +1,11 @@
-{*********************************************************}
-{                                                         }
-{   OpenSoldatServer                                      }
-{                                                         }
-{   Copyright (c) 2001 Michal Marcinkowski                }
-{                                                         }
-{*********************************************************}
+{*************************************************************}
+{                                                             }
+{       OpenSoldat Server                                     }
+{                                                             }
+{       Copyright (c) 2001      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 program opensoldatserver;
 
@@ -15,12 +16,13 @@ program opensoldatserver;
 
 uses
   {$IFNDEF WINDOWS}
-  cthreads, // needs to be first included unit in project
+    cthreads, // needs to be first included unit in project
   {$ENDIF}
   {$IFDEF AUTOUPDATER}
-  AutoUpdater,
+    AutoUpdater,
   {$ENDIF}
   Main in 'Main.pas';
+
 
 {$IFDEF MSWINDOWS}
 const
@@ -39,6 +41,7 @@ const
   IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE = $8000;
   {$SetPEOptFlags IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE}
 {$ENDIF MSWINDOWS}
+
 
 begin
   {$IFDEF AUTOUPDATER}

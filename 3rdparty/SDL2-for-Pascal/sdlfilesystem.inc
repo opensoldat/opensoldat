@@ -22,7 +22,7 @@
  *
  * \sa SDL_GetPrefPath
  *}
-function SDL_GetBasePath(): PChar cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetBasePath' {$ENDIF} {$ENDIF};
+function SDL_GetBasePath(): PAnsiChar cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetBasePath' {$ENDIF} {$ENDIF};
 
 {**
  * \brief Get the user-and-app-specific path where files can be written.
@@ -85,4 +85,4 @@ function SDL_GetBasePath(): PChar cdecl; external SDL_LibName {$IFDEF DELPHI} {$
  *
  * \sa SDL_GetBasePath
  *}
-function SDL_GetPrefPath(const org: PAnsiChar; const app: PAnsiChar): PChar cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetPrefPath' {$ENDIF} {$ENDIF};
+function SDL_GetPrefPath(const org: PAnsiChar; const app: PAnsiChar): PAnsiChar cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetPrefPath' {$ENDIF} {$ENDIF};

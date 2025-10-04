@@ -47,16 +47,17 @@ type
 {**
  *  \brief The predefined log priorities
  *}
-const
-  SDL_LOG_PRIORITY_VERBOSE = 1;
-  SDL_LOG_PRIORITY_DEBUG = 2;
-  SDL_LOG_PRIORITY_INFO = 3;
-  SDL_LOG_PRIORITY_WARN = 4;
-  SDL_LOG_PRIORITY_ERROR = 5;
-  SDL_LOG_PRIORITY_CRITICAL = 6;
-  SDL_NUM_LOG_PRIORITIES = 7;
 type 
-  TSDL_LogPriority = Integer;
+  PSDL_LogPriority = ^TSDL_LogPriority;
+  TSDL_LogPriority = type SInt32;
+const
+  SDL_LOG_PRIORITY_VERBOSE = TSDL_LogPriority(1);
+  SDL_LOG_PRIORITY_DEBUG = TSDL_LogPriority(2);
+  SDL_LOG_PRIORITY_INFO = TSDL_LogPriority(3);
+  SDL_LOG_PRIORITY_WARN = TSDL_LogPriority(4);
+  SDL_LOG_PRIORITY_ERROR = TSDL_LogPriority(5);
+  SDL_LOG_PRIORITY_CRITICAL = TSDL_LogPriority(6);
+  SDL_NUM_LOG_PRIORITIES = TSDL_LogPriority(7);
 
 
 {**

@@ -1,19 +1,49 @@
+{*************************************************************}
+{                                                             }
+{       GostekGraphics Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit GostekGraphics;
+
 {$hints off}
 interface
 
 uses
-  Classes, Sprites;
+  // System units
+  Classes,
+
+  // Project units
+  Sprites;
+
 
 procedure RenderGostek(var Soldier: TSprite);
 procedure LoadGostekData(Data: TStringList);
 procedure ApplyGostekConstraints;
 
+
 implementation
 
 uses
-  Math, SysUtils, Client, Vector,
-  Game, ClientGame, Weapons, Parts, Constants, GameRendering, Gfx;
+  // System units
+  Math,
+  SysUtils,
+
+  // Helper units
+  Vector,
+
+  // Project units
+  Client,
+  ClientGame,
+  Constants,
+  Game,
+  GameRendering,
+  Gfx,
+  Parts,
+  Weapons;
+
 
 const
   {$DEFINE IDS}
@@ -50,6 +80,7 @@ type
 var
   GostekSprites: array[GOSTEK_FIRST..GOSTEK_LAST] of TGostekSprite;
   GostekBase: TGostekSpriteSet;
+
 
 procedure LoadDefaults();
 var
@@ -456,4 +487,5 @@ end;
 
 initialization
   LoadDefaults();
+
 end.

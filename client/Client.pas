@@ -1,49 +1,67 @@
-{*******************************************************}
-{                                                       }
-{       Main Unit for OPENSOLDAT                        }
-{                                                       }
-{       Copyright (c) 2003 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Client Unit for OpenSoldat                            }
+{                                                             }
+{       Copyright (c) 2003      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Client;
 
 interface
 
 uses
-  // system and delphi units
+  // System units
+  Classes,
+  Math,
   {$IFDEF MSWINDOWS}
-  MMSystem,
+    MMSystem,
   {$ENDIF}
-  SysUtils, Classes, Math, GameStrings, Variants, FileClient,
+  SysUtils,
+  Variants,
 
-  // graphics units
-  Gfx,
-
-  // helper units
-  Version, Vector, Util, Sha1,
-
-  // SDL2
-  SDL2,
-
-  {$IFDEF STEAM}
-  // Steam
-  Steam,
+  // Library units
+  {$IFDEF ENABLE_FAE}
+    // Anti-Cheat
+    FaeClient,
   {$ENDIF}
-
-  // PhysFS
   PhysFS,
+  SDL2,
+  sha1,
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
 
-  // Cvar
-  Cvar, Command, ClientCommands,
+  // Helper units
+  Util,
+  Vector,
+  Version,
 
-  // anti-cheat units
-  {$IFDEF ENABLE_FAE}FaeClient,{$ENDIF}
+  // Project units
+  Anims,
+  ClientCommands,
+  ClientLauncherIPC,
+  Command,
+  Console,
+  Constants,
+  Cvar,
+  Demo,
+  FileClient,
+  Game,
+  GameMenus,
+  GameRendering,
+  GameStrings,
+  GetText,
+  Gfx,
+  LogFile,
+  Net,
+  NetworkClientConnection,
+  PolyMap,
+  Sound,
+  Sprites,
+  Weapons;
 
-  // OpenSoldat units
-  Sprites, Anims, PolyMap, Net, LogFile, Sound, GetText,
-  NetworkClientConnection, GameMenus, Demo, Console,
-  Weapons, Constants, Game, GameRendering, ClientLauncherIPC;
 
 procedure JoinServer;
 procedure StartGame;
@@ -67,12 +85,11 @@ var
   GameLoopRun: Boolean;
   ProgReady: Boolean;
 
-  JoinPassword: String; // server password
-  JoinPort: String; // join port to server
-  JoinIP: String; // join ip to server
+  JoinPassword: String;  // server password
+  JoinPort: String;  // join port to server
+  JoinIP: String;  // join ip to server
 
   WindowReady: Boolean = False;
-  Initing: Byte;
   GraphicsInitialized: Boolean = False;
 
   BaseDirectory: string;
@@ -149,13 +166,13 @@ var
   fs_workshop_interface: TIntegerCvar;
   {$ENDIF}
 
-  cl_player_name: TStringCvar;
-  cl_player_team: TIntegerCvar;
+  cl_player_name:  TStringCvar;
+  cl_player_team:  TIntegerCvar;
   cl_player_shirt: TColorCvar;
   cl_player_pants: TColorCvar;
-  cl_player_hair: TColorCvar;
-  cl_player_jet: TColorCvar;
-  cl_player_skin: TColorCvar;
+  cl_player_hair:  TColorCvar;
+  cl_player_jet:   TColorCvar;
+  cl_player_skin:  TColorCvar;
 
   cl_player_hairstyle: TIntegerCvar;
   cl_player_headstyle: TIntegerCvar;
@@ -194,9 +211,9 @@ var
   launcher_ipc_port: TIntegerCvar;
   launcher_ipc_reconnect_rate: TIntegerCvar;
 
-  sv_respawntime: TIntegerCvar; // TODO: Remove
-  sv_inf_redaward: TIntegerCvar; // TODO: Remove
-  net_contype: TIntegerCvar; // TODO: Remove
+  sv_respawntime: TIntegerCvar;  // TODO: Remove
+  sv_inf_redaward: TIntegerCvar;  // TODO: Remove
+  net_contype: TIntegerCvar;  // TODO: Remove
   net_allowdownload: TBooleanCvar;
 
   // syncable cvars
@@ -229,11 +246,10 @@ var
   ServerIP: string = '127.0.0.1';
   ServerPort: Integer = 23073;
 
-  Grav: Single = 0.06;
   Connection: Byte = INTERNET;
 
-  WeaponActive: array[1..MAIN_WEAPONS] of Byte; // sync
-  WeaponsInGame: Integer; // sync
+  WeaponActive: array[1..MAIN_WEAPONS] of Byte;  // sync
+  WeaponsInGame: Integer;  // sync
 
   Trails: Byte = 1;
   Spectator: Byte = 0;  // TODO: Remove
@@ -306,10 +322,22 @@ var
   ForceReconnect: Boolean;
   {$ENDIF}
 
+
 implementation
 
 uses
-  IniFiles, TraceLog, ClientGame, ControlGame, InterfaceGraphics, Input;
+  // Library units
+  IniFiles,
+
+  // Helper units
+  TraceLog,
+
+  // Project units
+  ClientGame,
+  ControlGame,
+  Input,
+  InterfaceGraphics;
+
 
 procedure RestartGraph;
 begin
@@ -344,7 +372,8 @@ begin
   else
     Prefix := '';
 
-  MainConsole.Console(_('Loading Weapon Names from') + WideString(' ' + Prefix + 'txt/weaponnames.txt'), DEBUG_MESSAGE_COLOR);
+  MainConsole.Console(_('Loading Weapon Names from') +
+    WideString(' ' + Prefix + 'txt/weaponnames.txt'), DEBUG_MESSAGE_COLOR);
   TF := PHYSFS_openRead(PChar(Prefix + 'txt/weaponnames.txt'));
   if TF <> nil then
     for i := 0 to EXTENDED_WEAPONS - 1 do
@@ -362,6 +391,7 @@ begin
   Buttons[0].flags := SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
   Buttons[0].buttonid := 0;
   Buttons[0].text := 'Yes';
+
   Buttons[1].flags := SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT;
   Buttons[1].buttonid := 1;
   Buttons[1].text := 'No';
@@ -384,7 +414,7 @@ begin
   begin
     JoinIP := RedirectIP;
     JoinPort := IntToStr(RedirectPort);
-    JoinServer();
+    JoinServer;
   end else
   begin
     RedirectIP := '';
@@ -415,7 +445,7 @@ begin
     ClientDisconnect
   else
     if Assigned(UDP) then
-      UDP.Disconnect(true);
+      UDP.Disconnect(True);
 
   StopSound(CHANNEL_WEATHER);
 
@@ -428,43 +458,43 @@ begin
   MapChangeCounter := -60;
   //WindowReady := False;
 
-  for i := 1 to MAX_SPRITES do
+  for i := Low(Sprite) to High(Sprite) do
     if Sprite[i].Active then
       Sprite[i].Kill;
-  for i := 1 to MAX_BULLETS do
+  for i := Low(Bullet) to High(Bullet) do
       Bullet[i].Kill;
-  for i := 1 to MAX_SPARKS do
+  for i := Low(Spark) to High(Spark) do
       Spark[i].Kill;
-  for i := 1 to MAX_THINGS do
+  for i := Low(Thing) to High(Thing) do
       Thing[i].Kill;
 
   // Reset World and Big Texts
   for I := 0 to MAX_BIG_MESSAGES do
   begin
     // Big Text
-    BigText[I] := '';
+    BigText[I]  := '';
     BigDelay[I] := 0;
     BigScale[I] := 0;
     BigColor[I] := 0;
-    BigPosX[I] := 0;
-    BigPosY[I] := 0;
-    BigX[I] := 0;
+    BigPosX[I]  := 0;
+    BigPosY[I]  := 0;
+    BigX[I]     := 0;
     // World Text
-    WorldText[I] := '';
+    WorldText[I]  := '';
     WorldDelay[I] := 0;
     WorldScale[I] := 0;
     WorldColor[I] := 0;
-    WorldPosX[I] := 0;
-    WorldPosY[I] := 0;
-    WorldX[I] := 0;
+    WorldPosX[I]  := 0;
+    WorldPosY[I]  := 0;
+    WorldX[I]     := 0;
   end;
 
   // Reset ABOVE CHAT MESSAGE
   for I := 1 to MAX_SPRITES do
   begin
-    ChatDelay[I] := 0;
+    ChatDelay[I]   := 0;
     ChatMessage[I] := '';
-    ChatTeam[I] := False;
+    ChatTeam[I]    := False;
   end;
 
   MySprite := 0;
@@ -506,7 +536,8 @@ var
   Sr: TSearchRec;
   Name: String;
 begin
-  if SteamAPI.UGC.GetItemInstallInfo(fs_workshop_mod.Value, @SizeOnDisk, @Path, 1024, @TimeStamp) then
+  if SteamAPI.UGC.GetItemInstallInfo(fs_workshop_mod.Value, @SizeOnDisk, @Path,
+    1024, @TimeStamp) then
   begin
     if FindFirst(Path + '/*.smod', faAnyFile - faDirectory, sr) = 0 then
     begin
@@ -516,7 +547,8 @@ begin
       if not PhysFS_mount(PChar(Path + '/' + Sr.Name),
         PChar('mods/' + LowerCase(Name) + '/'), False) then
       begin
-        ShowMessage(_('Could not load mod archive (' + IntToStr(fs_workshop_mod.Value) + '/' + Sr.Name + ').'));
+        ShowMessage(_('Could not load mod archive (' + IntToStr(fs_workshop_mod.Value) +
+          '/' + Sr.Name + ').'));
         Exit;
       end;
       ModDir := 'mods/' + LowerCase(Name) + '/';
@@ -533,10 +565,12 @@ var
   Path: array[0..4096] of Char;
   TimeStamp: Cardinal;
 begin
-  if SteamAPI.UGC.GetItemInstallInfo(fs_workshop_interface.Value, @SizeOnDisk, @Path, 1024, @TimeStamp) then
+  if SteamAPI.UGC.GetItemInstallInfo(fs_workshop_interface.Value, @SizeOnDisk,
+    @Path, 1024, @TimeStamp) then
     LoadInterfaceArchives(Path + '/', True)
   else
-    Debug('Failed to load interface from workshop - ' + IntToStr(fs_workshop_interface.Value));
+    Debug('Failed to load interface from workshop - ' +
+      IntToStr(fs_workshop_interface.Value));
 end;
 
 procedure DownloadItemResult(Callback: PDownloadItemResult_t); cdecl;
@@ -555,16 +589,18 @@ begin
         end;
       end;
     end else
-      Debug('[Steam] Failed to download workshop item, id:' + IntToStr(Callback.m_nPublishedFileId) + ' error: ' + IntToStr(Ord(Callback.m_eResult)));
+      Debug('[Steam] Failed to download workshop item, id:' +
+        IntToStr(Callback.m_nPublishedFileId) + ' error: ' +
+        IntToStr(Ord(Callback.m_eResult)));
   end;
 end;
 
-procedure SteamNetConnectionStatusChangedCallback(Callback: PSteamNetConnectionStatusChangedCallback_t); cdecl;
+procedure SteamNetConnectionStatusChangedCallback(Callback:
+  PSteamNetConnectionStatusChangedCallback_t); cdecl;
 begin
   if Assigned(UDP) then
     UDP.ProcessEvents(Callback);
 end;
-
 {$ENDIF}
 
 procedure StartGame();
@@ -583,7 +619,7 @@ begin
   Randomize;
 
   DefaultFormatSettings.DecimalSeparator := '.';
-  DefaultFormatSettings.DateSeparator := '-';
+  DefaultFormatSettings.DateSeparator    := '-';
 
   UserPathSDL := SDL_GetPrefPath('OpenSoldat', 'OpenSoldat');
   BasePathSDL := SDL_GetBasePath();
@@ -601,7 +637,7 @@ begin
   ParseCommandLine();
 
   // NOTE: fs_basepath, fs_userpath, fs_portable and fs_localmount
-  // must be set from command line, not in client.cfg.
+  //       must be set from command line, not in client.cfg.
   if fs_portable.Value then
   begin
     UserDirectory := BasePathSDL;
@@ -617,7 +653,8 @@ begin
       if DirectoryExists(s) then
         UserDirectory := IncludeTrailingPathDelimiter(s)
       else
-        Debug('[FS] Warning: Specified fs_userpath directory ''' + fs_userpath.Value + ''' does not exist.');
+        Debug('[FS] Warning: Specified fs_userpath directory ''' +
+          fs_userpath.Value + ''' does not exist.');
     end;
 
     BaseDirectory := BasePathSDL;
@@ -627,7 +664,8 @@ begin
       if DirectoryExists(s) then
         BaseDirectory := IncludeTrailingPathDelimiter(s)
       else
-        Debug('[FS] Warning: Specified fs_basepath directory ''' + fs_basepath.Value + ''' does not exist.');
+        Debug('[FS] Warning: Specified fs_basepath directory ''' +
+          fs_basepath.Value + ''' does not exist.');
     end;
   end;
 
@@ -662,14 +700,15 @@ begin
   CreateDirIfMissing(UserDirectory + '/logs/kills');
   CreateDirIfMissing(UserDirectory + '/maps');
   CreateDirIfMissing(UserDirectory + '/mods');
+  CreateDirIfMissing(UserDirectory + '/custom-interfaces');
 
   PHYSFS_CopyFileFromArchive('configs/bindings.cfg', UserDirectory + '/configs/bindings.cfg');
-  PHYSFS_CopyFileFromArchive('configs/client.cfg', UserDirectory + '/configs/client.cfg');
+  PHYSFS_CopyFileFromArchive('configs/client.cfg',   UserDirectory + '/configs/client.cfg');
   PHYSFS_CopyFileFromArchive('configs/controls.cfg', UserDirectory + '/configs/controls.cfg');
-  PHYSFS_CopyFileFromArchive('configs/game.cfg', UserDirectory + '/configs/game.cfg');
+  PHYSFS_CopyFileFromArchive('configs/game.cfg',     UserDirectory + '/configs/game.cfg');
   PHYSFS_CopyFileFromArchive('configs/graphics.cfg', UserDirectory + '/configs/graphics.cfg');
-  PHYSFS_CopyFileFromArchive('configs/player.cfg', UserDirectory + '/configs/player.cfg');
-  PHYSFS_CopyFileFromArchive('configs/sound.cfg', UserDirectory + '/configs/sound.cfg');
+  PHYSFS_CopyFileFromArchive('configs/player.cfg',   UserDirectory + '/configs/player.cfg');
+  PHYSFS_CopyFileFromArchive('configs/sound.cfg',    UserDirectory + '/configs/sound.cfg');
 
   LoadConfig('client.cfg');
 
@@ -690,8 +729,6 @@ begin
   if r_sleeptime.Value > 0 then
     timeBeginPeriod(r_sleeptime.Value);
   {$ENDIF}
-
-  Initing := 0;
 
   {$IFDEF STEAM}
   Debug('[Steam] Initializing system');
@@ -718,7 +755,8 @@ begin
   if fs_workshop_mod.Value <> 0 then
     LoadWorkshopModArchives
   else
-  {$ENDIF}if fs_mod.Value <> '' then
+  {$ENDIF}
+  if fs_mod.Value <> '' then
   begin
     Debug('[PhysFS] Mounting mods/' + fs_mod.Value + '.smod');
     if not PhysFS_mount(PChar(UserDirectory + 'mods/' + fs_mod.Value + '.smod'),
@@ -739,23 +777,27 @@ begin
   LoadInterfaceArchives(UserDirectory + 'custom-interfaces/');
 
   // these might change so keep a backup to avoid changing the settings file
-  ScreenWidth := r_screenwidth.Value;
+  ScreenWidth  := r_screenwidth.Value;
   ScreenHeight := r_screenheight.Value;
   RenderHeight := r_renderheight.Value;
-  RenderWidth := r_renderwidth.Value;
+  RenderWidth  := r_renderwidth.Value;
 
-  SDL_Init(SDL_INIT_VIDEO);
+  if SDL_Init(SDL_INIT_VIDEO) < 0 then
+  begin
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, 'Failed', SDL_GetError, nil);
+    Exit;
+  end;
   SDL_GetCurrentDisplayMode(0, @currentDisplay);
 
   if (ScreenWidth = 0) or (ScreenHeight = 0) then
   begin
-    ScreenWidth := currentDisplay.w;
+    ScreenWidth  := currentDisplay.w;
     ScreenHeight := currentDisplay.h;
   end;
 
   if (RenderWidth = 0) or (RenderHeight = 0) then
   begin
-    RenderWidth := ScreenWidth;
+    RenderWidth  := ScreenWidth;
     RenderHeight := ScreenHeight;
   end;
 
@@ -774,7 +816,7 @@ begin
 
   // Calulcate internal game width based on the fov and internal height
   GameWidth := Round(fov * GameHeight);
-  GameWidthHalf := GameWidth / 2;
+  GameWidthHalf  := GameWidth  / 2;
   GameHeightHalf := GameHeight / 2;
 
   if r_fullscreen.Value = 0 then
@@ -792,12 +834,13 @@ begin
 
   if r_fullscreen.Value = 2 then
   begin
-  //  WindowWidth := Screen.Width;
-  //  WindowHeight := Screen.Height;
+    // TODO: Why commented out?
+    //WindowWidth := Screen.Width;
+    //WindowHeight := Screen.Height;
   end;
 
-  GfxLog(Format('Window size: %dx%d', [WindowWidth, WindowHeight]));
-  GfxLog(Format('Target resolution: %dx%d', [ScreenWidth, ScreenHeight]));
+  GfxLog(Format('Window size: %dx%d',         [WindowWidth, WindowHeight]));
+  GfxLog(Format('Target resolution: %dx%d',   [ScreenWidth, ScreenHeight]));
   GfxLog(Format('Internal resolution: %dx%d', [RenderWidth, RenderHeight]));
 
   // even windowed mode can behave as fullscreen with the right size
@@ -879,24 +922,24 @@ begin
 
   // Create Consoles
   MainConsole.CountMax := Round(ui_console_length.Value * _rscala.y);
-  MainConsole.ScrollTickMax := 150;
+  MainConsole.ScrollTickMax  := 150;
   MainConsole.NewMessageWait := 150;
-  MainConsole.AlphaCount := 255;
+  MainConsole.AlphaCount     := 255;
   MainConsole.Count := 0;
   if MainConsole.CountMax > 254 then
     MainConsole.CountMax := 254;
 
   BigConsole.CountMax := Floor((0.85 * RenderHeight) /
     (font_consolelineheight.Value * FontStyleSize(FONT_SMALL)));
-  BigConsole.ScrollTickMax := 1500000;
+  BigConsole.ScrollTickMax  := 1500000;
   BigConsole.NewMessageWait := 0;
-  BigConsole.AlphaCount := 255;
+  BigConsole.AlphaCount     := 255;
   BigConsole.Count := 0;
   if BigConsole.CountMax > 254 then
     BigConsole.CountMax := 254;
 
   KillConsole.CountMax := Round(ui_killconsole_length.Value * _rscala.y);
-  KillConsole.ScrollTickMax := 240;
+  KillConsole.ScrollTickMax  := 240;
   KillConsole.NewMessageWait := 70;
 
   // Create static player objects
@@ -913,7 +956,8 @@ begin
 
   {$IFDEF ENABLE_FAE}
   if FaeIsEnabled then
-    MainConsole.Console('Multi-player sessions are protected by Fae Anti-Cheat', AC_MESSAGE_COLOR);
+    MainConsole.Console('Multi-player sessions are protected by Fae Anti-Cheat',
+      AC_MESSAGE_COLOR);
   {$ENDIF}
 
   // Load weapon display names
@@ -963,7 +1007,6 @@ begin
     Exit;
 
   AddLineToLogFile(GameLog, 'Freeing sprites.', ConsoleLogFileName);
-
   // Free GFX
   DestroyGameGraphics();
 
@@ -972,18 +1015,16 @@ begin
   DeInitTranslation();
 
   AddLineToLogFile(GameLog, 'UDP closing.', ConsoleLogFileName);
-
   FreeAndNil(UDP);
 
   AddLineToLogFile(GameLog, 'Sound closing.', ConsoleLogFileName);
-
   CloseSound;
 
   AddLineToLogFile(GameLog, 'PhysFS closing.', ConsoleLogFileName);
-
   PhysFS_deinit();
 
-  if launcher_ipc_enable.Value then begin
+  if launcher_ipc_enable.Value then
+  begin
     AddLineToLogFile(GameLog, 'Launcher connection closing.', ConsoleLogFileName);
     FreeAndNil(LauncherIPC);
   end;
@@ -1017,10 +1058,6 @@ procedure JoinServer();
 begin
   ResetFrameTiming;
 
-  Inc(Initing);
-  if Initing > 10 then
-    Initing := 10;
-
   ServerIP := Trim(JoinIP);
   if not TryStrToInt(Trim(JoinPort), ServerPort) then
     Exit;
@@ -1042,33 +1079,28 @@ begin
   {$ENDIF}
 
   UDP := TClientNetwork.Create();
+
   // DEMO
   if JoinPort = '0' then
   begin
     DemoPlayer.OpenDemo(UserDirectory + 'demos/' + JoinIP + '.sdm');
     DemoPlayer.ProcessDemo;
-    ProgReady := True;
-    GameLoopRun := True;
-    RenderGameInfo(_('Loading'));
-    StartGameLoop();
-  end else
+  end
+  else
   begin
     RenderGameInfo(_(WideFormat('Connecting to %s:%d', [ServerIP, ServerPort])));
 
-    if UDP.Connect(ServerIP, ServerPort) then
-    begin
-      ProgReady := True;
-      GameLoopRun := True;
-      RenderGameInfo(_('Loading'));
-      ClientRequestGame;
-      StartGameLoop;
-    end
-    else
+    if not UDP.Connect(ServerIP, ServerPort) then
     begin
       RenderGameInfo(_('Connection timed out.'));
       Exit;
     end;
   end;
+
+  ProgReady   := True;
+  GameLoopRun := True;
+  RenderGameInfo(_('Loading'));
+  StartGameLoop();
 end;
 
 procedure ShowMessage(MessageText: AnsiString); overload;
@@ -1078,15 +1110,20 @@ end;
 
 procedure ShowMessage(MessageText: WideString); overload;
 begin
-  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, PChar('Error'), PAnsiChar(AnsiString(MessageText)), nil);
+  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, PChar('Error'),
+    PAnsiChar(AnsiString(MessageText)), nil);
 end;
 
 initialization
+  {$IFNDEF DEBUG}
   // Mask exceptions on 32 and 64 bit fpc builds
   {$IF defined(cpui386) or defined(cpux86_64)}
-  SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow, exUnderflow, exPrecision]);
+  SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow,
+    exUnderflow, exPrecision]);
+  {$ENDIF}
   {$ENDIF}
 
 finalization
   ShutDown;
+
 end.

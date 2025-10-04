@@ -1,19 +1,31 @@
-{*******************************************************}
-{                                                       }
-{       Sprites Unit for OPENSOLDAT                     }
-{       Based on Strike of the Dragon Unit              }
-{       by Michal Marcinkowski                          }
-{                                                       }
-{       Copyright (c) 2002 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Sprites Unit for OpenSoldat                           }
+{       Based on Strike of the Dragon Unit                    }
+{       by Michal Marcinkowski                                }
+{                                                             }  
+{       Copyright (c) 2002      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Sprites;
 
 interface
 
 uses
-  Parts, Anims, MapFile, PolyMap, Weapons, Constants, Vector, Net;
+  // Helper units
+  Vector,
+
+  // Project units
+  Anims,
+  Constants,
+  MapFile,
+  Net,
+  Parts,
+  PolyMap,
+  Weapons;
+
 
 const
   MAX_SPRITES = MAX_PLAYERS;
@@ -61,7 +73,7 @@ const
   POS_PRONE  = 4;
 
 type
-  TSpriteIndexes = array[1..MAX_SPRITES] of Integer;
+  TSpriteIndexes   = array[1..MAX_SPRITES] of Integer;
   TSpriteDistances = array[1..MAX_SPRITES] of Single;
 
   TControl = record
@@ -96,9 +108,9 @@ type
     BackgroundStatus: Byte;
     BackgroundPoly: SmallInt;
     BackgroundTestResult: Boolean;
-    function BackgroundTest(Poly: Word): Boolean;
+    function  BackgroundTest(Poly: Word): Boolean;
     procedure BackgroundTestBigPolyCenter(Pos: TVector2);
-    function BackgroundFindCurrentPoly(Pos: TVector2): SmallInt;
+    function  BackgroundFindCurrentPoly(Pos: TVector2): SmallInt;
     procedure BackgroundTestPrepare();
     procedure BackgroundTestReset();
   end;
@@ -175,14 +187,14 @@ type
     procedure Update;
     procedure Kill;
     procedure Die(How, Who, Where, What: Integer; Impact: TVector2);
-    function DropWeapon(): Integer;
+    function  DropWeapon(): Integer;
     procedure LegsApplyAnimation(Anim: TAnimation; Curr: Integer);
     procedure BodyApplyAnimation(Anim: TAnimation; Curr: Integer);
     procedure MoveSkeleton(x1, y1: Single; FromZero: Boolean);
-    function CheckMapCollision(X, Y: Single; Area: Integer): Boolean;
-    function CheckRadiusMapCollision(X, Y: Single; HasCollided: Boolean): Boolean;
-    function CheckMapVerticesCollision(X, Y: Single; R: Single; HasCollided: Boolean): Boolean;
-    function CheckSkeletonMapCollision(i: Integer; X, Y: Single): Boolean;
+    function  CheckMapCollision(X, Y: Single; Area: Integer): Boolean;
+    function  CheckRadiusMapCollision(X, Y: Single; HasCollided: Boolean): Boolean;
+    function  CheckMapVerticesCollision(X, Y: Single; R: Single; HasCollided: Boolean): Boolean;
+    function  CheckSkeletonMapCollision(i: Integer; X, Y: Single): Boolean;
     procedure HandleSpecialPolyTypes(PolyType: Integer; Pos: TVector2);
     procedure ApplyWeaponByNum(WNum: Byte; Gun: Byte; Ammo: Integer = -1;
       RestorePrimaryState: Boolean = False);
@@ -201,21 +213,21 @@ type
     procedure Fire();
     procedure ThrowFlag();
     procedure ThrowGrenade();
-    function GetMoveacc(): Single;
-    function GetCursorAimDirection(): TVector2;
-    function GetHandsAimDirection(): TVector2;
-    function IsSolo(): Boolean;
-    function IsNotSolo(): Boolean;
-    function IsInTeam(): Boolean;
-    function IsSpectator(): Boolean;
-    function IsNotSpectator(): Boolean;
-    function IsInSameTeam(const OtherPlayer: TSprite): Boolean;
-    function IsNotInSameTeam(const OtherPlayer: TSprite): Boolean;
-    function CanRespawn(DeadMeatBeforeRespawn: Boolean): Boolean;
+    function  GetMoveacc(): Single;
+    function  GetCursorAimDirection(): TVector2;
+    function  GetHandsAimDirection(): TVector2;
+    function  IsSolo(): Boolean;
+    function  IsNotSolo(): Boolean;
+    function  IsInTeam(): Boolean;
+    function  IsSpectator(): Boolean;
+    function  IsNotSpectator(): Boolean;
+    function  IsInSameTeam(const OtherPlayer: TSprite): Boolean;
+    function  IsNotInSameTeam(const OtherPlayer: TSprite): Boolean;
+    function  CanRespawn(DeadMeatBeforeRespawn: Boolean): Boolean;
   end;
 
-  function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
-  function TeamCollides(Poly, Team: Integer; Bullet: Boolean): Boolean;
+function  CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
+function  TeamCollides(Poly, Team: Integer; Bullet: Boolean): Boolean;
 
 var
   SpriteMapColCount: Integer;
@@ -224,20 +236,48 @@ var
   procedure SelectDefaultWeapons(MySprite: Byte);
   {$ENDIF}
 
+
 implementation
 
 uses
+  // System units
+  Calc,
+  Math,
+  SysUtils,
+
+  // Helper units
+  LogFile,
+  TraceLog,
+  Util,
+
+  // Project units
+  Bullets,
+  Control,
   {$IFDEF SERVER}
-  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
-  ServerHelper, LogFile,
-  NetworkServerSprite, NetworkServerMessages, NetworkServerConnection, NetworkServerGame, NetworkServerThing,
-  Server,
+    NetworkServerConnection,
+    NetworkServerGame,
+    NetworkServerMessages,
+    NetworkServerSprite,
+    NetworkServerThing,
+    {$IFDEF SCRIPT}
+      ScriptDispatcher,
+    {$ENDIF}
+    Server,
+    ServerHelper,
   {$ELSE}
-  Sound, Demo, GameStrings, ClientGame, GameMenus, Sparks,
-  NetworkClientSprite,
-  Client,
+    Client,
+    ClientGame,
+    Demo,
+    GameMenus,
+    GameStrings,
+    NetworkClientSprite,
+    Sound,
+    Sparks,
   {$ENDIF}
-  Bullets, Util, SysUtils, Calc, Math, TraceLog, Game, Control, Things, Cvar;
+  Cvar,
+  Game,
+  Things;
+
 
 function CreateSprite(sPos, sVelocity: TVector2; sStyle, N: Byte; Player: TPlayer; TransferOwnership: Boolean): Integer;
 var
@@ -326,7 +366,7 @@ begin
 
   // create skeleton
   Sprite[i].Skeleton.TimeStep := 1;
-  Sprite[i].Skeleton.Gravity := 1.06 * GRAV;
+  Sprite[i].Skeleton.GravityMultiplier := 1.06;
   Sprite[i].Skeleton := GostekSkeleton;
   Sprite[i].Skeleton.VDamping := 0.9945;
 
@@ -353,7 +393,7 @@ begin
     Sprite[i].WearHelmet := 0;
 
   Sprite[i].Brain.TargetNum := 1;
-  Sprite[i].Brain.WaypointTimeoutCounter := WAYPOINTTIMEOUT;
+  Sprite[i].Brain.WaypointTimeoutCounter := WAYPOINT_TIMEOUT_SMALL;
 
   Sprite[i].DeadCollideCount := 0;
 
@@ -2777,7 +2817,7 @@ begin
                  (Step.Y > SLIDELIMIT) then
               begin
                 SpriteParts.Pos[Num] := SpriteParts.OldPos[Num];
-                SpriteParts.Forces[Num].Y := SpriteParts.Forces[Num].Y - GRAV;
+                SpriteParts.Forces[Num].Y := SpriteParts.Forces[Num].Y - (SpriteParts.GravityMultiplier * Grav);
               end
               else
               begin
@@ -4018,7 +4058,7 @@ begin
   a.y := Skeleton.Pos[15].Y - (b.y * 4) - 2;
 
   {$IFNDEF SERVER}
-  // TODO(skoskav): Make bink and self-bink sprite-specific so bots can also use it
+  // TODO: Make bink and self-bink sprite-specific so bots can also use it
   if Num = MySprite then
   begin
     // Bink & self-bink
@@ -4539,7 +4579,7 @@ begin
   if BurstCount < 255 then
     Inc(BurstCount);
 
-  // TODO(skoskav): Make bink and self-bink sprite-specific so bots can also use it
+  // TODO: Make bink and self-bink sprite-specific so bots can also use it
   {$IFNDEF SERVER}
   if Num = MySprite then
   begin

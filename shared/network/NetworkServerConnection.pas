@@ -1,52 +1,99 @@
+{*************************************************************}
+{                                                             }
+{       NetworkServerConnection Unit for OpenSoldat           }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkServerConnection;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
 
-  // helper units
-  Vector, Util, Cvar, BitStream,
-
-  {$IFDEF SCRIPT}ScriptDispatcher,{$ENDIF}
-
-  // OpenSoldat units
-  PolyMap, {$IFDEF SERVER}Steam,{$ENDIF} Net, Sprites, Weapons, Constants;
-
+  // Library units
+  BitStream,
   {$IFDEF SERVER}
-  procedure ServerHandleRequestGame(NetMessage: PSteamNetworkingMessage_t);
-  procedure ServerHandlePlayerInfo(NetMessage: PSteamNetworkingMessage_t);
+    Steam,
   {$ENDIF}
-  procedure ServerSendPlayList({$IFDEF SERVER}Peer: HSteamNetConnection{$ENDIF});
-  procedure ServerSendNewPlayerInfo(Num: Byte; JoinType: Byte);
-  {$IFDEF SERVER}
-  function GetBanStrForIndex(BanIndex: Integer; BanHW: Boolean = False): string; // TODO move?
-  procedure ServerSendUnAccepted(Peer: HSteamNetConnection; State: Byte; Message: string = '');
-  procedure ServerDisconnect;
-  procedure ServerPlayerDisconnect(Player: TPlayer; Why: Byte; Now: Boolean = False);
-  procedure ServerPing(ToNum: Byte);
+
+  // Helper units
+  Util,
+  Vector,
+
+  // Project units
+  Constants,
+  Cvar,
+  Net,
+  PolyMap,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
   {$ENDIF}
-  procedure ServerSyncCvars({$IFDEF SERVER}ToNum: Byte; peer: HSteamNetConnection;{$ENDIF} FullSync: Boolean = False);
-  procedure ServerVars({$IFDEF SERVER}ToNum: Byte{$ENDIF});
-  {$IFDEF SERVER}
-  procedure ServerHandlePong(NetMessage: PSteamNetworkingMessage_t);
-  {$ENDIF}
+  Sprites,
+  Weapons;
+
+
+{$IFDEF SERVER}
+procedure ServerHandleRequestGame(NetMessage: PSteamNetworkingMessage_t);
+procedure ServerHandlePlayerInfo(NetMessage: PSteamNetworkingMessage_t);
+{$ENDIF}
+procedure ServerSendPlayList({$IFDEF SERVER}Peer: HSteamNetConnection{$ENDIF});
+procedure ServerSendNewPlayerInfo(Num: Byte; JoinType: Byte);
+{$IFDEF SERVER}
+function  GetBanStrForIndex(BanIndex: Integer; BanHW: Boolean = False): string; // TODO move?
+procedure ServerSendUnAccepted(Peer: HSteamNetConnection; State: Byte; Message: string = '');
+procedure ServerDisconnect;
+procedure ServerPlayerDisconnect(Player: TPlayer; Why: Byte; Now: Boolean = False);
+procedure ServerPing(ToNum: Byte);
+{$ENDIF}
+procedure ServerSyncCvars({$IFDEF SERVER}ToNum: Byte; peer: HSteamNetConnection;{$ENDIF} FullSync: Boolean = False);
+procedure ServerVars({$IFDEF SERVER}ToNum: Byte{$ENDIF});
+{$IFDEF SERVER}
+procedure ServerHandlePong(NetMessage: PSteamNetworkingMessage_t);
+{$ENDIF}
+
 
 implementation
 
 uses
-    Game, NetworkUtils, Demo
-    {$IFDEF SERVER}, Server, ServerHelper, Sha1, NetworkServerGame, NetworkServerMessages,
-    NetworkServerThing, BanSystem, Things, Version, LogFile, TraceLog{$ELSE}, Client {$ENDIF}
-    {$IFDEF ENABLE_FAE}, NetworkServerFae{$ENDIF}
-    ;
+  {$IFDEF SERVER}
+    // Library units
+    sha1,
+
+    // Helper units
+    Version,
+    LogFile,
+    TraceLog,
+
+    // Project units
+    BanSystem,
+    NetworkServerGame,
+    NetworkServerMessages,
+    NetworkServerThing,
+    Server,
+    ServerHelper,
+    Things,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  {$IFDEF ENABLE_FAE}
+    NetworkServerFae,
+  {$ENDIF}
+  Game,
+  Demo,
+  NetworkUtils;
+
 
 {$IFDEF SERVER}
 var
   PingTime: array[1..MAX_PLAYERS, -1..9] of Integer;
   PingSendCount: array[1..MAX_PLAYERS] of Byte;
 {$ENDIF}
+
 
 {$IFDEF SERVER}
 procedure ServerHandleRequestGame(NetMessage: PSteamNetworkingMessage_t);
@@ -606,15 +653,13 @@ begin
   // fill memory
   UnAccepted.Header.ID := MsgID_UnAccepted;
   UnAccepted.State := State;
-  if OPENSOLDAT_VERSION_LONG <> '' then
-    UnAccepted.Version := OPENSOLDAT_VERSION_LONG
-  else
-    UnAccepted.Version := OPENSOLDAT_VERSION;
+  UnAccepted.Version := OPENSOLDAT_VERSION_LONG;
+
   StrPCopy(UnAccepted.Text, Message);
 
   UDP.SendData(UnAccepted^, Size, Peer, k_nSteamNetworkingSend_Reliable);
 
-  UDP.NetworkingSocket.CloseConnection(Peer, 0, '', true);
+  UDP.NetworkingSocket.CloseConnection(Peer, 0, '', True);
 end;
 {$ENDIF}
 

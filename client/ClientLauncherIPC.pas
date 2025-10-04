@@ -1,9 +1,18 @@
+{*************************************************************}
+{                                                             }
+{       ClientLauncherIPC Unit for OpenSoldat                 }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ClientLauncherIPC;
 
 interface
 
 uses
   LauncherIPC, fpjson;
+
 
 type
   TClientLauncherIPC = class(TLauncherIPC)
@@ -13,6 +22,7 @@ type
   public
     procedure SendJoinServerMessage(IP: String; Port: Integer);
   end;
+
 
 implementation
 

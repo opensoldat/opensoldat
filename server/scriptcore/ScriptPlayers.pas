@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       ScriptPlayers unit for OPENSOLDAT               }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptPlayers Unit for OpenSoldat                     }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit ScriptPlayers;
@@ -14,34 +15,39 @@ unit ScriptPlayers;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Library units
+  fgl,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   ScriptCore3Api,
   ScriptPlayer,
   Sprites,
-  Things,
-  fgl,
-  SysUtils;
+  Things;
+
 
 type
-
   TScriptPlayers = class(TObject)
   private
     FPlayers: array [1..MAX_SPRITES] of TScriptActivePlayer;
     FActivePlayers: TFPGList<TScriptActivePlayer>;
-    function GetPlayer(ID: Byte): TScriptActivePlayer;
+    function  GetPlayer(ID: Byte): TScriptActivePlayer;
   public
     constructor Create;
     destructor Destroy; override;
-    function Add(Player: TScriptNewPlayer; JoinType: TJoinType): TScriptActivePlayer;
+    function  Add(Player: TScriptNewPlayer; JoinType: TJoinType): TScriptActivePlayer;
     procedure WriteConsole(Text: string; Color: Longint);
     procedure BigText(Layer: Byte; Text: string; Delay: Integer;
       Color: Longint; Scale: Single; X, Y: Integer);
     procedure WorldText(Layer: Byte; Text: string; Delay: Integer;
       Color: Longint; Scale, X, Y: Single);
-    function GetByName(Name: string): TScriptActivePlayer;
-    function GetByIP(IP: string): TScriptActivePlayer;
+    function  GetByName(Name: string): TScriptActivePlayer;
+    function  GetByIP(IP: string): TScriptActivePlayer;
     procedure Tell(Text: string);
 
     property Player[ID: Byte]: TScriptActivePlayer read GetPlayer; default;
@@ -60,18 +66,23 @@ type
     property Players: TScriptPlayers read FPlayers;
   end;
 
+
 implementation
 
 uses
-  Constants,
+  // Helper units
   Vector,
+
+  // Project units
+  Constants,
+  Game,
   Net,
-  NetworkServerMessages,
   NetworkServerConnection,
+  NetworkServerMessages,
   ScriptDispatcher,
-  ServerHelper,
   Server,
-  Game;
+  ServerHelper;
+
 
 constructor TScriptPlayers.Create;
 var
@@ -168,7 +179,7 @@ end;
 procedure TScriptPlayers.BigText(Layer: Byte; Text: string; Delay: Integer;
   Color: Longint; Scale: Single; X, Y: Integer);
 begin
-  NetworkServerMessages.ServerSendSpecialMessage(Text, 1, Layer, Delay, Scale, Color, X, Y, 0);
+  NetworkServerMessages.ServerSendSpecialMessage(Text, 1, Layer, Delay, Scale, Longword(Color), X, Y, 0);
 end;
 
 procedure TScriptPlayers.WorldText(Layer: Byte; Text: string; Delay: Integer;

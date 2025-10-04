@@ -1,31 +1,34 @@
-{*******************************************************}
-{                                                       }
-{       Particle Unit for OPENSOLDAT                    }
-{                                                       }
-{       Copyright (c) 2001-02 Michal Marcinkowski       }
-{                                                       }
-{ PARTS ver. 1.0.7                                      }
-{ PARTICLE & CONSTRAINT PHYSICS MODULE FOR DELPHI 2D    }
-{  by Michal Marcinkowski                               }
-{                                                       }
-{  version history:                                     }
-{  Current - Modified for OPENSOLDAT                    }
-{  1.0.7 - Changed to 2D                                }
-{  1.0.6 - Added Constraint Active variable             }
-{  1.0.5 - Added PO Constraints only loading            }
-{  1.0.4 - Changed to D3DX Vectors                      }
-{  1.0.3 - Added PO loader scaling                      }
-{  1.0.2 - Added Euler Integrator                       }
-{  1.0.1 - Added PO files loading                       }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Particle Unit for OpenSoldat                          }
+{                                                             }
+{       Copyright (c) 2001-2002 Michal Marcinkowski           } 
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{  PARTS ver. 1.0.7                                           }
+{  PARTICLE & CONSTRAINT PHYSICS MODULE FOR DELPHI 2D         }
+{  by Michal Marcinkowski                                     }
+{                                                             }
+{  version history:                                           }
+{  Current - Modified for OPENSOLDAT                          }
+{  1.0.7 - Changed to 2D                                      }
+{  1.0.6 - Added Constraint Active variable                   }
+{  1.0.5 - Added PO Constraints only loading                  }
+{  1.0.4 - Changed to D3DX Vectors                            }
+{  1.0.3 - Added PO loader scaling                            }
+{  1.0.2 - Added Euler Integrator                             }
+{  1.0.1 - Added PO files loading                             }
+{                                                             }
+{*************************************************************}
 
 unit Parts;
 
 interface
 
 uses
+  // Helper units
   Vector;
+
 
 const
   NUM_PARTICLES = 560;
@@ -39,14 +42,14 @@ type
   end;
 
   ParticleSystem = object
-    Active: array[1..NUM_PARTICLES] of Boolean;
-    Pos: array[1..NUM_PARTICLES] of TVector2;
-    Velocity: array[1..NUM_PARTICLES] of TVector2;
-    OldPos: array[1..NUM_PARTICLES] of TVector2;
-    Forces: array[1..NUM_PARTICLES] of TVector2;
+    Active:      array[1..NUM_PARTICLES] of Boolean;
+    Pos:         array[1..NUM_PARTICLES] of TVector2;
+    Velocity:    array[1..NUM_PARTICLES] of TVector2;
+    OldPos:      array[1..NUM_PARTICLES] of TVector2;
+    Forces:      array[1..NUM_PARTICLES] of TVector2;
     OneOverMass: array[1..NUM_PARTICLES] of Single;
     TimeStep: Single;
-    Gravity, VDamping, EDamping: Single;
+    GravityMultiplier, VDamping, EDamping: Single;
     ConstraintCount: Integer;
     PartCount: Integer;
     Constraints: array[1..NUM_PARTICLES] of Constraint;
@@ -68,10 +71,19 @@ type
     procedure SatisfyConstraintsFor(I: Integer);
   end;
 
+
 implementation
 
 uses
-  SysUtils, PhysFS;
+  // System units
+  SysUtils,
+
+  // Library units
+  PhysFS,
+
+  // Project units
+  Game;
+
 
 procedure ParticleSystem.DoVerletTimeStep;
 var
@@ -108,7 +120,7 @@ var
   TempPos, S: TVector2;
 begin
   // Accumulate Forces
-  Forces[I].Y := Forces[I].Y + Gravity;
+  Forces[I].Y := Forces[I].Y + (GravityMultiplier * Grav);
   TempPos := Pos[I];
 
   Vec2Scale(S, Forces[I], OneOverMass[I]);
@@ -128,7 +140,7 @@ var
   TempPos, S1, S2, D: TVector2;
 begin
   // Accumulate Forces
-  Forces[I].Y := Forces[I].Y + Gravity;
+  Forces[I].Y := Forces[I].Y + (GravityMultiplier * Grav);
   TempPos := Pos[I];
 
   // Pos[I]:= 2 * Pos[I] - OldPos[I] + Forces[I]{ / Mass} * TimeStep * TimeStep;  {Verlet integration}
@@ -277,14 +289,14 @@ begin
     Exit;
 
   repeat
-    PhysFS_ReadLN(F, Nm);  // name
+    PhysFS_ReadLN(F, Nm);  // Name
     if Nm <> 'CONSTRAINTS' then
     begin
       PhysFS_ReadLN(F, X);  // X
       PhysFS_ReadLN(F, Y);  // Y
       PhysFS_ReadLN(F, Z);  // Z
 
-      // make object
+      // Make object
       P.X := -StrToFloat(X) * Scale / 1.2;
       P.Y := -StrToFloat(Z) * Scale;
 
@@ -301,8 +313,8 @@ begin
       Break;
 
     PhysFS_ReadLN(F, B);  // Part B
-    {if not Eof(F) then
-    begin}
+    //if not Eof(F) then
+    //begin
     Delete(A, 1, 1);
     Delete(B, 1, 1);
     Pa := StrToInt(A);
@@ -310,7 +322,7 @@ begin
 
     Delta := Vec2Subtract(Pos[Pa], Pos[Pb]);
     MakeConstraint(Pa, Pb, Sqrt(Vec2Dot(Delta, Delta)));
-    {end;}
+    //end;
   until A = 'ENDFILE';
 
   PHYSFS_close(F);

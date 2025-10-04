@@ -1,3 +1,11 @@
+{*************************************************************}
+{                                                             }
+{       NetworkUtils Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 // helper functions
 
 unit NetworkUtils;
@@ -5,83 +13,96 @@ unit NetworkUtils;
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
+  // System units
+  Classes,
+  StrUtils,
+  SysUtils,
 
-  // helper units
-  Version, StrUtils,
+  // Helper units
+  Version,
 
-  // OpenSoldat units
+  // Project units
   {$IFNDEF SERVER}
-  Sound,
+    Sound,
   {$ENDIF}
-  Sprites, Weapons, Constants;
+  Constants,
+  Sprites,
+  Weapons;
+
 
 {$IFDEF SERVER}
-function IsRemoteAdminIP(IP: string): Boolean;
-function IsAdminIP(IP: string): Boolean;
-function IsAdminPassword(Password: string): Boolean;
+function  IsRemoteAdminIP(IP: string): Boolean;
+function  IsAdminIP(IP: string): Boolean;
+function  IsAdminPassword(Password: string): Boolean;
+function  IsServerTotallyFull: Boolean;
+function  IsServerFull: Boolean;
+function  IsWrongGamePassword(GamePassword: string): Boolean;
+
+function  CheckWeaponNotAllowed(i: Byte): Boolean;
+
+function  FindFloodID(SrcIP: string): Integer;
+function  AddFloodIP(SrcIP: string): Cardinal;
+function  UpdateAntiFlood(SrcIP: string): Cardinal;
+function  IsFloodID(ID: Cardinal): Boolean;
+
+function  AddIPToRemoteAdmins(SrcIP: string): Boolean;
 {$ENDIF}
-function IsWrongGameVersion(RequestVersion: string): Boolean;
-function VerifyPacket(ValidSize, ReceiveSize, PacketId: Integer): Boolean;
-function VerifyPacketLargerOrEqual(ValidSize, ReceiveSize, PacketId: Integer): Boolean;
-{$IFDEF SERVER}
-function IsServerTotallyFull: Boolean;
-function IsServerFull: Boolean;
-function IsWrongGamePassword(GamePassword: string): Boolean;
-{$ENDIF}
-function FixPlayerName(Name: array of char): string;
 
 {$IFNDEF SERVER}
 procedure PlayRadioSound(RadioID: Byte);
 procedure NewPlayerWeapon;
-function ReturnFixedPlayerName(name: string): string;
+function  ReturnFixedPlayerName(name: string): string;
 {$ENDIF}
-{$IFDEF SERVER}
-function CheckWeaponNotAllowed(i: Byte): Boolean;
-{$ENDIF}
+
+function  IsWrongGameVersion(RequestVersion: string): Boolean;
+function  VerifyPacket(ValidSize, ReceiveSize, PacketId: Integer): Boolean;
+function  VerifyPacketLargerOrEqual(ValidSize, ReceiveSize, PacketId: Integer): Boolean;
+function  FixPlayerName(Name: array of Char): string;
 
 procedure EncodeKeys(var SpriteC: TSprite; out Keys16: Word);
 procedure DecodeKeys(var SpriteC: TSprite; var Keys16: Word);
-{$IFDEF SERVER}
-function FindFloodID(SrcIP: string): Integer;
-function AddFloodIP(SrcIP: string): Cardinal;
-function UpdateAntiFlood(SrcIP: string): Cardinal;
-function IsFloodID(ID: Cardinal): Boolean;
-
-function AddIPToRemoteAdmins(SrcIP: string): Boolean;
-{$ENDIF}
 procedure StringToArray(var c: array of Char; s: string);
+
+
 implementation
 
 uses
+  // Helper units
+  TraceLog,
+
+  // Project units
   {$IFDEF SERVER}
-  Server, BanSystem,
+    BanSystem,
+    Server,
   {$ELSE}
-  Client, GameMenus,
+    Client,
+    GameMenus,
   {$ENDIF}
-  Net, Game, TraceLog;
+  Game,
+  Net;
+
 
 {$IFNDEF SERVER}
 procedure PlayRadioSound(RadioID: Byte);
 begin
   if (RadioCooldown > 0) or (not sv_radio.Value) then
     Exit;
-  if (sv_gamemode.Value <> GAMESTYLE_CTF) and (sv_gamemode.Value <> GAMESTYLE_HTF) and
+  if (sv_gamemode.Value <> GAMESTYLE_CTF) and
+     (sv_gamemode.Value <> GAMESTYLE_HTF) and
      (sv_gamemode.Value <> GAMESTYLE_INF) then
     Exit;
 
   RadioCooldown := 3;
   case RadioID of
-    11: PlaySound(SFX_RADIO_EFCUP, SpriteParts.Pos[MySprite]);
-    12: PlaySound(SFX_RADIO_EFCMID, SpriteParts.Pos[MySprite]);
+    11: PlaySound(SFX_RADIO_EFCUP,   SpriteParts.Pos[MySprite]);
+    12: PlaySound(SFX_RADIO_EFCMID,  SpriteParts.Pos[MySprite]);
     13: PlaySound(SFX_RADIO_EFCDOWN, SpriteParts.Pos[MySprite]);
-    21: PlaySound(SFX_RADIO_FFCUP, SpriteParts.Pos[MySprite]);
-    22: PlaySound(SFX_RADIO_FFCMID, SpriteParts.Pos[MySprite]);
+    21: PlaySound(SFX_RADIO_FFCUP,   SpriteParts.Pos[MySprite]);
+    22: PlaySound(SFX_RADIO_FFCMID,  SpriteParts.Pos[MySprite]);
     23: PlaySound(SFX_RADIO_FFCDOWN, SpriteParts.Pos[MySprite]);
-    31: PlaySound(SFX_RADIO_ESUP, SpriteParts.Pos[MySprite]);
-    32: PlaySound(SFX_RADIO_ESMID, SpriteParts.Pos[MySprite]);
-    33: PlaySound(SFX_RADIO_ESDOWN, SpriteParts.Pos[MySprite]);
+    31: PlaySound(SFX_RADIO_ESUP,    SpriteParts.Pos[MySprite]);
+    32: PlaySound(SFX_RADIO_ESMID,   SpriteParts.Pos[MySprite]);
+    33: PlaySound(SFX_RADIO_ESDOWN,  SpriteParts.Pos[MySprite]);
   end;
 end;
 {$ENDIF}
@@ -93,17 +114,17 @@ begin
   Controls := @SpriteC.Control;
 
   Keys16 := 0;
-  if Controls.Left          then Keys16 := Keys16 or B1;
-  if Controls.Right         then Keys16 := Keys16 or B2;
-  if Controls.Up            then Keys16 := Keys16 or B3;
-  if Controls.Down          then Keys16 := Keys16 or B4;
-  if Controls.Fire          then Keys16 := Keys16 or B5;
-  if Controls.Jetpack       then Keys16 := Keys16 or B6;
-  if Controls.ThrowNade     then Keys16 := Keys16 or B7;
-  if Controls.ChangeWeapon  then Keys16 := Keys16 or B8;
-  if Controls.ThrowWeapon   then Keys16 := Keys16 or B9;
-  if Controls.Reload        then Keys16 := Keys16 or B10;
-  if Controls.FlagThrow     then Keys16 := Keys16 or B11;
+  if Controls.Left         then Keys16 := Keys16 or B1;
+  if Controls.Right        then Keys16 := Keys16 or B2;
+  if Controls.Up           then Keys16 := Keys16 or B3;
+  if Controls.Down         then Keys16 := Keys16 or B4;
+  if Controls.Fire         then Keys16 := Keys16 or B5;
+  if Controls.Jetpack      then Keys16 := Keys16 or B6;
+  if Controls.ThrowNade    then Keys16 := Keys16 or B7;
+  if Controls.ChangeWeapon then Keys16 := Keys16 or B8;
+  if Controls.ThrowWeapon  then Keys16 := Keys16 or B9;
+  if Controls.Reload       then Keys16 := Keys16 or B10;
+  if Controls.FlagThrow    then Keys16 := Keys16 or B11;
 
   if SpriteC.BodyAnimation.ID = Change.ID then
     Keys16 := Keys16 or B8;
@@ -131,13 +152,13 @@ begin
 end;
 
 // Sets the player name to Major if it is invalid
-function FixPlayerName(Name: array of char): string;
+function FixPlayerName(Name: array of Char): string;
 begin
   if (Trim(Name) = '') or
-    (Name = #12) or
-    (UpperCase(Name) = 'SERVER MESSAGE') or
-    AnsiContainsStr(Name, #10) or
-    AnsiContainsStr(Name, #13) then
+      (Name = #12) or
+      (UpperCase(Name) = 'SERVER MESSAGE') or
+      AnsiContainsStr(Name, #10) or
+      AnsiContainsStr(Name, #13) then
     Result := 'Major'
   else
     Result := Name;
@@ -177,20 +198,13 @@ end;
 // Checks if the IP string is inside the remote IPs list
 function IsRemoteAdminIP(IP: string): Boolean;
 begin
-
-  if RemoteIPs.IndexOf(IP) > -1 then
-    Result := True
-  else
-    Result := False;
+  Result := RemoteIPs.IndexOf(IP) > -1;
 end;
 
 // Checks if the IP string is inside the admin IPs list
 function IsAdminIP(IP: string): Boolean;
 begin
-  if AdminIPs.IndexOf(IP) > -1 then
-    Result := True
-  else
-    Result := False;
+  Result := AdminIPs.IndexOf(IP) > -1;
 end;
 
 // Retruns true if the password is not empty and equal to the Admin password
@@ -227,10 +241,7 @@ end;
 // Checks if the Requested and the current OpenSoldat version are the same
 function IsWrongGameVersion(RequestVersion: string): Boolean;
 begin
-  if OPENSOLDAT_VERSION_LONG <> '' then
-    Result := RequestVersion <> OPENSOLDAT_VERSION_LONG
-  else
-    Result := RequestVersion <> OPENSOLDAT_VERSION;
+  Result := RequestVersion <> OPENSOLDAT_VERSION_LONG
 end;
 
 {$IFNDEF SERVER}
@@ -253,7 +264,7 @@ end;
 {$IFNDEF SERVER}
 procedure NewPlayerWeapon;
 var
-  i, j: Integer;
+  i, j:   Integer;
   SecWep: Integer;
 begin
   if Sprite[MySprite].Weapon.Num = Guns[NOWEAPON].Num then
@@ -283,6 +294,7 @@ begin
     Sprite[i].SecondaryWeapon := Guns[NOWEAPON];
 end;
 {$ENDIF}
+
 {$IFDEF SERVER}
 function CheckWeaponNotAllowed(i: Byte): Boolean;
 var
@@ -297,8 +309,8 @@ begin
     Exit;
 
   if ((Sprite[i].Weapon.Num = Guns[BOW].Num)    and (sv_gamemode.Value <> GAMESTYLE_RAMBO)) or
-      ((Sprite[i].Weapon.Num = Guns[BOW2].Num)   and (sv_gamemode.Value <> GAMESTYLE_RAMBO)) or
-      ((Sprite[i].Weapon.Num = Guns[FLAMER].Num) and (sv_bonus_flamer.Value)) then
+     ((Sprite[i].Weapon.Num = Guns[BOW2].Num)   and (sv_gamemode.Value <> GAMESTYLE_RAMBO)) or
+     ((Sprite[i].Weapon.Num = Guns[FLAMER].Num) and (sv_bonus_flamer.Value)) then
     Exit;
 
   Result := False;
@@ -311,7 +323,7 @@ var
   i: Integer;
 begin
   Result := 0;
-  for i := 1 to MAX_FLOODIPS do
+  for i := Low(FloodIP) to High(FloodIP) do
     if FloodIP[i] = SrcIP then
     begin
       Result := i;
@@ -328,7 +340,7 @@ const
   FLOOD_ID_NOT_FOUND = 0;
 begin
   Result := FLOOD_ID_NOT_FOUND;
-  for i := 1 to MAX_FLOODIPS do
+  for i := Low(FloodIP) to High(FloodIP) do
     if FloodIP[i] = ' ' then
     begin
       FloodIP[i] := SrcIP;
@@ -343,7 +355,7 @@ var
 const
   FLOOD_ID_NOT_FOUND = 0;
 begin
-  {$IFDEF SERVER}
+  {$IFDEF SERVER}  // Leftover from client server?
   LastReqIP[LastReqID] := SrcIP;
   LastReqID := (LastReqID + 1) mod 4;
   {$ENDIF}
@@ -394,12 +406,14 @@ var
   i: Integer;
 begin
   FillChar(c, sizeOf(c), 0);
+
   if Length(s) < 1 then
     Exit;
   if Length(c) < 1 then
     Exit;
   if Length(s) > Length(c) then
     Exit;
+
   for i := 0 to Length(s) - 1 do
   begin
     c[i] := s[i + 1];

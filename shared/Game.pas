@@ -1,22 +1,42 @@
-{*******************************************************}
-{                                                       }
-{       Game Unit                                       }
-{                                                       }
-{       Copyright (c) 2012-2013 Gregor A. Cieslak       }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Game Unit for OpenSoldat                              }
+{                                                             }
+{       Copyright (c) 2012-2013 Gregor A. Cieslak             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Game;
 
 interface
 
 uses
-  SysUtils, Classes,
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  sha1,
+
+  // Helper units
+  Util,
+  Vector,
+
+  // Project units
+  Anims,
+  Bullets,
+  Constants,
+  Parts,
+  PolyMap,
   {$IFNDEF SERVER}
   Sparks,
   {$ENDIF}
-  Vector, Constants, PolyMap, Parts, Sprites, Bullets, Things, Waypoints, Anims,
-  Weapons, Sha1, Util;
+  Sprites,
+  Things,
+  Waypoints,
+  Weapons;
+
 
 type
   TKillSort = record
@@ -34,6 +54,8 @@ var
   GOALTICKS: Integer = DEFAULT_GOALTICKS;
 
   BulletTimeTimer: Integer;
+
+  Grav: Single = 0.06;
 
   SpriteParts, BulletParts, SparkParts,
   GostekSkeleton, BoxSkeleton, FlagSkeleton, ParaSkeleton, StatSkeleton,
@@ -134,8 +156,8 @@ var
 procedure Number27Timing;
 procedure ToggleBulletTime(TurnOn: Boolean; Duration: Integer = 30);
 procedure UpdateGameStats;
-function PointVisible(X, Y: Single; i: Integer): Boolean;
-function PointVisible2(X, Y: Single; i: Integer): Boolean;
+function  PointVisible(X, Y: Single; i: Integer): Boolean;
+function  PointVisible2(X, Y: Single; i: Integer): Boolean;
 procedure StartVote(StarterVote, TypeVote: Byte; TargetVote, ReasonVote: string);
 procedure StopVote;
 procedure TimerVote;
@@ -144,50 +166,63 @@ procedure CountVote(Voter: Byte);
 {$ENDIF}
 procedure ShowMapChangeScoreboard(); overload;
 procedure ShowMapChangeScoreboard(const NextMap: string); overload;
-function IsTeamGame(): Boolean;
+function  IsTeamGame(): Boolean;
 {$IFNDEF SERVER}
-function IsPointOnScreen(Point: TVector2): Boolean;
+function  IsPointOnScreen(Point: TVector2): Boolean;
 {$ENDIF}
 procedure ChangeMap;
 procedure SortPlayers;
 
+
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF}
   {$IFDEF SERVER}
-  TraceLog, ServerHelper,
-  {$IFDEF SCRIPT}
-  ScriptDispatcher,
-  {$ENDIF}
+    Server,
+    ServerHelper,
+    {$IFDEF SCRIPT}
+      ScriptDispatcher,
+    {$ENDIF}
+    TraceLog,
   {$ELSE}
-  Sound, GameMenus, ClientGame, GameRendering, GameStrings, InterfaceGraphics,
+    Client,
+    ClientGame,
+    GameMenus,
+    GameRendering,
+    GameStrings,
+    InterfaceGraphics,
+    Sound,
   {$ENDIF}
-  Net, Demo,
+  Net,
   {$IFNDEF SERVER}
-  NetworkClientGame
+    NetworkClientGame,
   {$ELSE}
-  NetworkServerGame, NetworkServerSprite
-  {$ENDIF};
+    NetworkServerGame,
+    NetworkServerSprite,
+  {$ENDIF}
+  Demo;
+
 
 var
   // NUMBER27's TIMING ROUTINES
   TimeinMil, TimeinMilLast: QWord;  // time in Milliseconds the computer has
-                                       // been running
+                                    // been running
   Timepassed: Cardinal;  // Time in Milliseconds the program has been running
   Seconds, SecondsLast: Integer;  // Seconds the program has been running
+
 
 // Timing routine
 procedure Number27Timing;
 begin
   TimeInMilLast := TimeInMil;
-  TimeInMil := GetTickCount64;
+  TimeInMil     := GetTickCount64;
+
   if TimeInMil - TimeinMilLast > 2000 then
     TimeInMilLast := TimeInMil;  // safety precaution
 
-  Timepassed := Timepassed + (TimeInMil - TimeInMilLast);
+  Timepassed  := Timepassed + (TimeInMil - TimeInMilLast);
   SecondsLast := Seconds;
-  Seconds := Trunc(Timepassed / 1000);
+  Seconds     := Trunc(Timepassed / 1000);
 
   if Seconds <> SecondsLast then
   begin  // new Second
@@ -222,11 +257,11 @@ begin
       case sv_gamemode.Value of
         GAMESTYLE_DEATHMATCH: S.Add('Gamemode: Deathmatch');
         GAMESTYLE_POINTMATCH: S.Add('Gamemode: Pointmatch');
-        GAMESTYLE_TEAMMATCH: S.Add('Gamemode: Teammatch');
-        GAMESTYLE_CTF: S.Add('Gamemode: Capture the Flag');
-        GAMESTYLE_RAMBO: S.Add('Gamemode: Rambomatch');
-        GAMESTYLE_INF: S.Add('Gamemode: Infiltration');
-        GAMESTYLE_HTF: S.Add('Gamemode: Hold the Flag');
+        GAMESTYLE_TEAMMATCH:  S.Add('Gamemode: Teammatch');
+        GAMESTYLE_CTF:        S.Add('Gamemode: Capture the Flag');
+        GAMESTYLE_RAMBO:      S.Add('Gamemode: Rambomatch');
+        GAMESTYLE_INF:        S.Add('Gamemode: Infiltration');
+        GAMESTYLE_HTF:        S.Add('Gamemode: Hold the Flag');
       end;
       S.Add('Timeleft: ' + IntToStr(TimeLeftMin) + ':' + IntToStr(TimeLeftSec));
       if IsTeamGame() then
@@ -241,7 +276,7 @@ begin
       if PlayersNum > 0 then
         for i := 1 to PlayersNum do
         begin
-          S.Add(Sprite[SortedPlayers[i].PlayerNum].Player.Name);
+          S.Add(         Sprite[SortedPlayers[i].PlayerNum].Player.Name);
           S.Add(IntToStr(Sprite[SortedPlayers[i].PlayerNum].Player.Kills));
           S.Add(IntToStr(Sprite[SortedPlayers[i].PlayerNum].Player.Deaths));
           S.Add(IntToStr(Sprite[SortedPlayers[i].PlayerNum].Player.Team));
@@ -537,6 +572,7 @@ begin
       MainConsole.Console('Error: Could not load map (' + MapChange.Name + ')',
         DEBUG_MESSAGE_COLOR);
       NextMap;
+      ChangeMap;
       Exit;
     end;
   {$ENDIF}

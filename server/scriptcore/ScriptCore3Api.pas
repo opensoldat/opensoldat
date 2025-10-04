@@ -1,3 +1,11 @@
+{*************************************************************}
+{                                                             }
+{       ScriptCore3Api Unit for OpenSoldat                    }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptCore3Api;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}
@@ -5,10 +13,14 @@ unit ScriptCore3Api;
 interface
 
 uses
+  // System units
   Classes,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   Script;
+
 
 type
   TScriptCore3API = class(TInterfacedObject, ICompilerAPI, IRuntimeAPI)
@@ -21,16 +33,19 @@ type
     procedure RuntimeRegisterVariables(Exec: TPascalExec); virtual;
     procedure BeforeExecute(Exec: TPascalExec); virtual;
     procedure AfterExecute(Exec: TPascalExec); virtual;
-    function CallEvent(const Event; const Params: array of Variant): Variant;
+    function  CallEvent(const Event; const Params: array of Variant): Variant;
   end;
 
 
 implementation
 
 uses
+  // Project units
   ScriptCore3;
 
-{$push}{$warn 5024 off}
+
+{$PUSH}
+{$WARN 5024 OFF}
 constructor TScriptCore3API.Create(Script: TScript);
 begin
   Self.FScript := Script;
@@ -60,5 +75,6 @@ function TScriptCore3API.CallEvent(const Event; const Params: array of Variant):
 begin
   Result := TScriptCore3(FScript).CallEvent(Event, Params);
 end;
-{$pop}
+{$POP}
+
 end.

@@ -20,12 +20,15 @@ type
     patch: UInt8;  {**< update version *}
   end;
 
-{* Printable format: "%d.%d.%d", MAJOR, MINOR, PATCHLEVEL
+{*
+  Printable format: "%d.%d.%d", MAJOR, MINOR, PATCHLEVEL
+
+  Last updated when TSDL_FPoint and TSDL_FRect were added.
 *}
 const
   SDL_MAJOR_VERSION = 2;
   SDL_MINOR_VERSION = 0;
-  SDL_PATCHLEVEL    = 4;
+  SDL_PATCHLEVEL    = 10;
 
 {**
  *  Macro to determine SDL version program was compiled against.

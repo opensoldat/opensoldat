@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       Sound Unit for OPENSOLDAT                       }
-{                                                       }
-{       Copyright (c) 2002-2003 Michal Marcinkowski     }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Sound Unit for OpenSoldat                             }
+{                                                             }
+{       Copyright (c) 2002-2003 Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Sound;
 
@@ -12,8 +13,17 @@ unit Sound;
 interface
 
 uses
-  {$IFDEF STEAM}fgl,{$ENDIF}
-  SDL2, Vector, openal, PhysFS;
+  // Library units
+  {$IFDEF STEAM}
+    fgl,
+  {$ENDIF}
+  openal,
+  PhysFS,
+  SDL2,
+
+  // Helper units
+  Vector;
+
 
 type
   TSoundSample = record
@@ -31,6 +41,7 @@ const
   RESERVED_SOURCES = 128;
   MAX_SAMPLES = 163;
   CHANNEL_WEATHER = 127;
+  MAX_VOICE_CHAT_BUFFER = 64;
 
 var
   Samp: array[1..MAX_SAMPLES] of TSoundSample;
@@ -41,36 +52,45 @@ var
   Sources: array[0..MAX_SOURCES - 1] of ALuint;
   DefaultChannel: LongInt = -1;
   {$IFDEF STEAM}
-  VoiceChatBuffer: array[0..64] of ALuint;
+  VoiceChatBuffer: array[0..MAX_VOICE_CHAT_BUFFER - 1] of ALuint;
   VoiceBufferQueue: TFPGList<LongWord>;
   {$ENDIF}
 
-function InitSound(): Boolean;
-function SoundNameToID(Name: string): ShortInt;
-function LoadSample(Name: PChar; samp: TSoundSample): TSoundSample;
-function ScaleVolumeSetting(VolumeSetting: Byte): Single;
+function  InitSound(): Boolean;
+function  SoundNameToID(Name: string): ShortInt;
+function  LoadSample(Name: PChar; samp: TSoundSample): TSoundSample;
+function  ScaleVolumeSetting(VolumeSetting: Byte): Single;
 procedure LoadSounds(ModDir: string);
 procedure CloseSound;
 procedure FPlaySound(SampleNum: Integer; ListenerX, ListenerY, EmitterX,
-  EmitterY: Single; Chan: Integer);
+  EmitterY: Single; Channel: Integer);
 procedure PlaySound(Sample: Integer); overload;
 procedure PlaySound(Sample: Integer; Channel: Integer); overload;
 procedure PlaySound(Sample: Integer; var Emitter: TVector2); overload;
 procedure PlaySound(Sample: Integer; var Emitter: TVector2; var Channel: Integer); overload;
-function StopSound(Channel: Integer): Boolean;
+function  StopSound(Channel: Integer): Boolean;
 
-function SetSoundPaused(Channel: Integer; Paused: Boolean): Boolean;
+function  SetSoundPaused(Channel: Integer; Paused: Boolean): Boolean;
 
-function SetVolume(Channel: Integer; Volume: Single): Boolean;
+function  SetVolume(Channel: Integer; Volume: Single): Boolean;
 {$IFDEF STEAM}
 procedure PlayVoiceData(Data: Pointer; DataLength: Word; SpriteNum: Byte);
 {$ENDIF}
 
+
 implementation
 
 uses
-  Client, SysUtils,
-  LogFile, Math, Constants, Game;
+  // System units
+  Math,
+  SysUtils,
+
+  // Project units
+  Client,
+  Constants,
+  Game,
+  LogFile;
+
 
 function InitSound(): Boolean;
 var
@@ -81,9 +101,11 @@ begin
   ALDevice := alcOpenDevice(nil);
   if ALDevice = nil then
     Exit;
+
   ALContext := alcCreateContext(ALDevice, nil);
   if ALContext = nil then
     Exit;
+
   if not alcMakeContextCurrent(ALContext) then
     Exit;
 
@@ -93,15 +115,15 @@ begin
   if alGetError <> AL_NO_ERROR then
     Exit;
 
-  for I := 1 to MAX_SAMPLES do
+  for I := Low(Samp) to High(Samp) do
     Samp[I].Loaded := False;
 
   Result := True;
 
   {$IFDEF STEAM}
-  alGenBuffers(64, @VoiceChatBuffer);
+  alGenBuffers(MAX_VOICE_CHAT_BUFFER, @VoiceChatBuffer);
   VoiceBufferQueue := TFPGLIST<LongWord>.Create;
-  for i := 0 to High(VoiceChatBuffer) do
+  for i := Low(VoiceChatBuffer) to High(VoiceChatBuffer) do
     VoiceBufferQueue.Add(VoiceChatBuffer[i]);
   {$ENDIF}
 end;
@@ -175,7 +197,7 @@ begin
   Result := -1;
   if High(ScriptSamp) < 0 then
     Exit;
-  for i := 0 to High(ScriptSamp) do
+  for i := Low(ScriptSamp) to High(ScriptSamp) do
     if UpperCase(ScriptSamp[i].Name) = UpperCase(Name) then
     begin
       Result := i;
@@ -183,13 +205,12 @@ begin
     end;
 end;
 
-{ Takes a volume percentage (0-100) and converts it for internal use (0-1).
-  The result is exponentially scaled to improve volume control intuitiveness
-  and sensitivity at lower decibels.
+// Takes a volume percentage (0-100) and converts it for internal use (0-1).
+// The result is exponentially scaled to improve volume control intuitiveness
+// and sensitivity at lower decibels.
 
-  VolumeSetting the volume percentage to scale
-  return the volume scaled for internal use
-}
+// VolumeSetting the volume percentage to scale
+// return the volume scaled for internal use
 function ScaleVolumeSetting(VolumeSetting: Byte): Single;
 begin
   Result := (Power(1.0404, VolumeSetting) - 1) / (1.0404 - 1) / 1275;
@@ -400,7 +421,7 @@ begin
 end;
 
 procedure FPlaySound(SampleNum: Integer; ListenerX, ListenerY, EmitterX,
-  EmitterY: Single; Chan: Integer);
+  EmitterY: Single; Channel: Integer);
 var
   Dist: Single;
   Volume: Single;
@@ -409,7 +430,6 @@ var
   State: Integer = 0;
   //Pan: Single = 0.0;
 begin
-
   if not Samp[SampleNum].Loaded then
     Exit;
 
@@ -426,13 +446,13 @@ begin
   begin
     case SampleNum of
       SFX_M79_EXPLOSION:
-        FPlaySound(SFX_DIST_M79, ListenerX, ListenerY, EmitterX, EmitterY, Chan);
+        FPlaySound(SFX_DIST_M79, ListenerX, ListenerY, EmitterX, EmitterY, Channel);
       SFX_GRENADE_EXPLOSION, SFX_CLUSTERGRENADE, SFX_CLUSTER_EXPLOSION:
-        FPlaySound(SFX_DIST_GRENADE, ListenerX, ListenerY, EmitterX, EmitterY, Chan);
+        FPlaySound(SFX_DIST_GRENADE, ListenerX, ListenerY, EmitterX, EmitterY, Channel);
       SFX_AK74_FIRE, SFX_M249_FIRE, SFX_RUGER77_FIRE, SFX_SPAS12_FIRE,
         SFX_DESERTEAGLE_FIRE, SFX_STEYRAUG_FIRE, SFX_BARRETM82_FIRE,
         SFX_MINIGUN_FIRE, SFX_COLT1911_FIRE:
-        FPlaySound(81 + Random(4), ListenerX, ListenerY, EmitterX, EmitterY, Chan);
+        FPlaySound(81 + Random(4), ListenerX, ListenerY, EmitterX, EmitterY, Channel);
       SFX_DIST_M79, SFX_DIST_GRENADE, SFX_DIST_GUN1, SFX_DIST_GUN2, SFX_DIST_GUN3, SFX_DIST_GUN4:
         if Dist > 1 then
           Dist := Dist - 1
@@ -453,38 +473,37 @@ begin
   else
     PlayMode := AL_FALSE; // one time
 
-  if Chan >= RESERVED_SOURCES then
+  if Channel >= RESERVED_SOURCES then
     Exit;
-  if Chan = -1 then
+  if Channel = -1 then
     for i := RESERVED_SOURCES to MAX_SOURCES - 1 do
     begin
       alGetSourcei(Sources[i], AL_SOURCE_STATE, State);
       if State <> AL_PLAYING then
       begin
-        Chan := i;
+        Channel := i;
         Break;
       end;
     end;
 
-  if Chan <> -1 then
+  if Channel <> -1 then
   begin
-    alSourcei(Sources[Chan], AL_LOOPING, PlayMode);
+    alSourcei(Sources[Channel], AL_LOOPING, PlayMode);
     Volume := VolumeInternal * (1 - Dist);
-    alSourcef(Sources[Chan], AL_GAIN, Volume);
+    alSourcef(Sources[Channel], AL_GAIN, Volume);
     //Pan := EmitterX - ListenerX;
-    alSource3f(Sources[Chan], AL_POSITION,
+    alSource3f(Sources[Channel], AL_POSITION,
       (EmitterX - ListenerX)/SOUND_METERLENGTH,
       (EmitterY - ListenerY)/SOUND_METERLENGTH,
       -SOUND_PANWIDTH/SOUND_METERLENGTH);
-    alGetSourcei(Sources[Chan], AL_SOURCE_STATE, State);
+    alGetSourcei(Sources[Channel], AL_SOURCE_STATE, State);
     if State = AL_PLAYING then
       Exit;
     if State = AL_PAUSED then
-      alSourceStop(Sources[Chan]);
-    alSourcei(Sources[Chan], AL_BUFFER, Samp[SampleNum].Buffer);
-    alSourcePlay(Sources[Chan]);
+      alSourceStop(Sources[Channel]);
+    alSourcei(Sources[Channel], AL_BUFFER, Samp[SampleNum].Buffer);
+    alSourcePlay(Sources[Channel]);
   end;
-
 end;
 
 procedure PlaySound(Sample: Integer);
@@ -521,7 +540,10 @@ end;
 
 function StopSound(Channel: Integer): Boolean;
 begin
+  Assert(Channel < High(Sources));
+
   alSourceStop(Sources[Channel]);
+
   Result := False;
 end;
 
@@ -529,10 +551,12 @@ function SetSoundPaused(Channel: Integer; Paused: Boolean): Boolean;
 var
   State: Integer = 0;
 begin
+  Assert(Channel < High(Sources));
+
   alGetSourcei(Sources[Channel], AL_SOURCE_STATE, State);
   if (State = AL_PLAYING) and (Paused) then
-    alSourcePause(Sources[Channel]);
-  if (State = AL_PAUSED) and (not Paused) then
+    alSourcePause(Sources[Channel])
+  else if (State = AL_PAUSED) and (not Paused) then
     alSourcePlay(Sources[Channel]);
 
   Result := False;
@@ -542,11 +566,14 @@ function SetVolume(Channel: Integer; Volume: Single): Boolean;
 var
   i: Integer;
 begin
+  Assert(Channel < High(Sources));
+
   if Channel = -1 then
     for i := 0 to MAX_SOURCES - 1 do
       alSourcef(Sources[i], AL_GAIN, Volume)
   else
     alSourcef(Sources[Channel], AL_GAIN, Volume);
+
   Result := True;
 end;
 
@@ -554,18 +581,20 @@ end;
 procedure PlayVoiceData(Data: Pointer; DataLength: Word; SpriteNum: Byte);
 var
   State: Integer = 0;
-  Chan: Integer;
+  Channel: Integer;
   i: Byte;
   BuffersProcessed: LongInt = 0;
   VoiceBuffer: ALuint;
   BufferHolder: array[0..64] of ALuint;
 begin
-  Chan := 64 + SpriteNum; // use reserved chan
+  Channel := 64 + SpriteNum;  // use reserved chan
 
-  alGetSourcei(Sources[Chan], AL_BUFFERS_PROCESSED, BuffersProcessed);
+  Assert(Channel < High(Sources));
+
+  alGetSourcei(Sources[Channel], AL_BUFFERS_PROCESSED, BuffersProcessed);
   if BuffersProcessed > 0 then
   begin
-    alSourceUnqueueBuffers(Sources[Chan], BuffersProcessed, BufferHolder);
+    alSourceUnqueueBuffers(Sources[Channel], BuffersProcessed, BufferHolder);
     for i:= 0 to BuffersProcessed - 1 do
       VoiceBufferQueue.Add(bufferHolder[i]);
   end;
@@ -573,13 +602,13 @@ begin
   VoiceBuffer := VoiceBufferQueue.First;
   VoiceBufferQueue.Remove(VoiceBufferQueue.First);
   alBufferData(VoiceBuffer, AL_FORMAT_MONO16, Data, DataLength, 44100);
-  alSourceQueueBuffers(Sources[Chan], 1, @VoiceBuffer);
-  alGetSourcei(Sources[Chan], AL_SOURCE_STATE, State);
+  alSourceQueueBuffers(Sources[Channel], 1, @VoiceBuffer);
+  alGetSourcei(Sources[Channel], AL_SOURCE_STATE, State);
 
   if State = AL_PLAYING then
     Exit;
 
-  alSourcePlay(Sources[Chan]);
+  alSourcePlay(Sources[Channel]);
 end;
 {$ENDIF}
 

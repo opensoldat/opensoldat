@@ -1,21 +1,26 @@
-{*******************************************************}
-{                                                       }
-{       LogFile Unit for OPENSOLDAT                     }
-{                                                       }
-{       Copyright (c) 2002 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       LogFile Unit for OpenSoldat                           }
+{                                                             }
+{       Copyright (c) 2002      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit LogFile;
 
 interface
 
 uses
-  SyncObjs, Classes;
+  // System units
+  Classes,
+  SyncObjs;
+
 
 procedure NewLogFile(var F: TStringList; Name: string);
 procedure WriteLogFile(var F: TStringList; Name: string);
-procedure AddLineToLogFile(var F: TStringList; S: string; Name: string; WithDate: Boolean = True);
+procedure AddLineToLogFile(var F: TStringList; S: string; Name: string;
+  WithDate: Boolean = True);
 procedure NewLogFiles;
 
 var
@@ -27,15 +32,26 @@ var
   {$ENDIF}
   LogLock: TCriticalSection;
 
+
 implementation
 
 uses
+  // System units
+  SysUtils,
+
+  // Helper units
+  TraceLog,
+
+  // Project units
   {$IFDEF SERVER}
-  Server,
+    Server,
   {$ELSE}
-  Util, Client,
+    Client,
+    Util,
   {$ENDIF}
-  SysUtils, Constants, TraceLog, Cvar;
+  Constants,
+  Cvar;
+
 
 procedure NewLogFile(var F: TStringList; Name: string);
 var
@@ -228,12 +244,14 @@ begin
   {$ENDIF}
   S2 := FormatDateTime('yy-mm-dd', Now);
 
-  ConsoleLogFileName := Format('%slogs/consolelog-%s-01.txt', [UserDirectory, S2]);
+  ConsoleLogFileName :=
+    Format('%slogs/consolelog-%s-01.txt', [UserDirectory, S2]);
   j := 1;
   while FileExists(ConsoleLogFileName) do
   begin
     Inc(j);
-    ConsoleLogFileName := Format('%slogs/consolelog-%s-%.2d.txt', [UserDirectory, S2, j]);
+    ConsoleLogFileName :=
+      Format('%slogs/consolelog-%s-%.2d.txt', [UserDirectory, S2, j]);
   end;
   if log_level.Value = LEVEL_OFF then
     ConsoleLogFileName := UserDirectory + 'logs/consolelog.txt';
@@ -242,12 +260,14 @@ begin
   AddLineToLogFile(GameLog, '   Console Log Started', ConsoleLogFileName);
 
   {$IFDEF SERVER}
-  KillLogFileName := Format('%slogs/kills/killlog-%s-01.txt', [UserDirectory, S2]);
+  KillLogFileName :=
+    Format('%slogs/kills/killlog-%s-01.txt', [UserDirectory, S2]);
   j := 1;
   while FileExists(KillLogFileName) do
   begin
     Inc(j);
-    KillLogFileName := Format('%slogs/kills/killlog-%s-%.2d.txt', [UserDirectory, S2, j]);
+    KillLogFileName :=
+      Format('%slogs/kills/killlog-%s-%.2d.txt', [UserDirectory, S2, j]);
   end;
   NewLogFile(KillLog, KillLogFileName);
   AddLineToLogFile(KillLog, '   Kill Log Started', KillLogFileName);

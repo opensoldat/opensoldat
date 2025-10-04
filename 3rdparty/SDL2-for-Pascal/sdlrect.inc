@@ -2,11 +2,8 @@
 
 type
   {**
-   *  The structure that defines a point
-   *
-   *  SDL_EnclosePoints
+   *  The structure that defines a point (integer)
    *}
-
   PSDL_Point = ^TSDL_Point;
   TSDL_Point = record
     x: SInt32;
@@ -14,20 +11,30 @@ type
   end;
 
   {**
-   *  A rectangle, with the origin at the upper left.
-   *
-   *  SDL_RectEmpty
-   *  SDL_RectEquals
-   *  SDL_HasIntersection
-   *  SDL_IntersectRect
-   *  SDL_UnionRect
-   *  SDL_EnclosePoints
+   *  The structure that defines a point (floating point)
    *}
+  PSDL_FPoint = ^TSDL_FPoint;
+  TSDL_FPoint = record
+    x: Single;
+    y: Single;
+  end;
 
+  {**
+   *  A rectangle, with the origin at the upper left. (integer)
+   *}
   PSDL_Rect = ^TSDL_Rect;
   TSDL_Rect = record
     x,y: SInt32;
     w,h: SInt32;
+  end;
+
+  {**
+   *  A rectangle, with the origin at the upper left. (floating point)
+   *}
+  PSDL_FRect = ^TSDL_FRect;
+  TSDL_FRect = record
+    x,y: Single;
+    w,h: Single;
   end;
 
   {**

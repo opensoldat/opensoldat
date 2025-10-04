@@ -2,25 +2,37 @@ unit NetworkServerFae;
 
 interface
 
-uses Steam;
+uses
+  // Library units
+  Steam;
+
 
 procedure ServerSendFaeChallenge(Peer: HSteamNetConnection; InOrder: Boolean);
 procedure ServerHandleFaeResponse(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
+  // System units
   SysUtils,
-  Constants,
-  Game,
+
+  // Library units
   FaeBase,
   FaeRemoteAttestation,
+
+  // Helper units
+  TraceLog,
+
+  // Project units
+  Constants,
+  Game,
   Net,
   NetworkServerConnection,
   NetworkServerMessages,
   NetworkUtils,
-  TraceLog,
   Unit1;
+
 
 function IsFaeGameDataValid(Response: TFaeResponse): Boolean;
 begin

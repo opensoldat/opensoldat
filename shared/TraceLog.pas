@@ -1,19 +1,23 @@
-{*******************************************************}
-{                                                       }
-{       TraceLog Unit                                   }
-{                                                       }
-{       Copyright (c) 2012 Daniel Forssten              }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       TraceLog Unit for OpenSoldat                          }
+{                                                             }
+{       Copyright (c) 2012      Daniel Forssten               }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit TraceLog;
 
 interface
 
+
 const
   LEVEL_OFF   = 0;
   LEVEL_DEBUG = 1;
   LEVEL_TRACE = 2;
+
+// TODO: move log_level here
 
 procedure Debug(const Msg: string);
 procedure Trace(const Msg: string);
@@ -21,10 +25,20 @@ procedure Trace(const Msg: string);
 procedure SteamWarning(Severity: Integer; WarnMessage: PAnsiChar); cdecl;
 {$ENDIF}
 
+
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} sysutils;
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+
+  // System units
+  SysUtils;
+
 
 procedure Debug(const Msg: string);
 begin

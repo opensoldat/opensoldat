@@ -1,27 +1,37 @@
+{*************************************************************}
+{                                                             }
+{       BanSystem Unit for OpenSoldat                         }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit BanSystem;
 
 interface
 
 uses
+  // Project units
   Constants;
 
-  procedure AddBannedIP(IP: ShortString; Reason: string;
-    Duration: Integer = PERMANENT);
-  function DelBannedIP(IP: ShortString): Boolean;
-  function CheckBannedIP(IP: ShortString): Boolean;
-  function FindBan(IP: ShortString): Integer;
-  procedure LoadBannedList(filename: string);
-  procedure SaveBannedList(filename: string);
-  // bans hardwareids
-  procedure AddBannedHW(HW: string; Reason: string;
-    Duration: Integer = PERMANENT);
-  function DelBannedHW(HW: string): Boolean;
-  function CheckBannedHW(HW: string): Boolean;
-  function FindBanHW(HW: string): Integer;
-  procedure LoadBannedListHW(filename: string);
-  procedure SaveBannedListHW(filename: string);
-  procedure UpdateIPBanList;
-  procedure UpdateHWBanList;
+
+procedure AddBannedIP(IP: ShortString; Reason: string;
+  Duration: Integer = PERMANENT);
+function  DelBannedIP(IP: ShortString): Boolean;
+function  CheckBannedIP(IP: ShortString): Boolean;
+function  FindBan(IP: ShortString): Integer;
+procedure LoadBannedList(filename: string);
+procedure SaveBannedList(filename: string);
+// bans hardwareids
+procedure AddBannedHW(HW: string; Reason: string;
+  Duration: Integer = PERMANENT);
+function  DelBannedHW(HW: string): Boolean;
+function  CheckBannedHW(HW: string): Boolean;
+function  FindBanHW(HW: string): Integer;
+procedure LoadBannedListHW(filename: string);
+procedure SaveBannedListHW(filename: string);
+procedure UpdateIPBanList;
+procedure UpdateHWBanList;
 
 type
   // These records are packed so they can be sent over the wall to PascalScript.
@@ -43,10 +53,21 @@ var
   LastBan: string;
   LastBanHW: string;
 
+
 implementation
 
 uses
-  Server, fpmasks, classes, sysutils, ServerHelper;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  FPMasks,
+
+  // Project units
+  Server,
+  ServerHelper;
+
 
 procedure AddBannedIP(IP: ShortString; Reason: string;
   Duration: Integer = PERMANENT);

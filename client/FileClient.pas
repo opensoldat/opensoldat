@@ -1,10 +1,32 @@
+{*************************************************************}
+{                                                             }
+{       FileClient Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit FileClient;
 
 interface
 
 uses
-  SysUtils, Classes, sha1, strutils, fphttpclient,
-  GameRendering, Constants, Version;
+  // System units
+  SysUtils,
+  Classes,
+  StrUtils,
+
+  // Library units
+  sha1,
+  fphttpclient,
+
+  // Helper units
+  Version,
+
+  // Project units
+  Constants,
+  GameRendering;
+
 
 const
   MAX_DL_SIZE = 150000000;  // max download size in bytes
@@ -38,10 +60,16 @@ type
 var
   DownloadRetry: Byte = 0;
 
+
 implementation
 
 uses
-  Client, Util;
+  // Helper units
+  Util,
+
+  // Project units
+  Client;
+
 
 constructor TDownloadThread.Create(DownloadURL: String; Name: String; Checksum: TSHA1Digest);
 begin
@@ -69,7 +97,8 @@ begin
     [ExtractFileName(FFilename), FProgress, GetSize(FDownloadPos), GetSize(FDownloadSize)])));
 end;
 
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 procedure TDownloadThread.DoProgress(Sender: TObject; const ContentLength, CurrentPos: Int64);
 var
   OldProgress: Int64;
@@ -90,7 +119,7 @@ begin
       Synchronize(SetStatus);
   end;
 end;
-{$pop}
+{$POP}
 
 procedure TDownloadThread.Execute;
 begin

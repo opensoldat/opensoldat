@@ -1,9 +1,23 @@
+{*************************************************************}
+{                                                             }
+{       Mapfile Unit for OpenSoldat                           }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit MapFile;
 
 interface
 
 uses
-  Vector, Waypoints, Util;
+  // Helper units
+  Util,
+  Vector,
+
+  // Project units
+  Waypoints;
+
 
 type
   PMapColor = ^TMapColor;
@@ -88,13 +102,28 @@ type
     Waypoints: array of TWaypoint;
   end;
 
-function LoadMapFile(MapInfo: TMapInfo; var Map: TMapFile): Boolean;
-function MapColor(Color: LongInt): TMapColor;
-function IsPropActive(var Map: TMapFile; Index: Integer): Boolean;
+function  LoadMapFile(MapInfo: TMapInfo; var Map: TMapFile): Boolean;
+function  MapColor(Color: LongInt): TMapColor;
+function  IsPropActive(var Map: TMapFile; Index: Integer): Boolean;
+
 
 implementation
 
-uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, PolyMap, PhysFS; // for constants
+uses
+  // System units
+  SysUtils,
+
+  // Library units
+  PhysFS,
+
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  PolyMap;
+
 
 {******************************************************************************}
 {*                              Helper functions                              *}
@@ -141,6 +170,7 @@ const
     $89B8FD09,$8D79E0BE,$803AC667,$84FBDBD0,$9ABC8BD5,$9E7D9662,$933EB0BB,$97FFAD0C,
     $AFB010B1,$AB710D06,$A6322BDF,$A2F33668,$BCB4666D,$B8757BDA,$B5365D03,$B1F740B4
   );
+
 
 function crc32(crc: LongWord; Data: PByte; Len: Integer): LongWord;
 begin

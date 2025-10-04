@@ -1,16 +1,32 @@
+{*************************************************************}
+{                                                             }
+{       AutoUpdater Unit for OpenSoldat                       }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit AutoUpdater;
 
 interface
 
 uses
-  Process, sysutils;
+  // Library units
+  Process;
+
 
 procedure StartAutoUpdater;
 
 var
   UpdaterProcess: TProcess;
 
+
 implementation
+
+uses
+  // System units
+  SysUtils;
+
 
 procedure StartAutoUpdater;
 var

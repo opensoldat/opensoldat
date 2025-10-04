@@ -1,7 +1,7 @@
-//types from SDLtype_s.h / SDL_stdinc.h
+//types from SDL_stdinc.h
 type
 
-  TSDL_Bool = (SDL_FALSE,SDL_TRUE);
+  TSDL_Bool = (SDL_FALSE = 0,SDL_TRUE = 1);
 
   DWord = LongWord;
 
@@ -13,15 +13,15 @@ type
   TUInt8Array = array [0..MAXINT shr 1] of UInt8;
 
   PUInt16 = ^UInt16;
-  UInt16 = word;
+  UInt16 = Word;
   {$EXTERNALSYM UInt16}
 
   PSInt8 = ^SInt8;
-  SInt8 = Shortint;
+  SInt8 = ShortInt;
   {$EXTERNALSYM SInt8}
 
   PSInt16 = ^SInt16;
-  SInt16 = smallint;
+  SInt16 = SmallInt;
   {$EXTERNALSYM SInt16}
 
   PUInt32 = ^UInt32;
@@ -69,3 +69,8 @@ type
 
   Float = Single;
   {$EXTERNALSYM Float}
+
+{**
+*  Free memory returned by functions like SDL_GetBasePath(), SDL_GetPrefPath(), etc.
+*}
+procedure SDL_free(mem: Pointer); cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_free' {$ENDIF} {$ENDIF};

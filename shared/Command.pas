@@ -1,20 +1,44 @@
+{*************************************************************}
+{                                                             }
+{       Command Unit for OpenSoldat                           }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit Command;
 
 interface
 
 uses
-  classes, contnrs, sysutils, variants, Constants;
+  // System units
+  Classes,
+  Contnrs,
+  SysUtils,
+  Variants,
+
+  // Project units
+  Constants;
+
 
 procedure CommandInit();
 procedure CommandCleanup();
-function ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
-function LoadConfig(ConfigName: AnsiString): Boolean;
+function  ParseInput(Input: String; Sender: Byte = 0): Boolean; overload;
+function  LoadConfig(ConfigName: AnsiString): Boolean;
 
 const
   MAX_COMMANDS = 1024;
 
 type
-  TCommandFlag = (CMD_INIT, CMD_ALIAS, CMD_SCRIPT, CMD_DEFERRED, CMD_ADMINONLY, CMD_PLAYERONLY);
+  TCommandFlag = (
+    CMD_INIT,
+    CMD_ALIAS,
+    CMD_SCRIPT,
+    CMD_DEFERRED,
+    CMD_ADMINONLY,
+    CMD_PLAYERONLY,
+    CMD_INGAMEONLY
+  );
   TCommandFlags = set of TCommandFlag;
   PCommand = ^TCommand;
   TCommandFunction = procedure(Args: array of AnsiString; Sender: Byte);
@@ -26,7 +50,8 @@ type
   end;
   TCommandTargets = array of byte;
 
-  function CommandAdd(CommandNameVar: AnsiString; CommandPtr: TCommandFunction; Description: AnsiString; Flags: TCommandFlags): PCommand;
+  function CommandAdd(CommandNameVar: AnsiString; CommandPtr: TCommandFunction;
+    Description: AnsiString; Flags: TCommandFlags): PCommand;
   function CommandFind(Name: AnsiString): PCommand;
   procedure CommandExecuteAlias(Args: array of AnsiString; Sender: Byte);
   procedure ParseCommandLine();
@@ -38,10 +63,35 @@ var
   DeferredCommands: TStringList;
   DeferredInitialized: Boolean = False;
 
+
 implementation
-  uses {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF}Cvar, strutils, Game, Net
-    {$IFDEF DEVELOPMENT}, Steam, ctypes, TraceLog{$ENDIF}
-    {$IFDEF SERVER}, NetworkUtils{$ENDIF};
+
+uses
+  // System units
+  StrUtils,
+  {$IFDEF DEVELOPMENT}
+    ctypes,
+
+    // Library units
+    Steam,
+
+    // Helper units
+    TraceLog,
+  {$ENDIF}
+
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  Cvar,
+  Game,
+  {$IFDEF SERVER}
+    NetworkUtils,
+  {$ENDIF}
+  Net;
+
 
 {$PUSH}
 {$WARN 5024 OFF : Parameter "$1" not used}
@@ -177,6 +227,10 @@ begin
   for i:=0 to Commands.Count-1 do
   begin
     CommandPtr := Commands.Items[i];
+    if Length(Args) = 2 then
+      if not AnsiContainsStr(CommandPtr.Name, Args[1]) then
+        Continue;
+
     MainConsole.Console(CommandPtr.Name + ' - ' + CommandPtr.Description, GAME_MESSAGE_COLOR);
   end;
 end;
@@ -264,6 +318,7 @@ var
   cbResult: csize_t = 0;
   SetResult: Boolean = False;
   ConfigID: Integer;
+  NetworkingUtil: PISteamNetworkingUtils;
 begin
   if Length(Args) < 3 then
   begin
@@ -271,22 +326,31 @@ begin
     Exit;
   end;
 
+  if UDP <> Nil then
+    NetworkingUtil := UDP.NetworkingUtil
+  else
+    {$IFDEF STEAM}
+    NetworkingUtil := SteamAPI_SteamNetworkingUtils_SteamAPI_v004();
+    {$ELSE}
+    NetworkingUtil := SteamAPI_SteamNetworkingUtils_v003();
+    {$ENDIF}
+
   ConfigID := StrToIntDef(Args[1], -1);
-  ConfigName := UDP.NetworkingUtil.GetConfigValueInfo(ESteamNetworkingConfigValue(ConfigID), @OutDataType, @OutScope);
+  ConfigName := NetworkingUtil.GetConfigValueInfo(ESteamNetworkingConfigValue(ConfigID), @OutDataType, @OutScope);
   if ConfigName <> Nil then
   begin
     if OutDataType = k_ESteamNetworkingConfig_Int32 then
     begin
       cbResult := SizeOf(Integer);
       IntegerValue := StrToIntDef(Args[2], 0);
-      SetResult := UDP.NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @IntegerValue);
+      SetResult := NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @IntegerValue);
       MainConsole.Console(Format('[NET] NetConfig: Set %S to %D, result: %S', [AnsiString(ConfigName), IntegerValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end
     else if OutDataType = k_ESteamNetworkingConfig_Float then
     begin
       cbResult := SizeOf(Single);
       FloatValue := StrToFloatDef(Args[2], 0.0);
-      SetResult := UDP.NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @FloatValue);
+      SetResult := NetworkingUtil.SetConfigValue(ESteamNetworkingConfigValue(StrToInt(Args[1])), k_ESteamNetworkingConfig_Global, 0, OutDataType, @FloatValue);
       MainConsole.Console(Format('[NET] NetConfig: Set %S to %F, result: %S', [AnsiString(ConfigName), FloatValue, SetResult.ToString(TUseBoolStrs.True)]), DEBUG_MESSAGE_COLOR{$IFDEF SERVER}, Sender{$ENDIF});
     end;
   end
@@ -419,10 +483,17 @@ begin
     begin
       {$IFDEF SERVER}
       if CMD_ADMINONLY in CommandPtr.Flags then
-        if not ((Sender = 255) or (IsRemoteAdminIP(Sprite[Sender].Player.IP) or IsAdminIP(Sprite[Sender].Player.IP))) then
+        if not ((Sender = 0) or (Sender = 255) or (IsRemoteAdminIP(Sprite[Sender].Player.IP) or IsAdminIP(Sprite[Sender].Player.IP))) then
           Exit;
       if CMD_PLAYERONLY in CommandPtr.Flags then
         if (Sender = 0) or (Sender > MAX_PLAYERS + 1) then
+          Exit;
+      if CMD_INGAMEONLY in CommandPtr.Flags then
+        if UDP = Nil then
+          Exit;
+      {$ELSE}
+      if CMD_INGAMEONLY in CommandPtr.Flags then
+        if MySprite = 0 then
           Exit;
       {$ENDIF}
       CommandFunction := CommandPtr.FunctionPtr;
@@ -656,20 +727,20 @@ procedure CommandInit();
 begin
   Commands := TFPHashList.Create;
   DeferredCommands := TStringList.Create;
-  CommandAdd('echo', CommandEcho, 'echo text', []);
-  CommandAdd('exec', CommandExec, 'executes fileconfig', []);
-  CommandAdd('cmdlist', CommandCmdlist, 'list of commands', []);
+  CommandAdd('echo',     CommandEcho,     'echo text', []);
+  CommandAdd('exec',     CommandExec,     'executes fileconfig', []);
+  CommandAdd('cmdlist',  CommandCmdlist,  'list of commands',  []);
   CommandAdd('cvarlist', CommandCvarlist, 'list of cvars', []);
-  CommandAdd('reset', CommandReset, 'resets cvar to default value', []);
-  CommandAdd('alias', CommandAlias, 'creates alias', []);
-  CommandAdd('toggle', CommandToggle, 'toggles cvar between two values', []);
-  CommandAdd('inc', CommandInc, 'increments cvar value', []);
+  CommandAdd('reset',    CommandReset,    'resets cvar to default value', []);
+  CommandAdd('alias',    CommandAlias,    'creates alias', []);
+  CommandAdd('toggle',   CommandToggle,   'toggles cvar between two values', []);
+  CommandAdd('inc',      CommandInc,      'increments cvar value', []);
   {$IFDEF DEVELOPMENT}
-  CommandAdd('netconfig', CommandNetConfig, 'Set GNS config', []);
-  CommandAdd('netconfig_conn', CommandNetConfig, 'Set GNS config for specific connection handle', []);
-  CommandAdd('netconfig_list', CommandNetConfigList, 'List GNS cvars', []);
+  CommandAdd('netconfig',      CommandNetConfig,     'Set GNS config', []);
+  CommandAdd('netconfig_conn', CommandNetConfig,     'Set GNS config for specific connection handle', []);
+  CommandAdd('netconfig_list', CommandNetConfigList, 'List GNS cvars', [CMD_INGAMEONLY]);
 
-  CommandAdd('netconfig_loglevel', CommandNetLogLevel, 'Set GNS log level', []);
+  CommandAdd('netconfig_loglevel', CommandNetLogLevel, 'Set GNS log level', [CMD_INGAMEONLY]);
 
   {$ENDIF}
 end;

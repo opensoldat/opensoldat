@@ -2,7 +2,7 @@ OpenSoldat contributors (sorted alphabetically)
 ===============================================
 
 Peters "daaw" Brede  
-Gregor. "Shoozza" A. Cieslak  
+Gregor "Shoozza" A. Cieslak  
 Nick "EnEsCe" Cooper  
 Mariano "urraka" Cuatrin  
 Paweł "helloer" Drzazga  

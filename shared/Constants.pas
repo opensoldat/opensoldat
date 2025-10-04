@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       Constants Unit                                  }
-{                                                       }
-{       Copyright (c) 2011 Gregor A. Cieslak            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Constants Unit for OpenSoldat                         }
+{                                                             }
+{       Copyright (c) 2011      Gregor A. Cieslak             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Constants;
 
@@ -13,6 +14,7 @@ interface
 {$DEFINE GFXID}
 {$INCLUDE gfx.inc}
 {$UNDEF GFXID}
+
 
 const
   DEFAULT_FONT = 'play-regular.ttf';
@@ -138,9 +140,10 @@ const
   MOUSEAIMDELTA = 30;
   SPAWNRANDOMVELOCITY = 25;
 
-  FLAG_TIMEOUT     = SECOND * 25;
-  WAYPOINTTIMEOUT  = SECOND * 5 + 20;  // = 320
-  WAYPOINT_TIMEOUT = 480; // TODO: why the duplication?
+  FLAG_TIMEOUT           = SECOND * 25;
+  // TODO: why the duplication?
+  WAYPOINT_TIMEOUT_SMALL = SECOND * 5 + 20;  // = 320
+  WAYPOINT_TIMEOUT_BIG   = SECOND * 8;       // = 480
 
   WAYPOINTSEEKRADIUS = 21;
 
@@ -150,13 +153,13 @@ const
 
   DEFAULT_MAPCHANGE_TIME = SECOND * 5 + 20;
 
-  MEDIKITTHINGSDIV    = 23;
-  GRENADEKITTHINGSDIV = 23;
+  MEDIKIT_THINGS_DIV    = 23;  // unused?
+  GRENADEKIT_THINGS_DIV = 23;  // unused?
 
-  CONNECTIONPROBLEM_TIME  = SECOND * 4;
-  CONNECTIONPROBLEM_TIME2 = SECOND * 5;
+  CONNECTIONPROBLEM_TIME_SMALL = SECOND * 4;
+  CONNECTIONPROBLEM_TIME_BIG   = SECOND * 5;
 
-  DISCONNECTION_TIME        = SECOND * 15;
+  DISCONNECTION_TIME           = SECOND * 15;
 
   KILLMESSAGEWAIT       = SECOND * 4;
   CAPTUREMESSAGEWAIT    = SECOND * 6;
@@ -217,7 +220,7 @@ const
 
   WAVERESPAWN_TIME_MULITPLIER = 1;
 
-  PARA_SPEED    = -0.5 * 0.06; // GRAV
+  PARA_SPEED    = -0.5 * 0.06; // Grav
   PARA_DISTANCE = 500;
 
   MAX_OLDPOS = 125;
@@ -234,12 +237,24 @@ const
   FIREINTERVAL_NET = 5;
   MELEE_DIST = 12;
 
-  MULTIKILLMESSAGE: array[2..17] of WideString = ('DOUBLE KILL', 'TRIPLE KILL',
-    'MULTI KILL', 'MULTI KILL X2', 'SERIAL KILL', 'INSANE KILLS', 'GIMME MORE!',
-    'MASTA KILLA!', 'MASTA KILLA!', 'MASTA KILLA!', 'STOP IT!!!!',
-    'MERCY!!!!!!!!!!', 'CHEATER!!!!!!!!',
+  MULTIKILL_MESSAGE: array[2..17] of WideString = (
+    'DOUBLE KILL',
+    'TRIPLE KILL',
+    'MULTI KILL',
+    'MULTI KILL X2',
+    'SERIAL KILL',
+    'INSANE KILLS',
+    'GIMME MORE!',
+    'MASTA KILLA!',
+    'MASTA KILLA!',
+    'MASTA KILLA!',
+    'STOP IT!!!!',
+    'MERCY!!!!!!!!!!',
+    'CHEATER!!!!!!!!',
     'Phased-plasma rifle in the forty watt range',
-    'Hey, just what you see, pal', 'just what you see, pal...');
+    'Hey, just what you see, pal',
+    'just what you see, pal...'
+  );
 
 
   DEFAULT_JETCOLOR = $FFFFBD24;
@@ -582,6 +597,8 @@ const
   SFX_SNOW               = 162;
   SFX_WIND               = 163;
 
+
 implementation
+
 
 end.

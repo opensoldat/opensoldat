@@ -1,9 +1,24 @@
+{*************************************************************}
+{                                                             }
+{       FileServer Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit FileServer;
 
 interface
 
 uses
-  sysutils, Classes, fphttpserver, strutils;
+  // System units
+  Classes,
+  StrUtils,
+  SysUtils,
+
+  // Library units
+  fphttpserver;
+
 
 type
   THTTPServer = class(TFPHTTPServer)
@@ -32,13 +47,25 @@ type
 procedure StartFileServer;
 procedure StopFileServer;
 
+
 implementation
 
 uses
-  Server{$IFDEF STEAM}, Steam{$ENDIF}, Version;
+  // Library units
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Helper units,
+  Version,
+
+  // Project units
+  Server;
+
 
 var
   FServerThread: THTTPFileServerThread;
+
 
 {$PUSH}
 {$WARN 5024 OFF: Parameter "$1" not used}
@@ -50,10 +77,7 @@ end;
 
 procedure THTTPServer.CheckConnect(Sender: TObject; ASocket: LongInt; var Allow: Boolean);
 begin
-  if Self.ConnectionCount >= fileserver_maxconnections.Value then
-    Allow := False
-  else
-    Allow := True;
+  Allow := Self.ConnectionCount < fileserver_maxconnections.Value;
 end;
 {$POP}
 
@@ -136,7 +160,8 @@ begin
   end;
 end;
 
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 procedure THTTPFileServerThread.DoHandleRequest(Sender: TObject;
   var ARequest: TFPHTTPConnectionRequest; var AResponse: TFPHTTPConnectionResponse);
 var
@@ -212,9 +237,10 @@ begin
       end;
     end;
   end else
+  begin
     AResponse.Free;
-
+  end;
 end;
-{$pop}
+{$POP}
 
 end.

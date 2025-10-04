@@ -1,17 +1,23 @@
-{*******************************************************}
-{                                                       }
-{       Gfx Unit for OPENSOLDAT                         }
-{                                                       }
-{       Copyright (c) 2015 Mariano Cuatrin              }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Gfx Unit for OpenSoldat                               }
+{                                                             }
+{       Copyright (c) 2015      Mariano Cuatrin               }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Gfx;
 
 interface
 
 uses
-  Vector, Classes;
+  // System units
+  Classes,
+
+  // Helper units
+  Vector;
+
 
 const
   GFX_MONOCHROME = 1;
@@ -290,12 +296,30 @@ function RectHeight(const Rect: TGfxRect): Single;
 var
   GfxLog: procedure(s: string);
 
+
 implementation
 
 uses
-  SysUtils, Math, dglOpenGL,
-  {$IFDEF MSWINDOWS}Windows, {$ENDIF}
-  BinPack, stb, FreeType, SDL2, Input, PhysFS;
+  // System units
+  Math,
+  SysUtils,
+  {$IFDEF MSWINDOWS}
+    Windows,
+  {$ENDIF}
+
+  // Library units
+  dglOpenGL,
+  FreeType,
+  PhysFS,
+  SDL2,
+  stb,
+
+  // Helper units
+  BinPack,
+
+  // Project units
+  Input;
+
 
 {******************************************************************************}
 {*                              Helper functions                              *}
@@ -897,8 +921,8 @@ begin
   SetupVertexAttributes(Buffer);
   glDrawArrays(GL_TRIANGLES, Offset, Count);
 end;
-{$push}
-{$warn 4055 off}
+{$PUSH}
+{$WARN 4055 OFF}
 
 procedure GfxDraw(Buffer: TGfxVertexBuffer; IndexBuffer: TGfxIndexBuffer; Offset,
   Count: Integer);
@@ -939,7 +963,7 @@ begin
   end;
 end;
 
-{$pop}
+{$POP}
 
 procedure GfxPresent(Finish: Boolean);
 begin

@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  macos-11:
+    runs-on: macos-11
+    steps:
+      - name: Install FPC
+        run: |
+          brew update
+          brew install fpc
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Compile SDL2 unit
+        run: fpc sdl2.pas
+      - name: Compile SDL2_gfx unit
+        run: fpc sdl2_gfx.pas
+      - name: Compile SDL2_image unit
+        run: fpc sdl2_image.pas
+      - name: Compile SDL2_mixer unit
+        run: fpc sdl2_mixer.pas
+      - name: Compile SDL2_net unit
+        run: fpc sdl2_net.pas
+      - name: Compile SDL2_ttf unit
+        run: fpc sdl2_ttf.pas
+  ubuntu-20-04:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install FPC
+        run: |
+           export DEBIAN_FRONTEND=noninteractive
+           sudo apt update
+           sudo apt install fpc
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Compile SDL2 unit
+        run: fpc sdl2.pas
+      - name: Compile SDL2_gfx unit
+        run: fpc sdl2_gfx.pas
+      - name: Compile SDL2_image unit
+        run: fpc sdl2_image.pas
+      - name: Compile SDL2_mixer unit
+        run: fpc sdl2_mixer.pas
+      - name: Compile SDL2_net unit
+        run: fpc sdl2_net.pas
+      - name: Compile SDL2_ttf unit
+        run: fpc sdl2_ttf.pas
+  windows-2022:
+    runs-on: windows-2022
+    steps:
+      - name: Install Lazarus
+        run: |
+          choco install lazarus
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Compile SDL2 unit
+        run: C:/lazarus/fpc/*/bin/x86_64-win64/fpc.exe sdl2.pas
+      - name: Compile SDL2_gfx unit
+        run: C:/lazarus/fpc/*/bin/x86_64-win64/fpc.exe sdl2_gfx.pas
+      - name: Compile SDL2_image unit
+        run: C:/lazarus/fpc/*/bin/x86_64-win64/fpc.exe sdl2_image.pas
+      - name: Compile SDL2_mixer unit
+        run: C:/lazarus/fpc/*/bin/x86_64-win64/fpc.exe sdl2_mixer.pas
+      - name: Compile SDL2_net unit
+        run: C:/lazarus/fpc/*/bin/x86_64-win64/fpc.exe sdl2_net.pas
+      - name: Compile SDL2_ttf unit
+        run: C:/lazarus/fpc/*/bin/x86_64-win64/fpc.exe sdl2_ttf.pas
+

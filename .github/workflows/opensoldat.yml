@@ -2,13 +2,13 @@ on: [push, pull_request, workflow_dispatch]
 name: OpenSoldat
 jobs:
   linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout OpenSoldat code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Checkout launcher code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: opensoldat/launcher
           path: launcher
@@ -18,10 +18,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install cmake git libprotobuf-dev protobuf-compiler libssl-dev libsdl2-dev libopenal-dev libphysfs-dev libfreetype6 patchelf
 
-      - name: Install fpc
-        run: |
-          curl -L -o ./fpc.deb https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.2.2/fpc-laz_3.2.2-210709_amd64.deb/download
-          sudo apt-get install ./fpc.deb
+      - name: Setup Lazarus environment
+        uses: gcarreno/setup-lazarus@v3.2.17
+        with:
+          lazarus-version: "3.0"
+          #include-packages: "Synapse 40.1"
+          #with-cache: true
+
+#      - name: Install fpc
+#        run: |
+#          curl -L -o ./fpc.deb https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.2.2/fpc-laz_3.2.2-210709_amd64.deb/download
+#          sudo apt-get install ./fpc.deb
 
       - name: Compile OpenSoldat
         run: |
@@ -63,13 +70,13 @@ jobs:
           tar -cvf OpenSoldatServer-linux-x64.tar -C build OpenSoldatServer
 
       - name: Upload game build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: linux-build
           path: launcher/out/make/zip/linux/x64/
 
       - name: Upload server-only build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: linux-server-build
           path: OpenSoldatServer-linux-x64.tar
@@ -78,38 +85,45 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout OpenSoldat code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Checkout launcher code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: opensoldat/launcher
           path: launcher
 
-      - name: Cache fpc
-        id: fpc
-        uses: actions/cache@v2
-        with:
-          path: C:\fpc
-          key: freepascal-3.2.2
+      #- name: Cache fpc
+      #  id: fpc
+      #  uses: actions/cache@v4
+      #  with:
+      #    path: C:\fpc
+      #    key: freepascal-3.2.2
 
       - name: Cache vcpkg
         id: vcpkg-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: C:\vcpkg\installed
           key: vcpkg-cache
 
-      - name: Download freepascal
-        if: steps.fpc.outputs.cache-hit != 'true'
-        run: |
-          curl -o C:\fpc64.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/i386-win32/fpc-3.2.2.win32.and.win64.exe
+#      - name: Download freepascal
+#        if: steps.fpc.outputs.cache-hit != 'true'
+#        run: |
+#          curl -o C:\fpc64.exe ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/i386-win32/fpc-3.2.2.win32.and.win64.exe
 
-      - name: Install freepascal
-        if: steps.fpc.outputs.cache-hit != 'true'
-        run: |
-           C:\fpc64.exe /silent /nocancel /suppressmsgboxes=no
-        shell: cmd
+#      - name: Install freepascal
+#        if: steps.fpc.outputs.cache-hit != 'true'
+#        run: |
+#           C:\fpc64.exe /silent /nocancel /suppressmsgboxes=no
+#        shell: cmd
+
+      - name: Setup Lazarus environment
+        uses: gcarreno/setup-lazarus@v3.2.17
+        with:
+          lazarus-version: "3.0"
+          #include-packages: "Synapse 40.1"
+          with-cache: false
 
       - name: Install dependencies
         run: |
@@ -140,12 +154,12 @@ jobs:
           npm ci
           npm run make
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: windows-build
           path: launcher/out/make/zip/win32/x64/
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: OpenSoldatServer-win32-x64
           path: build/OpenSoldatServer-win32-x64
@@ -154,25 +168,25 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: true
 
       - name: Install dependencies
         run: |
-          brew install openssl@1.1 protobuf fpc cmake sdl2 physfs freetype2
+          brew install openssl@3 protobuf fpc cmake sdl2 physfs freetype2
 
       - name: Compile OpenSoldat
         run: |
           export BUILD_ID=${GITHUB_SHA::8}
           mkdir build
           cd build
-          export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@1.1/lib/pkgconfig
-          cmake -DCMAKE_INSTALL_PREFIX=./OpenSoldat-macos-x64 -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@1.1) .. -DCMAKE_BUILD_TYPE="Release"
+          export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl@3/lib/pkgconfig
+          cmake -DCMAKE_INSTALL_PREFIX=./OpenSoldat-macos-x64 -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@3) .. -DCMAKE_BUILD_TYPE="Release"
           make
           make install
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: OpenSoldat-macos-x64
           path: build/OpenSoldat-macos-x64
@@ -183,13 +197,14 @@ jobs:
     needs: [linux, windows, macos]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Zip build dirs back together
         run: |
+          ls
           zip -r OpenSoldat-macos-x64.zip OpenSoldat-macos-x64
           zip -r OpenSoldatServer-win32-x64.zip OpenSoldatServer-win32-x64
 
@@ -197,13 +212,19 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git fetch --tags
-          if git rev-parse continuous &>/dev/null; then
-            gh release delete continuous --yes
-            git tag --delete continuous
-            git push --delete origin continuous
+          if ! git show-ref --tags continuous &>/dev/null; then
+            gh release delete continuous --yes || echo "Failed to delete GitHub release. Ignoring."
+            git tag --delete continuous || echo "Failed to delete local tag. Ignoring."
+            git push --delete origin continuous || echo "Failed to delete remote tag. Ignoring."
           fi
 
           git tag continuous
           git push --tags origin continuous
-          gh release create continuous windows-build/*.zip OpenSoldatServer-win32-x64.zip OpenSoldat-macos-x64.zip linux-build/*.zip linux-server-build/*.tar --notes "OpenSoldat 1.8 alpha dev build" --title "OpenSoldat 1.8 alpha dev build"
+          gh release create continuous \
+            windows-build/*.zip \
+            OpenSoldatServer-win32-x64.zip \
+            OpenSoldat-macos-x64.zip \
+            linux-build/*.zip \
+            linux-server-build/*.tar \
+            --notes "OpenSoldat 1.8 alpha dev build" \
+            --title "OpenSoldat 1.8 alpha dev build"

@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       ScriptTeam unit for OPENSOLDAT                  }
-{                                                       }
-{       Copyright (c) 2013 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptTeam Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2013      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit ScriptTeam;
@@ -14,21 +15,24 @@ unit ScriptTeam;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  Game,
   PascalCompiler,
   PascalExec,
-  Server,
-  Game,
-  ScriptPlayer,
   ScriptCore3Api,
-  SysUtils;
+  ScriptPlayer,
+  Server;
+
 
 type
-
   TScriptTeam = class;
 
   TOnBeforeJoinTeam = function (Player: TScriptActivePlayer; Team, OldTeam: TScriptTeam): ShortInt of object;
-  TOnJoinTeam = procedure(Player: TScriptActivePlayer; Team: TScriptTeam) of object;
+  TOnJoinTeam  = procedure(Player: TScriptActivePlayer; Team: TScriptTeam) of object;
   TOnLeaveTeam = procedure(Player: TScriptActivePlayer; Team: TScriptTeam; Kicked: Boolean) of object;
 
   TScriptTeam = class(TObject)
@@ -38,10 +42,10 @@ type
     FOnBeforeJoin: TOnBeforeJoinTeam;
     FOnJoin: TOnJoinTeam;
     FOnLeave: TOnLeaveTeam;
-    function GetScore: Byte;
+    function  GetScore: Byte;
     procedure SetScore(Score: Byte);
-    function GetPlayer(Num: Byte): TScriptActivePlayer;
-    function GetCount: Byte;
+    function  GetPlayer(Num: Byte): TScriptActivePlayer;
+    function  GetCount: Byte;
   public
     constructor Create(ID: Byte);
     destructor Destroy; override;
@@ -63,7 +67,9 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
+
 
 constructor TScriptTeam.Create(ID: Byte);
 begin

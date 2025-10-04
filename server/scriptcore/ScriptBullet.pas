@@ -1,11 +1,13 @@
-{*******************************************************}
-{                                                       }
-{       ScriptBullet unit for OPENSOLDAT                }
-{                                                       }
-{       Copyright (c) 2014 Tomasz Kolosowski            }
-{                          and  Umut Karakas            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptBullet Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2014      Tomasz Kolosowski             }
+{       Copyright (c) 2014      Umut Karakas                  }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptBullet;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}
@@ -13,17 +15,20 @@ unit ScriptBullet;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  Bullets,
+  Game,
   PascalCompiler,
   PascalExec,
   ScriptCore3Api,
-  Bullets,
-  SysUtils,
-  Server,
-  Game;
+  Server;
+
 
 type
-
   PBullet = ^TBullet;
 
   TScriptActiveBullet = class(TObject)
@@ -56,10 +61,13 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
 
 uses
+  // Project units
   Parts;
+
 
 function TScriptActiveBullet.GetOwnerWeaponId: Integer;
 begin

@@ -1,3 +1,11 @@
+{*************************************************************}
+{                                                             }
+{       ScriptCoreAPIAdapter Unit for OpenSoldat              }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptCoreAPIAdapter;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}
@@ -5,16 +13,19 @@ unit ScriptCoreAPIAdapter;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   Script,
   ScriptCore3Api,
-  ScriptCoreInterface,
-  SysUtils;
+  ScriptCoreInterface;
+
 
 type
-
   TScriptCoreAPIAdapter = class(TScriptCore3API)
   private
     FAppOnIdleTimer: Longint;
@@ -47,47 +58,56 @@ type
     procedure OnFlagReturn(Id, TeamFlag: Byte);
 
     procedure OnAfterPlayerRespawn(Id: Byte);
-    function OnPlayerDamage(Victim, Shooter: Byte; Damage: Single;
+    function  OnPlayerDamage(Victim, Shooter: Byte; Damage: Single;
       BulletID: Byte): Single;
     procedure OnPlayerKill(Killer, Victim, Weapon: Byte);
     procedure OnWeaponChange(Id, Primary, Secondary: Byte);
 
-    function OnVoteMapStart(Id: Byte; Map: string): Boolean;
-    function OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean;
+    function  OnVoteMapStart(Id: Byte; Map: string): Boolean;
+    function  OnVoteKickStart(Id, Victim: Byte; Reason: string): Boolean;
     procedure OnVoteMap(Id: Byte; Map: string);
     procedure OnVoteKick(Id, Victim: Byte);
 
     procedure OnPlayerSpeak(Id: Byte; Text: string);
-    function OnPlayerCommand(Id: Byte; Command: string): Boolean;
-    function OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
+    function  OnPlayerCommand(Id: Byte; Command: string): Boolean;
+    function  OnConsoleCommand(Ip: string; Port: Word; Command: string): Boolean;
 
     property AppOnIdleTimer: Longint read FAppOnIdleTimer;
     property Disabled: Boolean read FDisabled;
   end;
 
+
 implementation
 
 uses
+  // System units
+  Math,
+  StrUtils,
+
+  // Library units
+  FPMasks,
+
+  // Helper units
   Calc,
+  Util,
+  Version,
+
+  // Project units
   Constants,
-  fpmasks,
-  math,
   Net,
   NetworkServerFunctions,
   NetworkUtils,
   ScriptCore3,
   ScriptDispatcher,
+  Server,
   ServerHelper,
   Sprites,
-  strutils,
   {$IFDEF RCON}
-  Rcon,
+    Rcon,
   {$ENDIF}
-  Server,
   Game,
-  Util,
-  Version,
   Weapons;
+
 
 constructor TScriptCoreAPIAdapter.Create(Script: TScript);
 begin
@@ -442,7 +462,8 @@ begin
 end;
 
 procedure TScriptCoreAPIAdapter.OnJoinTeam(Id, Team, OldTeam: Byte; JoinGame: Boolean);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if Sprite[Id].Player.ControlMethod <> Net.HUMAN then
     Exit;
@@ -452,7 +473,7 @@ begin
     Self.FScript.CallFunc([Id, Team], 'OnJoinTeam', 0);
   end;
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnLeaveGame(Id: Byte; Kicked: Boolean);
 begin
@@ -461,12 +482,13 @@ begin
 end;
 
 procedure TScriptCoreAPIAdapter.OnBeforeMapChange(Map: string);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.Disabled then
     Self.FScript.CallFunc([], 'OnGameEnd', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnAfterMapChange(Map: string);
 begin
@@ -475,28 +497,31 @@ begin
 end;
 
 procedure TScriptCoreAPIAdapter.OnAdminConnect(Ip: string; Port: Word);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.Disabled then
     Self.FScript.CallFunc([Ip], 'OnAdminConnect', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnAdminDisconnect(Ip: string; Port: Word);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.Disabled then
     Self.FScript.CallFunc([Ip], 'OnAdminDisconnect', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnAdminMessage(Ip: string; Port: Word; Message: string);
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   if not Self.Disabled then
     Self.FScript.CallFunc([Ip, Message], 'OnAdminMessage', 0);
 end;
-{$pop}
+{$POP}
 
 procedure TScriptCoreAPIAdapter.OnFlagGrab(Id, TeamFlag: Byte; GrabbedInBase: Boolean);
 begin
@@ -601,12 +626,13 @@ end;
 
 function TScriptCoreAPIAdapter.OnConsoleCommand(Ip: string; Port: Word;
   Command: string): Boolean;
-{$push}{$warn 5024 off}
+{$PUSH}
+{$WARN 5024 OFF}
 begin
   Result := False;
   if not Self.Disabled then
     Result := Self.FScript.CallFunc([255, Command], 'OnCommand', False);
 end;
-{$pop}
+{$POP}
 
 end.

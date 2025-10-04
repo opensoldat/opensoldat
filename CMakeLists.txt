@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.14)
+
 project(opensoldat)
 
 option(ADD_ASSETS "Include soldat.smod and font file" True)
@@ -15,8 +17,12 @@ option(CROSS_DARWIN_32 "Cross compile to macOS i386" False)
 option(ADD_BFT "Copy BFT test to scripts directory" False)
 option(ADD_FFI_FUZZ "Enable ScriptCore FFI fuzz tests" False)
 
-cmake_minimum_required(VERSION 3.14)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 include(${CMAKE_MODULE_PATH}/utils.cmake)
 
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -108,7 +114,7 @@ add_flag_append(CMAKE_Pascal_FLAGS "-vm3123 -vm3124")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fi${CMAKE_SOURCE_DIR}/shared")
 
 add_flag_prepend(CMAKE_Pascal_FLAGS
-                 "-Fu${CMAKE_SOURCE_DIR}/3rdparty/Pascal-SDL-2-Headers")
+                 "-Fu${CMAKE_SOURCE_DIR}/3rdparty/SDL2-for-Pascal")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared")
 add_flag_prepend(CMAKE_Pascal_FLAGS "-Fu${CMAKE_SOURCE_DIR}/shared/libs")
 add_flag_prepend(CMAKE_Pascal_FLAGS
@@ -180,6 +186,8 @@ endif()
 if(BUILD_SERVER)
   add_subdirectory(server)
 endif()
+
+set_property(TARGET GameNetworkingSockets PROPERTY CXX_STANDARD 17)
 
 # Install step that does 3 things:
 # 1) Cleans binary directory by removing unnecessary files from compilation.

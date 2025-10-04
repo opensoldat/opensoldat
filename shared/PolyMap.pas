@@ -1,8 +1,25 @@
+{*************************************************************}
+{                                                             }
+{       PolyMap Unit for OpenSoldat                           }
+{                                                             }
+{       Copyright (c) 2001-2020 Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit PolyMap;
 
 interface
 
-uses MapFile, Waypoints, Vector, Util;
+uses
+  // Helper units
+  Util,
+  Vector,
+
+  // Project units
+  MapFile,
+  Waypoints;
+
 
 const
   MAX_POLYS = 5000;
@@ -113,14 +130,29 @@ type
 procedure CheckOutOfBounds(var x: Single; var y: Single); overload;
 procedure CheckOutOfBounds(var x: SmallInt; var y: SmallInt); overload;
 
+
 implementation
 
 uses
+  // System units
   {$IFNDEF SERVER}
-  Classes, SysUtils,
+    Classes,
+    SysUtils,
   {$ENDIF}
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF}
-  Math, Calc, Game, Constants;
+  Math,
+
+  // Helper units
+  Calc,
+
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  Constants,
+  Game;
+
 
 procedure TPolyMap.Initialize();
 var
@@ -166,7 +198,7 @@ begin
   Self.MapID := MapFile.Hash;
   Self.SectorsDivision := MapFile.SectorsDivision;
   Self.SectorsNum := MapFile.SectorsNum;
-  Self.StartJet := 119 * MapFile.StartJet div 100;  // quickfix bla bla
+  Self.StartJet := 119 * MapFile.StartJet div 100;  // quickfix
   Self.Grenades := MapFile.GrenadePacks;
   Self.Medikits := MapFile.Medikits;
   Self.Weather := MapFile.Weather;
@@ -549,7 +581,7 @@ begin
   ky := Round(Pos.y / SectorsDivision);
 
   if (kx > -SectorsNum) and (kx < SectorsNum) and
-    (ky > -SectorsNum) and (ky < SectorsNum) then
+     (ky > -SectorsNum) and (ky < SectorsNum) then
   begin
     for j := 1 to High(Sectors[kx, ky].Polys) do
     begin
@@ -584,7 +616,7 @@ begin
   ky := Round(Pos.y / SectorsDivision);
 
   if (kx > -SectorsNum) and (kx < SectorsNum) and
-    (ky > -SectorsNum) and (ky < SectorsNum) then
+     (ky > -SectorsNum) and (ky < SectorsNum) then
   begin
     for j := 1 to High(Sectors[kx, ky].Polys) do
     begin
@@ -631,7 +663,7 @@ begin
   by := Round(Max(a.y, b.y) / SectorsDivision);
 
   if (ax > MAX_SECTORZ) or (bx < MIN_SECTORZ) or
-    (ay > MAX_SECTORZ) or (by < MIN_SECTORZ) then
+     (ay > MAX_SECTORZ) or (by < MIN_SECTORZ) then
     Exit;
 
   ax := Max(MIN_SECTORZ, ax);

@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       ScriptGame unit for OPENSOLDAT                  }
-{                                                       }
-{       Copyright (c) 2013 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptGame Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2013      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit ScriptGame;
@@ -14,7 +15,16 @@ unit ScriptGame;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Helper units
+  Version,
+
+  // Project units
+  Command,
+  Cvar,
   Net,
   NetworkServerGame,
   PascalCompiler,
@@ -25,13 +35,10 @@ uses
   ScriptTeam,
   ScriptMapsList,
   ScriptBanLists,
-  SysUtils,
   Server,
   Game,
-  Command,
-  Cvar,
-  Demo,
-  Version;
+  Demo;
+
 
 type
   TOnClockTick = procedure(Ticks: Integer) of object;
@@ -62,61 +69,61 @@ type
     FOnAdminConnect: TOnAdminConnect;
     FOnAdminDisconnect: TOnAdminDisconnect;
     FTickThreshold: Longint;
-    function GetGameStyle: Byte;
+    function  GetGameStyle: Byte;
     procedure SetGameStyle(Style: Byte);
-    function GetMaxPlayers: Byte;
+    function  GetMaxPlayers: Byte;
     procedure SetMaxPlayers(Max: Byte);
-    function GetNextMap: string;
-    function GetCurrentMap: string;
-    function GetNumBots: Byte;
-    function GetNumPlayers: Byte;
-    function GetSpectators: Byte;
-    function GetScoreLimit: Word;
+    function  GetNextMap: string;
+    function  GetCurrentMap: string;
+    function  GetNumBots: Byte;
+    function  GetNumPlayers: Byte;
+    function  GetSpectators: Byte;
+    function  GetScoreLimit: Word;
     procedure SetScoreLimit(Limit: Word);
-    function GetServerIP: string;
-    function GetServerName: string;
-    function GetServerPort: Word;
-    function GetServerVersion: string;
-    function GetServerInfo: string;
-    function GetGravity: Single;
+    function  GetServerIP: string;
+    function  GetServerName: string;
+    function  GetServerPort: Word;
+    function  GetServerVersion: string;
+    function  GetServerInfo: string;
+    function  GetGravity: Single;
     procedure SetGravity(Grav: Single);
-    function GetPaused: Boolean;
+    function  GetPaused: Boolean;
     procedure SetPaused(Paused: Boolean);
-    function GetRespawnTime: Integer;
+    function  GetRespawnTime: Integer;
     procedure SetRespawnTime(Time: Integer);
-    function GetMinRespawnTime: Integer;
+    function  GetMinRespawnTime: Integer;
     procedure SetMinRespawnTime(Time: Integer);
-    function GetMaxRespawnTime: Integer;
+    function  GetMaxRespawnTime: Integer;
     procedure SetMaxRespawnTime(Time: Integer);
-    function GetMaxGrenades: Byte;
+    function  GetMaxGrenades: Byte;
     procedure SetMaxGrenades(Num: Byte);
-    function GetBonus: Byte;
+    function  GetBonus: Byte;
     procedure SetBonus(Num: Byte);
-    function GetTimeLimit: Longint;
+    function  GetTimeLimit: Longint;
     procedure SetTimeLimit(Num: Longint);
-    function GetTimeLeft: Longint;
-    function GetFriendlyFire: Boolean;
+    function  GetTimeLeft: Longint;
+    function  GetFriendlyFire: Boolean;
     procedure SetFriendlyFire(Enabled: Boolean);
-    function GetPassword: string;
+    function  GetPassword: string;
     procedure SetPassword(Pass: string);
     {$IFDEF RCON}
-    function GetAdminPassword: string;
+    function  GetAdminPassword: string;
     procedure SetAdminPassword(Pass: string);
     {$ENDIF}
-    function GetVotePercent: Byte;
+    function  GetVotePercent: Byte;
     procedure SetVotePercent(Percent: Byte);
-    function GetRealistic: Boolean;
+    function  GetRealistic: Boolean;
     procedure SetRealistic(Enabled: Boolean);
-    function GetSurvival: Boolean;
+    function  GetSurvival: Boolean;
     procedure SetSurvival(Enabled: Boolean);
-    function GetAdvance: Boolean;
+    function  GetAdvance: Boolean;
     procedure SetAdvance(Enabled: Boolean);
-    function GetBalance: Boolean;
+    function  GetBalance: Boolean;
     procedure SetBalance(Enabled: Boolean);
-    function GetTickCount: Longint;
-    function GetTeam(ID: Byte): TScriptTeam;
-    function GetMapsList: TScriptMapsList;
-    function GetBanLists: TScriptBanLists;
+    function  GetTickCount: Longint;
+    function  GetTeam(ID: Byte): TScriptTeam;
+    function  GetMapsList: TScriptMapsList;
+    function  GetBanLists: TScriptBanLists;
   public
     constructor Create;
     destructor Destroy; override;
@@ -125,10 +132,10 @@ type
     procedure StartVoteMap(Name: string);
     procedure StopRecord;
     procedure Restart;
-    function LoadWeap(WeaponMod: string): Boolean;
-    function LoadCon(ConfigFile: string): Boolean;
-    function LoadList(MapsList: string): Boolean;
-    function StartRecord(DemoName: string): Boolean;
+    function  LoadWeap(WeaponMod: string): Boolean;
+    function  LoadCon(ConfigFile: string): Boolean;
+    function  LoadList(MapsList: string): Boolean;
+    function  StartRecord(DemoName: string): Boolean;
     //function LobbyRegister: Boolean;
     property GameStyle: Byte read GetGameStyle write SetGameStyle;
     property MaxPlayers: Byte read GetMaxPlayers write SetMaxPlayers;
@@ -191,11 +198,14 @@ type
     property Game: TScriptGame read FGame;
   end;
 
+
 implementation
 
 uses
+  // Project units
   ScriptCore3,
   ScriptPlayers;
+
 
 function TScriptGame.GetGameStyle: Byte;
 begin

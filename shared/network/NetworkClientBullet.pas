@@ -1,27 +1,52 @@
+{*************************************************************}
+{                                                             }
+{       NetworkClientBullet Unit for OpenSoldat               }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkClientBullet;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes, Math,
+  // System units
+  Classes,
+  Math,
+  SysUtils,
 
-  // helper units
+  // Library units
+  Steam,
+  // Helper units
   Vector,
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Weapons, Constants, NetworkServerBullet, Demo;
+  // Project units
+  Constants,
+  Demo,
+  Net,
+  NetworkServerBullet,
+  Sprites,
+  Weapons;
+
 
 procedure ClientSendBullet(i: Byte);
 procedure ClientHandleBulletSnapshot(NetMessage: PSteamNetworkingMessage_t);
 
+
 implementation
 
 uses
-  Client, Game, Bullets, NetworkUtils;
+  // Project units
+  Bullets,
+  Client,
+  Game,
+  NetworkUtils;
+
 
 var
   OldBulletSnapshotMsg: array[1..MAX_SPRITES] of TMsg_BulletSnapshot;
+
 
 procedure ClientSendBullet(i: Byte);
 var
@@ -84,7 +109,7 @@ begin
   if Style = BULLET_STYLE_FRAGNADE then
     hm := Guns[FRAGGRENADE].HitMultiply;
 
-  i := CreateBullet(a, b, BulletSnap.WeaponNum, BulletSnap.Owner, 255, hm, false, true);
+  i := CreateBullet(a, b, BulletSnap.WeaponNum, BulletSnap.Owner, 255, hm, False, True);
 
     Bullet[i].OwnerPingTick := Sprite[BulletSnap.Owner].Player.PingTicks +
       PingTicksAdd;
@@ -114,7 +139,7 @@ begin
         a.x := a.x - Sign(BStraight.x) * Abs(BNorm.y) * 3.0;
         a.y := a.y + Sign(BStraight.y) * Abs(BNorm.x) * 3.0;
 
-        k := CreateBullet(a, bx, BulletSnap.WeaponNum, BulletSnap.Owner, 255, i, false, true);
+        k := CreateBullet(a, bx, BulletSnap.WeaponNum, BulletSnap.Owner, 255, i, False, True);
 
         if (MySprite > 0) and (BulletSnap.Owner > 0) then
           for c := 1 to pa do
@@ -149,7 +174,7 @@ begin
                 BulletParts.DoEulerTimeStepFor(k);
                 Bullet[k].Update;
                 if not Bullet[k].Active then
-                  break;
+                  Break;
               end;
         end;
 
@@ -170,7 +195,7 @@ begin
         BulletParts.DoEulerTimeStepFor(i);
         Bullet[i].Update;
         if not Bullet[i].Active then
-          break;
+          Break;
       end;
 
   // stat gun
@@ -178,7 +203,7 @@ begin
     if Style = BULLET_STYLE_M2 then
         for i := 1 to MAX_THINGS do
           if (Thing[i].Active) and (Thing[i].Style = OBJECT_STATIONARY_GUN) then
-            Thing[i].CheckStationaryGunCollision(true);
+            Thing[i].CheckStationaryGunCollision(True);
 
   OldBulletSnapshotMsg[BulletSnap.Owner] := BulletSnap;
 end;

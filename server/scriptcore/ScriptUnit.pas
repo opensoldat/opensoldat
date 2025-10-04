@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       ScriptUnit unit for OPENSOLDAT                  }
-{                                                       }
-{       Copyright (c) 2013 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptUnit Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2013      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit ScriptUnit;
@@ -14,15 +15,18 @@ unit ScriptUnit;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   Script,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
+
 
 type
-
   TOnException = procedure(ErrorCode: TPSError; Message, UnitName, FunctionName: string;
     Row, Col: Cardinal) of object;
 
@@ -34,10 +38,10 @@ type
     FScript: TScript;
     FOnException: TOnException;
     FOnUnhandledException: TOnUnhandledException;
-    function GetName: string;
-    function GetVersion: string;
-    function GetDir: string;
-    function GetDebugMode: Boolean;
+    function  GetName: string;
+    function  GetVersion: string;
+    function  GetDir: string;
+    function  GetDebugMode: Boolean;
   public
     constructor Create(Script: TScript);
     procedure Recompile(Force: Boolean);
@@ -48,7 +52,7 @@ type
     property DebugMode: Boolean read GetDebugMode;
     property OnException: TOnException read FOnException write FOnException;
     property OnUnhandledException: TOnUnhandledException
-        read FOnUnhandledException write FOnUnhandledException;
+      read FOnUnhandledException write FOnUnhandledException;
   end;
 
   TScriptUnitAPI = class(TScriptCore3API)
@@ -63,11 +67,14 @@ type
     property ScriptUnit: TScriptUnit read FUnit;
   end;
 
+
 implementation
 
 uses
+  // Project units
   ScriptCore3,
   ScriptExceptions;
+
 
 function TScriptUnit.GetName: string;
 begin

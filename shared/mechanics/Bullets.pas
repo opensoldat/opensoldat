@@ -1,12 +1,32 @@
+{*************************************************************}
+{                                                             }
+{       Bullets Unit for OpenSoldat                           }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit Bullets;
 
 interface
 
 uses
-  Parts, MapFile, PolyMap, Net, Weapons, Constants,
-  Vector, Sprites, Things;
+  // Helper units
+  Vector,
 
-type TBullet = object
+  // Project units
+  Constants,
+  MapFile,
+  Net,
+  Parts,
+  PolyMap,
+  Sprites,
+  Things,
+  Weapons;
+
+
+type
+  TBullet = object
     Active: Boolean;
     {$IFNDEF SERVER}
     HasHit: Boolean;
@@ -41,18 +61,18 @@ type TBullet = object
     procedure Render(TimeElapsed: Extended);
     {$ENDIF}
     procedure Kill;
-    function CheckMapCollision(X, Y: Single): TVector2;
-    function CheckSpriteCollision(lasthitdist: Single): TVector2;
-    function CheckThingCollision(lasthitdist: Single): TVector2;
-    function CheckColliderCollision(lasthitdist: Single): TVector2;
+    function  CheckMapCollision(X, Y: Single): TVector2;
+    function  CheckSpriteCollision(lasthitdist: Single): TVector2;
+    function  CheckThingCollision(lasthitdist: Single): TVector2;
+    function  CheckColliderCollision(lasthitdist: Single): TVector2;
     procedure Hit(T: Integer; SpriteHit: Integer = 0; Where: Integer = 0);
     procedure ExplosionHit(Typ, SpriteHit, Where: Integer);
     procedure CheckOutOfBounds;
-    function FilterSpritesByDistance(var SpriteIndexes: TSpriteIndexes): Integer;
-    function TargetableSprite(i: Integer): Boolean;
-    function GetComparableSpriteDistance(i: Integer): Single;
-    function GetSpriteCollisionPoint(i: Integer): TVector2;
-    function GetWeaponIndex: Byte;
+    function  FilterSpritesByDistance(var SpriteIndexes: TSpriteIndexes): Integer;
+    function  TargetableSprite(i: Integer): Boolean;
+    function  GetComparableSpriteDistance(i: Integer): Single;
+    function  GetSpriteCollisionPoint(i: Integer): TVector2;
+    function  GetWeaponIndex: Byte;
   end;
 
 const
@@ -67,29 +87,50 @@ const
   HIT_TYPE_BODYHIT     = 9;
   HIT_TYPE_RICOCHET    = 10;
 
-  function CreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
-    sOwner: Integer; N: Byte; HitM: Single; Net, MustCreate: Boolean; Seed: LongInt = -1): Integer;
-  {$IFDEF SERVER}
-  function ServerCreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
-    sOwner: Integer; N: Byte; HitM: Single; Net: Boolean): Integer;
-  {$ELSE}
-  function CanHitSpray(Victim: Integer; Attacker: Integer): Boolean;
-  procedure CalculateRecoil(px: Single; py: Single; var cx: Single;
-    var cy: Single; da: Single);
-  procedure HitSpray();
+function  CreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
+  sOwner: Integer; N: Byte; HitM: Single; Net, MustCreate: Boolean; Seed: LongInt = -1): Integer;
+{$IFDEF SERVER}
+function ServerCreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
+  sOwner: Integer; N: Byte; HitM: Single; Net: Boolean): Integer;
+{$ELSE}
+function  CanHitSpray(Victim: Integer; Attacker: Integer): Boolean;
+procedure CalculateRecoil(px: Single; py: Single; var cx: Single;
+  var cy: Single; da: Single);
+procedure HitSpray();
+{$ENDIF}
+function  BulletCanSend(X, Y: Single; i: Integer; vX: Single): Boolean;
+
+
+implementation
+
+uses
+  // System units
+  Math,
+  SysUtils,
+
+  // Helper units
+  Calc,
+  TraceLog,
+  {$IFNDEF SERVER}
+    Util,
   {$ENDIF}
-  function BulletCanSend(X, Y: Single; i: Integer; vX: Single): Boolean;
 
-  implementation
-
-  uses
-    {$IFNDEF SERVER}
-    Gfx, Sound, GameRendering, Sparks, Util,
-    NetworkClientBullet, Demo, ClientGame,
-    {$ELSE}
+  // Project units
+  {$IFDEF SERVER}
     NetworkServerBullet,
-    {$ENDIF}
-    {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} SysUtils, Calc, Math, Game, TraceLog;
+    Server,
+  {$ELSE}
+    Client,
+    ClientGame,
+    Demo,
+    GameRendering,
+    Gfx,
+    NetworkClientBullet,
+    Sound,
+    Sparks,
+  {$ENDIF}
+  Game;
+
 
 function CreateBullet(sPos, sVelocity: TVector2; sNum: Byte;
   sOwner: Integer; N: Byte; HitM: Single; Net, MustCreate: Boolean; Seed: LongInt = -1): Integer;
@@ -162,11 +203,11 @@ begin
   Bullet[i].Num := i;
   Bullet[i].Owner := sOwner;
   Bullet[i].TimeOut := Guns[WeaponIndex].Timeout;
-  {$IFNDEF SERVER} // TODO: Check if this should be used also in server
+  {$IFNDEF SERVER}  // TODO: Check if this should be used also in server
   Bullet[i].TimeOutPrev := Guns[WeaponIndex].Timeout;
   {$ENDIF}
   Bullet[i].HitMultiply := HitM;
-  {$IFNDEF SERVER} // TODO: Check if this should be used also in server
+  {$IFNDEF SERVER}  // TODO: Check if this should be used also in server
   Bullet[i].HitMultiplyPrev := HitM;
   {$ENDIF}
   Bullet[i].Whizzed := False;
@@ -186,7 +227,7 @@ begin
   Bullet[i].HitSpot.Y := 0;
   Bullet[i].Tracking := 0;
 
-  {$IFNDEF SERVER} // TODO: Check if this should be used also in server
+  {$IFNDEF SERVER}  // TODO: Check if this should be used also in server
   if Sprite[sOwner].AimDistCoef < DEFAULTAIMDIST then
     Bullet[i].Tracking := 255;
 
@@ -196,7 +237,7 @@ begin
   {$ENDIF}
   Bullet[i].StartUpTime := MainTickCounter;
   Bullet[i].RicochetCount := 0;
-  {$IFNDEF SERVER} // TODO: Check if this should be used also in server
+  {$IFNDEF SERVER}  // TODO: Check if this should be used also in server
   Bullet[i].DegradeCount := 0;
   Bullet[i].PingAdd := 0;
   Bullet[i].PingAddStart := 0;
@@ -612,11 +653,19 @@ begin
   if TimeOut = 0 then
   begin
     case Style of
-      BULLET_STYLE_PLAIN, BULLET_STYLE_SHOTGUN, BULLET_STYLE_FLAME,
-      BULLET_STYLE_PUNCH, BULLET_STYLE_ARROW, BULLET_STYLE_CLUSTERNADE,
-      BULLET_STYLE_KNIFE, BULLET_STYLE_THROWNKNIFE:
+      BULLET_STYLE_PLAIN,
+      BULLET_STYLE_SHOTGUN,
+      BULLET_STYLE_FLAME,
+      BULLET_STYLE_PUNCH,
+      BULLET_STYLE_ARROW,
+      BULLET_STYLE_CLUSTERNADE,
+      BULLET_STYLE_KNIFE,
+      BULLET_STYLE_THROWNKNIFE:
         Kill;
-      BULLET_STYLE_FRAGNADE, BULLET_STYLE_M79, BULLET_STYLE_FLAMEARROW, BULLET_STYLE_LAW:
+      BULLET_STYLE_FRAGNADE,
+      BULLET_STYLE_M79,
+      BULLET_STYLE_FLAMEARROW,
+      BULLET_STYLE_LAW:
         begin
           Hit(HIT_TYPE_FRAGNADE);
           Kill;
@@ -754,7 +803,8 @@ begin
     if (Owner > 0) and (Owner < MAX_SPRITES + 1) then
       if Sprite[Owner].Active then
         if Sprite[Owner].Visible = 0 then
-          if Map.RayCast(BulletPos, Sprite[MySprite].Skeleton.Pos[9], grenvel, GameWidth, True) then
+          if Map.RayCast(BulletPos, Sprite[MySprite].Skeleton.Pos[9], grenvel,
+              GameWidth, True) then
             Exit;
 
   BulletVel := BulletParts.Velocity[Num];
@@ -764,15 +814,15 @@ begin
     BULLET_STYLE_PLAIN:  // bullet
       if TimeOutReal < BULLET_TIMEOUT - 2 then
       begin
-        if (ImageStyle <> Guns[EAGLE].BulletImageStyle) and
-           (ImageStyle <> Guns[MP5].BulletImageStyle) and
-           (ImageStyle <> Guns[AK74].BulletImageStyle) and
+        if (ImageStyle <> Guns[EAGLE].BulletImageStyle)    and
+           (ImageStyle <> Guns[MP5].BulletImageStyle)      and
+           (ImageStyle <> Guns[AK74].BulletImageStyle)     and
            (ImageStyle <> Guns[STEYRAUG].BulletImageStyle) and
-           (ImageStyle <> Guns[RUGER77].BulletImageStyle) and
-           (ImageStyle <> Guns[BARRETT].BulletImageStyle) and
-           (ImageStyle <> Guns[M249].BulletImageStyle) and
-           (ImageStyle <> Guns[MINIGUN].BulletImageStyle) and
-           (ImageStyle <> Guns[COLT].BulletImageStyle) then
+           (ImageStyle <> Guns[RUGER77].BulletImageStyle)  and
+           (ImageStyle <> Guns[BARRETT].BulletImageStyle)  and
+           (ImageStyle <> Guns[M249].BulletImageStyle)     and
+           (ImageStyle <> Guns[MINIGUN].BulletImageStyle)  and
+           (ImageStyle <> Guns[COLT].BulletImageStyle)     then
           ImageStyle := Guns[COLT].BulletImageStyle;
 
         _p.x := BulletPos.X + BulletVel.X;
@@ -798,7 +848,8 @@ begin
         begin
           a.x := BulletPos.X - Initial.X;
           a.y := BulletPos.Y - Initial.Y;
-          b.x := Vec2Length(a) * Min(1 / BULLETLENGTH, ((PingAdd + 2) / PingAddStart) / BULLETTRAIL);
+          b.x := Vec2Length(a) * Min(1 / BULLETLENGTH,
+            ((PingAdd + 2) / PingAddStart) / BULLETTRAIL);
           b.y := 1;
 
           if Active then
@@ -1122,21 +1173,24 @@ begin
         w := Map.Sectors[kx, ky].Polys[j];
         teamcol := TeamCollides(w, Sprite[Owner].Player.Team, True);
         if teamcol then
-          if (Map.PolyType[w] <> POLY_TYPE_ONLY_PLAYER) and
-            (Map.PolyType[w] <> POLY_TYPE_DOESNT) and
-            (Map.PolyType[w] <> POLY_TYPE_ONLY_FLAGGERS) and
-            (Map.PolyType[w] <> POLY_TYPE_NOT_FLAGGERS) and
-            (Map.PolyType[w] <> POLY_TYPE_BACKGROUND) and
-            (Map.PolyType[w] <> POLY_TYPE_BACKGROUND_TRANSITION) then
+          if (Map.PolyType[w] <> POLY_TYPE_ONLY_PLAYER)   and
+             (Map.PolyType[w] <> POLY_TYPE_DOESNT)        and
+             (Map.PolyType[w] <> POLY_TYPE_ONLY_FLAGGERS) and
+             (Map.PolyType[w] <> POLY_TYPE_NOT_FLAGGERS)  and
+             (Map.PolyType[w] <> POLY_TYPE_BACKGROUND)    and
+             (Map.PolyType[w] <> POLY_TYPE_BACKGROUND_TRANSITION) then
             if Map.PointInPolyEdges(Pos.X, Pos.y, w) then
             begin
               case Style of
-                BULLET_STYLE_PLAIN, BULLET_STYLE_SHOTGUN, BULLET_STYLE_PUNCH,
-                BULLET_STYLE_KNIFE, BULLET_STYLE_M2:
+                BULLET_STYLE_PLAIN,
+                BULLET_STYLE_SHOTGUN,
+                BULLET_STYLE_PUNCH,
+                BULLET_STYLE_KNIFE,
+                BULLET_STYLE_M2:
                   begin
                     BulletParts.OldPos[Num] := BulletParts.Pos[Num];
                     BulletParts.Pos[Num] := Vec2Subtract(Pos, BulletParts.Velocity[Num]);
-                    Temp := BulletParts.Pos[Num];
+                    Temp  := BulletParts.Pos[Num];
                     Temp2 := BulletParts.Velocity[Num];
 
                     Perp := Vec2Subtract(BulletParts.Pos[Num], HitSpot);
@@ -1170,13 +1224,13 @@ begin
                         for k := 1 to High(Map.Sectors[kx, ky].Polys) do
                         begin
                           w2 := Map.Sectors[kx, ky].Polys[k];
-                          if (Map.PolyType[w2] <> POLY_TYPE_ONLY_PLAYER) and
-                             (Map.PolyType[w2] <> POLY_TYPE_DOESNT) and
+                          if (Map.PolyType[w2] <> POLY_TYPE_ONLY_PLAYER)   and
+                             (Map.PolyType[w2] <> POLY_TYPE_DOESNT)        and
                              (Map.PolyType[w2] <> POLY_TYPE_ONLY_FLAGGERS) and
-                             (Map.PolyType[w2] <> POLY_TYPE_NOT_FLAGGERS) and
-                             (Map.PolyType[w2] <> POLY_TYPE_BACKGROUND) and
+                             (Map.PolyType[w2] <> POLY_TYPE_NOT_FLAGGERS)  and
+                             (Map.PolyType[w2] <> POLY_TYPE_BACKGROUND)    and
                              (Map.PolyType[w2] <> POLY_TYPE_BACKGROUND_TRANSITION) and
-                            TeamCollides(w2, Sprite[Owner].Player.Team, True) then
+                             TeamCollides(w2, Sprite[Owner].Player.Team, True) then
                             if Map.PointInPolyEdges(Pos.X, Pos.y, w2) then
                             begin
                               Kill;
@@ -1192,20 +1246,22 @@ begin
 
                     if Active then
                     begin
-                      BulletParts.Pos[Num] := Temp;
                       Perp := BulletParts.Velocity[Num];
+                      BulletParts.Pos[Num]      := Temp;
                       BulletParts.Velocity[Num] := Temp2;
+
                       Hit(HIT_TYPE_RICOCHET);
-                      BulletParts.Pos[Num] := HitSpot;
+                      BulletParts.Pos[Num]      := HitSpot;
                       BulletParts.Velocity[Num] := Perp;
                     end
                     else
                     begin
-                      BulletParts.Pos[Num] := Temp;
                       Perp := BulletParts.Velocity[Num];
+                      BulletParts.Pos[Num]      := Temp;
                       BulletParts.Velocity[Num] := Temp2;
+
                       Hit(HIT_TYPE_WALL);
-                      BulletParts.Pos[Num] := HitSpot;
+                      BulletParts.Pos[Num]      := HitSpot;
                       BulletParts.Velocity[Num] := Perp;
                     end;
                   end;
@@ -1214,12 +1270,12 @@ begin
                     BulletParts.Pos[Num] :=
                       Vec2Subtract(Pos, BulletParts.Velocity[Num]);
                     BulletParts.Forces[Num].Y :=
-                      BulletParts.Forces[Num].Y - BulletParts.Gravity;
+                      BulletParts.Forces[Num].Y - (BulletParts.GravityMultiplier * Grav);
                     if TimeOut > ARROW_RESIST then
                       TimeOut := ARROW_RESIST;
                     if TimeOut < 20 then
                       BulletParts.Forces[Num].Y :=
-                        BulletParts.Forces[Num].Y + BulletParts.Gravity;
+                        BulletParts.Forces[Num].Y + (BulletParts.GravityMultiplier * Grav);
                   end;
                 BULLET_STYLE_FRAGNADE, BULLET_STYLE_FLAME:
                   begin
@@ -1548,8 +1604,11 @@ begin
             end;
 
             case Style of
-              BULLET_STYLE_PLAIN, BULLET_STYLE_SHOTGUN, BULLET_STYLE_PUNCH,
-                BULLET_STYLE_KNIFE, BULLET_STYLE_M2:
+              BULLET_STYLE_PLAIN,
+              BULLET_STYLE_SHOTGUN,
+              BULLET_STYLE_PUNCH,
+              BULLET_STYLE_KNIFE,
+              BULLET_STYLE_M2:
                 begin
                   BulletParts.Pos[Num] := Pos;
 
@@ -1691,7 +1750,7 @@ begin
                 if TimeOut > ARROW_RESIST then
                 begin
                   BulletParts.Pos[Num] := Vec2Subtract(Pos, BulletParts.Velocity[Num]);
-                  BulletParts.Forces[Num].Y := BulletParts.Forces[Num].Y - BulletParts.Gravity;
+                  BulletParts.Forces[Num].Y := BulletParts.Forces[Num].Y - (BulletParts.GravityMultiplier * Grav);
                   if ((not sv_friendlyfire.Value) and
                     Sprite[Owner].IsNotSolo() and
                     Sprite[Owner].IsInSameTeam(Sprite[j])
@@ -2006,7 +2065,9 @@ end;
 function TBullet.CheckColliderCollision(lasthitdist: Single): TVector2;
 var
   j: Integer;
-  {$IFNDEF SERVER}i: Integer;{$ENDIF}
+  {$IFNDEF SERVER}
+  i: Integer;
+  {$ENDIF}
   StartPoint, EndPoint, Pos, ColPos, a: TVector2;
   dist: Single;
 begin
@@ -2043,8 +2104,12 @@ begin
         end;
 
         case Style of
-          BULLET_STYLE_PLAIN, BULLET_STYLE_SHOTGUN, BULLET_STYLE_PUNCH,
-          BULLET_STYLE_KNIFE, BULLET_STYLE_THROWNKNIFE, BULLET_STYLE_M2:
+          BULLET_STYLE_PLAIN,
+          BULLET_STYLE_SHOTGUN,
+          BULLET_STYLE_PUNCH,
+          BULLET_STYLE_KNIFE,
+          BULLET_STYLE_THROWNKNIFE,
+          BULLET_STYLE_M2:
             begin
               BulletParts.Pos[Num] :=
                 Vec2Subtract(Pos, BulletParts.Velocity[Num]);
@@ -2088,7 +2153,7 @@ begin
             if TimeOut > ARROW_RESIST then
             begin
               BulletParts.Forces[Num].Y :=
-                BulletParts.Forces[Num].Y - BulletParts.Gravity;
+                BulletParts.Forces[Num].Y - (BulletParts.GravityMultiplier * Grav);
               Hit(HIT_TYPE_WALL);
 
               Kill;
@@ -2721,10 +2786,14 @@ begin
 
       while (j > 1) and (RoughDistance < Distances[j - 1]) do
         j := j - 1;
-      Move(Distances[j], Distances[j + 1], (SpriteCount - j) * SizeOf(Single));
-      Distances[j] := RoughDistance;
 
-      Move(SpriteIndexes[j], SpriteIndexes[j + 1], (SpriteCount - j) * SizeOf(Integer));
+      if (SpriteCount - j) > 0 then
+      begin
+        Move(Distances[j], Distances[j + 1], (SpriteCount - j) * SizeOf(Single));
+        Move(SpriteIndexes[j], SpriteIndexes[j + 1], (SpriteCount - j) * SizeOf(Integer));
+      end;
+
+      Distances[j] := RoughDistance;
       SpriteIndexes[j] := i;
     end;
   end;
@@ -2792,7 +2861,7 @@ function TBullet.GetWeaponIndex: Byte;
 var
   WeaponIndex: Byte;
 begin
-  for WeaponIndex := 1 to High(Guns) do
+  for WeaponIndex := Low(Guns) to High(Guns) do
   begin
     if OwnerWeapon = Guns[WeaponIndex].Num then
     begin

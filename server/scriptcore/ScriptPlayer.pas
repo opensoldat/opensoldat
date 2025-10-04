@@ -1,10 +1,11 @@
-{*******************************************************}
-{                                                       }
-{       ScriptPlayer unit for OPENSOLDAT                }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptPlayer Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 // TODO: Documentation
 unit ScriptPlayer;
@@ -14,19 +15,24 @@ unit ScriptPlayer;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Helper units
+  Vector,
+
+  // Project units
   PascalCompiler,
   PascalExec,
   ScriptCore3Api,
   ScriptObject,
   ScriptWeapon,
   Sprites,
-  Things,
-  SysUtils,
-  Vector;
+  Things;
+
 
 type
-
   PSprite = ^TSprite;
 
   TScriptActivePlayer = class;
@@ -70,53 +76,53 @@ type
     FSpritePtr: PSprite;
     FPrimary: TScriptWeapon;
     FSecondary: TScriptWeapon;
-    function GetSprite: TSprite;
-    function GetTeam: Byte;
-    function GetName: string;
-    function GetAlive: Boolean;
-    function GetHealth: Single;
+    function  GetSprite: TSprite;
+    function  GetTeam: Byte;
+    function  GetName: string;
+    function  GetAlive: Boolean;
+    function  GetHealth: Single;
     procedure SetHealth(Health: Single);
-    function GetVest: Single;
+    function  GetVest: Single;
     procedure SetVest(Vest: Single);
-    function GetPrimary: TScriptPrimaryPlayerWeapon;
-    function GetSecondary: TScriptSecondaryPlayerWeapon;
-    function GetShirtColor: Longword;
-    function GetPantsColor: Longword;
-    function GetSkinColor: Longword;
-    function GetHairColor: Longword;
-    function GetFavouriteWeapon: string;
+    function  GetPrimary: TScriptPrimaryPlayerWeapon;
+    function  GetSecondary: TScriptSecondaryPlayerWeapon;
+    function  GetShirtColor: Longword;
+    function  GetPantsColor: Longword;
+    function  GetSkinColor: Longword;
+    function  GetHairColor: Longword;
+    function  GetFavouriteWeapon: string;
     procedure SetFavouriteWeapon(Weapon: string);
-    function GetChosenSecondaryWeapon: Byte;
-    function GetFriend: string;
+    function  GetChosenSecondaryWeapon: Byte;
+    function  GetFriend: string;
     procedure SetFriend(Friend: string);
-    function GetAccuracy: Byte;
+    function  GetAccuracy: Byte;
     procedure SetAccuracy(Accuracy: Byte);
-    function GetShootDead: Boolean;
+    function  GetShootDead: Boolean;
     procedure SetShootDead(ShootDead: Boolean);
-    function GetGrenadeFrequency: Integer;
+    function  GetGrenadeFrequency: Integer;
     procedure SetGrenadeFrequency(Frequency: Integer);
-    function GetCamping: Boolean;
+    function  GetCamping: Boolean;
     procedure SetCamping(Camping: Boolean);
-    function GetOnStartUse: Byte;
+    function  GetOnStartUse: Byte;
     procedure SetOnStartUse(Thing: Byte);
-    function GetHairStyle: Byte;
-    function GetHeadgear: Byte;
-    function GetChain: Byte;
-    function GetChatFrequency: Byte;
+    function  GetHairStyle: Byte;
+    function  GetHeadgear: Byte;
+    function  GetChain: Byte;
+    function  GetChatFrequency: Byte;
     procedure SetChatFrequency(Frequency: Byte);
-    function GetChatKill: string;
+    function  GetChatKill: string;
     procedure SetChatKill(Message: string);
-    function GetChatDead: string;
+    function  GetChatDead: string;
     procedure SetChatDead(Message: string);
-    function GetChatLowHealth: string;
+    function  GetChatLowHealth: string;
     procedure SetChatLowHealth(Message: string);
-    function GetChatSeeEnemy: string;
+    function  GetChatSeeEnemy: string;
     procedure SetChatSeeEnemy(Message: string);
-    function GetChatWinning: string;
+    function  GetChatWinning: string;
     procedure SetChatWinning(Message: string);
-    function GetAdmin: Boolean;
+    function  GetAdmin: Boolean;
     procedure SetAdmin(SetAsAdmin: Boolean);
-    function GetDummy: Boolean;
+    function  GetDummy: Boolean;
     procedure SetDummy(Dummy: Boolean);
   public
     destructor Destroy; override;
@@ -161,7 +167,7 @@ type
     procedure SetHealth(Health: Single);
     function GetPrimary: TScriptWeapon;
     procedure SetPrimary(Primary: TScriptWeapon);
-    function GetSecondary: TScriptWeapon;
+    function  GetSecondary: TScriptWeapon;
     procedure SetSecondary(Secondary: TScriptWeapon);
     procedure SetShirtColor(Color: Longword);
     procedure SetPantsColor(Color: Longword);
@@ -170,7 +176,7 @@ type
     procedure SetHairStyle(Style: Byte);
     procedure SetHeadgear(Headgear: Byte);
     procedure SetChain(Chain: Byte);
-    function GetDummy: Boolean;
+    function  GetDummy: Boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -209,66 +215,66 @@ type
     FOnSpeak: TOnSpeak;
     FOnCommand: TOnCommand;
   protected
-    function GetKills: Integer;
+    function  GetKills: Integer;
     procedure SetKills(Kills: Integer);
-    function GetDeaths: Integer;
+    function  GetDeaths: Integer;
     procedure SetDeaths(Deaths: Integer);
-    function GetPing: Integer;
+    function  GetPing: Integer;
     procedure SetTeam(Team: Byte);
-    function GetActive: Boolean;
-    function GetIP: string;
-    function GetPort: Word;
-    function GetVelX: Single;
-    function GetVelY: Single;
-    function GetMuted: Boolean;
+    function  GetActive: Boolean;
+    function  GetIP: string;
+    function  GetPort: Word;
+    function  GetVelX: Single;
+    function  GetVelY: Single;
+    function  GetMuted: Boolean;
     procedure SetMuted(Muted: Boolean);
-    function GetJets: Integer;
-    function GetGrenades: Byte;
-    function GetX: Single;
-    function GetY: Single;
-    function GetMouseAimX: SmallInt;
+    function  GetJets: Integer;
+    function  GetGrenades: Byte;
+    function  GetX: Single;
+    function  GetY: Single;
+    function  GetMouseAimX: SmallInt;
     procedure SetMouseAimX(AimX: SmallInt);
-    function GetMouseAimY: SmallInt;
+    function  GetMouseAimY: SmallInt;
     procedure SetMouseAimY(AimY: SmallInt);
-    function GetFlagger: Boolean;
-    function GetTime: Integer;
-    function GetOnGround: Boolean;
-    function GetProne: Boolean;
-    function GetHuman: Boolean;
-    function GetDirection: Shortint;
-    function GetFlags: Byte;
-    function GetHWID: string;
+    function  GetFlagger: Boolean;
+    function  GetTime: Integer;
+    function  GetOnGround: Boolean;
+    function  GetProne: Boolean;
+    function  GetHuman: Boolean;
+    function  GetDirection: Shortint;
+    function  GetFlags: Byte;
+    function  GetHWID: string;
     {$IFDEF STEAM}
-    function GetSteamID: Int64;
+    function  GetSteamID: Int64;
     {$ENDIF}
-    function GetKeyUp: Boolean;
+    function  GetKeyUp: Boolean;
     procedure SetKeyUp(Pressed: Boolean);
-    function GetKeyLeft: Boolean;
+    function  GetKeyLeft: Boolean;
     procedure SetKeyLeft(Pressed: Boolean);
-    function GetKeyRight: Boolean;
+    function  GetKeyRight: Boolean;
     procedure SetKeyRight(Pressed: Boolean);
-    function GetKeyShoot: Boolean;
+    function  GetKeyShoot: Boolean;
     procedure SetKeyShoot(Pressed: Boolean);
-    function GetKeyJetpack: Boolean;
+    function  GetKeyJetpack: Boolean;
     procedure SetKeyJetpack(Pressed: Boolean);
-    function GetKeyGrenade: Boolean;
+    function  GetKeyGrenade: Boolean;
     procedure SetKeyGrenade(Pressed: Boolean);
-    function GetKeyChangeWeap: Boolean;
+    function  GetKeyChangeWeap: Boolean;
     procedure SetKeyChangeWeap(Pressed: Boolean);
-    function GetKeyThrow: Boolean;
+    function  GetKeyThrow: Boolean;
     procedure SetKeyThrow(Pressed: Boolean);
-    function GetKeyReload: Boolean;
+    function  GetKeyReload: Boolean;
     procedure SetKeyReload(Pressed: Boolean);
-    function GetKeyCrouch: Boolean;
+    function  GetKeyCrouch: Boolean;
     procedure SetKeyCrouch(Pressed: Boolean);
-    function GetKeyProne: Boolean;
+    function  GetKeyProne: Boolean;
     procedure SetKeyProne(Pressed: Boolean);
-    function GetKeyFlagThrow: Boolean;
+    function  GetKeyFlagThrow: Boolean;
     procedure SetKeyFlagThrow(Pressed: Boolean);
     procedure SetWeaponActive(ID: Byte; Active: Boolean);
   public
     constructor Create(var Sprite: TSprite; ID: Byte); overload;
-    function Ban(Time: Integer; Reason: string): Boolean;
+    function  Ban(Time: Integer; Reason: string): Boolean;
     procedure Say(Text: string; MsgType: Byte);
     procedure Damage(Shooter: Byte; Damage: Single);
     procedure Kill();
@@ -353,20 +359,23 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
 
 uses
+  // Project units
+  Command,
   Constants,
+  Game,
   Net,
   NetworkServerFunctions,
   NetworkServerMessages,
   NetworkServerThing,
   NetworkUtils,
-  ServerHelper,
   Server,
-  Command,
-  Game,
+  ServerHelper,
   Weapons;
+
 
 constructor TScriptNewPlayer.Create;
 begin
@@ -376,7 +385,7 @@ begin
   Self.FSecondary := TScriptSecondaryPlayerWeapon.Create(Self.FSpritePtr^);
   Self.FSpritePtr^.Player := TPlayer.Create;
   Self.FSpritePtr^.Brain.TargetNum := 1;
-  Self.FSpritePtr^.Brain.WaypointTimeoutCounter := WAYPOINTTIMEOUT;
+  Self.FSpritePtr^.Brain.WaypointTimeoutCounter := WAYPOINT_TIMEOUT_SMALL;
 end;
 
 destructor TScriptNewPlayer.Destroy;
@@ -955,7 +964,7 @@ procedure TScriptActivePlayer.BigText(Layer: Byte; Text: string;
 begin
   if not Self.Active then
     Exit;
-  ServerSendSpecialMessage(Text, 1, Layer, Delay, Scale, Color, X, Y, Self.ID);
+  ServerSendSpecialMessage(Text, 1, Layer, Delay, Scale, Longword(Color), X, Y, Self.ID);
 end;
 
 procedure TScriptActivePlayer.WorldText(Layer: Byte; Text: string;
@@ -993,17 +1002,17 @@ begin
   case BType of
     1:
     begin  // Predator
-      Self.FSpritePtr^.Alpha := PREDATORALPHA;
-      Self.FSpritePtr^.BonusTime := PREDATORBONUSTIME;
+      Self.FSpritePtr^.Alpha      := PREDATORALPHA;
       Self.FSpritePtr^.BonusStyle := BONUS_PREDATOR;
-      Self.FSpritePtr^.Health := STARTHEALTH;
+      Self.FSpritePtr^.BonusTime  := PREDATORBONUSTIME;
+      Self.FSpritePtr^.Health     := STARTHEALTH;
       PStyle := 20;
     end;
     2:
     begin  // Berserker
       Self.FSpritePtr^.BonusStyle := BONUS_BERSERKER;
-      Self.FSpritePtr^.BonusTime := BERSERKERBONUSTIME;
-      Self.FSpritePtr^.Health := STARTHEALTH;
+      Self.FSpritePtr^.BonusTime  := BERSERKERBONUSTIME;
+      Self.FSpritePtr^.Health     := STARTHEALTH;
       PStyle := 21;
     end;
     3:
@@ -1026,8 +1035,8 @@ begin
     6:
     begin  // Flame god
       Self.FSpritePtr^.BonusStyle := BONUS_FLAMEGOD;
-      Self.FSpritePtr^.BonusTime := FLAMERBONUSTIME;
-      Self.FSpritePtr^.Health := STARTHEALTH;
+      Self.FSpritePtr^.BonusTime  := FLAMERBONUSTIME;
+      Self.FSpritePtr^.Health     := STARTHEALTH;
       PStyle := 18;
     end;
     else
@@ -1083,10 +1092,10 @@ begin
     Result := False;
     Exit;
   end;
-  {  TKickReason = (TKickNoResponse, TKickNoCheatResponse,
-    TKickChangeTeam, TKickPing, TKickFlooding, TKickConsole,
-    TKickConnectionCheat, TKickCheat, TKickLeft, TKickVoted,
-    TKickAC); }
+  // TKickReason = (TKickNoResponse, TKickNoCheatResponse,
+  //                TKickChangeTeam, TKickPing, TKickFlooding, TKickConsole,
+  //                TKickConnectionCheat, TKickCheat, TKickLeft, TKickVoted,
+  //                TKickAC);
   case Reason of
     TKickNoResponse: Result := KickPlayer(Self.Id, False, KICK_NORESPONSE, 0);
     TKickNoCheatResponse: Result := KickPlayer(Self.Id, False, KICK_NOCHEATRESPONSE, 0);

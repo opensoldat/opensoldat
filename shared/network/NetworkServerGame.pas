@@ -1,17 +1,32 @@
+{*************************************************************}
+{                                                             }
+{       NetworkServerGame Unit for OpenSoldat                 }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit NetworkServerGame;
 
 interface
 
 uses
-  // delphi and system units
-  SysUtils, Classes,
-  {$IFDEF SCRIPT}
-  // Script
-  ScriptDispatcher,
-  {$ENDIF}
+  // System units
+  Classes,
+  SysUtils,
 
-  // OpenSoldat units
-  Steam, Net, Sprites, Constants;
+  // Library units
+  Steam,
+
+
+  // Project units
+  Constants,
+  Net,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  Sprites;
+
 
 procedure ServerHandlePlayerDisconnect(NetMessage: PSteamNetworkingMessage_t);
 procedure ServerMapChange(ID: Byte);
@@ -28,11 +43,21 @@ procedure ServerSyncMsg(ToNum: Integer = 0);
 procedure ServerHandleVoiceData(NetMessage: PSteamNetworkingMessage_t);
 {$ENDIF}
 
+
 implementation
 
 uses
-  Server, Game, Util, ServerHelper,
-  NetworkUtils, NetworkServerConnection, NetworkServerMessages;
+  // Helper units
+  Util,
+
+  // Project units
+  Game,
+  NetworkServerConnection,
+  NetworkServerMessages,
+  NetworkUtils,
+  Server,
+  ServerHelper;
+
 
 procedure ServerHandlePlayerDisconnect(NetMessage: PSteamNetworkingMessage_t);
 var

@@ -11,7 +11,10 @@ unit Steam;
 interface
 
 uses
-  ctypes, sysutils;
+  // System units
+  ctypes,
+  SysUtils;
+
 
 {$PACKENUM 4}
 
@@ -8690,6 +8693,7 @@ type
     constructor Init(unIP: uint32; usGamePort: uint16; usQueryPort: uint16; ServerMode: EServerMode; pchVersionString: PChar);
   end;
 {$ENDIF}
+
 
 implementation
 

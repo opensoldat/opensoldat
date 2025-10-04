@@ -1,17 +1,28 @@
-{*******************************************************}
-{                                                       }
-{       Util Unit for OPENSOLDAT                        }
-{                                                       }
-{       Copyright (c) 2003 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Util Unit for OpenSoldat                              }
+{                                                             }
+{       Copyright (c) 2003      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Util;
 
 interface
 
 uses
-  Variants, Classes, SysUtils, Sha1 {$IFDEF DEVELOPMENT}, typinfo{$ENDIF};
+  // Systen units
+  Classes,
+  SysUtils,
+  {$IFDEF DEVELOPMENT}
+    TypInfo,
+  {$ENDIF}
+  Variants,
+
+  // Library units
+  sha1;
+
 
 type
   TColor = 0..$FFFFFFFF;
@@ -24,52 +35,68 @@ type
   end;
 
 // Gets a specific piece of a string
-function GetPiece(const Source: string; const Delimiter: string;
+function  GetPiece(const Source: string; const Delimiter: string;
   const Piece: Integer): string;
 
-function Iif(const Condition: Boolean; const TruePart: Variant;
+function  Iif(const Condition: Boolean; const TruePart: Variant;
   const FalsePart: Variant): Variant;
-function Choose(const Index: Integer; const Choices: array of Variant): Variant;
+function  Choose(const Index: Integer; const Choices: array of Variant): Variant;
 
-function ColorToHex(Color: TColor): LongWord;
-function StringToColor(const S: string): TColor;
+function  ColorToHex(Color: TColor): LongWord;
+function  StringToColor(const S: string): TColor;
 
 {$IFNDEF SERVER}
-function NumberFormat(Num: Cardinal): string;
-function CheckFileSize(filename: string): Integer;
+function  NumberFormat(Num: Cardinal): string;
+function  CheckFileSize(filename: string): Integer;
 {$ENDIF}
 
-function OverrideFileExt(const Filename, Ext: string): string;
-//function MapExists(MapName: string; RootDirectory: string{$IFNDEF SERVER}; Checksum: TSHA1Digest{$ENDIF}): Boolean;
-function Md5StringHelper(Text: String): String;
-function CreateDirIfMissing(const Dir: string): Boolean;
-function CreateFileIfMissing(const Filename: string): Boolean;
-function GetSize(Bytes: Int64): string;
-function GetMapChecksum(Map: TMapInfo): TSHA1Digest;
-function GetMapInfo(MapName: String; Directory: String; out MapInfo: TMapInfo): Boolean;
-function VerifyMapChecksum(Map: TMapInfo; Checksum: TSHA1Digest): Boolean;
+function  OverrideFileExt(const Filename, Ext: string): string;
+//function  MapExists(MapName: string; RootDirectory: string{$IFNDEF SERVER}; Checksum: TSHA1Digest{$ENDIF}): Boolean;
+function  Md5StringHelper(Text: String): String;
+function  CreateDirIfMissing(const Dir: string): Boolean;
+function  CreateFileIfMissing(const Filename: string): Boolean;
+function  GetSize(Bytes: Int64): string;
+function  GetMapChecksum(Map: TMapInfo): TSHA1Digest;
+function  GetMapInfo(MapName: String; Directory: String; out MapInfo: TMapInfo): Boolean;
+function  VerifyMapChecksum(Map: TMapInfo; Checksum: TSHA1Digest): Boolean;
 {$IFDEF DEVELOPMENT}
-function ToStr(const AValue; ATypeInfo: PTypeInfo): AnsiString;
+function  ToStr(const AValue; ATypeInfo: PTypeInfo): AnsiString;
 {$ENDIF}
+
 
 implementation
 
 uses
-  {$IFDEF SERVER}Server,{$ELSE}Client,{$ENDIF} Constants, PhysFS, Md5, Game {$IFDEF STEAM}, Steam{$ENDIF};
+  // Library units
+  Md5,
+  PhysFS,
+  {$IFDEF STEAM}
+    Steam,
+  {$ENDIF}
+
+  // Project units
+  {$IFDEF SERVER}
+    Server,
+  {$ELSE}
+    Client,
+  {$ENDIF}
+  Constants,
+  Game;
+
 
 function Iif(const Condition: Boolean; const TruePart: Variant;
   const FalsePart: Variant): Variant;
 begin
   if Condition then
-    Result := Truepart
+    Result := TruePart
   else
-    Result := Falsepart;
+    Result := FalsePart;
 end;
 
 // ie: gamemode := string(choose(gametype, ['CTF', 'DM']));
 function Choose(const Index: Integer; const Choices: array of Variant): Variant;
 begin
-  if Index <= High(Choices) then
+  if (Index >= Low(Choices)) and (Index <= High(Choices)) then
     Result := Choices[index]
   else
     Result := '';
@@ -119,14 +146,21 @@ begin
   end;
 end;
 
+// converts BBGGRR, BBGGRRA and BBGGRRAA into AARRGGBB with alpha set to $FF
+// examples:
+// $11223344 -> $FF332211
+// $1122334  -> $FF332211
+// $112233   -> $FF332211
 function ColorToHex(Color: TColor): LongWord;
-var
-  Temp: LongWord;
-  Temp2: string;
 begin
-  Temp := Color;
-  Temp2 := IntToHex(Temp, 6);
-  Result := LongWord(StrToInt('$FF' + Copy(Temp2, 5, 2) + Copy(Temp2, 3, 2) + Copy(Temp2, 1, 2)));
+  while (Color and $FF000000) > 0 do
+    Color := Color shr 4;
+
+  Result :=
+    $FF000000 or
+    (Color and $FF) shl 16 or
+    (Color and $FF00) or
+    (Color and $FF0000) shr 16;
 end;
 
 function StringToColor(const S: string): TColor;
@@ -166,22 +200,25 @@ begin
 end;
 
 //function MapExists(MapName: string; RootDirectory: string{$IFNDEF SERVER}; Checksum: TSHA1Digest{$ENDIF}): Boolean;
-{begin
+{
+begin
   Result := False;
+
   if PHYSFS_exists(PChar('maps/' + MapName + '.pms')) then
     Result := True
   else if FileExists(RootDirectory + 'maps/' + MapName + '.smap') then
     if Sha1Match(GetMapChecksum(MapName, RootDirectory), Checksum) then
       Result := True;
-end;}
+end;
+}
 
 function Md5StringHelper(Text: String): String;
 begin
   Result := MD5Print(MD5String(Text));
 end;
 
-// makes sure the directory exists
-// returns false on error and true if everything is allright
+// Make sure the directory exists
+// Returns false on error and true if everything is all right
 function CreateDirIfMissing(const Dir: string): Boolean;
 begin
   Result := True;
@@ -202,9 +239,8 @@ begin
     if FileHandle = THandle(-1) then
       Result := False
     else
-      // Attempting to read a file immediately after creating
-      // it throws an error on Windows. We close the handle
-      // manually to prevent it.
+      // Attempting to read a file immediately after creating it throws an
+      // error on Windows. We close the handle  manually to prevent it.
       FileClose(FileHandle);
   end;
 end;
@@ -371,11 +407,11 @@ begin
       FillByte(FormatSettings, SizeOf(TFormatSettings), 0);
       FormatSettings.DecimalSeparator := '.';
       case GetTypeData(ATypeInfo)^.FloatType of
-        ftSingle: Result := FormatFloat('0.######', Single(AValue), FormatSettings);
-        ftDouble: Result := FormatFloat('0.######', Double(AValue), FormatSettings);
+        ftSingle: Result   := FormatFloat('0.######', Single(AValue),   FormatSettings);
+        ftDouble: Result   := FormatFloat('0.######', Double(AValue),   FormatSettings);
         ftExtended: Result := FormatFloat('0.######', Extended(AValue), FormatSettings);
-        ftComp: Result := FormatFloat('0.######', Comp(AValue), FormatSettings);
-        ftCurr: Result := FormatFloat('0.######', Currency(AValue), FormatSettings);
+        ftComp: Result     := FormatFloat('0.######', Comp(AValue),     FormatSettings);
+        ftCurr: Result     := FormatFloat('0.######', Currency(AValue), FormatSettings);
       end;
     end;
     tkRecord:
@@ -383,7 +419,8 @@ begin
       Result := '(';
       with GetTypeData(ATypeInfo)^ do
       begin
-        {$IFNDEF VER3_0} //ifdef needed because of a field rename in trunk (ManagedFldCount to TotalFieldCount)
+        // Ifdef needed because of a field rename in trunk (ManagedFldCount to TotalFieldCount)
+        {$IFNDEF VER3_0}
         FirstField := PManagedField(PByte(@TotalFieldCount) + SizeOf(TotalFieldCount));
         for I := 0 to TotalFieldCount - 1 do
         {$ELSE}

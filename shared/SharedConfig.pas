@@ -1,28 +1,49 @@
-{*******************************************************}
-{                                                       }
-{       SharedConfig Unit for OPENSOLDAT                }
-{                                                       }
-{       Copyright (c) 2012 Daniel Forssten              }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       SharedConfig Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2012      Daniel Forssten               }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit SharedConfig;
 
 interface
 
 uses
+  // Project units
   Sprites;
 
+
 {$IFDEF SERVER}
-function LoadBotConfig(const FilePath: string; var SpriteC: TSprite): Boolean;
+function  LoadBotConfig(const FilePath: string; var SpriteC: TSprite): Boolean;
 {$ENDIF}
-function LoadWeaponsConfig(const FilePath: string): Boolean;
+function  LoadWeaponsConfig(const FilePath: string): Boolean;
+
 
 implementation
 
 uses
-  Game, IniFiles, Classes, SysUtils, StrUtils, Math,
-  Util, Server, Net, Weapons, Constants;
+  // System units
+  Classes,
+  Math,
+  StrUtils,
+  SysUtils,
+
+  // Library units
+  IniFiles,
+
+  // Helper units
+  Util,
+
+  // Project units
+  Constants,
+  Game,
+  Net,
+  Server,
+  Weapons;
+
 
 procedure ReadConfColor(conf: TStringList; const SectionName: string; var VarName: LongWord); overload;
 begin
@@ -155,6 +176,8 @@ begin
 
       ReadConf(conf, 'Favourite_Weapon', FavWeaponName);
       SpriteC.Brain.FavWeapon := WeaponNameToNum(FavWeaponName);
+      if SpriteC.Brain.FavWeapon = -1 then
+        Exit;
       ReadConf(conf, 'Secondary_Weapon', SpriteC.Player.SecWep);
       ReadConf(conf, 'Friend', SpriteC.Brain.Friend, True);
       ReadConf(conf, 'Accuracy', SpriteC.Brain.Accuracy);

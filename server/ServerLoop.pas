@@ -1,27 +1,61 @@
+{*************************************************************}
+{                                                             }
+{       ServerLoop Unit for OpenSoldat                        }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ServerLoop;
 
 interface
 
+
 procedure UpdateFrame;
 procedure AppOnIdle;
+
 
 implementation
 
 uses
-  {$IFDEF SCRIPT}
-  ScriptDispatcher,
-  {$ENDIF}
+  // System units
+  Classes,
+  SysUtils,
+
+  // Helper units
+  LogFile,
+  TraceLog,
+  Vector,
+
+  // Project units
+  BanSystem,
+  Constants,
+  Cvar,
+  Demo,
+  Game,
+  LobbyClient,
+  Net,
   {$IFDEF ENABLE_FAE}
-  NetworkServerFae,
+    NetworkServerFae,
   {$ENDIF}
-  Server, Game, TraceLog, Constants, LogFile, BanSystem,
-  sysutils, Sprites, Net, Things, Vector, ServerHelper,
-  classes, Demo, Weapons, Cvar, LobbyClient,
-  NetworkServerGame, NetworkServerSprite, NetworkServerThing,
-  NetworkServerConnection, NetworkServerHeartbeat;
+  NetworkServerConnection,
+  NetworkServerGame,
+  NetworkServerHeartbeat,
+  NetworkServerSprite,
+  NetworkServerThing,
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  Server,
+  ServerHelper,
+  Sprites,
+  Things,
+  Weapons;
+
 
 var
   LastMinuteTick: QWord = 0;
+
 
 procedure AppOnIdle;
 var
@@ -91,7 +125,7 @@ begin
 
     // Flood Nums Cancel
     if MainTickCounter mod 1000 = 0 then
-      for j := 1 to MAX_FLOODIPS do
+      for j := Low(FloodNum) to High(FloodNum) do
         FloodNum[j] := 0;
 
     // Warnings Cancel
@@ -106,7 +140,7 @@ begin
       end;
 
     if MainTickCounter mod 1000 = 0 then
-      for j := 1 to MAX_PLAYERS do
+      for j := Low(Sprite) to High(Sprite) do
         if Sprite[j].Active then
           Sprite[j].Player.KnifeWarnings := 0;
 
@@ -295,7 +329,7 @@ begin
       if not LauncherIPC.ThreadAlive and (MainTickCounter mod launcher_ipc_reconnect_rate.Value = 0) then
          LauncherIPC.Connect(launcher_ipc_port.Value);
 
-      //UDP.FlushMsg;
+    //UDP.FlushMsg;  // TODO: is this necessary?
   end;
 end;
 
@@ -326,7 +360,7 @@ begin
         if Sprite[j].IsNotSpectator() then
           SpriteParts.DoEulerTimeStepFor(j);  // integrate sprite particles
 
-    for j := 1 to MAX_SPRITES do
+    for j := Low(Sprite) to High(Sprite) do
       if Sprite[j].Active then
         Sprite[j].Update;  // update sprite
 

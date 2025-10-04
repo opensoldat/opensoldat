@@ -1,16 +1,13 @@
-{*******************************************************}
-{                                                       }
-{       OPENSOLDAT                                      }
-{                                                       }
-{       Copyright (c) 2001 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       OpenSoldat Client                                     }
+{                                                             }
+{       Copyright (c) 2001      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 program opensoldat;
-
-{$IFDEF MSWINDOWS}
-{$APPTYPE CONSOLE}
-{$ENDIF}
 
 {$IFDEF DARWIN}
 {$linklib freetype}
@@ -24,10 +21,15 @@ uses
   cthreads,
   cwstring,
   {$ENDIF}
-  {$IFDEF MSWINDOWS}Windows,{$ENDIF}
+  {$IFDEF MSWINDOWS}
+  Windows,
+  {$ENDIF}
   SysUtils,
-  {$IFDEF AUTOUPDATER}AutoUpdater,{$ENDIF}
+  {$IFDEF AUTOUPDATER}
+  AutoUpdater,
+  {$ENDIF}
   Client in 'Client.pas';
+
 
 {$IFDEF MSWINDOWS}
 const

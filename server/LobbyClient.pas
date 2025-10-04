@@ -1,12 +1,26 @@
+{*************************************************************}
+{                                                             }
+{       LobbyClient Unit for OpenSoldat                       }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit LobbyClient;
 
 interface
 
 uses
-  SysUtils, Classes, fpjson, fphttpclient, Constants;
+  // System units
+  Classes,
+  SysUtils,
+
+  // Library units
+  fpjson,
+  fphttpclient;
+
 
 type
-
   TLobbyThread = Class(TThread)
     private
       FData: TStringStream;
@@ -18,10 +32,24 @@ type
       constructor Create();
   end;
 
+
 implementation
-  uses Server, Game, Sprites, Version, Weapons, Net, TraceLog;
+
+uses
+  // Helper units
+  TraceLog,
+  Version,
+
+  // Project units
+  Game,
+  Net,
+  Server,
+  Sprites,
+  Weapons;
+
 
 constructor TLobbyThread.Create();
+
 
 function GetOS(): Integer;
 begin

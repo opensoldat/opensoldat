@@ -1,9 +1,22 @@
+{*************************************************************}
+{                                                             }
+{       GameRendering Unit for OpenSoldat                     }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit GameRendering;
 
 interface
 
 uses
-  Gfx, SDL2;
+  // Library units
+  SDL2,
+
+  // Project units
+  Gfx;
+
 
 type
   TGameRenderingParams = record
@@ -23,28 +36,61 @@ const
 var
   GameRenderingParams: TGameRenderingParams;
   Textures: TGfxSpriteArray;
+  ActualZoom: Single = 0.0;
 
-function InitGameGraphics: Boolean;
-procedure ReloadGraphics;
+function  InitGameGraphics(): Boolean;
+procedure ReloadGraphics();
 procedure DestroyGameGraphics();
 procedure RenderFrame(TimeElapsed, FramePercent: Extended; Paused: Boolean);
 procedure RenderGameInfo(TextString: WideString);
-function DoTextureLoading(FinishLoading: Boolean = False): Boolean;
+function  DoTextureLoading(FinishLoading: Boolean = False): Boolean;
 procedure SetFontStyle(Style: Integer); overload;
 procedure SetFontStyle(Style: Integer; Scale: Single); overload;
-function FontStyleSize(Style: Integer): Single;
+function  FontStyleSize(Style: Integer): Single;
 procedure TakeScreenshot(Filename: string; Async: Boolean = True);
-procedure FillCaseInsensitiveImageMap;
-function FindImagePath(const Filename: string): string;
+procedure FillCaseInsensitiveImageMap();
+function  FindImagePath(const Filename: string): string;
+function  EaseZoom(Current, Goal: Single): Single;
+
 
 implementation
 
 uses
+  // System units
+  Classes,
+  Contnrs,
+  Math,
+  SysUtils,
+
+  // Library units
+  IniFiles,
+  PhysFS,
+
+  // Helper units
+  TraceLog,
+  Util,
+  Vector,
+  {$IFDEF TESTING}
+    Version,
+  {$ENDIF}
+
+  // Project units
   Client,
-  Math, SysUtils, IniFiles, Classes, Contnrs,
-  Constants, Sprites, Parts, Game, Weapons, PolyMap, MapFile, Vector, Util,
-  InterfaceGraphics, ClientGame, GameStrings, GostekGraphics, Input,
-  PhysFS, Cvar, MapGraphics, TraceLog {$IFDEF TESTING},  Version{$ENDIF};
+  ClientGame,
+  Constants,
+  Cvar,
+  Game,
+  GameStrings,
+  GostekGraphics,
+  Input,
+  InterfaceGraphics,
+  MapFile,
+  MapGraphics,
+  Parts,
+  PolyMap,
+  Sprites,
+  Weapons;
+
 
 type
   TTextureLoadData = record
@@ -100,6 +146,7 @@ var
     CurrentMod: TStringList;
     CustomInterface: TStringList;
   end;
+
 
 procedure LoadModInfo();
 var
@@ -238,38 +285,44 @@ begin
   CaseInsensitiveImageMap.Clear();
 
   ImageDirs := TStringArray.Create(
-    'scenery-gfx/',
+                'scenery-gfx/',
     'current_map/scenery-gfx/',
-    'textures/',
-    'textures/edges/',
-    'textures/objects/',
+
+                'textures/',
+                'textures/edges/',
+                'textures/objects/',
     'current_map/textures/',
     'current_map/textures/edges/',
-    ModDir + 'textures/',
-    ModDir + 'textures/edges/',
-    ModDir + 'textures/objects/',
-    'gostek-gfx/',
-    'gostek-gfx/ranny/',
-    'gostek-gfx/team2/',
-    'gostek-gfx/team2/ranny/',
-    ModDir + 'gostek-gfx/',
-    ModDir + 'gostek-gfx/ranny/',
-    ModDir + 'gostek-gfx/team2/',
-    ModDir + 'gostek-gfx/team2/ranny/',
-    'weapons-gfx/',
-    ModDir + 'weapons-gfx/',
-    'sparks-gfx/',
-    'sparks-gfx/explosion/',
-    'sparks-gfx/flames/',
-    ModDir + 'sparks-gfx/',
-    ModDir + 'sparks-gfx/explosion/',
-    ModDir + 'sparks-gfx/flames/',
-    'interface-gfx/',
-    'interface-gfx/guns/',
-    ModDir + 'interface-gfx/',
-    ModDir + 'interface-gfx/guns/',
-    'objects-gfx/',
-    ModDir + 'objects-gfx/'
+    ModDir +    'textures/',
+    ModDir +    'textures/edges/',
+    ModDir +    'textures/objects/',
+
+                'gostek-gfx/',
+                'gostek-gfx/ranny/',
+                'gostek-gfx/team2/',
+                'gostek-gfx/team2/ranny/',
+    ModDir +    'gostek-gfx/',
+    ModDir +    'gostek-gfx/ranny/',
+    ModDir +    'gostek-gfx/team2/',
+    ModDir +    'gostek-gfx/team2/ranny/',
+
+                'weapons-gfx/',
+    ModDir +    'weapons-gfx/',
+
+                'sparks-gfx/',
+                'sparks-gfx/explosion/',
+                'sparks-gfx/flames/',
+    ModDir +    'sparks-gfx/',
+    ModDir +    'sparks-gfx/explosion/',
+    ModDir +    'sparks-gfx/flames/',
+
+                'interface-gfx/',
+                'interface-gfx/guns/',
+    ModDir +    'interface-gfx/',
+    ModDir +    'interface-gfx/guns/',
+
+                'objects-gfx/',
+    ModDir +    'objects-gfx/'
   );
 
   for ImageDir in ImageDirs do
@@ -297,6 +350,17 @@ begin
     Result := CaseInsensitiveImageMap[Png]
   else if CaseInsensitiveImageMap[Orig] <> '' then
     Result := CaseInsensitiveImageMap[Orig]
+  else if PHYSFS_exists(PChar(Png)) then
+    Result := Png;
+end;
+
+function EaseZoom(Current, Goal: Single): Single;
+const
+  EPSILON = 0.01;
+begin
+  Result := Current + (Goal - Current) / 4;
+  if Abs(Goal - Result) < EPSILON then
+    Result := Goal;
 end;
 
 procedure LoadMainTextures();
@@ -482,41 +546,41 @@ begin
   Fonts[1] := GfxCreateFont(FontPath[1], Npot(w div 2), Npot(h div 2));
   Fonts[2] := GfxCreateFont(FontPath[2], Npot(w div 3), Npot(h div 3));
 
-  FontStyles[FONT_SMALL].Font := Fonts[2];
-  FontStyles[FONT_SMALL].Size := s * font_consolesize.Value;
+  FontStyles[FONT_SMALL].Font    := Fonts[2];
+  FontStyles[FONT_SMALL].Size    := s * font_consolesize.Value;
   FontStyles[FONT_SMALL].Stretch := font_2_scale.Value / 100;
-  FontStyles[FONT_SMALL].Flags := 0;
+  FontStyles[FONT_SMALL].Flags   := 0;
 
   // bold not supported for now so same as FONT_SMALL
-  FontStyles[FONT_SMALL_BOLD].Font := Fonts[2];
-  FontStyles[FONT_SMALL_BOLD].Size := s * font_consolesize.Value;
+  FontStyles[FONT_SMALL_BOLD].Font    := Fonts[2];
+  FontStyles[FONT_SMALL_BOLD].Size    := s * font_consolesize.Value;
   FontStyles[FONT_SMALL_BOLD].Stretch := font_2_scale.Value / 100;
-  FontStyles[FONT_SMALL_BOLD].Flags := 0;
+  FontStyles[FONT_SMALL_BOLD].Flags   := 0;
 
-  FontStyles[FONT_SMALLEST].Font := Fonts[2];
-  FontStyles[FONT_SMALLEST].Size := s * font_consolesmallsize.Value;;
+  FontStyles[FONT_SMALLEST].Font    := Fonts[2];
+  FontStyles[FONT_SMALLEST].Size    := s * font_consolesmallsize.Value;;
   FontStyles[FONT_SMALLEST].Stretch := font_2_scale.Value / 100;
-  FontStyles[FONT_SMALLEST].Flags := 0;
+  FontStyles[FONT_SMALLEST].Flags   := 0;
 
-  FontStyles[FONT_BIG].Font := Fonts[1];
-  FontStyles[FONT_BIG].Size := font_bigsize.Value;
+  FontStyles[FONT_BIG].Font    := Fonts[1];
+  FontStyles[FONT_BIG].Size    := font_bigsize.Value;
   FontStyles[FONT_BIG].Stretch := font_1_scale.Value / 100;
-  FontStyles[FONT_BIG].Flags := 0;
+  FontStyles[FONT_BIG].Flags   := 0;
 
-  FontStyles[FONT_MENU].Font := Fonts[1];
-  FontStyles[FONT_MENU].Size := s * font_menusize.Value;
+  FontStyles[FONT_MENU].Font    := Fonts[1];
+  FontStyles[FONT_MENU].Size    := s * font_menusize.Value;
   FontStyles[FONT_MENU].Stretch := font_1_scale.Value / 100;
-  FontStyles[FONT_MENU].Flags := 0;
+  FontStyles[FONT_MENU].Flags   := 0;
 
-  FontStyles[FONT_WEAPONS_MENU].Font := Fonts[2];
-  FontStyles[FONT_WEAPONS_MENU].Size := s * font_weaponmenusize.Value;;
+  FontStyles[FONT_WEAPONS_MENU].Font    := Fonts[2];
+  FontStyles[FONT_WEAPONS_MENU].Size    := s * font_weaponmenusize.Value;;
   FontStyles[FONT_WEAPONS_MENU].Stretch := font_2_scale.Value / 100;
-  FontStyles[FONT_WEAPONS_MENU].Flags := 0;
+  FontStyles[FONT_WEAPONS_MENU].Flags   := 0;
 
-  FontStyles[FONT_WORLD].Font := Fonts[1];
-  FontStyles[FONT_WORLD].Size := 128 * (RenderHeight / GameHeight);
+  FontStyles[FONT_WORLD].Font    := Fonts[1];
+  FontStyles[FONT_WORLD].Size    := 128 * (RenderHeight / GameHeight);
   FontStyles[FONT_WORLD].Stretch := font_1_scale.Value / 100;
-  FontStyles[FONT_WORLD].Flags := 0;
+  FontStyles[FONT_WORLD].Flags   := 0;
 
   for i := Low(FontStyles) to High(FontStyles) do
   begin
@@ -589,7 +653,7 @@ begin
       ShowMessage('Error creating sdl2 window');
       Result := False;
       Exit;
-     end;
+    end;
 
   if not GfxInitContext(GameWindow, r_dithering.Value, r_compatibility.Value) then
   begin
@@ -867,7 +931,7 @@ var
 begin
   mg := @MapGfx;
 
-  // graphics might be destroyed before end of game loop
+  // Graphics might be destroyed before end of game loop
   if mg.VertexBuffer = nil then
     Exit;
 
@@ -923,8 +987,8 @@ begin
     InterpolationState := Default(TInterpolationState);
     InterpolateState(FramePercent, InterpolationState, Paused);
 
-    w := exp(r_zoom.Value) * GameWidth;
-    h := exp(r_zoom.Value) * GameHeight;
+    w := exp(ActualZoom) * GameWidth;
+    h := exp(ActualZoom) * GameHeight;
 
     dx := CameraX - w / 2;
     dy := CameraY - h / 2;
@@ -997,6 +1061,11 @@ begin
     begin
       w := RenderWidth;
       h := RenderHeight;
+    end
+    else
+    begin
+      w := GameWidth;
+      h := GameHeight;
     end;
 
     if GrabActionSnap then
@@ -1162,7 +1231,7 @@ var
   MainLoading, InterfaceLoading: Boolean;
   s: string;
 begin
-  Result := True; // return true when not loading
+  Result := True;  // Return true when not loading
 
   if (MainSpritesheet = nil) or (InterfaceSpritesheet = nil) then
     Exit;
@@ -1290,4 +1359,5 @@ end;
 
 initialization
   GfxLog := @GfxLogCallback;
+
 end.

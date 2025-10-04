@@ -1,125 +1,131 @@
 //from "sdl_events.h"
 
+type
+  PSDL_EventType = ^TSDL_EventType;
+  TSDL_EventType = type UInt32;
+
   {**
    *  The types of events that can be delivered.
    *}
-
 const
 
   { General keyboard/mouse state definitions }
   SDL_RELEASED         = 0;
   SDL_PRESSED          = 1;
 
-  SDL_FIRSTEVENT       = 0;     // Unused (do not remove) (needed in pascal?)
+  SDL_FIRSTEVENT       = TSDL_EventType(0);     // Unused (do not remove) (needed in pascal?)
 
-  SDL_COMMONEVENT      = 1;     //added for pascal-compatibility
+  SDL_COMMONEVENT      = TSDL_EventType(1);     //added for pascal-compatibility
 
   { Application events }
-  SDL_QUITEV           = $100;  // User-requested quit (originally SDL_QUIT, but changed, cause theres a method called SDL_QUIT)
+  SDL_QUITEV           = TSDL_EventType($100);  // User-requested quit (originally SDL_QUIT, but changed, cause theres a method called SDL_QUIT)
 
 
-  {* These application events have special meaning on iOS, see README.iOS for details *}
-  SDL_APP_TERMINATING  = $101;   {**< The application is being terminated by the OS
-                                      Called on iOS in applicationWillTerminate()
-                                      Called on Android in onDestroy()
-                                  *}
-  SDL_APP_LOWMEMORY    = $102;   {**< The application is low on memory, free memory if possible.
-                                      Called on iOS in applicationDidReceiveMemoryWarning()
-                                      Called on Android in onLowMemory()
-                                  *}
-  SDL_APP_WILLENTERBACKGROUND = $103; {**< The application is about to enter the background
-                                           Called on iOS in applicationWillResignActive()
-                                           Called on Android in onPause()
-                                       *}
-  SDL_APP_DIDENTERBACKGROUND = $104;  {**< The application did enter the background and may not get CPU for some time
-                                           Called on iOS in applicationDidEnterBackground()
-                                           Called on Android in onPause()
-                                       *}
-  SDL_APP_WILLENTERFOREGROUND = $105; {**< The application is about to enter the foreground
-                                           Called on iOS in applicationWillEnterForeground()
-                                           Called on Android in onResume()
-                                       *}
-  SDL_APP_DIDENTERFOREGROUND = $106;  {**< The application is now interactive
-                                           Called on iOS in applicationDidBecomeActive()
-                                           Called on Android in onResume()
-                                       *}
+  { These application events have special meaning on iOS, see README.iOS for details *}
+  
+  {* The application is being terminated by the OS. *
+   * Called on iOS in applicationWillTerminate()    *
+   * Called on Android in onDestroy()               *}
+  SDL_APP_TERMINATING  = TSDL_EventType($101);
+
+  {* The application is low on memory, free memory if possible. *
+   * Called on iOS in applicationDidReceiveMemoryWarning()      *
+   * Called on Android in onLowMemory()                         *}
+  SDL_APP_LOWMEMORY    = TSDL_EventType($102);
+
+  {* The application is about to enter the background. *
+   * Called on iOS in applicationWillResignActive()    *
+   * Called on Android in onPause()                    *}
+  SDL_APP_WILLENTERBACKGROUND = TSDL_EventType($103);
+  
+  {* The application did enter the background and may not get CPU for some time. *
+   * Called on iOS in applicationDidEnterBackground()                            *
+   * Called on Android in onPause()                                              *}
+  SDL_APP_DIDENTERBACKGROUND = TSDL_EventType($104);
+  
+  {* The application is about to enter the foreground. *
+   * Called on iOS in applicationWillEnterForeground() *
+   * Called on Android in onResume()                   *}
+  SDL_APP_WILLENTERFOREGROUND = TSDL_EventType($105);
+  
+  {* The application is now interactive.           *
+   * Called on iOS in applicationDidBecomeActive() *
+   * Called on Android in onResume()               *}
+  SDL_APP_DIDENTERFOREGROUND = TSDL_EventType($106); 
+
 
   { Window events }
-  SDL_WINDOWEVENT      = $200;  // Window state change
-  SDL_SYSWMEVENT       = $201;  // System specific event
+  SDL_WINDOWEVENT      = TSDL_EventType($200);  // Window state change
+  SDL_SYSWMEVENT       = TSDL_EventType($201);  // System specific event
 
   { Keyboard events }
-  SDL_KEYDOWN          = $300;  // Key pressed
-  SDL_KEYUP            = $301;  // Key released
-  SDL_TEXTEDITING      = $302;  // Keyboard text editing (composition)
-  SDL_TEXTINPUT        = $303;  // Keyboard text input
-  SDL_KEYMAPCHANGED    = $304;  // Keymap changed due to a system event such as an
-                                // input language or keyboard layout change.
+  SDL_KEYDOWN          = TSDL_EventType($300);  // Key pressed
+  SDL_KEYUP            = TSDL_EventType($301);  // Key released
+  SDL_TEXTEDITING      = TSDL_EventType($302);  // Keyboard text editing (composition)
+  SDL_TEXTINPUT        = TSDL_EventType($303);  // Keyboard text input
+  SDL_KEYMAPCHANGED    = TSDL_EventType($304);  // Keymap changed due to a system event such as an input language or keyboard layout change.
 
   { Mouse events }
-  SDL_MOUSEMOTION      = $400;  // Mouse moved
-  SDL_MOUSEBUTTONDOWN  = $401;  // Mouse button pressed
-  SDL_MOUSEBUTTONUP    = $402;  // Mouse button released
-  SDL_MOUSEWHEEL       = $403;  // Mouse wheel motion
+  SDL_MOUSEMOTION      = TSDL_EventType($400);  // Mouse moved
+  SDL_MOUSEBUTTONDOWN  = TSDL_EventType($401);  // Mouse button pressed
+  SDL_MOUSEBUTTONUP    = TSDL_EventType($402);  // Mouse button released
+  SDL_MOUSEWHEEL       = TSDL_EventType($403);  // Mouse wheel motion
 
   { Joystick events }
-  SDL_JOYAXISMOTION    = $600;  // Joystick axis motion
-  SDL_JOYBALLMOTION    = $601;  // Joystick trackball motion
-  SDL_JOYHATMOTION     = $602;  // Joystick hat position change
-  SDL_JOYBUTTONDOWN    = $603;  // Joystick button pressed
-  SDL_JOYBUTTONUP      = $604;  // Joystick button released
-  SDL_JOYDEVICEADDED   = $605;  // A new joystick has been inserted into the system 
-  SDL_JOYDEVICEREMOVED = $606;  // An opened joystick has been removed 
+  SDL_JOYAXISMOTION    = TSDL_EventType($600);  // Joystick axis motion
+  SDL_JOYBALLMOTION    = TSDL_EventType($601);  // Joystick trackball motion
+  SDL_JOYHATMOTION     = TSDL_EventType($602);  // Joystick hat position change
+  SDL_JOYBUTTONDOWN    = TSDL_EventType($603);  // Joystick button pressed
+  SDL_JOYBUTTONUP      = TSDL_EventType($604);  // Joystick button released
+  SDL_JOYDEVICEADDED   = TSDL_EventType($605);  // A new joystick has been inserted into the system 
+  SDL_JOYDEVICEREMOVED = TSDL_EventType($606);  // An opened joystick has been removed 
 
   { Game controller events }
-  SDL_CONTROLLERAXISMOTION     = $650;  // Game controller axis motion
-  SDL_CONTROLLERBUTTONDOWN     = $651;  // Game controller button pressed 
-  SDL_CONTROLLERBUTTONUP       = $652;  // Game controller button released
-  SDL_CONTROLLERDEVICEADDED    = $653;  // A new Game controller has been inserted into the system 
-  SDL_CONTROLLERDEVICEREMOVED  = $654;  // An opened Game controller has been removed 
-  SDL_CONTROLLERDEVICEREMAPPED = $655;  // The controller mapping was updated 
+  SDL_CONTROLLERAXISMOTION     = TSDL_EventType($650);  // Game controller axis motion
+  SDL_CONTROLLERBUTTONDOWN     = TSDL_EventType($651);  // Game controller button pressed 
+  SDL_CONTROLLERBUTTONUP       = TSDL_EventType($652);  // Game controller button released
+  SDL_CONTROLLERDEVICEADDED    = TSDL_EventType($653);  // A new Game controller has been inserted into the system 
+  SDL_CONTROLLERDEVICEREMOVED  = TSDL_EventType($654);  // An opened Game controller has been removed 
+  SDL_CONTROLLERDEVICEREMAPPED = TSDL_EventType($655);  // The controller mapping was updated 
    
   { Touch events }
-  SDL_FINGERDOWN      = $700;
-  SDL_FINGERUP        = $701;
-  SDL_FINGERMOTION    = $702;
+  SDL_FINGERDOWN      = TSDL_EventType($700);
+  SDL_FINGERUP        = TSDL_EventType($701);
+  SDL_FINGERMOTION    = TSDL_EventType($702);
 
   { Gesture events }
-  SDL_DOLLARGESTURE   = $800;
-  SDL_DOLLARRECORD    = $801;
-  SDL_MULTIGESTURE    = $802;
+  SDL_DOLLARGESTURE   = TSDL_EventType($800);
+  SDL_DOLLARRECORD    = TSDL_EventType($801);
+  SDL_MULTIGESTURE    = TSDL_EventType($802);
 
   { Clipboard events }
-  SDL_CLIPBOARDUPDATE = $900; // The clipboard changed
+  SDL_CLIPBOARDUPDATE = TSDL_EventType($900); // The clipboard changed
 
   { Drag and drop events }
-  SDL_DROPFILE        = $1000; // The system requests a file open
-  SDL_DROPTEXT        = $1001; // text/plain drag-and-drop event
-  SDL_DROPBEGIN       = $1002; // A new set of drops is beginning (NULL filename)
-  SDL_DROPCOMPLETE    = $1003; // Current set of drops is now complete (NULL filename)
+  SDL_DROPFILE        = TSDL_EventType($1000); // The system requests a file open
+  SDL_DROPTEXT        = TSDL_EventType($1001); // text/plain drag-and-drop event
+  SDL_DROPBEGIN       = TSDL_EventType($1002); // A new set of drops is beginning (NULL filename)
+  SDL_DROPCOMPLETE    = TSDL_EventType($1003); // Current set of drops is now complete (NULL filename)
 
   { Audio hotplug events }
-  SDL_AUDIODEVICEADDED     = $1100; // A new audio device is available
-  SDL_AUDIODEVICEREMOVED   = $1101; // An audio device has been removed.
+  SDL_AUDIODEVICEADDED     = TSDL_EventType($1100); // A new audio device is available
+  SDL_AUDIODEVICEREMOVED   = TSDL_EventType($1101); // An audio device has been removed.
 
   { Render events }
-  SDL_RENDER_TARGETS_RESET = $2000; // The render targets have been reset
-  SDL_RENDER_DEVICE_RESET  = $2001; // The device has been reset and all textures need to be recreated
+  SDL_RENDER_TARGETS_RESET = TSDL_EventType($2000); // The render targets have been reset
+  SDL_RENDER_DEVICE_RESET  = TSDL_EventType($2001); // The device has been reset and all textures need to be recreated
   
   {** Events SDL_USEREVENT through SDL_LASTEVENT are for your use,
    *  and should be allocated with SDL_RegisterEvents()
    *}
-  SDL_USEREVENT    = $8000;
+  SDL_USEREVENT    = TSDL_EventType($8000);
 
   {**
    *  This last event is only for bounding internal arrays (needed in pascal ??)
    *}
-  SDL_LASTEVENT    = $FFFF;
+  SDL_LASTEVENT    = TSDL_EventType($FFFF);
 
 type
-
-  TSDL_EventType = Word;
-
   {**
    *  Fields shared by every event
    *}
@@ -561,21 +567,21 @@ type
    *  This function is thread-safe.
    *}
 
-  function SDL_PeepEvents(events: PSDL_Event; numevents: SInt32; action: TSDL_EventAction; minType: UInt32; maxType: UInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_PeepEvents' {$ENDIF} {$ENDIF};
+  function SDL_PeepEvents(events: PSDL_Event; numevents: SInt32; action: TSDL_EventAction; minType, maxType: TSDL_EventType): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_PeepEvents' {$ENDIF} {$ENDIF};
 
   {**
    *  Checks to see if certain event types are in the event queue.
    *}
 
-  function SDL_HasEvent(type_: UInt32): TSDL_Bool  cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_HasEvent' {$ENDIF} {$ENDIF};
-  function SDL_HasEvents(minType: UInt32; maxType: UInt32): TSDL_Bool cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_HasEvents' {$ENDIF} {$ENDIF};
+  function SDL_HasEvent(type_: TSDL_EventType): TSDL_Bool  cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_HasEvent' {$ENDIF} {$ENDIF};
+  function SDL_HasEvents(minType, maxType: TSDL_EventType): TSDL_Bool cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_HasEvents' {$ENDIF} {$ENDIF};
 
   {**
    *  This function clears events from the event queue
    *}
 
-  procedure SDL_FlushEvent(type_: UInt32) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_FlushEvent' {$ENDIF} {$ENDIF};
-  procedure SDL_FlushEvents(minType: UInt32; maxType: UInt32) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_FlushEvents' {$ENDIF} {$ENDIF};
+  procedure SDL_FlushEvent(type_: TSDL_EventType) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_FlushEvent' {$ENDIF} {$ENDIF};
+  procedure SDL_FlushEvents(minType, maxType: TSDL_EventType) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_FlushEvents' {$ENDIF} {$ENDIF};
 
   {**
    *  Polls for currently pending events.
@@ -623,7 +629,7 @@ type
 type
   PSDL_EventFilter = ^TSDL_EventFilter;
   {$IFNDEF GPC}
-    TSDL_EventFilter = function( userdata: Pointer; event: PSDL_Event ): Integer; cdecl;
+    TSDL_EventFilter = function(userdata: Pointer; event: PSDL_Event): Integer; cdecl;
   {$ELSE}
     TSDL_EventFilter = function( userdata: Pointer; event: PSDL_Event ): Integer;
   {$ENDIF}
@@ -694,9 +700,9 @@ const
    *     current processing state of the specified event.
    *}
 
-  function SDL_EventState(type_: UInt32; state: SInt32): UInt8 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_EventState' {$ENDIF} {$ENDIF};
+  function SDL_EventState(type_: TSDL_EventType; state: SInt32): UInt8 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_EventState' {$ENDIF} {$ENDIF};
 
-  function SDL_GetEventState(type_: UInt32): UInt8;
+  function SDL_GetEventState(type_: TSDL_EventType): UInt8;
 
   {**
    *  This function allocates a set of user-defined events, and returns

@@ -1,61 +1,81 @@
-{*******************************************************}
-{                                                       }
-{       Main Unit for OPENSOLDAT                        }
-{                                                       }
-{       Copyright (c) 2002 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Server Unit for OpenSoldat                            }
+{                                                             } 
+{       Copyright (c) 2002      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Server;
 
 interface
 
 uses
-  // system and delphi units
-  SysUtils, Classes, Variants,
+  // System units
+  SysUtils,
+  Classes,
+  Variants,
+  Math,
   {$IFNDEF MSWINDOWS}
-  Baseunix,
+    Baseunix,
   {$ENDIF}
-
-  // helper units
-  Vector, Util, Sha1,
-
-  // Cvar units
-  Cvar, Command,
-
-  // scripting units
-  {$IFDEF SCRIPT}
-  ScriptDispatcher,
-  {$ENDIF}
-
   {$IFDEF STEAM}
-  typinfo,
+    TypInfo,
   {$ENDIF}
 
+  // Library units
+  PhysFS,
+  sha1,
+  Steam,
+
+  // Helper units
+  Vector,
+  Util,
+  Constants,
+  LogFile,
+  Version,
+
+  // Project units
+  Anims,
+  BanSystem,
+  Command,
+  Console,
+  Cvar,
+  FileServer,
+  Game,
+  LobbyClient,
+  Net,
+  NetworkServerConnection,
+  NetworkServerGame,
+  NetworkServerSprite,
+  NetworkUtils,
+  PolyMap,
   {$IFDEF RCON}
-  Rcon,
+    Rcon,
   {$ENDIF}
+  {$IFDEF SCRIPT}
+    ScriptDispatcher,
+  {$ENDIF}
+  ServerCommands,
+  ServerHelper,
+  ServerLauncherIPC,
+  SharedConfig,
+  Sprites,
+  Things;
 
-  FileServer, LobbyClient, ServerLauncherIPC,
-
-  // OpenSoldat units
-  Steam, Net, NetworkUtils,
-  NetworkServerSprite, NetworkServerConnection, NetworkServerGame,
-  ServerCommands, PhysFS, Console, ServerHelper,
-  Sprites, Anims, PolyMap, SharedConfig, Game, Things,
-  BanSystem, LogFile, Version, Constants;
 
 procedure ActivateServer;
-function AddBotPlayer(Name: string; team: Integer): Byte;
+function  AddBotPlayer(Name: string; team: Integer): Byte;
 procedure StartServer;
-function LoadMapsList(Filename: string = ''): Boolean;
+function  LoadMapsList(Filename: string = ''): Boolean;
 procedure LoadWeapons(filename: string);
 procedure ShutDown;
 procedure NextMap;
 procedure SpawnThings(style, amount: Byte);
-function KickPlayer(num: Byte; Ban: Boolean; why: Integer; time: Integer;
+function  KickPlayer(num: Byte; Ban: Boolean; why: Integer; time: Integer;
   Reason: string = ''): Boolean;  // True if kicked
-function PrepareMapChange(Name: String): Boolean;
+function  PrepareMapChange(Name: String): Boolean;
 {$IFDEF STEAM}
 {$IFDEF STEAMSTATS}
 procedure RequestUserStats(Player: CSteamID);
@@ -65,7 +85,8 @@ procedure StoreStats(Player: CSteamID);
 procedure RunManualCallbacks;
 {$ENDIF}
 
-const PATH_MAX = 4095;
+const
+  PATH_MAX = 4095;
 
 var
   ProgReady: Boolean = False;
@@ -79,7 +100,6 @@ var
   log_filesupdate: TIntegerCvar;
   log_timestamp: TBooleanCvar;
 
-  fs_localmount: TBooleanCvar;
   fs_mod: TStringCvar;
   fs_portable: TBooleanCvar;
   fs_basepath: TStringCvar;
@@ -87,7 +107,7 @@ var
 
   demo_autorecord: TBooleanCvar;
 
-  sv_respawntime: TIntegerCvar;
+  sv_respawntime:         TIntegerCvar;
   sv_respawntime_minwave: TIntegerCvar;
   sv_respawntime_maxwave: TIntegerCvar;
 
@@ -96,11 +116,11 @@ var
   sv_tm_limit: TIntegerCvar;
   sv_rm_limit: TIntegerCvar;
 
-  sv_inf_redaward: TIntegerCvar;
-  sv_inf_limit: TIntegerCvar;
+  sv_inf_redaward:  TIntegerCvar;
+  sv_inf_limit:     TIntegerCvar;
   sv_inf_bluelimit: TIntegerCvar;
 
-  sv_htf_limit: TIntegerCvar;
+  sv_htf_limit:      TIntegerCvar;
   sv_htf_pointstime: TIntegerCvar;
 
   sv_ctf_limit: TIntegerCvar;
@@ -247,8 +267,8 @@ var
   MuteName: array[1..MAX_PLAYERS] of string;
 
   // TK array
-  TKList: array[1..MAX_PLAYERS] of ShortString;  // IP
-  TKListKills: array[1..MAX_PLAYERS] of Byte;    // TK Warnings
+  TKList:      array[1..MAX_PLAYERS] of ShortString;  // IP
+  TKListKills: array[1..MAX_PLAYERS] of Byte;         // TK Warnings
 
   TCPBytesSent: Int64;
   TCPBytesReceived: Int64;
@@ -258,10 +278,10 @@ var
 
   RemoteIPs, AdminIPs: TStrings;
 
-  FloodIP: array[1..1000] of ShortString;
-  FloodNum: array[1..1000] of Integer;
+  FloodIP:  array[1..MAX_FLOODIPS] of ShortString;
+  FloodNum: array[1..MAX_FLOODIPS] of Integer;
 
-  LastReqIP: array[0..3] of ShortString; // last 4 IP's to request game
+  LastReqIP: array[0..3] of ShortString;  // last 4 IP's to request game
   LastReqID: Byte = 0;
   DropIP: ShortString = '';
 
@@ -286,8 +306,6 @@ var
   WMName, WMVersion: string;
   LastWepMod: string;
 
-  Grav: Single = 0.06;
-
   ModDir: string = '';
 
   UDP: TServerNetwork;
@@ -301,10 +319,15 @@ var
   SteamAPI: TSteamGS;
   {$ENDIF}
 
+
 implementation
 
 uses
-  Weapons, TraceLog;
+  // Helper units
+  TraceLog,
+
+  // Project units
+  Weapons;
 
 
 {$IFNDEF MSWINDOWS}
@@ -517,6 +540,11 @@ begin
 end;
 {$ENDIF}
 
+procedure WriteLnCenter(s: string);
+begin
+  WriteLn(StringOfChar(' ', (80 - Length(s)) div 2) + s);
+end;
+
 procedure ActivateServer;
 var
   i, j: Integer;
@@ -525,26 +553,29 @@ begin
   MainThreadID := GetThreadID;
 
   WriteLn('');
-  WriteLn('             -= OpenSoldat Dedicated Server ' + OPENSOLDAT_VERSION + ' - ' +
+  WriteLnCenter('-= OpenSoldat Dedicated Server ' + OPENSOLDAT_VERSION + ' - ' +
     DEDVERSION + ' (build ' + OPENSOLDAT_VERSION_LONG + ') =-');
+  {$IFDEF FPC}
+  WriteLnCenter('Compiled with FreePascal ' + {$I %FPCVERSION%});
+  {$ENDIF}
   WriteLn('');
-  WriteLn('----------------------------------------------------------------');
-  WriteLn('         OpenSoldat Dedicated Server initializing...');
-  WriteLn('----------------------------------------------------------------');
+  WriteLn(StringOfChar('-', 79));
+  WriteLnCenter('OpenSoldat Dedicated Server initializing...');
+  WriteLn(StringOfChar('-', 79));
   WriteLn('');
   WriteLn('   Need help running your server?');
-  WriteLn('   Discord: https://discord.gg/a8BeCkue');
-  WriteLn('');
-  WriteLn('   ---> https://forums.soldat.pl/');
+  WriteLn('    Discord: https://discord.gg/6TqqtVpRdV');
+  WriteLn('    Forum:   https://forums.soldat.pl/');
   WriteLn('');
   WriteLn('   Additional parameters:');
-  WriteLn('   ./opensoldatserver -net_port PORT -sv_maxplayers MAXPLAYERS -sv_password PASSWORD');
-  WriteLn('   Example: ./opensoldatserver -net_port 23073 -sv_maxplayers 16 -sv_password "my pass"');
+  WriteLn('    -net_port PORT');
+  WriteLn('    -sv_maxplayers MAXPLAYERS');
+  WriteLn('    -sv_password PASSWORD');
   WriteLn('');
+  WriteLn('   Example:');
+  WriteLn('    ./opensoldatserver -net_port 23073 -sv_maxplayers 16 -sv_password "mypass"');
   WriteLn('');
-
-  WriteLn(' Compiled with FreePascal ' + {$I %FPCVERSION%});
-  WriteLn('');
+  WriteLn(StringOfChar('-', 79));
 
   {$IFNDEF CPUARM}
   // Disable FPU exceptions
@@ -688,9 +719,6 @@ begin
   ScrptDispatcher.SafeMode := sc_safemode.Value;
   {$ENDIF}
 
-  if net_ip.Value = '' then
-    net_ip.ParseAndSetValue('0.0.0.0');
-
   {$IFDEF STEAM}
   SteamAPI := TSteamGS.Init(
       0, // The IP address you are going to bind to
@@ -784,9 +812,9 @@ begin
   AdminIPs.Add('127.0.0.1');
 
   // Flood IP stuff
-  for i := 1 to MAX_FLOODIPS do
+  for i := Low(FloodIP) to High(FloodIP) do
     FloodIP[i] := ' ';
-  for i := 1 to MAX_FLOODIPS do
+  for i := Low(FloodNum) to High(FloodNum) do
     FloodNum[i] := 0;
 
   WeaponsInGame := 0;
@@ -925,8 +953,15 @@ begin
   end
   else
   begin
-    Result := False;
-    MainConsole.Console('Maps list file not found: configs/' + Filename, WARNING_MESSAGE_COLOR);
+    if Filename <> sv_maplist.DefaultValue then
+    begin
+      Result := sv_maplist.SetValue(sv_maplist.DefaultValue);
+    end
+    else
+    begin
+      Result := False;
+      MainConsole.Console('Maps list file not found: configs/' + Filename, WARNING_MESSAGE_COLOR);
+    end;
   end;
 
   // MapsList can't be empty on server's startup. This includes cases where
@@ -1295,6 +1330,9 @@ begin
     end;
   end;
 
+  if bots_random_noteam.Value > 0 then
+    for k := 1 to bots_random_noteam.Value do
+      AddBotPlayer(RandomBot, 0);
   if bots_random_alpha.Value > 0 then
     for k := 1 to bots_random_alpha.Value do
       AddBotPlayer(RandomBot, 1);
@@ -1437,12 +1475,12 @@ begin
 
   if Why = KICK_LEFTGAME then
     case Sprite[i].Player.Team of
-      0: MainConsole.Console(Sprite[i].Player.Name + ' has left the game.', ENTER_MESSAGE_COLOR);
-      1: MainConsole.Console(Sprite[i].Player.Name + ' has left alpha team.', ALPHAJ_MESSAGE_COLOR);
-      2: MainConsole.Console(Sprite[i].Player.Name + ' has left bravo team.', BRAVOJ_MESSAGE_COLOR);
+      0: MainConsole.Console(Sprite[i].Player.Name + ' has left the game.',     ENTER_MESSAGE_COLOR);
+      1: MainConsole.Console(Sprite[i].Player.Name + ' has left alpha team.',   ALPHAJ_MESSAGE_COLOR);
+      2: MainConsole.Console(Sprite[i].Player.Name + ' has left bravo team.',   BRAVOJ_MESSAGE_COLOR);
       3: MainConsole.Console(Sprite[i].Player.Name + ' has left charlie team.', CHARLIEJ_MESSAGE_COLOR);
-      4: MainConsole.Console(Sprite[i].Player.Name + ' has left delta team.', DELTAJ_MESSAGE_COLOR);
-      5: MainConsole.Console(Sprite[i].Player.Name + ' has left spectators', DELTAJ_MESSAGE_COLOR);
+      4: MainConsole.Console(Sprite[i].Player.Name + ' has left delta team.',   DELTAJ_MESSAGE_COLOR);
+      5: MainConsole.Console(Sprite[i].Player.Name + ' has left spectators',    DELTAJ_MESSAGE_COLOR);
     end;
 
   if not Ban and not (why = KICK_LEFTGAME) and not (why = KICK_SILENT) then
@@ -1472,8 +1510,8 @@ begin
         CLIENT_MESSAGE_COLOR)
     end else
       MainConsole.Console(Sprite[i].Player.Name +
-      ' has been kicked and permanently banned (' + Reason + ')',
-      CLIENT_MESSAGE_COLOR);
+        ' has been kicked and permanently banned (' + Reason + ')',
+        CLIENT_MESSAGE_COLOR);
   end;
 
   SaveTxtLists;
@@ -1485,12 +1523,13 @@ begin
   Result := True;
 end;
 
-{$IFDEF STEAM}
 initialization
+  {$IFNDEF DEBUG}
   // Mask exceptions on 32 and 64 bit fpc builds
   {$IF defined(cpui386) or defined(cpux86_64)}
-  //SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow, exUnderflow, exPrecision]);
+  SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow,
+    exUnderflow, exPrecision]);
   {$ENDIF}
-{$ENDIF}
+  {$ENDIF}
 
 end.

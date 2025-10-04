@@ -1,32 +1,61 @@
+{*************************************************************}
+{                                                             }
+{       ServerHelper Unit for OpenSoldat                      }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ServerHelper;
 
 interface
 
-function CheckNextMap: string;
+
+function  CheckNextMap: string;
 procedure WriteLn(S: Variant); overload;
-function IDToName(ID: Integer): string;
-function TeamToName(ID: Integer): string;
-function NameToID(Name: string): Integer;
-function NameToHW(Name: string): string;
-function FindLowestTeam(const Arr: array of Integer): Integer;
+function  IDToName(ID: Integer): string;
+function  TeamToName(ID: Integer): string;
+function  NameToID(Name: string): Integer;
+function  NameToHW(Name: string): string;
+function  FindLowestTeam(const Arr: array of Integer): Integer;
 procedure SaveTxtLists;
 procedure SaveMapList;
-function RGB(r, g, b: Byte): Cardinal;
-function FixTeam(Team: Byte): Byte;
-function WeaponNameByNum(Num: Integer): string;
-function CheckFileSize(filename: string): Integer;
+function  RGB(r, g, b: Byte): Cardinal;
+function  FixTeam(Team: Byte): Byte;
+function  WeaponNameByNum(Num: Integer): string;
+function  CheckFileSize(filename: string): Integer;
 procedure WritePID;
-function GetPID: Integer;
+function  GetPID: Integer;
 procedure WriteConsole(ID: Byte; Text: string; Colour: UInt32);
 procedure UpdateWaveRespawnTime;
-function RandomBot: string;
+function  RandomBot: string;
 procedure DoBalanceBots(LeftGame: Byte; NewTeam: Byte);
+
 
 implementation
 
 uses
-  Server, sysutils, strutils, classes, Cvar, Game, Net, Sprites, Constants, Util, Weapons,
-  TraceLog, NetworkServerMessages, BanSystem, Command;
+  // System units
+  Classes,
+  StrUtils,
+  SysUtils,
+
+  // Helper units
+  TraceLog,
+  Util,
+
+  // Project units
+  Constants,
+  Cvar,
+  Server,
+  Game,
+  Net,
+  Sprites,
+  Weapons,
+  NetworkServerMessages,
+  BanSystem,
+  Command;
+
 
 procedure WriteLn(S: Variant); overload;
 begin
@@ -192,7 +221,7 @@ procedure SaveTxtLists;
 begin
   Trace('SaveTxtLists');
 
-  // save ban files
+  // Save ban files
   SaveBannedList(UserDirectory + 'configs/banned.txt');
   SaveBannedListHW(UserDirectory + 'configs/bannedhw.txt');
 

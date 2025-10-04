@@ -1,19 +1,22 @@
-{*******************************************************}
-{                                                       }
-{       Animation Unit for OPENSOLDAT                   }
-{       Based on Strike of the Dragon ENGINE            }
-{       by Michal Marcinkowski                          }
-{                                                       }
-{       Copyright (c) 2001 Michal Marcinkowski          }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       Animation Unit for OpenSoldat                         }
+{       Based on Strike of the Dragon ENGINE                  }
+{       by Michal Marcinkowski                                }
+{                                                             }
+{       Copyright (c) 2001      Michal Marcinkowski           }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
 unit Anims;
 
 interface
 
 uses
+  // Helper units
   Vector;
+
 
 const
   MAX_POS_INDEX    = 20;
@@ -39,18 +42,32 @@ type
 
   procedure LoadAnimObjects(ModDir: string);
 
+
 implementation
 
 uses
+  // System units
+  SysUtils,
+
+  // Library units
+  PhysFS,
+
+  // Helper units
+  LogFile,
+  TraceLog,
+
+  // Project units
   {$IFDEF SERVER}
-  Server,
+    Server,
   {$ELSE}
-  Client,
+    Client,
   {$ENDIF}
-  SysUtils, TraceLog, PhysFS, Game, LogFile;
+  Game;
+
 
 const
   SCALE = 3;
+
 
 procedure TAnimation.DoAnimation;
 begin
@@ -362,12 +379,13 @@ begin
 
   SpriteParts.Destroy;
   SpriteParts.TimeStep := 1;
-  SpriteParts.Gravity := GRAV;
+  SpriteParts.GravityMultiplier := 1;
   SpriteParts.EDamping := 0.99;
+
   GostekSkeleton.Destroy;
   GostekSkeleton.LoadPOObject('objects/gostek.po', SCALE);
   GostekSkeleton.TimeStep := 1;
-  GostekSkeleton.Gravity := 1.06 * GRAV;
+  GostekSkeleton.GravityMultiplier := 1.06;
   GostekSkeleton.VDamping := 0.997;
 
   BoxSkeleton.Destroy;
@@ -376,17 +394,20 @@ begin
 
   BulletParts.Destroy;
   BulletParts.TimeStep := 1;
-  BulletParts.Gravity := GRAV * 2.25;
+  BulletParts.GravityMultiplier := 2.25;
   BulletParts.EDamping := 0.99;
 
   SparkParts.Destroy;
   SparkParts.TimeStep := 1;
-  SparkParts.Gravity := GRAV / 1.4;
+  SparkParts.GravityMultiplier := 1 / 1.4;
   SparkParts.EDamping := 0.998;
 
   FlagSkeleton.LoadPOObject('objects/flag.po', 4.0);
+
   ParaSkeleton.LoadPOObject('objects/para.po', 5.0);
+
   StatSkeleton.LoadPOObject('objects/stat.po', 4.0);
+
   RifleSkeleton10.LoadPOObject('objects/karabin.po', 1.0);
   RifleSkeleton11.LoadPOObject('objects/karabin.po', 1.1);
   RifleSkeleton18.LoadPOObject('objects/karabin.po', 1.8);

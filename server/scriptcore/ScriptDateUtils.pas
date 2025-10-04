@@ -1,12 +1,12 @@
-{*******************************************************}
-{                                                       }
-{       DateUtils unit for OPENSOLDAT                   }
-{                                                       }
-{       Copyright (c) 2012 Tomasz Kolosowski            }
-{                                                       }
-{*******************************************************}
+{*************************************************************}
+{                                                             }
+{       ScriptDateUtils Unit for OpenSoldat                   }
+{                                                             }
+{       Copyright (c) 2012      Tomasz Kolosowski             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
 
-// i guess there's not much to comment here
 unit ScriptDateUtils;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}
@@ -14,11 +14,15 @@ unit ScriptDateUtils;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
   PascalCompiler,
   PascalExec,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
+
 
 type
   TScriptDateUtilsAPI = class(TScriptCore3API)
@@ -27,10 +31,13 @@ type
     procedure RuntimeRegisterApi(Exec: TPascalExec); override;
   end;
 
+
 implementation
 
 uses
+  // Library units
   DateUtils;
+
 
 function DateTimeToUnix(D: TDateTime): Int64;
 begin
@@ -110,4 +117,3 @@ begin
 end;
 
 end.
-

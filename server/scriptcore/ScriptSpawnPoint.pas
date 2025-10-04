@@ -1,3 +1,11 @@
+{*************************************************************}
+{                                                             }
+{       ScriptSpawnPoint Unit for OpenSoldat                  }
+{                                                             }
+{       Copyright (c) 2020-2023 OpenSoldat contributors       }
+{                                                             }
+{*************************************************************}
+
 unit ScriptSpawnPoint;
 
 {$IFDEF FPC}{$mode delphi}{$ENDIF}
@@ -5,25 +13,28 @@ unit ScriptSpawnPoint;
 interface
 
 uses
+  // System units
   Classes,
+  SysUtils,
+
+  // Project units
+  MapFile,
   PascalCompiler,
   PascalExec,
-  MapFile,
-  ScriptCore3Api,
-  SysUtils;
+  ScriptCore3Api;
+
 
 type
-
   TScriptSpawnPoint = class(TObject)
   protected
     FSpawnPoint: PMapSpawnPoint;
-    function GetActive: Boolean;
+    function  GetActive: Boolean;
     procedure SetActive(Active: Boolean);
-    function GetX: Longint;
+    function  GetX: Longint;
     procedure SetX(X: Longint);
-    function GetY: Longint;
+    function  GetY: Longint;
     procedure SetY(Y: Longint);
-    function GetStyle: Byte;
+    function  GetStyle: Byte;
     procedure SetStyle(Style: Byte);
   public
     property Active: Boolean read GetActive write SetActive;
@@ -53,6 +64,7 @@ type
 
 
 implementation
+
 
 function TScriptSpawnPoint.GetActive: Boolean;
 begin
@@ -202,6 +214,5 @@ begin
     RegisterPropertyHelper(@IDReadHelper, nil, 'ID');
   end;
 end;
-
 
 end.
