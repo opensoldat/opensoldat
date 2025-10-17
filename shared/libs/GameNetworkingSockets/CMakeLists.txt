@@ -60,8 +60,7 @@ FetchContent_Populate(gamenetworkingsockets)
 # Fix build issues in gna 1.4.1
 add_custom_command(
   OUTPUT ${GNS_PATCH_MARKER}
-  COMMAND patch -p1 --batch --forward -r - < ../../gns141.patch
-  WORKING_DIRECTORY ${GNS_SOURCE_DIR}
+  COMMAND patch -p1 -d ${GNS_SOURCE_DIR} --batch --forward -r - < ${GNS_SOURCE_DIR}/../../gns141.patch
   COMMAND touch ${GNS_PATCH_MARKER}
   COMMENT "Applying gns1.4.1 patch if not already applied"
   VERBATIM
