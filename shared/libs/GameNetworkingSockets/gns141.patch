@@ -1,0 +1,30 @@
+diff -ruN gns_download/src/CMakeLists.txt gns_download_patched/src/CMakeLists.txt
+--- gns_download/src/CMakeLists.txt	2022-06-16 16:39:44.000000000 +0200
++++ gns_download/src/CMakeLists.txt	2025-10-17 02:06:12.619116496 +0200
+@@ -124,13 +124,12 @@
+ 
+ set(GNS_COMMON_FLAGS
+ 	-fvisibility=hidden
++	-fpermissive
+ 	-fno-strict-aliasing
+ 	-Wall
+ 	-Wno-unknown-pragmas
+ 	-Wno-sign-compare
+-	-Wno-unused-local-typedef
+ 	-Wno-unused-const-variable
+-	-Wno-nested-anon-types
+ 	-Wno-format-truncation
+ 	)
+ 
+diff -ruN gns_download/src/steamnetworkingsockets/steamnetworkingsockets_internal.h gns_download_patched/src/steamnetworkingsockets/steamnetworkingsockets_internal.h
+--- gns_download/src/steamnetworkingsockets/steamnetworkingsockets_internal.h	2022-06-16 16:39:44.000000000 +0200
++++ gns_download/src/steamnetworkingsockets/steamnetworkingsockets_internal.h	2025-10-17 01:51:08.978038404 +0200
+@@ -674,7 +674,7 @@
+ #define SteamNetworkingIdentityToProtobuf( identity, msg, field_identity_string, field_identity_legacy_binary, field_legacy_steam_id ) \
+ 	{ SteamDatagramErrMsg identityToProtobufErrMsg; \
+ 		if ( !BSteamNetworkingIdentityToProtobuf( identity, msg, field_identity_string, field_identity_legacy_binary, field_legacy_steam_id, identityToProtobufErrMsg ) ) { \
+-			AssertMsg2( false, "Failed to serialize identity to %s message.  %s", msg.GetTypeName().c_str(), identityToProtobufErrMsg ); \
++			AssertMsg2( false, "Failed to serialize identity to %s message.  %s", msg.GetTypeName().data(), identityToProtobufErrMsg ); \
+ 		} \
+ 	}
+ 

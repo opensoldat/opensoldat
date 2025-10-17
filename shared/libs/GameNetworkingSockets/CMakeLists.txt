@@ -41,6 +41,7 @@ project(GameNetworkingSockets)
 SET(GNS_SOURCE_DIR "${PROJECT_ROOT}/gns_download" )
 SET(GNS_TAG "v1.4.1" )
 SET(GNS_URL "https://github.com/ValveSoftware/GameNetworkingSockets/archive/refs/tags/${GNS_TAG}.tar.gz" )
+SET(GNS_PATCH_MARKER ${GNS_SOURCE_DIR}/.gns_141_patch_applied)
 
 #############################################################
 ## Fetch and build GNS
@@ -56,11 +57,25 @@ FetchContent_Declare(
 
 FetchContent_Populate(gamenetworkingsockets)
 
+# Fix build issues in gna 1.4.1
+add_custom_command(
+  OUTPUT ${GNS_PATCH_MARKER}
+  COMMAND patch -p1 --batch --forward -r - < ../../gns141.patch
+  WORKING_DIRECTORY ${GNS_SOURCE_DIR}
+  COMMAND touch ${GNS_PATCH_MARKER}
+  COMMENT "Applying gns1.4.1 patch if not already applied"
+  VERBATIM
+)
+
+ADD_CUSTOM_TARGET(gns_141_patch ALL DEPENDS ${GNS_PATCH_MARKER})
+
 option(GAMENETWORKINGSOCKETS_BUILD_EXAMPLES OFF)
 option(GAMENETWORKINGSOCKETS_BUILD_TESTS OFF)
 
 ADD_SUBDIRECTORY( ${GNS_SOURCE_DIR} EXCLUDE_FROM_ALL)
+ADD_DEPENDENCIES(GameNetworkingSockets gns_141_patch)
 ADD_DEPENDENCIES(GameNetworkingSockets GameNetworkingSockets)
+
 ##############################################################
 ## Install
 ##############################################################
