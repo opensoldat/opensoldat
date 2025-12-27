@@ -1,0 +1,237 @@
+# Menu File
+# Format: 
+#  first line: 1 (there is only one menu tree currently)
+#  then: menu entry
+#  a menu entry consists of three lines
+#  - number of entries in the menu (always 0 for normal entries)
+#  - menu code
+#  - menu caption
+
+# if the menu code is 'xsub', the menu contains a submenu (i.e. has
+# no action). The entry is followed by the submenu description (i.e. more
+# menu entries)
+
+1
+
+# Root Menu - Game / Audio / Video / Quit
+4
+Root
+Root
+
+# Game Submenu - Start Game / Game Settings / Configure Players
+# 2 (chooseModel)
+3
+xsub
+Game
+
+0
+xconnect
+Connect
+
+6
+xsub
+Game Settings
+
+0
+sti_fast_finish
+Fast Finish          - %s
+
+0
+sti_erase_crashed
+Erase dead players   - %s
+
+0
+sti_turn_cycle
+Cycle turns smooth   - %s
+
+0
+sti_show_2d
+Show 2D map          - %s
+
+0
+sti_show_ai_status
+Show AI status       - %s
+
+0
+xp__resetScores
+Reset Scores
+
+5
+xsub
+Player customization
+
+0
+"cl_player_name"
+Change name
+
+4
+xsub
+Hair style
+
+0
+"cl_player_hairstyle"
+Dreadlocks
+
+0
+"cl_player_hairstyle"
+Punk
+
+0
+"cl_player_hairstyle"
+Mr. T
+
+0
+"cl_player_hairstyle"
+Normal
+
+3
+xsub
+Head style
+
+0
+"cl_player_headstyle"
+None
+
+0
+"cl_player_headstyle"
+Helmet
+
+0
+"cl_player_headstyle"
+Hat
+
+3
+xsub
+Chain style
+
+0
+"cl_player_chainstyle"
+None
+
+0
+"cl_player_chainstyle"
+Dog tags
+
+0
+"cl_player_chainstyle"
+Gold
+
+4
+xsub
+Secondary weapon
+
+0
+"cl_player_secwep"
+USSOCOM
+
+0
+"cl_player_secwep"
+Combat knife
+
+0
+"cl_player_secwep"
+Chainsaw
+
+0
+"cl_player_secwep"
+M72 LAW
+
+# 0
+# xc_chooseModel
+# Choose Model (not implemented)
+
+# Audio Submenu (1 entry)
+3
+xsub
+Audio
+
+0
+"snd_volume"
+Volume - %s
+
+0
+"snd_effects_explosions"
+Explosions - %s
+
+0
+"snd_effects_battle"
+Battle - %s
+
+# Video Submenu (4 entries)
+# Display Options / Misc Options / Status Information / Change Resolution
+4
+xsub
+Video
+
+# Options Submenu (4 entries)
+6
+xsub
+Display Options
+
+0
+"r_weathereffects"
+Weather effects - %s
+
+0
+sti_show_wall
+Wall Texture       - %s
+0
+sti_show_alpha
+Alpha Blending     - %s
+0
+sti_show_glow
+Halos              - %s
+0
+sti_show_model
+Show Lightcycles   - %s
+0
+sti_show_crash_texture
+Show crash texture - %s
+
+# Misc Options Sub Menu
+1
+xsub
+Misc Options
+
+0
+sti_mouse_warp
+Capture mouse  - %s
+
+# Status information sub menu
+2
+xsub
+Status information
+0
+sti_show_fps
+Show FPS counter - %s
+0
+sti_show_ai_status
+Show AI status   - %s
+
+# Change Resolution sub menu
+6
+xsub
+Change Resolution
+0
+"r_screenwidth"
+320 x 240
+0
+"r_screenwidth"
+400 x 300
+0
+"r_screenwidth"
+512 x 384
+0
+"r_screenwidth"
+640 x 480
+0
+"r_screenwidth"
+800 x 600
+0
+"r_screenwidth"
+1024 x 768
+
+# Quit entry (saves settings)
+0
+xquit
+Quit
