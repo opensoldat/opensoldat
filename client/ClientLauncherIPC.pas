@@ -11,23 +11,46 @@ unit ClientLauncherIPC;
 interface
 
 uses
-  // Project units
-  LauncherIPC;
+  LauncherIPC, fpjson;
 
 
 type
   TClientLauncherIPC = class(TLauncherIPC)
   protected
-    procedure HandleMessage(Message: String); override;
+    procedure HandleParsedMessage(MessageId: String; JSON: TJSONObject); override;
+    procedure SendIdentityMessage; override;
+  public
+    procedure SendJoinServerMessage(IP: String; Port: Integer);
   end;
 
 
 implementation
 
+uses
+  LauncherMessages;
 
-procedure TClientLauncherIPC.HandleMessage(Message: String);
+procedure TClientLauncherIPC.HandleParsedMessage(MessageId: String; JSON: TJSONObject);
 begin
-  HandleCommand(Message);
+  if MessageId = LauncherMessageIds.Commands then
+    HandleCommandsMessage(JSON);
+end;
+
+procedure TClientLauncherIPC.SendIdentityMessage;
+var
+  Message: TIdentityMessage;
+begin
+  Message := TIdentityMessage.Create(GameProcessTypes.Client);
+  SendObjectAsJSON(Message);
+  Message.Free;
+end;
+
+procedure TClientLauncherIPC.SendJoinServerMessage(IP: String; Port: Integer);
+var
+  Message: TJoinServerMessage;
+begin
+  Message := TJoinServerMessage.Create(IP, Port);
+  SendObjectAsJSON(Message);
+  Message.Free;
 end;
 
 end.
