@@ -5,6 +5,7 @@ Peters "daaw" Brede
 Gregor "Shoozza" A. Cieslak  
 Nick "EnEsCe" Cooper  
 Mariano "urraka" Cuatrin  
+Brendan "pewpew" Dougherty  
 Paweł "helloer" Drzazga  
 Daniel "Skoskav" Forssten  
 Justin "splitcoffe" Gascoigne  
