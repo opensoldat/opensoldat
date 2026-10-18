@@ -28,14 +28,14 @@
 {*                                                                            *}
 {*  Partly based upon :                                                       *}
 {*    Direct3DX 7.0 Delphi adaptation by                                      *}
-{*      Arne Sch‰pers, e-Mail: [look at www.delphi-jedi.org/DelphiGraphics/]  *}
+{*      Arne Sch√§pers, e-Mail: [look at www.delphi-jedi.org/DelphiGraphics/]  *}
 {*                                                                            *}
 {*  Latest version can be downloaded from:                                    *}
 {*    http://clootie.ru                                                       *}
 {*    http://sourceforge.net/projects/delphi-dx9sdk                           *}
 {*                                                                            *}
 {*  This File contains only Direct3DX 8.x Definitions.                        *}
-{*  If you want to use D3DX7 version of D3DX use translation by Arne Sch‰pers *}
+{*  If you want to use D3DX7 version of D3DX use translation by Arne Sch√§pers *}
 {*                                                                            *}
 {******************************************************************************}
 {                                                                              }
