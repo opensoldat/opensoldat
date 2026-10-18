@@ -433,7 +433,7 @@ begin
         Result := False
     else if (Map.PolyType[Poly] = POLY_TYPE_BLUE_BULLETS) or
       (Map.PolyType[Poly] = POLY_TYPE_BLUE_PLAYER) then
-      if (Team = TEAM_BRAVO) and (Map.PolyType[Poly] = POLY_TYPE_YELLOW_BULLETS) then
+      if (Team = TEAM_BRAVO) and (Map.PolyType[Poly] = POLY_TYPE_BLUE_BULLETS) then
         Result := True
       else
         Result := False
